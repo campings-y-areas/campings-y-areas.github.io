@@ -1,0 +1,925 @@
+// ==========================================
+// CAMPINGS & ÁREAS
+// Buscador de áreas y parkings
+// ==========================================
+
+let puntos = [];
+let resultadosActuales = [];
+
+const resultadosPorPagina = 20;
+let paginaActual = 1;
+
+
+// ==========================================
+// CARGAR BASE DE DATOS
+// ==========================================
+
+fetch("areas-parkings-espana-v2.json?v=1")
+  .then(response => {
+
+    if (!response.ok) {
+      throw new Error("No se pudo cargar la base de áreas y parkings");
+    }
+
+    return response.json();
+
+  })
+
+  .then(data => {
+
+    puntos = data;
+
+    console.log("Puntos cargados:", puntos.length);
+
+    buscarPuntos();
+
+  })
+
+  .catch(error => {
+
+    console.error("Error:", error);
+
+    const resultados =
+      document.getElementById("resultadosAreas");
+
+    if (resultados) {
+      resultados.innerHTML =
+        "<p>No se pudieron cargar las áreas y parkings.</p>";
+    }
+
+  });
+
+
+// ==========================================
+// NORMALIZAR TEXTO
+// ==========================================
+
+function normalizarTexto(texto) {
+
+  return String(texto || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+
+}
+
+
+// ==========================================
+// NORMALIZAR URL
+// ==========================================
+
+function normalizarUrl(url) {
+
+  if (!url) {
+    return "";
+  }
+
+  url = String(url).trim();
+
+  if (
+    url.startsWith("http://") ||
+    url.startsWith("https://")
+  ) {
+    return url;
+  }
+
+  return "https://" + url;
+
+}
+
+
+// ==========================================
+// ENLACE GOOGLE MAPS
+// ==========================================
+
+function crearEnlaceMapa(punto) {
+
+  if (punto.google_maps) {
+    return normalizarUrl(punto.google_maps);
+  }
+
+  let consulta = [
+    punto.nombre,
+    punto.localidad,
+    punto.provincia,
+    punto.direccion
+  ]
+    .filter(Boolean)
+    .join(", ");
+
+  if (
+    !consulta &&
+    punto.lat !== null &&
+    punto.lon !== null
+  ) {
+
+    consulta =
+      `${punto.lat},${punto.lon}`;
+
+  }
+
+  if (!consulta) {
+    return "";
+  }
+
+  return (
+    "https://www.google.com/maps/search/?api=1&query=" +
+    encodeURIComponent(consulta)
+  );
+
+}
+
+
+// ==========================================
+// BUSCAR Y FILTRAR
+// ==========================================
+
+function buscarPuntos() {
+
+  const campoBusqueda =
+    document.getElementById("buscarArea");
+
+  const texto =
+    normalizarTexto(
+      campoBusqueda
+        ? campoBusqueda.value
+        : ""
+    );
+
+
+  const tipoSeleccionado =
+    document.querySelector(
+      'input[name="tipoPunto"]:checked'
+    );
+
+
+  const tipo =
+    tipoSeleccionado
+      ? tipoSeleccionado.value
+      : "";
+
+
+  const filtroAdmiteCaravanas =
+    document.getElementById(
+      "filtroAdmiteCaravanas"
+    );
+
+  const filtroNoAdmiteCaravanas =
+    document.getElementById(
+      "filtroNoAdmiteCaravanas"
+    );
+
+  const filtroPernocta =
+    document.getElementById(
+      "filtroPernocta"
+    );
+
+  const filtroAgua =
+    document.getElementById(
+      "filtroAgua"
+    );
+
+  const filtroVaciado =
+    document.getElementById(
+      "filtroVaciado"
+    );
+
+  const filtroElectricidad =
+    document.getElementById(
+      "filtroElectricidad"
+    );
+
+  const filtroMascotas =
+    document.getElementById(
+      "filtroMascotasArea"
+    );
+
+  const filtroSinServicios =
+    document.getElementById(
+      "filtroSinServicios"
+    );
+
+
+  const soloAdmite =
+    filtroAdmiteCaravanas
+      ? filtroAdmiteCaravanas.checked
+      : false;
+
+  const soloNoAdmite =
+    filtroNoAdmiteCaravanas
+      ? filtroNoAdmiteCaravanas.checked
+      : false;
+
+  const soloPernocta =
+    filtroPernocta
+      ? filtroPernocta.checked
+      : false;
+
+  const soloAgua =
+    filtroAgua
+      ? filtroAgua.checked
+      : false;
+
+  const soloVaciado =
+    filtroVaciado
+      ? filtroVaciado.checked
+      : false;
+
+  const soloElectricidad =
+    filtroElectricidad
+      ? filtroElectricidad.checked
+      : false;
+
+  const soloMascotas =
+    filtroMascotas
+      ? filtroMascotas.checked
+      : false;
+
+  const soloSinServicios =
+    filtroSinServicios
+      ? filtroSinServicios.checked
+      : false;
+
+
+  resultadosActuales =
+    puntos.filter(punto => {
+
+
+      const contenido =
+        normalizarTexto(
+          [
+            punto.nombre,
+            punto.localidad,
+            punto.provincia,
+            punto.comunidad_autonoma,
+            punto.pais,
+            punto.direccion,
+            punto.descripcion_original
+          ]
+            .filter(Boolean)
+            .join(" ")
+        );
+
+
+      const coincideTexto =
+        texto === "" ||
+        contenido.includes(texto);
+
+
+      const coincideTipo =
+        tipo === "" ||
+        punto.tipo === tipo;
+
+
+      const coincideAdmite =
+        !soloAdmite ||
+        punto.admite_caravanas === true;
+
+
+      const coincideNoAdmite =
+        !soloNoAdmite ||
+        punto.admite_caravanas === false;
+
+
+      const coincidePernocta =
+        !soloPernocta ||
+        punto.permite_pernocta === true;
+
+
+      const coincideAgua =
+        !soloAgua ||
+        punto.agua === true;
+
+
+      const coincideVaciado =
+        !soloVaciado ||
+        punto.vaciado_aguas === true;
+
+
+      const coincideElectricidad =
+        !soloElectricidad ||
+        punto.electricidad === true;
+
+
+      const coincideMascotas =
+        !soloMascotas ||
+        punto.mascotas === true;
+
+
+      const coincideSinServicios =
+        !soloSinServicios ||
+        punto.sin_servicios === true;
+
+
+      return (
+        coincideTexto &&
+        coincideTipo &&
+        coincideAdmite &&
+        coincideNoAdmite &&
+        coincidePernocta &&
+        coincideAgua &&
+        coincideVaciado &&
+        coincideElectricidad &&
+        coincideMascotas &&
+        coincideSinServicios
+      );
+
+    });
+
+
+  paginaActual = 1;
+
+  mostrarPagina();
+
+}
+
+
+// ==========================================
+// MOSTRAR PÁGINA
+// ==========================================
+
+function mostrarPagina() {
+
+  const resultados =
+    document.getElementById(
+      "resultadosAreas"
+    );
+
+
+  if (!resultados) {
+    return;
+  }
+
+
+  resultados.innerHTML = "";
+
+
+  const totalResultados =
+    resultadosActuales.length;
+
+
+  const totalPaginas =
+    Math.ceil(
+      totalResultados /
+      resultadosPorPagina
+    );
+
+
+  const cabecera =
+    document.createElement("div");
+
+  cabecera.className =
+    "cabecera-resultados";
+
+
+  const contador =
+    document.createElement("p");
+
+  contador.className =
+    "contador-resultados";
+
+
+  contador.textContent =
+    totalResultados === 1
+      ? "1 resultado encontrado"
+      : `${totalResultados} resultados encontrados`;
+
+
+  cabecera.appendChild(contador);
+
+
+  if (totalPaginas > 1) {
+
+    const paginaInfo =
+      document.createElement("p");
+
+    paginaInfo.className =
+      "pagina-info";
+
+    paginaInfo.textContent =
+      `Página ${paginaActual} de ${totalPaginas}`;
+
+    cabecera.appendChild(paginaInfo);
+
+  }
+
+
+  resultados.appendChild(cabecera);
+
+
+  if (totalResultados === 0) {
+
+    const mensaje =
+      document.createElement("p");
+
+    mensaje.className =
+      "sin-resultados";
+
+    mensaje.textContent =
+      "No se han encontrado resultados con esos criterios.";
+
+    resultados.appendChild(mensaje);
+
+    return;
+
+  }
+
+
+  const inicio =
+    (paginaActual - 1) *
+    resultadosPorPagina;
+
+
+  const fin =
+    inicio +
+    resultadosPorPagina;
+
+
+  const pagina =
+    resultadosActuales.slice(
+      inicio,
+      fin
+    );
+
+
+  const listado =
+    document.createElement("div");
+
+  listado.className =
+    "lista-campings";
+
+
+  pagina.forEach(punto => {
+
+    listado.appendChild(
+      crearFichaPunto(punto)
+    );
+
+  });
+
+
+  resultados.appendChild(listado);
+
+
+  if (totalPaginas > 1) {
+
+    const paginacion =
+      document.createElement("div");
+
+    paginacion.className =
+      "paginacion";
+
+
+    const anterior =
+      document.createElement("button");
+
+    anterior.type = "button";
+    anterior.textContent =
+      "← Anterior";
+
+    anterior.disabled =
+      paginaActual === 1;
+
+
+    anterior.addEventListener(
+      "click",
+      () => {
+
+        if (paginaActual > 1) {
+
+          paginaActual--;
+
+          mostrarPagina();
+
+          irAResultados();
+
+        }
+
+      }
+    );
+
+
+    const indicador =
+      document.createElement("span");
+
+    indicador.textContent =
+      `${paginaActual} / ${totalPaginas}`;
+
+
+    const siguiente =
+      document.createElement("button");
+
+    siguiente.type = "button";
+    siguiente.textContent =
+      "Siguiente →";
+
+    siguiente.disabled =
+      paginaActual === totalPaginas;
+
+
+    siguiente.addEventListener(
+      "click",
+      () => {
+
+        if (
+          paginaActual <
+          totalPaginas
+        ) {
+
+          paginaActual++;
+
+          mostrarPagina();
+
+          irAResultados();
+
+        }
+
+      }
+    );
+
+
+    paginacion.appendChild(anterior);
+    paginacion.appendChild(indicador);
+    paginacion.appendChild(siguiente);
+
+    resultados.appendChild(paginacion);
+
+  }
+
+}
+
+
+// ==========================================
+// CREAR FICHA
+// ==========================================
+
+function crearFichaPunto(punto) {
+
+  const ficha =
+    document.createElement("article");
+
+  ficha.className =
+    "resultado-camping";
+
+
+  const titulo =
+    document.createElement("h3");
+
+  titulo.textContent =
+    punto.nombre || "Punto";
+
+  ficha.appendChild(titulo);
+
+
+  // TIPO
+
+  const tipo =
+    document.createElement("p");
+
+  tipo.className =
+    "tipo-punto";
+
+
+  tipo.textContent =
+    punto.tipo === "parking"
+      ? "🅿️ Parking"
+      : "🚐 Área";
+
+
+  ficha.appendChild(tipo);
+
+
+  // UBICACIÓN
+
+  const ubicacion = [
+    punto.localidad,
+    punto.provincia,
+    punto.comunidad_autonoma
+  ]
+    .filter(Boolean);
+
+
+  if (ubicacion.length > 0) {
+
+    const zona =
+      document.createElement("p");
+
+    zona.className =
+      "zona-camping";
+
+    zona.textContent =
+      "📌 " +
+      [...new Set(ubicacion)]
+        .join(" · ");
+
+    ficha.appendChild(zona);
+
+  }
+
+
+  if (punto.direccion) {
+
+    const direccion =
+      document.createElement("p");
+
+    direccion.className =
+      "direccion";
+
+    direccion.textContent =
+      "📍 " + punto.direccion;
+
+    ficha.appendChild(direccion);
+
+  }
+
+
+  // CARACTERÍSTICAS
+
+  const caracteristicas = [];
+
+
+  if (punto.tipo === "area") {
+
+    if (punto.admite_caravanas === true) {
+      caracteristicas.push(
+        "🔴 Admite caravanas"
+      );
+    }
+
+    if (punto.admite_caravanas === false) {
+      caracteristicas.push(
+        "🔵 No admite caravanas"
+      );
+    }
+
+  }
+
+
+  if (punto.tipo === "parking") {
+
+    if (punto.permite_pernocta === true) {
+      caracteristicas.push(
+        "🌙 Permite pernocta"
+      );
+    }
+
+    if (punto.permite_pernocta === false) {
+      caracteristicas.push(
+        "🚫 No permite pernocta"
+      );
+    }
+
+  }
+
+
+  if (punto.agua) {
+    caracteristicas.push(
+      "🚰 Agua"
+    );
+  }
+
+
+  if (punto.vaciado_aguas) {
+    caracteristicas.push(
+      "💧 Vaciado"
+    );
+  }
+
+
+  if (punto.electricidad) {
+    caracteristicas.push(
+      "⚡ Electricidad"
+    );
+  }
+
+
+  if (punto.mascotas === true) {
+    caracteristicas.push(
+      "🐕 Admite mascotas"
+    );
+  }
+
+
+  if (punto.sin_servicios) {
+    caracteristicas.push(
+      "🚫 Sin servicios"
+    );
+  }
+
+
+  if (caracteristicas.length > 0) {
+
+    const servicios =
+      document.createElement("p");
+
+    servicios.className =
+      "caracteristicas";
+
+    servicios.textContent =
+      caracteristicas.join(" · ");
+
+    ficha.appendChild(servicios);
+
+  }
+
+
+  // ENLACES
+
+  const enlaces =
+    document.createElement("div");
+
+  enlaces.className =
+    "enlaces-camping";
+
+
+  if (punto.web) {
+
+    const web =
+      document.createElement("a");
+
+    web.href =
+      normalizarUrl(punto.web);
+
+    web.target =
+      "_blank";
+
+    web.rel =
+      "noopener noreferrer";
+
+    web.textContent =
+      "🌐 Web";
+
+    enlaces.appendChild(web);
+
+  }
+
+
+  if (punto.telefono) {
+
+    const telefono =
+      document.createElement("a");
+
+    telefono.href =
+      "tel:" +
+      punto.telefono.replace(
+        /[^\d+]/g,
+        ""
+      );
+
+    telefono.textContent =
+      "☎️ " + punto.telefono;
+
+    enlaces.appendChild(telefono);
+
+  }
+
+
+  const enlaceMapa =
+    crearEnlaceMapa(punto);
+
+
+  if (enlaceMapa) {
+
+    const mapa =
+      document.createElement("a");
+
+    mapa.href =
+      enlaceMapa;
+
+    mapa.target =
+      "_blank";
+
+    mapa.rel =
+      "noopener noreferrer";
+
+    mapa.textContent =
+      "🗺️ Ver en el mapa";
+
+    enlaces.appendChild(mapa);
+
+  }
+
+
+  if (enlaces.children.length > 0) {
+    ficha.appendChild(enlaces);
+  }
+
+
+  return ficha;
+
+}
+
+
+// ==========================================
+// VOLVER A RESULTADOS
+// ==========================================
+
+function irAResultados() {
+
+  const resultados =
+    document.getElementById(
+      "resultadosAreas"
+    );
+
+
+  if (resultados) {
+
+    resultados.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+
+  }
+
+}
+
+
+// ==========================================
+// EVENTOS
+// ==========================================
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    const campoBusqueda =
+      document.getElementById(
+        "buscarArea"
+      );
+
+
+    const boton =
+      document.getElementById(
+        "botonBuscarArea"
+      );
+
+
+    if (boton) {
+
+      boton.addEventListener(
+        "click",
+        buscarPuntos
+      );
+
+    }
+
+
+    if (campoBusqueda) {
+
+      campoBusqueda.addEventListener(
+        "keydown",
+        event => {
+
+          if (event.key === "Enter") {
+            buscarPuntos();
+          }
+
+        }
+      );
+
+    }
+
+
+    document
+      .querySelectorAll(
+        'input[name="tipoPunto"]'
+      )
+      .forEach(radio => {
+
+        radio.addEventListener(
+          "change",
+          buscarPuntos
+        );
+
+      });
+
+
+    [
+      "filtroAdmiteCaravanas",
+      "filtroNoAdmiteCaravanas",
+      "filtroPernocta",
+      "filtroAgua",
+      "filtroVaciado",
+      "filtroElectricidad",
+      "filtroMascotasArea",
+      "filtroSinServicios"
+    ]
+      .forEach(id => {
+
+        const elemento =
+          document.getElementById(id);
+
+        if (elemento) {
+
+          elemento.addEventListener(
+            "change",
+            buscarPuntos
+          );
+
+        }
+
+      });
+
+  }
+);
