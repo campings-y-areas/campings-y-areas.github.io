@@ -704,7 +704,121 @@ function irAResultados() {
 // ==========================================
 // CAMBIAR ÁREAS / PARKINGS DESDE EL MENÚ
 // ==========================================
+// ==========================================
+// ACTUALIZAR TEXTOS SEGÚN ÁREAS / PARKINGS
+// ==========================================
 
+function actualizarTextosTipo() {
+
+  const tipoSeleccionado =
+    document.querySelector(
+      'input[name="tipoPunto"]:checked'
+    );
+
+  const tipo =
+    tipoSeleccionado
+      ? tipoSeleccionado.value
+      : "";
+
+  const titulo =
+    document.querySelector(
+      ".bienvenida h2"
+    );
+
+  const descripcion =
+    document.querySelector(
+      ".bienvenida p:not(.estado)"
+    );
+
+  const estado =
+    document.querySelector(
+      ".bienvenida .estado"
+    );
+
+  const tituloBuscador =
+    document.querySelector(
+      ".buscador h2"
+    );
+
+
+  // ÁREAS
+
+  if (tipo === "area") {
+
+    if (titulo) {
+      titulo.textContent =
+        "🚐 Áreas";
+    }
+
+    if (descripcion) {
+      descripcion.textContent =
+        "Encuentra áreas para autocaravanas, caravanas y campers.";
+    }
+
+    if (estado) {
+      estado.textContent =
+        "Busca por nombre, localidad, provincia o comunidad autónoma y filtra por características y servicios.";
+    }
+
+    if (tituloBuscador) {
+      tituloBuscador.textContent =
+        "🔎 Buscar áreas";
+    }
+
+    return;
+  }
+
+
+  // PARKINGS
+
+  if (tipo === "parking") {
+
+    if (titulo) {
+      titulo.textContent =
+        "🅿️ Parkings";
+    }
+
+    if (descripcion) {
+      descripcion.textContent =
+        "Encuentra parkings para estacionamiento y guarda de autocaravanas y caravanas.";
+    }
+
+    if (estado) {
+      estado.textContent =
+        "Busca por nombre, localidad, provincia o comunidad autónoma y filtra por características y servicios.";
+    }
+
+    if (tituloBuscador) {
+      tituloBuscador.textContent =
+        "🔎 Buscar parkings";
+    }
+
+    return;
+  }
+
+
+  // TODOS
+
+  if (titulo) {
+    titulo.textContent =
+      "🚐 Áreas y 🅿️ Parkings";
+  }
+
+  if (descripcion) {
+    descripcion.textContent =
+      "Encuentra áreas para autocaravanas y caravanas, además de parkings para estacionamiento y guarda.";
+  }
+
+  if (estado) {
+    estado.textContent =
+      "Busca por nombre, localidad, provincia o comunidad autónoma y filtra según el tipo de vehículo y los servicios disponibles.";
+  }
+
+  if (tituloBuscador) {
+    tituloBuscador.textContent =
+      "🔎 Buscar áreas y parkings";
+  }
+}
 function cambiarTipoDesdeMenu(tipo) {
 
   if (tipo === "area") {
@@ -738,7 +852,8 @@ function cambiarTipoDesdeMenu(tipo) {
     nuevaUrl
   );
 
-  buscarPuntos();
+  actualizarTextosTipo();
+buscarPuntos();
 }
 // ==========================================
 // INICIALIZACIÓN Y EVENTOS
@@ -750,6 +865,7 @@ document.addEventListener(
 
     // Primero aplicamos el filtro recibido desde la portada
     aplicarTipoInicial();
+actualizarTextosTipo();
 
 
     const campoBusqueda =
@@ -789,10 +905,13 @@ document.addEventListener(
         'input[name="tipoPunto"]'
       )
       .forEach(radio => {
-        radio.addEventListener(
-          "change",
-          buscarPuntos
-        );
+       radio.addEventListener(
+  "change",
+  () => {
+    actualizarTextosTipo();
+    buscarPuntos();
+  }
+);
       });
 
 
