@@ -1,6 +1,6 @@
 // ==========================================
 // CAMPINGS & ÁREAS
-// Buscador de áreas y parkings
+// ÁREAS Y PARKINGS
 // ==========================================
 
 let puntos = [];
@@ -47,45 +47,188 @@ function normalizarUrl(url) {
 
 
 // ==========================================
-// LEER TIPO DESDE LA URL
+// TIPO INICIAL DESDE LA URL
 // ==========================================
 
 function aplicarTipoInicial() {
   const parametros =
     new URLSearchParams(window.location.search);
 
-  const tipoInicial =
+  const tipo =
     parametros.get("tipo");
 
-  if (tipoInicial === "area") {
-    const radioArea =
+  if (tipo === "area") {
+    const radio =
       document.getElementById("tipoArea");
 
-    if (radioArea) {
-      radioArea.checked = true;
+    if (radio) {
+      radio.checked = true;
     }
   }
 
-  if (tipoInicial === "parking") {
-    const radioParking =
+  else if (tipo === "parking") {
+    const radio =
       document.getElementById("tipoParking");
 
-    if (radioParking) {
-      radioParking.checked = true;
+    if (radio) {
+      radio.checked = true;
     }
   }
 }
 
 
 // ==========================================
-// CREAR ENLACE GOOGLE MAPS
+// TEXTOS DINÁMICOS
+// ==========================================
+
+function actualizarTextosTipo() {
+  const seleccionado =
+    document.querySelector(
+      'input[name="tipoPunto"]:checked'
+    );
+
+  const tipo =
+    seleccionado
+      ? seleccionado.value
+      : "";
+
+  const titulo =
+    document.querySelector(".bienvenida h2");
+
+  const descripcion =
+    document.querySelector(
+      ".bienvenida p:not(.estado)"
+    );
+
+  const estado =
+    document.querySelector(
+      ".bienvenida .estado"
+    );
+
+  const tituloBuscador =
+    document.querySelector(
+      ".buscador h2"
+    );
+
+
+  if (tipo === "area") {
+    if (titulo) {
+      titulo.textContent = "🚐 Áreas";
+    }
+
+    if (descripcion) {
+      descripcion.textContent =
+        "Encuentra áreas para autocaravanas, caravanas y campers.";
+    }
+
+    if (estado) {
+      estado.textContent =
+        "Busca por nombre, localidad, provincia o comunidad autónoma y filtra por características y servicios.";
+    }
+
+    if (tituloBuscador) {
+      tituloBuscador.textContent =
+        "🔎 Buscar áreas";
+    }
+
+    return;
+  }
+
+
+  if (tipo === "parking") {
+    if (titulo) {
+      titulo.textContent =
+        "🅿️ Parkings";
+    }
+
+    if (descripcion) {
+      descripcion.textContent =
+        "Encuentra parkings para estacionamiento y guarda de autocaravanas y caravanas.";
+    }
+
+    if (estado) {
+      estado.textContent =
+        "Busca por nombre, localidad, provincia o comunidad autónoma y filtra por características y servicios.";
+    }
+
+    if (tituloBuscador) {
+      tituloBuscador.textContent =
+        "🔎 Buscar parkings";
+    }
+
+    return;
+  }
+
+
+  if (titulo) {
+    titulo.textContent =
+      "🚐 Áreas y 🅿️ Parkings";
+  }
+
+  if (descripcion) {
+    descripcion.textContent =
+      "Encuentra áreas para autocaravanas y caravanas, además de parkings para estacionamiento y guarda.";
+  }
+
+  if (estado) {
+    estado.textContent =
+      "Busca por nombre, localidad, provincia o comunidad autónoma y filtra según el tipo de vehículo y los servicios disponibles.";
+  }
+
+  if (tituloBuscador) {
+    tituloBuscador.textContent =
+      "🔎 Buscar áreas y parkings";
+  }
+}
+
+
+// ==========================================
+// CAMBIO DESDE EL MENÚ
+// ==========================================
+
+function cambiarTipoDesdeMenu(tipo) {
+  if (tipo === "area") {
+    const radio =
+      document.getElementById("tipoArea");
+
+    if (radio) {
+      radio.checked = true;
+    }
+  }
+
+  else if (tipo === "parking") {
+    const radio =
+      document.getElementById("tipoParking");
+
+    if (radio) {
+      radio.checked = true;
+    }
+  }
+
+  window.history.replaceState(
+    {},
+    "",
+    "areas.html?tipo=" + tipo
+  );
+
+  actualizarTextosTipo();
+  buscarPuntos();
+}
+
+
+// ==========================================
+// GOOGLE MAPS
 // ==========================================
 
 function crearEnlaceMapa(punto) {
-
   if (punto.google_maps) {
-    return normalizarUrl(punto.google_maps);
+    return normalizarUrl(
+      punto.google_maps
+    );
   }
+
+  // Si no hay enlace Maps,
+  // usamos coordenadas exactas.
 
   if (
     punto.lat !== null &&
@@ -101,7 +244,7 @@ function crearEnlaceMapa(punto) {
     );
   }
 
-  let consulta = [
+  const consulta = [
     punto.nombre,
     punto.localidad,
     punto.provincia,
@@ -109,37 +252,6 @@ function crearEnlaceMapa(punto) {
   ]
     .filter(Boolean)
     .join(", ");
-
-  if (!consulta) {
-    return "";
-  }
-
-  return (
-    "https://www.google.com/maps/search/?api=1&query=" +
-    encodeURIComponent(consulta)
-  );
-}
-  if (punto.google_maps) {
-    return normalizarUrl(punto.google_maps);
-  }
-
-  let consulta = [
-    punto.nombre,
-    punto.localidad,
-    punto.provincia,
-    punto.direccion
-  ]
-    .filter(Boolean)
-    .join(", ");
-
-  if (
-    !consulta &&
-    punto.lat !== null &&
-    punto.lon !== null
-  ) {
-    consulta =
-      `${punto.lat},${punto.lon}`;
-  }
 
   if (!consulta) {
     return "";
@@ -153,19 +265,20 @@ function crearEnlaceMapa(punto) {
 
 
 // ==========================================
-// BUSCAR Y FILTRAR
+// BUSCAR
 // ==========================================
 
 function buscarPuntos() {
-  const campoBusqueda =
-    document.getElementById("buscarArea");
+  const campo =
+    document.getElementById(
+      "buscarArea"
+    );
 
   const texto =
     normalizarTexto(
-      campoBusqueda
-        ? campoBusqueda.value
-        : ""
+      campo ? campo.value : ""
     );
+
 
   const tipoSeleccionado =
     document.querySelector(
@@ -177,65 +290,70 @@ function buscarPuntos() {
       ? tipoSeleccionado.value
       : "";
 
+
   const soloAdmite =
-    document.getElementById("filtroAdmiteCaravanas")?.checked || false;
+    document.getElementById(
+      "filtroAdmiteCaravanas"
+    )?.checked || false;
 
   const soloNoAdmite =
-    document.getElementById("filtroNoAdmiteCaravanas")?.checked || false;
+    document.getElementById(
+      "filtroNoAdmiteCaravanas"
+    )?.checked || false;
 
   const soloPernocta =
-    document.getElementById("filtroPernocta")?.checked || false;
+    document.getElementById(
+      "filtroPernocta"
+    )?.checked || false;
 
   const soloAgua =
-    document.getElementById("filtroAgua")?.checked || false;
+    document.getElementById(
+      "filtroAgua"
+    )?.checked || false;
 
   const soloVaciado =
-    document.getElementById("filtroVaciado")?.checked || false;
+    document.getElementById(
+      "filtroVaciado"
+    )?.checked || false;
 
   const soloElectricidad =
-    document.getElementById("filtroElectricidad")?.checked || false;
+    document.getElementById(
+      "filtroElectricidad"
+    )?.checked || false;
 
   const soloMascotas =
-    document.getElementById("filtroMascotasArea")?.checked || false;
+    document.getElementById(
+      "filtroMascotasArea"
+    )?.checked || false;
 
   const soloSinServicios =
-    document.getElementById("filtroSinServicios")?.checked || false;
+    document.getElementById(
+      "filtroSinServicios"
+    )?.checked || false;
 
 
   resultadosActuales =
     puntos.filter(punto => {
 
-      const nombre =
-        normalizarTexto(punto.nombre);
-
-      const localidad =
-        normalizarTexto(punto.localidad);
-
-      const provincia =
-        normalizarTexto(punto.provincia);
-
-      const comunidad =
-        normalizarTexto(punto.comunidad_autonoma);
-
-      const pais =
-        normalizarTexto(punto.pais);
-
-      const direccion =
-        normalizarTexto(punto.direccion);
-
-      const descripcion =
-        normalizarTexto(punto.descripcion_original);
+      const contenido =
+        normalizarTexto(
+          [
+            punto.nombre,
+            punto.localidad,
+            punto.provincia,
+            punto.comunidad_autonoma,
+            punto.pais,
+            punto.direccion,
+            punto.descripcion_original
+          ]
+            .filter(Boolean)
+            .join(" ")
+        );
 
 
       const coincideTexto =
         texto === "" ||
-        nombre.includes(texto) ||
-        localidad.includes(texto) ||
-        provincia.includes(texto) ||
-        comunidad.includes(texto) ||
-        pais.includes(texto) ||
-        direccion.includes(texto) ||
-        descripcion.includes(texto);
+        contenido.includes(texto);
 
 
       const coincideTipo =
@@ -305,12 +423,14 @@ function buscarPuntos() {
 
 
 // ==========================================
-// MOSTRAR PÁGINA
+// MOSTRAR RESULTADOS
 // ==========================================
 
 function mostrarPagina() {
   const resultados =
-    document.getElementById("resultadosAreas");
+    document.getElementById(
+      "resultadosAreas"
+    );
 
   if (!resultados) {
     return;
@@ -318,13 +438,13 @@ function mostrarPagina() {
 
   resultados.innerHTML = "";
 
-  const totalResultados =
+
+  const total =
     resultadosActuales.length;
 
   const totalPaginas =
     Math.ceil(
-      totalResultados /
-      resultadosPorPagina
+      total / resultadosPorPagina
     );
 
 
@@ -342,31 +462,31 @@ function mostrarPagina() {
     "contador-resultados";
 
   contador.textContent =
-    totalResultados === 1
+    total === 1
       ? "1 resultado encontrado"
-      : `${totalResultados} resultados encontrados`;
+      : `${total} resultados encontrados`;
 
   cabecera.appendChild(contador);
 
 
   if (totalPaginas > 1) {
-    const paginaInfo =
+    const info =
       document.createElement("p");
 
-    paginaInfo.className =
+    info.className =
       "pagina-info";
 
-    paginaInfo.textContent =
+    info.textContent =
       `Página ${paginaActual} de ${totalPaginas}`;
 
-    cabecera.appendChild(paginaInfo);
+    cabecera.appendChild(info);
   }
 
 
   resultados.appendChild(cabecera);
 
 
-  if (totalResultados === 0) {
+  if (total === 0) {
     const mensaje =
       document.createElement("p");
 
@@ -389,6 +509,7 @@ function mostrarPagina() {
   const fin =
     inicio +
     resultadosPorPagina;
+
 
   const pagina =
     resultadosActuales.slice(
@@ -432,7 +553,6 @@ function mostrarPagina() {
     anterior.disabled =
       paginaActual === 1;
 
-
     anterior.addEventListener(
       "click",
       () => {
@@ -461,7 +581,6 @@ function mostrarPagina() {
 
     siguiente.disabled =
       paginaActual === totalPaginas;
-
 
     siguiente.addEventListener(
       "click",
@@ -585,7 +704,7 @@ function crearFichaPunto(punto) {
       );
     }
 
-    if (punto.permite_pernocta === false) {
+    else {
       caracteristicas.push(
         "🚫 No permite pernocta"
       );
@@ -599,13 +718,11 @@ function crearFichaPunto(punto) {
     );
   }
 
-
   if (punto.vaciado_aguas) {
     caracteristicas.push(
       "💧 Vaciado"
     );
   }
-
 
   if (punto.electricidad) {
     caracteristicas.push(
@@ -613,13 +730,11 @@ function crearFichaPunto(punto) {
     );
   }
 
-
   if (punto.mascotas === true) {
     caracteristicas.push(
       "🐕 Admite mascotas"
     );
   }
-
 
   if (punto.sin_servicios) {
     caracteristicas.push(
@@ -721,7 +836,7 @@ function crearFichaPunto(punto) {
 
 
 // ==========================================
-// VOLVER A RESULTADOS
+// SCROLL
 // ==========================================
 
 function irAResultados() {
@@ -738,178 +853,23 @@ function irAResultados() {
   }
 }
 
+
 // ==========================================
-// CAMBIAR ÁREAS / PARKINGS DESDE EL MENÚ
-// ==========================================
-// ==========================================
-// ACTUALIZAR TEXTOS SEGÚN ÁREAS / PARKINGS
-// ==========================================
-
-function actualizarTextosTipo() {
-
-  const tipoSeleccionado =
-    document.querySelector(
-      'input[name="tipoPunto"]:checked'
-    );
-
-  const tipo =
-    tipoSeleccionado
-      ? tipoSeleccionado.value
-      : "";
-
-  const titulo =
-    document.querySelector(
-      ".bienvenida h2"
-    );
-
-  const descripcion =
-    document.querySelector(
-      ".bienvenida p:not(.estado)"
-    );
-
-  const estado =
-    document.querySelector(
-      ".bienvenida .estado"
-    );
-
-  const tituloBuscador =
-    document.querySelector(
-      ".buscador h2"
-    );
-
-
-  // ÁREAS
-
-  if (tipo === "area") {
-
-    if (titulo) {
-      titulo.textContent =
-        "🚐 Áreas";
-    }
-
-    if (descripcion) {
-      descripcion.textContent =
-        "Encuentra áreas para autocaravanas, caravanas y campers.";
-    }
-
-    if (estado) {
-      estado.textContent =
-        "Busca por nombre, localidad, provincia o comunidad autónoma y filtra por características y servicios.";
-    }
-
-    if (tituloBuscador) {
-      tituloBuscador.textContent =
-        "🔎 Buscar áreas";
-    }
-
-    return;
-  }
-
-
-  // PARKINGS
-
-  if (tipo === "parking") {
-
-    if (titulo) {
-      titulo.textContent =
-        "🅿️ Parkings";
-    }
-
-    if (descripcion) {
-      descripcion.textContent =
-        "Encuentra parkings para estacionamiento y guarda de autocaravanas y caravanas.";
-    }
-
-    if (estado) {
-      estado.textContent =
-        "Busca por nombre, localidad, provincia o comunidad autónoma y filtra por características y servicios.";
-    }
-
-    if (tituloBuscador) {
-      tituloBuscador.textContent =
-        "🔎 Buscar parkings";
-    }
-
-    return;
-  }
-
-
-  // TODOS
-
-  if (titulo) {
-    titulo.textContent =
-      "🚐 Áreas y 🅿️ Parkings";
-  }
-
-  if (descripcion) {
-    descripcion.textContent =
-      "Encuentra áreas para autocaravanas y caravanas, además de parkings para estacionamiento y guarda.";
-  }
-
-  if (estado) {
-    estado.textContent =
-      "Busca por nombre, localidad, provincia o comunidad autónoma y filtra según el tipo de vehículo y los servicios disponibles.";
-  }
-
-  if (tituloBuscador) {
-    tituloBuscador.textContent =
-      "🔎 Buscar áreas y parkings";
-  }
-}
-function cambiarTipoDesdeMenu(tipo) {
-
-  if (tipo === "area") {
-
-    const radioArea =
-      document.getElementById("tipoArea");
-
-    if (radioArea) {
-      radioArea.checked = true;
-    }
-
-  }
-
-  if (tipo === "parking") {
-
-    const radioParking =
-      document.getElementById("tipoParking");
-
-    if (radioParking) {
-      radioParking.checked = true;
-    }
-
-  }
-
-  const nuevaUrl =
-    "areas.html?tipo=" + tipo;
-
-  window.history.replaceState(
-    {},
-    "",
-    nuevaUrl
-  );
-
-  actualizarTextosTipo();
-buscarPuntos();
-}
-// ==========================================
-// INICIALIZACIÓN Y EVENTOS
+// INICIO
 // ==========================================
 
 document.addEventListener(
   "DOMContentLoaded",
   () => {
 
-    // Primero aplicamos el filtro recibido desde la portada
     aplicarTipoInicial();
-actualizarTextosTipo();
+    actualizarTextosTipo();
 
 
-    const campoBusqueda =
+    const campo =
       document.getElementById(
         "buscarArea"
       );
-
 
     const boton =
       document.getElementById(
@@ -925,8 +885,8 @@ actualizarTextosTipo();
     }
 
 
-    if (campoBusqueda) {
-      campoBusqueda.addEventListener(
+    if (campo) {
+      campo.addEventListener(
         "keydown",
         event => {
           if (event.key === "Enter") {
@@ -942,13 +902,15 @@ actualizarTextosTipo();
         'input[name="tipoPunto"]'
       )
       .forEach(radio => {
-       radio.addEventListener(
-  "change",
-  () => {
-    actualizarTextosTipo();
-    buscarPuntos();
-  }
-);
+
+        radio.addEventListener(
+          "change",
+          () => {
+            actualizarTextosTipo();
+            buscarPuntos();
+          }
+        );
+
       });
 
 
@@ -963,6 +925,7 @@ actualizarTextosTipo();
       "filtroSinServicios"
     ]
       .forEach(id => {
+
         const elemento =
           document.getElementById(id);
 
@@ -972,17 +935,20 @@ actualizarTextosTipo();
             buscarPuntos
           );
         }
+
       });
 
 
-    // Cargar datos después de haber aplicado el tipo inicial
+    // CARGAR JSON V3
 
-    fetch("areas-parkings-espana-v3.json?v=1")
+    fetch(
+      "areas-parkings-espana-v3.json?v=1"
+    )
       .then(response => {
 
         if (!response.ok) {
           throw new Error(
-            "No se pudo cargar la base de áreas y parkings"
+            "No se pudo cargar la base de datos"
           );
         }
 
@@ -1005,10 +971,7 @@ actualizarTextosTipo();
 
       .catch(error => {
 
-        console.error(
-          "Error:",
-          error
-        );
+        console.error(error);
 
         const resultados =
           document.getElementById(
