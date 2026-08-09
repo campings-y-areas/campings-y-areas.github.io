@@ -14,7 +14,7 @@ let paginaActual = 1;
 // CARGAR BASE DE DATOS
 // ==========================================
 
-fetch("campings-v2.json?v=1")
+fetch("campings-espana-v3.json?v=1")
   .then(response => {
 
     if (!response.ok) {
