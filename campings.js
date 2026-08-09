@@ -1,6 +1,6 @@
 // ==========================================
 // CAMPINGS & ÁREAS
-// Buscador + paginación de campings
+// Buscador + filtros + paginación
 // ==========================================
 
 let campings = [];
@@ -16,27 +16,20 @@ let paginaActual = 1;
 
 fetch("campings.json")
   .then(response => {
-
     if (!response.ok) {
       throw new Error("No se pudo cargar campings.json");
     }
 
     return response.json();
-
   })
-
   .then(data => {
-
     campings = data;
 
     console.log("Campings cargados:", campings.length);
 
     buscarCampings();
-
   })
-
   .catch(error => {
-
     console.error("Error:", error);
 
     const resultados =
@@ -46,7 +39,6 @@ fetch("campings.json")
       resultados.innerHTML =
         "<p>No se pudieron cargar los campings.</p>";
     }
-
   });
 
 
@@ -55,13 +47,11 @@ fetch("campings.json")
 // ==========================================
 
 function normalizarTexto(texto) {
-
   return String(texto || "")
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .trim();
-
 }
 
 
@@ -70,7 +60,6 @@ function normalizarTexto(texto) {
 // ==========================================
 
 function normalizarUrl(url) {
-
   if (!url) {
     return "";
   }
@@ -85,32 +74,18 @@ function normalizarUrl(url) {
   }
 
   return "https://" + url;
-
 }
 
 
 // ==========================================
-// CREAR ENLACE DE GOOGLE MAPS
+// CREAR ENLACE GOOGLE MAPS
 // ==========================================
 
 function crearEnlaceMapa(camping) {
 
-  // Si el KML ya contenía un enlace válido de Google Maps,
-  // utilizamos ese primero.
-
   if (camping.google_maps) {
     return normalizarUrl(camping.google_maps);
   }
-
-
-  /*
-    Si no existe, buscamos el establecimiento
-    por nombre y dirección.
-
-    Esto permite que Google intente abrir la
-    ficha real del camping y no solamente unas
-    coordenadas anónimas.
-  */
 
   let consulta = [
     camping.nombre,
@@ -119,40 +94,32 @@ function crearEnlaceMapa(camping) {
     .filter(Boolean)
     .join(", ");
 
-
-  // Si no tenemos dirección, añadimos coordenadas.
-
   if (
     !camping.direccion &&
     camping.lat !== null &&
     camping.lon !== null
   ) {
-
     consulta = [
       camping.nombre,
       `${camping.lat},${camping.lon}`
     ]
       .filter(Boolean)
       .join(", ");
-
   }
-
 
   if (!consulta) {
     return "";
   }
 
-
   return (
     "https://www.google.com/maps/search/?api=1&query=" +
     encodeURIComponent(consulta)
   );
-
 }
 
 
 // ==========================================
-// BUSCAR CAMPINGS
+// BUSCAR Y FILTRAR CAMPINGS
 // ==========================================
 
 function buscarCampings() {
@@ -163,20 +130,51 @@ function buscarCampings() {
   const campoPais =
     document.getElementById("paisCamping");
 
+  const filtroMascotas =
+    document.getElementById("filtroMascotas");
+
+  const filtroTodoAno =
+    document.getElementById("filtroTodoAno");
+
+  const filtroPiscina =
+    document.getElementById("filtroPiscina");
+
+  const filtroAcuatico =
+    document.getElementById("filtroAcuatico");
+
 
   const texto = normalizarTexto(
     campoBusqueda ? campoBusqueda.value : ""
   );
 
-
   const pais =
     campoPais ? campoPais.value : "";
 
 
+  const soloMascotas =
+    filtroMascotas
+      ? filtroMascotas.checked
+      : false;
+
+  const soloTodoAno =
+    filtroTodoAno
+      ? filtroTodoAno.checked
+      : false;
+
+  const soloPiscina =
+    filtroPiscina
+      ? filtroPiscina.checked
+      : false;
+
+  const soloAcuatico =
+    filtroAcuatico
+      ? filtroAcuatico.checked
+      : false;
+
+
   resultadosActuales = campings.filter(camping => {
 
-    // No mostrar cerrados permanentemente
-
+    // Ocultar cerrados permanentemente
     if (
       camping.estado ===
       "cerrado_permanentemente"
@@ -202,17 +200,39 @@ function buscarCampings() {
       contenido.includes(texto);
 
 
-    /*
-      De momento los datos proceden
-      principalmente de España.
-    */
-
     const coincidePais =
       pais === "" ||
       pais === "ES";
 
 
-    return coincideTexto && coincidePais;
+    const coincideMascotas =
+      !soloMascotas ||
+      camping.mascotas === true;
+
+
+    const coincideTodoAno =
+      !soloTodoAno ||
+      camping.abierto_todo_ano === true;
+
+
+    const coincidePiscina =
+      !soloPiscina ||
+      camping.piscina_climatizada === true;
+
+
+    const coincideAcuatico =
+      !soloAcuatico ||
+      camping.parque_acuatico === true;
+
+
+    return (
+      coincideTexto &&
+      coincidePais &&
+      coincideMascotas &&
+      coincideTodoAno &&
+      coincidePiscina &&
+      coincideAcuatico
+    );
 
   });
 
@@ -220,7 +240,6 @@ function buscarCampings() {
   paginaActual = 1;
 
   mostrarPagina();
-
 }
 
 
@@ -312,7 +331,6 @@ function mostrarPagina() {
     resultados.appendChild(mensaje);
 
     return;
-
   }
 
 
@@ -321,7 +339,6 @@ function mostrarPagina() {
   const inicio =
     (paginaActual - 1) *
     resultadosPorPagina;
-
 
   const fin =
     inicio +
@@ -345,11 +362,9 @@ function mostrarPagina() {
 
 
   campingsPagina.forEach(camping => {
-
     listado.appendChild(
       crearFichaCamping(camping)
     );
-
   });
 
 
@@ -371,10 +386,7 @@ function mostrarPagina() {
       document.createElement("button");
 
     anterior.type = "button";
-
-    anterior.textContent =
-      "← Anterior";
-
+    anterior.textContent = "← Anterior";
     anterior.disabled =
       paginaActual === 1;
 
@@ -382,17 +394,11 @@ function mostrarPagina() {
     anterior.addEventListener(
       "click",
       () => {
-
         if (paginaActual > 1) {
-
           paginaActual--;
-
           mostrarPagina();
-
           irAResultados();
-
         }
-
       }
     );
 
@@ -408,10 +414,7 @@ function mostrarPagina() {
       document.createElement("button");
 
     siguiente.type = "button";
-
-    siguiente.textContent =
-      "Siguiente →";
-
+    siguiente.textContent = "Siguiente →";
     siguiente.disabled =
       paginaActual === totalPaginas;
 
@@ -419,20 +422,14 @@ function mostrarPagina() {
     siguiente.addEventListener(
       "click",
       () => {
-
         if (
           paginaActual <
           totalPaginas
         ) {
-
           paginaActual++;
-
           mostrarPagina();
-
           irAResultados();
-
         }
-
       }
     );
 
@@ -442,9 +439,7 @@ function mostrarPagina() {
     paginacion.appendChild(siguiente);
 
     resultados.appendChild(paginacion);
-
   }
-
 }
 
 
@@ -461,8 +456,6 @@ function crearFichaCamping(camping) {
     "resultado-camping";
 
 
-  // NOMBRE
-
   const titulo =
     document.createElement("h3");
 
@@ -471,8 +464,6 @@ function crearFichaCamping(camping) {
 
   ficha.appendChild(titulo);
 
-
-  // DIRECCIÓN
 
   if (camping.direccion) {
 
@@ -486,48 +477,37 @@ function crearFichaCamping(camping) {
       "📍 " + camping.direccion;
 
     ficha.appendChild(direccion);
-
   }
 
-
-  // CARACTERÍSTICAS
 
   const caracteristicas = [];
 
 
   if (camping.abierto_todo_ano) {
-
     caracteristicas.push(
       "📅 Abierto todo el año"
     );
-
   }
 
 
   if (camping.piscina_climatizada) {
-
     caracteristicas.push(
       "🏊 Piscina climatizada/cubierta"
     );
-
   }
 
 
   if (camping.parque_acuatico) {
-
     caracteristicas.push(
       "🌊 Parque acuático/toboganes"
     );
-
   }
 
 
   if (camping.mascotas === true) {
-
     caracteristicas.push(
       "🐕 Admite mascotas"
     );
-
   }
 
 
@@ -543,11 +523,8 @@ function crearFichaCamping(camping) {
       caracteristicas.join(" · ");
 
     ficha.appendChild(servicios);
-
   }
 
-
-  // BOTONES
 
   const enlaces =
     document.createElement("div");
@@ -555,8 +532,6 @@ function crearFichaCamping(camping) {
   enlaces.className =
     "enlaces-camping";
 
-
-  // WEB
 
   if (camping.web) {
 
@@ -576,11 +551,8 @@ function crearFichaCamping(camping) {
       "🌐 Web";
 
     enlaces.appendChild(web);
-
   }
 
-
-  // TELÉFONO
 
   if (camping.telefono) {
 
@@ -598,11 +570,8 @@ function crearFichaCamping(camping) {
       "☎️ " + camping.telefono;
 
     enlaces.appendChild(telefono);
-
   }
 
-
-  // GOOGLE MAPS
 
   const enlaceMapa =
     crearEnlaceMapa(camping);
@@ -626,24 +595,20 @@ function crearFichaCamping(camping) {
       "🗺️ Ver en el mapa";
 
     enlaces.appendChild(mapa);
-
   }
 
 
   if (enlaces.children.length > 0) {
-
     ficha.appendChild(enlaces);
-
   }
 
 
   return ficha;
-
 }
 
 
 // ==========================================
-// VOLVER A LOS RESULTADOS
+// VOLVER A RESULTADOS
 // ==========================================
 
 function irAResultados() {
@@ -655,14 +620,11 @@ function irAResultados() {
 
 
   if (resultados) {
-
     resultados.scrollIntoView({
       behavior: "smooth",
       block: "start"
     });
-
   }
-
 }
 
 
@@ -679,55 +641,80 @@ document.addEventListener(
         "buscarCamping"
       );
 
-
     const campoPais =
       document.getElementById(
         "paisCamping"
       );
-
 
     const boton =
       document.getElementById(
         "botonBuscarCamping"
       );
 
+    const filtroMascotas =
+      document.getElementById(
+        "filtroMascotas"
+      );
+
+    const filtroTodoAno =
+      document.getElementById(
+        "filtroTodoAno"
+      );
+
+    const filtroPiscina =
+      document.getElementById(
+        "filtroPiscina"
+      );
+
+    const filtroAcuatico =
+      document.getElementById(
+        "filtroAcuatico"
+      );
+
 
     if (boton) {
-
       boton.addEventListener(
         "click",
         buscarCampings
       );
-
     }
 
 
     if (campoBusqueda) {
-
       campoBusqueda.addEventListener(
         "keydown",
         event => {
-
           if (event.key === "Enter") {
-
             buscarCampings();
-
           }
-
         }
       );
-
     }
 
 
     if (campoPais) {
-
       campoPais.addEventListener(
         "change",
         buscarCampings
       );
-
     }
+
+
+    [
+      filtroMascotas,
+      filtroTodoAno,
+      filtroPiscina,
+      filtroAcuatico
+    ].forEach(filtro => {
+
+      if (filtro) {
+        filtro.addEventListener(
+          "change",
+          buscarCampings
+        );
+      }
+
+    });
 
   }
 );
