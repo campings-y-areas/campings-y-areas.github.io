@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Áreas y Parkings | Campings & Áreas</title>
+
   <link rel="stylesheet" href="style.css?v=2">
 </head>
 
@@ -16,19 +19,43 @@
     </h1>
   </header>
 
+
   <nav class="menu">
-    <a href="index.html">🏠 Inicio</a>
-    <a href="campings.html">🏕️ Campings</a>
-    <a href="areas.html?tipo=area">🚐 Áreas</a>
-<a href="areas.html?tipo=parking">🅿️ Parkings</a>
-    <a href="#">📍 Lugares</a>
-    <a href="#">🔧 Servicios</a>
+
+    <a href="index.html">
+      🏠 Inicio
+    </a>
+
+    <a href="campings.html">
+      🏕️ Campings
+    </a>
+
+    <a href="areas.html?tipo=area">
+      🚐 Áreas
+    </a>
+
+    <a href="areas.html?tipo=parking">
+      🅿️ Parkings
+    </a>
+
+    <a href="#">
+      📍 Lugares
+    </a>
+
+    <a href="#">
+      🔧 Servicios
+    </a>
+
   </nav>
+
 
   <main>
 
     <section class="bienvenida">
-      <h2>🚐 Áreas y 🅿️ Parkings</h2>
+
+      <h2>
+        🚐 Áreas y 🅿️ Parkings
+      </h2>
 
       <p>
         Encuentra áreas para autocaravanas y caravanas,
@@ -39,10 +66,16 @@
         Busca por nombre, localidad, provincia o comunidad autónoma
         y filtra según el tipo de vehículo y los servicios disponibles.
       </p>
+
     </section>
 
+
     <section class="buscador">
-      <h2>🔎 Buscar áreas y parkings</h2>
+
+      <h2>
+        🔎 Buscar áreas y parkings
+      </h2>
+
 
       <div class="buscador-campos">
 
@@ -57,80 +90,127 @@
           <option value="ES">🇪🇸 España</option>
         </select>
 
-        <button type="button" id="botonBuscarArea">
+        <button
+          type="button"
+          id="botonBuscarArea"
+        >
           Buscar
         </button>
 
       </div>
 
+
       <div class="filtros-camping">
 
         <label>
-          <input type="radio" name="tipoPunto" id="tipoTodos" value="" checked>
+          <input
+            type="radio"
+            name="tipoPunto"
+            id="tipoTodos"
+            value=""
+            checked
+          >
           Todos
         </label>
 
         <label>
-          <input type="radio" name="tipoPunto" id="tipoArea" value="area">
+          <input
+            type="radio"
+            name="tipoPunto"
+            id="tipoArea"
+            value="area"
+          >
           🚐 Áreas
         </label>
 
         <label>
-          <input type="radio" name="tipoPunto" id="tipoParking" value="parking">
+          <input
+            type="radio"
+            name="tipoPunto"
+            id="tipoParking"
+            value="parking"
+          >
           🅿️ Parkings
         </label>
 
       </div>
 
+
       <div class="filtros-camping">
 
         <label>
-          <input type="checkbox" id="filtroAdmiteCaravanas">
+          <input
+            type="checkbox"
+            id="filtroAdmiteCaravanas"
+          >
           🔴 Admite caravanas
         </label>
 
         <label>
-          <input type="checkbox" id="filtroNoAdmiteCaravanas">
+          <input
+            type="checkbox"
+            id="filtroNoAdmiteCaravanas"
+          >
           🔵 No admite caravanas
         </label>
 
         <label>
-          <input type="checkbox" id="filtroPernocta">
+          <input
+            type="checkbox"
+            id="filtroPernocta"
+          >
           🌙 Permite pernocta
         </label>
 
       </div>
 
+
       <div class="filtros-camping">
 
         <label>
-          <input type="checkbox" id="filtroAgua">
+          <input
+            type="checkbox"
+            id="filtroAgua"
+          >
           🚰 Agua
         </label>
 
         <label>
-          <input type="checkbox" id="filtroVaciado">
+          <input
+            type="checkbox"
+            id="filtroVaciado"
+          >
           💧 Vaciado de aguas
         </label>
 
         <label>
-          <input type="checkbox" id="filtroElectricidad">
+          <input
+            type="checkbox"
+            id="filtroElectricidad"
+          >
           ⚡ Electricidad
         </label>
 
         <label>
-          <input type="checkbox" id="filtroMascotasArea">
+          <input
+            type="checkbox"
+            id="filtroMascotasArea"
+          >
           🐕 Admite mascotas
         </label>
 
         <label>
-          <input type="checkbox" id="filtroSinServicios">
+          <input
+            type="checkbox"
+            id="filtroSinServicios"
+          >
           🚫 Sin servicios
         </label>
 
       </div>
 
     </section>
+
 
     <section
       id="resultadosAreas"
@@ -139,7 +219,9 @@
 
   </main>
 
+
   <script src="areas.js?v=4"></script>
 
 </body>
+
 </html>
