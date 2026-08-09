@@ -248,3 +248,58 @@ footer {
         padding: 0 12px;
     }
 }
+/* ================================
+   BUSCADOR DE CAMPINGS
+   ================================ */
+
+.buscador {
+    max-width: 900px;
+    margin: 25px auto 50px;
+    padding: 30px;
+    text-align: center;
+}
+
+.buscador h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.buscador-campos {
+    display: grid;
+    grid-template-columns: 2fr 1.3fr auto;
+    gap: 12px;
+    align-items: center;
+}
+
+.buscador-campos input,
+.buscador-campos select {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #cfd8dc;
+    border-radius: 10px;
+    font-size: 1rem;
+    background: white;
+}
+
+.buscador-campos input:focus,
+.buscador-campos select:focus {
+    outline: 2px solid #159bd7;
+    border-color: transparent;
+}
+
+.buscador-campos button {
+    border-radius: 10px;
+    padding: 13px 22px;
+    font-weight: bold;
+}
+
+/* Buscador adaptado a móvil */
+@media (max-width: 700px) {
+    .buscador-campos {
+        grid-template-columns: 1fr;
+    }
+
+    .buscador {
+        padding: 20px;
+    }
+}
