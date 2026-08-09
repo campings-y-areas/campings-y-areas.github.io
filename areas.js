@@ -82,6 +82,43 @@ function aplicarTipoInicial() {
 // ==========================================
 
 function crearEnlaceMapa(punto) {
+
+  if (punto.google_maps) {
+    return normalizarUrl(punto.google_maps);
+  }
+
+  if (
+    punto.lat !== null &&
+    punto.lat !== undefined &&
+    punto.lon !== null &&
+    punto.lon !== undefined
+  ) {
+    return (
+      "https://www.google.com/maps/search/?api=1&query=" +
+      encodeURIComponent(
+        `${punto.lat},${punto.lon}`
+      )
+    );
+  }
+
+  let consulta = [
+    punto.nombre,
+    punto.localidad,
+    punto.provincia,
+    punto.direccion
+  ]
+    .filter(Boolean)
+    .join(", ");
+
+  if (!consulta) {
+    return "";
+  }
+
+  return (
+    "https://www.google.com/maps/search/?api=1&query=" +
+    encodeURIComponent(consulta)
+  );
+}
   if (punto.google_maps) {
     return normalizarUrl(punto.google_maps);
   }
@@ -940,7 +977,7 @@ actualizarTextosTipo();
 
     // Cargar datos después de haber aplicado el tipo inicial
 
-    fetch("areas-parkings-espana-v2.json?v=3")
+    fetch("areas-parkings-espana-v3.json?v=1")
       .then(response => {
 
         if (!response.ok) {
