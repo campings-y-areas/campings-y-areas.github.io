@@ -173,3 +173,78 @@ footer {
     color: #667;
     margin-bottom: 0;
 }
+/* ================================
+   TARJETAS DE CATEGORÍAS
+   ================================ */
+
+.categorias {
+    max-width: 1100px;
+    margin: 25px auto 50px;
+    padding: 0 20px;
+    background: transparent;
+    box-shadow: none;
+}
+
+.categorias h2 {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+}
+
+.tarjetas {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 18px;
+}
+
+.tarjeta {
+    background: white;
+    border-radius: 14px;
+    padding: 25px 18px;
+    text-align: center;
+    text-decoration: none;
+    color: #1f2933;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tarjeta:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.14);
+}
+
+.tarjeta .icono {
+    display: block;
+    font-size: 2.4rem;
+    margin-bottom: 12px;
+}
+
+.tarjeta h3 {
+    margin: 0 0 10px;
+    color: #126fa0;
+    font-size: 1.25rem;
+}
+
+.tarjeta p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.45;
+    color: #556;
+}
+
+/* Adaptación de tarjetas */
+@media (max-width: 900px) {
+    .tarjetas {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 520px) {
+    .tarjetas {
+        grid-template-columns: 1fr;
+    }
+
+    .categorias {
+        padding: 0 12px;
+    }
+}
