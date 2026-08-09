@@ -303,3 +303,138 @@ footer {
         padding: 20px;
     }
 }
+/* ================================
+   RESULTADOS DE CAMPINGS
+   ================================ */
+
+.resultados-campings {
+    max-width: 1100px;
+    margin: 25px auto 60px;
+    padding: 0 20px;
+}
+
+.cabecera-resultados {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.contador-resultados,
+.pagina-info {
+    margin: 0;
+    font-weight: bold;
+    color: #126fa0;
+}
+
+.lista-campings {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+.resultado-camping {
+    background: white;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.resultado-camping h3 {
+    margin: 0 0 12px;
+    color: #126fa0;
+    font-size: 1.25rem;
+}
+
+.resultado-camping .direccion {
+    margin: 0 0 12px;
+    color: #445;
+}
+
+.resultado-camping .caracteristicas {
+    margin: 0 0 16px;
+    color: #334;
+    line-height: 1.5;
+}
+
+.enlaces-camping {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+}
+
+.enlaces-camping a {
+    display: inline-block;
+    text-decoration: none;
+    background: #159bd7;
+    color: white;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.enlaces-camping a:hover {
+    background: #117daf;
+}
+
+.paginacion {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.paginacion button {
+    border: none;
+    background: #159bd7;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.paginacion button:hover:not(:disabled) {
+    background: #117daf;
+}
+
+.paginacion button:disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+.paginacion span {
+    font-weight: bold;
+    color: #126fa0;
+}
+
+.sin-resultados {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+
+/* Adaptación a móvil */
+
+@media (max-width: 800px) {
+    .lista-campings {
+        grid-template-columns: 1fr;
+    }
+
+    .resultados-campings {
+        padding: 0 12px;
+    }
+
+    .resultado-camping {
+        padding: 18px;
+    }
+}
