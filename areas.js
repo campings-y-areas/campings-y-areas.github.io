@@ -11,58 +11,16 @@ let paginaActual = 1;
 
 
 // ==========================================
-// CARGAR BASE DE DATOS
-// ==========================================
-
-fetch("areas-parkings-espana-v2.json?v=2")
-  .then(response => {
-
-    if (!response.ok) {
-      throw new Error("No se pudo cargar la base de áreas y parkings");
-    }
-
-    return response.json();
-
-  })
-
-  .then(data => {
-
-    puntos = data;
-
-    console.log("Puntos cargados:", puntos.length);
-
-    buscarPuntos();
-
-  })
-
-  .catch(error => {
-
-    console.error("Error:", error);
-
-    const resultados =
-      document.getElementById("resultadosAreas");
-
-    if (resultados) {
-      resultados.innerHTML =
-        "<p>No se pudieron cargar las áreas y parkings.</p>";
-    }
-
-  });
-
-
-// ==========================================
 // NORMALIZAR TEXTO
 // ==========================================
 
 function normalizarTexto(texto) {
-
   return String(texto || "")
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .replace(/\s+/g, " ")
     .trim();
-
 }
 
 
@@ -71,7 +29,6 @@ function normalizarTexto(texto) {
 // ==========================================
 
 function normalizarUrl(url) {
-
   if (!url) {
     return "";
   }
@@ -86,16 +43,45 @@ function normalizarUrl(url) {
   }
 
   return "https://" + url;
-
 }
 
 
 // ==========================================
-// ENLACE GOOGLE MAPS
+// LEER TIPO DESDE LA URL
+// ==========================================
+
+function aplicarTipoInicial() {
+  const parametros =
+    new URLSearchParams(window.location.search);
+
+  const tipoInicial =
+    parametros.get("tipo");
+
+  if (tipoInicial === "area") {
+    const radioArea =
+      document.getElementById("tipoArea");
+
+    if (radioArea) {
+      radioArea.checked = true;
+    }
+  }
+
+  if (tipoInicial === "parking") {
+    const radioParking =
+      document.getElementById("tipoParking");
+
+    if (radioParking) {
+      radioParking.checked = true;
+    }
+  }
+}
+
+
+// ==========================================
+// CREAR ENLACE GOOGLE MAPS
 // ==========================================
 
 function crearEnlaceMapa(punto) {
-
   if (punto.google_maps) {
     return normalizarUrl(punto.google_maps);
   }
@@ -114,10 +100,8 @@ function crearEnlaceMapa(punto) {
     punto.lat !== null &&
     punto.lon !== null
   ) {
-
     consulta =
       `${punto.lat},${punto.lon}`;
-
   }
 
   if (!consulta) {
@@ -128,7 +112,6 @@ function crearEnlaceMapa(punto) {
     "https://www.google.com/maps/search/?api=1&query=" +
     encodeURIComponent(consulta)
   );
-
 }
 
 
@@ -137,7 +120,6 @@ function crearEnlaceMapa(punto) {
 // ==========================================
 
 function buscarPuntos() {
-
   const campoBusqueda =
     document.getElementById("buscarArea");
 
@@ -148,18 +130,15 @@ function buscarPuntos() {
         : ""
     );
 
-
   const tipoSeleccionado =
     document.querySelector(
       'input[name="tipoPunto"]:checked'
     );
 
-
   const tipo =
     tipoSeleccionado
       ? tipoSeleccionado.value
       : "";
-
 
   const soloAdmite =
     document.getElementById("filtroAdmiteCaravanas")?.checked || false;
@@ -188,11 +167,6 @@ function buscarPuntos() {
 
   resultadosActuales =
     puntos.filter(punto => {
-
-
-      // ----------------------------------
-      // BUSCADOR PRINCIPAL
-      // ----------------------------------
 
       const nombre =
         normalizarTexto(punto.nombre);
@@ -227,18 +201,10 @@ function buscarPuntos() {
         descripcion.includes(texto);
 
 
-      // ----------------------------------
-      // TIPO
-      // ----------------------------------
-
       const coincideTipo =
         tipo === "" ||
         punto.tipo === tipo;
 
-
-      // ----------------------------------
-      // CARAVANAS
-      // ----------------------------------
 
       const coincideAdmite =
         !soloAdmite ||
@@ -250,18 +216,10 @@ function buscarPuntos() {
         punto.admite_caravanas === false;
 
 
-      // ----------------------------------
-      // PERNOCTA
-      // ----------------------------------
-
       const coincidePernocta =
         !soloPernocta ||
         punto.permite_pernocta === true;
 
-
-      // ----------------------------------
-      // SERVICIOS
-      // ----------------------------------
 
       const coincideAgua =
         !soloAgua ||
@@ -300,14 +258,12 @@ function buscarPuntos() {
         coincideMascotas &&
         coincideSinServicios
       );
-
     });
 
 
   paginaActual = 1;
 
   mostrarPagina();
-
 }
 
 
@@ -316,7 +272,6 @@ function buscarPuntos() {
 // ==========================================
 
 function mostrarPagina() {
-
   const resultados =
     document.getElementById("resultadosAreas");
 
@@ -324,13 +279,10 @@ function mostrarPagina() {
     return;
   }
 
-
   resultados.innerHTML = "";
-
 
   const totalResultados =
     resultadosActuales.length;
-
 
   const totalPaginas =
     Math.ceil(
@@ -352,18 +304,15 @@ function mostrarPagina() {
   contador.className =
     "contador-resultados";
 
-
   contador.textContent =
     totalResultados === 1
       ? "1 resultado encontrado"
       : `${totalResultados} resultados encontrados`;
 
-
   cabecera.appendChild(contador);
 
 
   if (totalPaginas > 1) {
-
     const paginaInfo =
       document.createElement("p");
 
@@ -374,7 +323,6 @@ function mostrarPagina() {
       `Página ${paginaActual} de ${totalPaginas}`;
 
     cabecera.appendChild(paginaInfo);
-
   }
 
 
@@ -382,7 +330,6 @@ function mostrarPagina() {
 
 
   if (totalResultados === 0) {
-
     const mensaje =
       document.createElement("p");
 
@@ -395,7 +342,6 @@ function mostrarPagina() {
     resultados.appendChild(mensaje);
 
     return;
-
   }
 
 
@@ -403,11 +349,9 @@ function mostrarPagina() {
     (paginaActual - 1) *
     resultadosPorPagina;
 
-
   const fin =
     inicio +
     resultadosPorPagina;
-
 
   const pagina =
     resultadosActuales.slice(
@@ -424,11 +368,9 @@ function mostrarPagina() {
 
 
   pagina.forEach(punto => {
-
     listado.appendChild(
       crearFichaPunto(punto)
     );
-
   });
 
 
@@ -436,7 +378,6 @@ function mostrarPagina() {
 
 
   if (totalPaginas > 1) {
-
     const paginacion =
       document.createElement("div");
 
@@ -458,17 +399,11 @@ function mostrarPagina() {
     anterior.addEventListener(
       "click",
       () => {
-
         if (paginaActual > 1) {
-
           paginaActual--;
-
           mostrarPagina();
-
           irAResultados();
-
         }
-
       }
     );
 
@@ -494,20 +429,14 @@ function mostrarPagina() {
     siguiente.addEventListener(
       "click",
       () => {
-
         if (
           paginaActual <
           totalPaginas
         ) {
-
           paginaActual++;
-
           mostrarPagina();
-
           irAResultados();
-
         }
-
       }
     );
 
@@ -517,9 +446,7 @@ function mostrarPagina() {
     paginacion.appendChild(siguiente);
 
     resultados.appendChild(paginacion);
-
   }
-
 }
 
 
@@ -528,7 +455,6 @@ function mostrarPagina() {
 // ==========================================
 
 function crearFichaPunto(punto) {
-
   const ficha =
     document.createElement("article");
 
@@ -551,12 +477,10 @@ function crearFichaPunto(punto) {
   tipo.className =
     "tipo-punto";
 
-
   tipo.textContent =
     punto.tipo === "parking"
       ? "🅿️ Parking"
       : "🚐 Área";
-
 
   ficha.appendChild(tipo);
 
@@ -570,7 +494,6 @@ function crearFichaPunto(punto) {
 
 
   if (ubicacion.length > 0) {
-
     const zona =
       document.createElement("p");
 
@@ -583,12 +506,10 @@ function crearFichaPunto(punto) {
         .join(" · ");
 
     ficha.appendChild(zona);
-
   }
 
 
   if (punto.direccion) {
-
     const direccion =
       document.createElement("p");
 
@@ -599,7 +520,6 @@ function crearFichaPunto(punto) {
       "📍 " + punto.direccion;
 
     ficha.appendChild(direccion);
-
   }
 
 
@@ -607,7 +527,6 @@ function crearFichaPunto(punto) {
 
 
   if (punto.tipo === "area") {
-
     if (punto.admite_caravanas === true) {
       caracteristicas.push(
         "🔴 Admite caravanas"
@@ -619,12 +538,10 @@ function crearFichaPunto(punto) {
         "🔵 No admite caravanas"
       );
     }
-
   }
 
 
   if (punto.tipo === "parking") {
-
     if (punto.permite_pernocta === true) {
       caracteristicas.push(
         "🌙 Permite pernocta"
@@ -636,37 +553,45 @@ function crearFichaPunto(punto) {
         "🚫 No permite pernocta"
       );
     }
-
   }
 
 
   if (punto.agua) {
-    caracteristicas.push("🚰 Agua");
+    caracteristicas.push(
+      "🚰 Agua"
+    );
   }
 
 
   if (punto.vaciado_aguas) {
-    caracteristicas.push("💧 Vaciado");
+    caracteristicas.push(
+      "💧 Vaciado"
+    );
   }
 
 
   if (punto.electricidad) {
-    caracteristicas.push("⚡ Electricidad");
+    caracteristicas.push(
+      "⚡ Electricidad"
+    );
   }
 
 
   if (punto.mascotas === true) {
-    caracteristicas.push("🐕 Admite mascotas");
+    caracteristicas.push(
+      "🐕 Admite mascotas"
+    );
   }
 
 
   if (punto.sin_servicios) {
-    caracteristicas.push("🚫 Sin servicios");
+    caracteristicas.push(
+      "🚫 Sin servicios"
+    );
   }
 
 
   if (caracteristicas.length > 0) {
-
     const servicios =
       document.createElement("p");
 
@@ -677,7 +602,6 @@ function crearFichaPunto(punto) {
       caracteristicas.join(" · ");
 
     ficha.appendChild(servicios);
-
   }
 
 
@@ -689,7 +613,6 @@ function crearFichaPunto(punto) {
 
 
   if (punto.web) {
-
     const web =
       document.createElement("a");
 
@@ -706,12 +629,10 @@ function crearFichaPunto(punto) {
       "🌐 Web";
 
     enlaces.appendChild(web);
-
   }
 
 
   if (punto.telefono) {
-
     const telefono =
       document.createElement("a");
 
@@ -726,7 +647,6 @@ function crearFichaPunto(punto) {
       "☎️ " + punto.telefono;
 
     enlaces.appendChild(telefono);
-
   }
 
 
@@ -735,7 +655,6 @@ function crearFichaPunto(punto) {
 
 
   if (enlaceMapa) {
-
     const mapa =
       document.createElement("a");
 
@@ -752,7 +671,6 @@ function crearFichaPunto(punto) {
       "🗺️ Ver en el mapa";
 
     enlaces.appendChild(mapa);
-
   }
 
 
@@ -762,7 +680,6 @@ function crearFichaPunto(punto) {
 
 
   return ficha;
-
 }
 
 
@@ -771,70 +688,61 @@ function crearFichaPunto(punto) {
 // ==========================================
 
 function irAResultados() {
-
   const resultados =
     document.getElementById(
       "resultadosAreas"
     );
 
-
   if (resultados) {
-
     resultados.scrollIntoView({
       behavior: "smooth",
       block: "start"
     });
-
   }
-
 }
 
 
 // ==========================================
-// EVENTOS
+// INICIALIZACIÓN Y EVENTOS
 // ==========================================
 
 document.addEventListener(
   "DOMContentLoaded",
   () => {
-document.addEventListener(
-  "DOMContentLoaded",
-  () => {
 
-    // AQUÍ PEGAS EL BLOQUE NUEVO
+    // Primero aplicamos el filtro recibido desde la portada
+    aplicarTipoInicial();
+
 
     const campoBusqueda =
-      document.getElementById("buscarArea");
-    const campoBusqueda =
-      document.getElementById("buscarArea");
+      document.getElementById(
+        "buscarArea"
+      );
+
 
     const boton =
-      document.getElementById("botonBuscarArea");
+      document.getElementById(
+        "botonBuscarArea"
+      );
 
 
     if (boton) {
-
       boton.addEventListener(
         "click",
         buscarPuntos
       );
-
     }
 
 
     if (campoBusqueda) {
-
       campoBusqueda.addEventListener(
         "keydown",
         event => {
-
           if (event.key === "Enter") {
             buscarPuntos();
           }
-
         }
       );
-
     }
 
 
@@ -843,12 +751,10 @@ document.addEventListener(
         'input[name="tipoPunto"]'
       )
       .forEach(radio => {
-
         radio.addEventListener(
           "change",
           buscarPuntos
         );
-
       });
 
 
@@ -863,17 +769,61 @@ document.addEventListener(
       "filtroSinServicios"
     ]
       .forEach(id => {
-
         const elemento =
           document.getElementById(id);
 
         if (elemento) {
-
           elemento.addEventListener(
             "change",
             buscarPuntos
           );
+        }
+      });
 
+
+    // Cargar datos después de haber aplicado el tipo inicial
+
+    fetch("areas-parkings-espana-v2.json?v=3")
+      .then(response => {
+
+        if (!response.ok) {
+          throw new Error(
+            "No se pudo cargar la base de áreas y parkings"
+          );
+        }
+
+        return response.json();
+
+      })
+
+      .then(data => {
+
+        puntos = data;
+
+        console.log(
+          "Puntos cargados:",
+          puntos.length
+        );
+
+        buscarPuntos();
+
+      })
+
+      .catch(error => {
+
+        console.error(
+          "Error:",
+          error
+        );
+
+        const resultados =
+          document.getElementById(
+            "resultadosAreas"
+          );
+
+        if (resultados) {
+          resultados.innerHTML =
+            "<p>No se pudieron cargar las áreas y parkings.</p>";
         }
 
       });
