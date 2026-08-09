@@ -14,7 +14,7 @@ let paginaActual = 1;
 // CARGAR BASE DE DATOS
 // ==========================================
 
-fetch("areas-parkings-espana-v2.json?v=1")
+fetch("areas-parkings-espana-v2.json?v=2")
   .then(response => {
 
     if (!response.ok) {
@@ -60,6 +60,7 @@ function normalizarTexto(texto) {
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
+    .replace(/\s+/g, " ")
     .trim();
 
 }
@@ -160,117 +161,84 @@ function buscarPuntos() {
       : "";
 
 
-  const filtroAdmiteCaravanas =
-    document.getElementById(
-      "filtroAdmiteCaravanas"
-    );
-
-  const filtroNoAdmiteCaravanas =
-    document.getElementById(
-      "filtroNoAdmiteCaravanas"
-    );
-
-  const filtroPernocta =
-    document.getElementById(
-      "filtroPernocta"
-    );
-
-  const filtroAgua =
-    document.getElementById(
-      "filtroAgua"
-    );
-
-  const filtroVaciado =
-    document.getElementById(
-      "filtroVaciado"
-    );
-
-  const filtroElectricidad =
-    document.getElementById(
-      "filtroElectricidad"
-    );
-
-  const filtroMascotas =
-    document.getElementById(
-      "filtroMascotasArea"
-    );
-
-  const filtroSinServicios =
-    document.getElementById(
-      "filtroSinServicios"
-    );
-
-
   const soloAdmite =
-    filtroAdmiteCaravanas
-      ? filtroAdmiteCaravanas.checked
-      : false;
+    document.getElementById("filtroAdmiteCaravanas")?.checked || false;
 
   const soloNoAdmite =
-    filtroNoAdmiteCaravanas
-      ? filtroNoAdmiteCaravanas.checked
-      : false;
+    document.getElementById("filtroNoAdmiteCaravanas")?.checked || false;
 
   const soloPernocta =
-    filtroPernocta
-      ? filtroPernocta.checked
-      : false;
+    document.getElementById("filtroPernocta")?.checked || false;
 
   const soloAgua =
-    filtroAgua
-      ? filtroAgua.checked
-      : false;
+    document.getElementById("filtroAgua")?.checked || false;
 
   const soloVaciado =
-    filtroVaciado
-      ? filtroVaciado.checked
-      : false;
+    document.getElementById("filtroVaciado")?.checked || false;
 
   const soloElectricidad =
-    filtroElectricidad
-      ? filtroElectricidad.checked
-      : false;
+    document.getElementById("filtroElectricidad")?.checked || false;
 
   const soloMascotas =
-    filtroMascotas
-      ? filtroMascotas.checked
-      : false;
+    document.getElementById("filtroMascotasArea")?.checked || false;
 
   const soloSinServicios =
-    filtroSinServicios
-      ? filtroSinServicios.checked
-      : false;
+    document.getElementById("filtroSinServicios")?.checked || false;
 
 
   resultadosActuales =
     puntos.filter(punto => {
 
 
-      const contenido =
-        normalizarTexto(
-          [
-            punto.nombre,
-            punto.localidad,
-            punto.provincia,
-            punto.comunidad_autonoma,
-            punto.pais,
-            punto.direccion,
-            punto.descripcion_original
-          ]
-            .filter(Boolean)
-            .join(" ")
-        );
+      // ----------------------------------
+      // BUSCADOR PRINCIPAL
+      // ----------------------------------
+
+      const nombre =
+        normalizarTexto(punto.nombre);
+
+      const localidad =
+        normalizarTexto(punto.localidad);
+
+      const provincia =
+        normalizarTexto(punto.provincia);
+
+      const comunidad =
+        normalizarTexto(punto.comunidad_autonoma);
+
+      const pais =
+        normalizarTexto(punto.pais);
+
+      const direccion =
+        normalizarTexto(punto.direccion);
+
+      const descripcion =
+        normalizarTexto(punto.descripcion_original);
 
 
       const coincideTexto =
         texto === "" ||
-        contenido.includes(texto);
+        nombre.includes(texto) ||
+        localidad.includes(texto) ||
+        provincia.includes(texto) ||
+        comunidad.includes(texto) ||
+        pais.includes(texto) ||
+        direccion.includes(texto) ||
+        descripcion.includes(texto);
 
+
+      // ----------------------------------
+      // TIPO
+      // ----------------------------------
 
       const coincideTipo =
         tipo === "" ||
         punto.tipo === tipo;
 
+
+      // ----------------------------------
+      // CARAVANAS
+      // ----------------------------------
 
       const coincideAdmite =
         !soloAdmite ||
@@ -282,10 +250,18 @@ function buscarPuntos() {
         punto.admite_caravanas === false;
 
 
+      // ----------------------------------
+      // PERNOCTA
+      // ----------------------------------
+
       const coincidePernocta =
         !soloPernocta ||
         punto.permite_pernocta === true;
 
+
+      // ----------------------------------
+      // SERVICIOS
+      // ----------------------------------
 
       const coincideAgua =
         !soloAgua ||
@@ -342,10 +318,7 @@ function buscarPuntos() {
 function mostrarPagina() {
 
   const resultados =
-    document.getElementById(
-      "resultadosAreas"
-    );
-
+    document.getElementById("resultadosAreas");
 
   if (!resultados) {
     return;
@@ -572,8 +545,6 @@ function crearFichaPunto(punto) {
   ficha.appendChild(titulo);
 
 
-  // TIPO
-
   const tipo =
     document.createElement("p");
 
@@ -589,8 +560,6 @@ function crearFichaPunto(punto) {
 
   ficha.appendChild(tipo);
 
-
-  // UBICACIÓN
 
   const ubicacion = [
     punto.localidad,
@@ -634,8 +603,6 @@ function crearFichaPunto(punto) {
   }
 
 
-  // CARACTERÍSTICAS
-
   const caracteristicas = [];
 
 
@@ -674,37 +641,27 @@ function crearFichaPunto(punto) {
 
 
   if (punto.agua) {
-    caracteristicas.push(
-      "🚰 Agua"
-    );
+    caracteristicas.push("🚰 Agua");
   }
 
 
   if (punto.vaciado_aguas) {
-    caracteristicas.push(
-      "💧 Vaciado"
-    );
+    caracteristicas.push("💧 Vaciado");
   }
 
 
   if (punto.electricidad) {
-    caracteristicas.push(
-      "⚡ Electricidad"
-    );
+    caracteristicas.push("⚡ Electricidad");
   }
 
 
   if (punto.mascotas === true) {
-    caracteristicas.push(
-      "🐕 Admite mascotas"
-    );
+    caracteristicas.push("🐕 Admite mascotas");
   }
 
 
   if (punto.sin_servicios) {
-    caracteristicas.push(
-      "🚫 Sin servicios"
-    );
+    caracteristicas.push("🚫 Sin servicios");
   }
 
 
@@ -723,8 +680,6 @@ function crearFichaPunto(punto) {
 
   }
 
-
-  // ENLACES
 
   const enlaces =
     document.createElement("div");
@@ -844,15 +799,10 @@ document.addEventListener(
   () => {
 
     const campoBusqueda =
-      document.getElementById(
-        "buscarArea"
-      );
-
+      document.getElementById("buscarArea");
 
     const boton =
-      document.getElementById(
-        "botonBuscarArea"
-      );
+      document.getElementById("botonBuscarArea");
 
 
     if (boton) {
