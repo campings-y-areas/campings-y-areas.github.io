@@ -701,7 +701,45 @@ function irAResultados() {
   }
 }
 
+// ==========================================
+// CAMBIAR ÁREAS / PARKINGS DESDE EL MENÚ
+// ==========================================
 
+function cambiarTipoDesdeMenu(tipo) {
+
+  if (tipo === "area") {
+
+    const radioArea =
+      document.getElementById("tipoArea");
+
+    if (radioArea) {
+      radioArea.checked = true;
+    }
+
+  }
+
+  if (tipo === "parking") {
+
+    const radioParking =
+      document.getElementById("tipoParking");
+
+    if (radioParking) {
+      radioParking.checked = true;
+    }
+
+  }
+
+  const nuevaUrl =
+    "areas.html?tipo=" + tipo;
+
+  window.history.replaceState(
+    {},
+    "",
+    nuevaUrl
+  );
+
+  buscarPuntos();
+}
 // ==========================================
 // INICIALIZACIÓN Y EVENTOS
 // ==========================================
