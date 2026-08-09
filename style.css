@@ -26,6 +26,13 @@ header {
     padding: 45px 20px;
 }
 
+.logo {
+  width: 85px;
+  height: 85px;
+  object-fit: contain;
+  vertical-align: middle;
+  margin-right: 15px;
+}
 header h1 {
     margin: 0;
     font-size: 2.5rem;
