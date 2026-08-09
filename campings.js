@@ -16,20 +16,27 @@ let paginaActual = 1;
 
 fetch("campings.json")
   .then(response => {
+
     if (!response.ok) {
       throw new Error("No se pudo cargar campings.json");
     }
 
     return response.json();
+
   })
+
   .then(data => {
+
     campings = data;
 
     console.log("Campings cargados:", campings.length);
 
     buscarCampings();
+
   })
+
   .catch(error => {
+
     console.error("Error:", error);
 
     const resultados =
@@ -39,19 +46,23 @@ fetch("campings.json")
       resultados.innerHTML =
         "<p>No se pudieron cargar los campings.</p>";
     }
+
   });
 
 
 // ==========================================
 // NORMALIZAR TEXTO
+// Permite buscar con o sin tildes
 // ==========================================
 
 function normalizarTexto(texto) {
+
   return String(texto || "")
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .trim();
+
 }
 
 
@@ -60,6 +71,7 @@ function normalizarTexto(texto) {
 // ==========================================
 
 function normalizarUrl(url) {
+
   if (!url) {
     return "";
   }
@@ -74,6 +86,7 @@ function normalizarUrl(url) {
   }
 
   return "https://" + url;
+
 }
 
 
@@ -87,34 +100,39 @@ function crearEnlaceMapa(camping) {
     return normalizarUrl(camping.google_maps);
   }
 
+
   let consulta = [
     camping.nombre,
+    camping.localidad,
+    camping.provincia,
     camping.direccion
   ]
     .filter(Boolean)
     .join(", ");
 
+
   if (
-    !camping.direccion &&
+    !consulta &&
     camping.lat !== null &&
     camping.lon !== null
   ) {
-    consulta = [
-      camping.nombre,
-      `${camping.lat},${camping.lon}`
-    ]
-      .filter(Boolean)
-      .join(", ");
+
+    consulta =
+      `${camping.lat},${camping.lon}`;
+
   }
+
 
   if (!consulta) {
     return "";
   }
 
+
   return (
     "https://www.google.com/maps/search/?api=1&query=" +
     encodeURIComponent(consulta)
   );
+
 }
 
 
@@ -143,12 +161,18 @@ function buscarCampings() {
     document.getElementById("filtroAcuatico");
 
 
-  const texto = normalizarTexto(
-    campoBusqueda ? campoBusqueda.value : ""
-  );
+  const texto =
+    normalizarTexto(
+      campoBusqueda
+        ? campoBusqueda.value
+        : ""
+    );
+
 
   const pais =
-    campoPais ? campoPais.value : "";
+    campoPais
+      ? campoPais.value
+      : "";
 
 
   const soloMascotas =
@@ -172,74 +196,98 @@ function buscarCampings() {
       : false;
 
 
-  resultadosActuales = campings.filter(camping => {
-
-    // Ocultar cerrados permanentemente
-    if (
-      camping.estado ===
-      "cerrado_permanentemente"
-    ) {
-      return false;
-    }
+  resultadosActuales =
+    campings.filter(camping => {
 
 
-    const contenido = normalizarTexto(
-      [
-        camping.nombre,
-        camping.direccion,
-        camping.provincia_texto,
-        camping.descripcion_original
-      ]
-        .filter(Boolean)
-        .join(" ")
-    );
+      // Ocultar cerrados permanentemente
+
+      if (
+        camping.estado ===
+        "cerrado_permanentemente"
+      ) {
+        return false;
+      }
 
 
-    const coincideTexto =
-      texto === "" ||
-      contenido.includes(texto);
+      // ----------------------------------
+      // BUSCADOR PRINCIPAL
+      // ----------------------------------
+
+      const contenido =
+        normalizarTexto(
+          [
+            camping.nombre,
+            camping.localidad,
+            camping.provincia,
+            camping.comunidad_autonoma,
+            camping.pais,
+            camping.direccion,
+            camping.descripcion_original
+          ]
+            .filter(Boolean)
+            .join(" ")
+        );
 
 
-    const coincidePais =
-      pais === "" ||
-      pais === "ES";
+      const coincideTexto =
+        texto === "" ||
+        contenido.includes(texto);
 
 
-    const coincideMascotas =
-      !soloMascotas ||
-      camping.mascotas === true;
+      // ----------------------------------
+      // PAÍS
+      // ----------------------------------
+
+      const coincidePais =
+        pais === "" ||
+        (
+          pais === "ES" &&
+          normalizarTexto(camping.pais) ===
+          "espana"
+        );
 
 
-    const coincideTodoAno =
-      !soloTodoAno ||
-      camping.abierto_todo_ano === true;
+      // ----------------------------------
+      // FILTROS
+      // ----------------------------------
+
+      const coincideMascotas =
+        !soloMascotas ||
+        camping.mascotas === true;
 
 
-    const coincidePiscina =
-      !soloPiscina ||
-      camping.piscina_climatizada === true;
+      const coincideTodoAno =
+        !soloTodoAno ||
+        camping.abierto_todo_ano === true;
 
 
-    const coincideAcuatico =
-      !soloAcuatico ||
-      camping.parque_acuatico === true;
+      const coincidePiscina =
+        !soloPiscina ||
+        camping.piscina_climatizada === true;
 
 
-    return (
-      coincideTexto &&
-      coincidePais &&
-      coincideMascotas &&
-      coincideTodoAno &&
-      coincidePiscina &&
-      coincideAcuatico
-    );
+      const coincideAcuatico =
+        !soloAcuatico ||
+        camping.parque_acuatico === true;
 
-  });
+
+      return (
+        coincideTexto &&
+        coincidePais &&
+        coincideMascotas &&
+        coincideTodoAno &&
+        coincidePiscina &&
+        coincideAcuatico
+      );
+
+    });
 
 
   paginaActual = 1;
 
   mostrarPagina();
+
 }
 
 
@@ -250,7 +298,10 @@ function buscarCampings() {
 function mostrarPagina() {
 
   const resultados =
-    document.getElementById("resultadosCampings");
+    document.getElementById(
+      "resultadosCampings"
+    );
+
 
   if (!resultados) {
     return;
@@ -331,6 +382,7 @@ function mostrarPagina() {
     resultados.appendChild(mensaje);
 
     return;
+
   }
 
 
@@ -362,9 +414,11 @@ function mostrarPagina() {
 
 
   campingsPagina.forEach(camping => {
+
     listado.appendChild(
       crearFichaCamping(camping)
     );
+
   });
 
 
@@ -386,7 +440,9 @@ function mostrarPagina() {
       document.createElement("button");
 
     anterior.type = "button";
-    anterior.textContent = "← Anterior";
+    anterior.textContent =
+      "← Anterior";
+
     anterior.disabled =
       paginaActual === 1;
 
@@ -394,11 +450,17 @@ function mostrarPagina() {
     anterior.addEventListener(
       "click",
       () => {
+
         if (paginaActual > 1) {
+
           paginaActual--;
+
           mostrarPagina();
+
           irAResultados();
+
         }
+
       }
     );
 
@@ -414,7 +476,9 @@ function mostrarPagina() {
       document.createElement("button");
 
     siguiente.type = "button";
-    siguiente.textContent = "Siguiente →";
+    siguiente.textContent =
+      "Siguiente →";
+
     siguiente.disabled =
       paginaActual === totalPaginas;
 
@@ -422,14 +486,20 @@ function mostrarPagina() {
     siguiente.addEventListener(
       "click",
       () => {
+
         if (
           paginaActual <
           totalPaginas
         ) {
+
           paginaActual++;
+
           mostrarPagina();
+
           irAResultados();
+
         }
+
       }
     );
 
@@ -439,7 +509,9 @@ function mostrarPagina() {
     paginacion.appendChild(siguiente);
 
     resultados.appendChild(paginacion);
+
   }
+
 }
 
 
@@ -456,6 +528,8 @@ function crearFichaCamping(camping) {
     "resultado-camping";
 
 
+  // NOMBRE
+
   const titulo =
     document.createElement("h3");
 
@@ -464,6 +538,35 @@ function crearFichaCamping(camping) {
 
   ficha.appendChild(titulo);
 
+
+  // LOCALIZACIÓN
+
+  const ubicacion = [
+    camping.localidad,
+    camping.provincia,
+    camping.comunidad_autonoma
+  ]
+    .filter(Boolean);
+
+
+  if (ubicacion.length > 0) {
+
+    const zona =
+      document.createElement("p");
+
+    zona.className =
+      "zona-camping";
+
+    zona.textContent =
+      "📌 " +
+      [...new Set(ubicacion)].join(" · ");
+
+    ficha.appendChild(zona);
+
+  }
+
+
+  // DIRECCIÓN
 
   if (camping.direccion) {
 
@@ -477,8 +580,11 @@ function crearFichaCamping(camping) {
       "📍 " + camping.direccion;
 
     ficha.appendChild(direccion);
+
   }
 
+
+  // CARACTERÍSTICAS
 
   const caracteristicas = [];
 
@@ -523,8 +629,11 @@ function crearFichaCamping(camping) {
       caracteristicas.join(" · ");
 
     ficha.appendChild(servicios);
+
   }
 
+
+  // BOTONES
 
   const enlaces =
     document.createElement("div");
@@ -532,6 +641,8 @@ function crearFichaCamping(camping) {
   enlaces.className =
     "enlaces-camping";
 
+
+  // WEB
 
   if (camping.web) {
 
@@ -551,8 +662,11 @@ function crearFichaCamping(camping) {
       "🌐 Web";
 
     enlaces.appendChild(web);
+
   }
 
+
+  // TELÉFONO
 
   if (camping.telefono) {
 
@@ -570,8 +684,11 @@ function crearFichaCamping(camping) {
       "☎️ " + camping.telefono;
 
     enlaces.appendChild(telefono);
+
   }
 
+
+  // MAPA
 
   const enlaceMapa =
     crearEnlaceMapa(camping);
@@ -595,15 +712,19 @@ function crearFichaCamping(camping) {
       "🗺️ Ver en el mapa";
 
     enlaces.appendChild(mapa);
+
   }
 
 
   if (enlaces.children.length > 0) {
+
     ficha.appendChild(enlaces);
+
   }
 
 
   return ficha;
+
 }
 
 
@@ -620,11 +741,14 @@ function irAResultados() {
 
 
   if (resultados) {
+
     resultados.scrollIntoView({
       behavior: "smooth",
       block: "start"
     });
+
   }
+
 }
 
 
@@ -673,30 +797,40 @@ document.addEventListener(
 
 
     if (boton) {
+
       boton.addEventListener(
         "click",
         buscarCampings
       );
+
     }
 
 
     if (campoBusqueda) {
+
       campoBusqueda.addEventListener(
         "keydown",
         event => {
+
           if (event.key === "Enter") {
+
             buscarCampings();
+
           }
+
         }
       );
+
     }
 
 
     if (campoPais) {
+
       campoPais.addEventListener(
         "change",
         buscarCampings
       );
+
     }
 
 
@@ -708,10 +842,12 @@ document.addEventListener(
     ].forEach(filtro => {
 
       if (filtro) {
+
         filtro.addEventListener(
           "change",
           buscarCampings
         );
+
       }
 
     });
