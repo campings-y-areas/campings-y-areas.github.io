@@ -16,11 +16,13 @@ let paginaActual = 1;
 
 fetch("campings.json")
   .then(response => {
+
     if (!response.ok) {
       throw new Error("No se pudo cargar campings.json");
     }
 
     return response.json();
+
   })
 
   .then(data => {
@@ -64,6 +66,92 @@ function normalizarTexto(texto) {
 
 
 // ==========================================
+// NORMALIZAR DIRECCIONES WEB
+// ==========================================
+
+function normalizarUrl(url) {
+
+  if (!url) {
+    return "";
+  }
+
+  url = String(url).trim();
+
+  if (
+    url.startsWith("http://") ||
+    url.startsWith("https://")
+  ) {
+    return url;
+  }
+
+  return "https://" + url;
+
+}
+
+
+// ==========================================
+// CREAR ENLACE DE GOOGLE MAPS
+// ==========================================
+
+function crearEnlaceMapa(camping) {
+
+  // Si el KML ya contenía un enlace válido de Google Maps,
+  // utilizamos ese primero.
+
+  if (camping.google_maps) {
+    return normalizarUrl(camping.google_maps);
+  }
+
+
+  /*
+    Si no existe, buscamos el establecimiento
+    por nombre y dirección.
+
+    Esto permite que Google intente abrir la
+    ficha real del camping y no solamente unas
+    coordenadas anónimas.
+  */
+
+  let consulta = [
+    camping.nombre,
+    camping.direccion
+  ]
+    .filter(Boolean)
+    .join(", ");
+
+
+  // Si no tenemos dirección, añadimos coordenadas.
+
+  if (
+    !camping.direccion &&
+    camping.lat !== null &&
+    camping.lon !== null
+  ) {
+
+    consulta = [
+      camping.nombre,
+      `${camping.lat},${camping.lon}`
+    ]
+      .filter(Boolean)
+      .join(", ");
+
+  }
+
+
+  if (!consulta) {
+    return "";
+  }
+
+
+  return (
+    "https://www.google.com/maps/search/?api=1&query=" +
+    encodeURIComponent(consulta)
+  );
+
+}
+
+
+// ==========================================
 // BUSCAR CAMPINGS
 // ==========================================
 
@@ -75,9 +163,11 @@ function buscarCampings() {
   const campoPais =
     document.getElementById("paisCamping");
 
+
   const texto = normalizarTexto(
     campoBusqueda ? campoBusqueda.value : ""
   );
+
 
   const pais =
     campoPais ? campoPais.value : "";
@@ -85,7 +175,8 @@ function buscarCampings() {
 
   resultadosActuales = campings.filter(camping => {
 
-    // Ocultar cerrados permanentemente
+    // No mostrar cerrados permanentemente
+
     if (
       camping.estado ===
       "cerrado_permanentemente"
@@ -113,7 +204,7 @@ function buscarCampings() {
 
     /*
       De momento los datos proceden
-      principalmente del mapa de España.
+      principalmente de España.
     */
 
     const coincidePais =
@@ -142,7 +233,9 @@ function mostrarPagina() {
   const resultados =
     document.getElementById("resultadosCampings");
 
-  if (!resultados) return;
+  if (!resultados) {
+    return;
+  }
 
 
   resultados.innerHTML = "";
@@ -159,29 +252,29 @@ function mostrarPagina() {
     );
 
 
-  // CONTADOR
+  // CABECERA DE RESULTADOS
 
-  const contador =
+  const cabecera =
     document.createElement("div");
 
-  contador.className =
+  cabecera.className =
     "cabecera-resultados";
 
 
-  const textoContador =
+  const contador =
     document.createElement("p");
 
-  textoContador.className =
+  contador.className =
     "contador-resultados";
 
 
-  textoContador.textContent =
+  contador.textContent =
     totalResultados === 1
       ? "1 camping encontrado"
       : `${totalResultados} campings encontrados`;
 
 
-  contador.appendChild(textoContador);
+  cabecera.appendChild(contador);
 
 
   if (totalPaginas > 1) {
@@ -195,12 +288,12 @@ function mostrarPagina() {
     paginaInfo.textContent =
       `Página ${paginaActual} de ${totalPaginas}`;
 
-    contador.appendChild(paginaInfo);
+    cabecera.appendChild(paginaInfo);
 
   }
 
 
-  resultados.appendChild(contador);
+  resultados.appendChild(cabecera);
 
 
   // SIN RESULTADOS
@@ -223,11 +316,12 @@ function mostrarPagina() {
   }
 
 
-  // CALCULAR REGISTROS DE ESTA PÁGINA
+  // REGISTROS DE ESTA PÁGINA
 
   const inicio =
     (paginaActual - 1) *
     resultadosPorPagina;
+
 
   const fin =
     inicio +
@@ -241,7 +335,7 @@ function mostrarPagina() {
     );
 
 
-  // CONTENEDOR DE FICHAS
+  // LISTADO
 
   const listado =
     document.createElement("div");
@@ -252,10 +346,9 @@ function mostrarPagina() {
 
   campingsPagina.forEach(camping => {
 
-    const ficha =
-      crearFichaCamping(camping);
-
-    listado.appendChild(ficha);
+    listado.appendChild(
+      crearFichaCamping(camping)
+    );
 
   });
 
@@ -345,11 +438,8 @@ function mostrarPagina() {
 
 
     paginacion.appendChild(anterior);
-
     paginacion.appendChild(indicador);
-
     paginacion.appendChild(siguiente);
-
 
     resultados.appendChild(paginacion);
 
@@ -457,7 +547,7 @@ function crearFichaCamping(camping) {
   }
 
 
-  // ENLACES
+  // BOTONES
 
   const enlaces =
     document.createElement("div");
@@ -466,13 +556,15 @@ function crearFichaCamping(camping) {
     "enlaces-camping";
 
 
+  // WEB
+
   if (camping.web) {
 
     const web =
       document.createElement("a");
 
     web.href =
-      camping.web;
+      normalizarUrl(camping.web);
 
     web.target =
       "_blank";
@@ -487,6 +579,8 @@ function crearFichaCamping(camping) {
 
   }
 
+
+  // TELÉFONO
 
   if (camping.telefono) {
 
@@ -508,16 +602,19 @@ function crearFichaCamping(camping) {
   }
 
 
-  if (
-    camping.lat !== null &&
-    camping.lon !== null
-  ) {
+  // GOOGLE MAPS
+
+  const enlaceMapa =
+    crearEnlaceMapa(camping);
+
+
+  if (enlaceMapa) {
 
     const mapa =
       document.createElement("a");
 
     mapa.href =
-      `https://www.google.com/maps/search/?api=1&query=${camping.lat},${camping.lon}`;
+      enlaceMapa;
 
     mapa.target =
       "_blank";
@@ -546,7 +643,7 @@ function crearFichaCamping(camping) {
 
 
 // ==========================================
-// VOLVER A RESULTADOS AL CAMBIAR DE PÁGINA
+// VOLVER A LOS RESULTADOS
 // ==========================================
 
 function irAResultados() {
@@ -555,6 +652,7 @@ function irAResultados() {
     document.getElementById(
       "resultadosCampings"
     );
+
 
   if (resultados) {
 
@@ -581,10 +679,12 @@ document.addEventListener(
         "buscarCamping"
       );
 
+
     const campoPais =
       document.getElementById(
         "paisCamping"
       );
+
 
     const boton =
       document.getElementById(
