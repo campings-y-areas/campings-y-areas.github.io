@@ -108,3 +108,44 @@ footer {
         padding: 20px;
     }
 }
+/* ================================
+   MENÚ PRINCIPAL
+   ================================ */
+
+.menu {
+    background: #117daf;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 0 15px;
+    flex-wrap: wrap;
+}
+
+.menu a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1rem;
+    padding: 14px 18px;
+    display: block;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.menu a:hover {
+    background: rgba(255, 255, 255, 0.18);
+}
+
+/* Menú adaptado a móviles */
+@media (max-width: 600px) {
+    .menu {
+        gap: 2px;
+        padding: 5px;
+    }
+
+    .menu a {
+        font-size: 0.9rem;
+        padding: 10px 8px;
+    }
+}
