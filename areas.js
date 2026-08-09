@@ -797,7 +797,14 @@ function irAResultados() {
 document.addEventListener(
   "DOMContentLoaded",
   () => {
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
 
+    // AQUÍ PEGAS EL BLOQUE NUEVO
+
+    const campoBusqueda =
+      document.getElementById("buscarArea");
     const campoBusqueda =
       document.getElementById("buscarArea");
 
