@@ -148,29 +148,28 @@ footer {
         padding: 8px 6px;
     }
 }
-/* ================================
-   BLOQUE DE BIENVENIDA
-   ================================ */
-
 .bienvenida {
     max-width: 900px;
-    margin: 35px auto;
+    margin: 50px auto 35px;
     text-align: center;
-    padding: 35px 25px;
+    padding: 40px 30px;
 }
 
 .bienvenida h2 {
     font-size: 2rem;
-    margin-bottom: 18px;
+    margin: 0 0 18px;
+    text-align: center;
 }
 
 .bienvenida p {
     font-size: 1.1rem;
     max-width: 760px;
     margin: 0 auto 18px;
+    text-align: center;
 }
 
-.estado {
+.bienvenida .estado {
     font-size: 0.95rem;
     color: #667;
+    margin-bottom: 0;
 }
