@@ -1,0 +1,2274 @@
+[
+  {
+    "id": "playa-canina-001",
+    "nombre": "Praia de Seselle",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Galicia",
+    "provincia": "A Coruña",
+    "localidad": "Ares",
+    "lat": 43.4287404,
+    "lon": -8.2262198,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/2AERTDyvMNCtsKFa9",
+    "enlaces": [
+      "https://goo.gl/maps/2AERTDyvMNCtsKFa9"
+    ],
+    "descripcion": "Praia de Seselle, Aldea Seselle, 15623 Ares, A Coruña, España\nCoordenadas: 43.42874, -8.22621\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-002",
+    "nombre": "Playa canina de Ayamonte",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Andalucía",
+    "provincia": "Huelva",
+    "localidad": "Ayamonte",
+    "lat": 37.19934,
+    "lon": -7.40615,
+    "web": "https://www.redcanina.es/playa-para-perros-en-ayamonte-huelva/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=37.19934,-7.40615",
+    "enlaces": [
+      "https://www.redcanina.es/playa-para-perros-en-ayamonte-huelva/"
+    ],
+    "descripcion": "Más Información:\nhttps://www.redcanina.es/playa-para-perros-en-ayamonte-huelva/\nCoordenadas: 37.19934, -7.40615\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-003",
+    "nombre": "Playas de San Vicente de la Barquera",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cantabria",
+    "provincia": "Cantabria",
+    "localidad": "San Vicente de la Barquera",
+    "lat": 43.3918612,
+    "lon": -4.373198,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/HM7QpGxVrL7PwHZX6",
+    "enlaces": [
+      "https://goo.gl/maps/HM7QpGxVrL7PwHZX6"
+    ],
+    "descripcion": "Playas de San Vicente de la Barquera, San Vicente de la Barquera, Cantabria, España\nCoordenadas: 43.39186, -4.37319\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-004",
+    "nombre": "Playa canina de Nules",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Comunitat Valenciana",
+    "provincia": "Castellón",
+    "localidad": "Nules",
+    "lat": 39.8154208,
+    "lon": -0.1199705,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/NqVtr1F4Cn3XLf2H7",
+    "enlaces": [
+      "https://goo.gl/maps/NqVtr1F4Cn3XLf2H7"
+    ],
+    "descripcion": "12520 Playa de Nules, Castellón, España\nSalida del camping playa Costa de Levante\nCoordenadas: 39.81542, -0.11997\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-005",
+    "nombre": "Playa de la Gola, Isla Cristina (Huelva)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Andalucía",
+    "provincia": "Huelva",
+    "localidad": "Isla Cristina",
+    "lat": 37.1933606,
+    "lon": -7.3328374,
+    "web": "http://www.redcanina.es/playa-de-la-gola-playa-para-perros-en-isla-cristina-huelva/",
+    "google_maps": "https://goo.gl/maps/VmjxmyJEd1RqkHtGA",
+    "enlaces": [
+      "http://www.redcanina.es/playa-de-la-gola-playa-para-perros-en-isla-cristina-huelva/",
+      "http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-de-la-gola/",
+      "https://goo.gl/maps/VmjxmyJEd1RqkHtGA"
+    ],
+    "descripcion": "Playa de la Punta del Caimán, 21410, Huelva, España.\nCoordenadas: 37.19336, -7.33283\nMás Información:\nhttp://www.redcanina.es/playa-de-la-gola-playa-para-perros-en-isla-cristina-huelva/\nAlojamientos que Admiten Perros Cercanos que no son campings ni áreas:\nhttp://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-de-la-gola/\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-006",
+    "nombre": "Playa Canina de la Ría",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Andalucía",
+    "provincia": "Huelva",
+    "localidad": "Punta Umbría",
+    "lat": 37.1948856,
+    "lon": -6.9675713,
+    "web": "https://www.redcanina.es/playa-para-perros-en-punta-umbria/",
+    "google_maps": "https://goo.gl/maps/me5gHTNugPq2tvcv6",
+    "enlaces": [
+      "https://www.redcanina.es/playa-para-perros-en-punta-umbria/",
+      "https://goo.gl/maps/me5gHTNugPq2tvcv6"
+    ],
+    "descripcion": "Salinas de Astur, 21100, 21100, Huelva, España\nCoordenadas: 37.19487, -6.96763\nMás Información:\nhttps://www.redcanina.es/playa-para-perros-en-punta-umbria/\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-007",
+    "nombre": "Playa de Peginas",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Andalucía",
+    "provincia": "Cádiz",
+    "localidad": "Rota",
+    "lat": 36.6547031,
+    "lon": -6.397837,
+    "web": null,
+    "google_maps": "https://maps.app.goo.gl/Fskp1hKSTaADHF9JA",
+    "enlaces": [
+      "https://maps.app.goo.gl/Fskp1hKSTaADHF9JA"
+    ],
+    "descripcion": "11520, Cádiz, España\ncoordenadas:\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-008",
+    "nombre": "Playa del Espigón Juan Carlos I",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Andalucía",
+    "provincia": "Huelva",
+    "localidad": "Huelva",
+    "lat": 37.1465657,
+    "lon": -6.8952678,
+    "web": "http://www.redcanina.es/playas-para-perros-en-huelva/",
+    "google_maps": "https://goo.gl/maps/S8g6vnAC58ipLE3EA",
+    "enlaces": [
+      "http://www.redcanina.es/playas-para-perros-en-huelva/",
+      "https://goo.gl/maps/S8g6vnAC58ipLE3EA"
+    ],
+    "descripcion": "Playa del Espigón Juan Carlos I, España\nCoordenadas: 37.14594, -6.89111\nMás Información:\nhttp://www.redcanina.es/playas-para-perros-en-huelva/\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-009",
+    "nombre": "Playa Camposoto",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Andalucía",
+    "provincia": "Cádiz",
+    "localidad": "San Fernando",
+    "lat": 36.4028379,
+    "lon": -6.2180436,
+    "web": "http://www.redcanina.es/playa-para-perros-en-camposoto-cadiz/",
+    "google_maps": "https://goo.gl/maps/QmyWC532rmvZjghz6",
+    "enlaces": [
+      "http://www.redcanina.es/playa-para-perros-en-camposoto-cadiz/",
+      "http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-de-camposoto/",
+      "https://goo.gl/maps/QmyWC532rmvZjghz6"
+    ],
+    "descripcion": "Isla de León, 11100, Cádiz, España\nCoordenadas: 36.4023, -6.21783\nMás Información:\nhttp://www.redcanina.es/playa-para-perros-en-camposoto-cadiz/\nAlojamientos que Admiten Perros Cercanos que no son campings ni Áreas:\nhttp://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-de-camposoto/\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-010",
+    "nombre": "Ostende Beach",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cantabria",
+    "provincia": "Cantabria",
+    "localidad": "Castro-Urdiales",
+    "lat": 43.3881505,
+    "lon": -3.226656,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/z4zSBXj2RfH7oB2n7",
+    "enlaces": [
+      "https://goo.gl/maps/z4zSBXj2RfH7oB2n7"
+    ],
+    "descripcion": "Ostende Beach, 39700, Cantabria, España\nCoordenadas: 43.38815, -3.22665\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-011",
+    "nombre": "Playa del Barranco",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Andalucía",
+    "provincia": "Cádiz",
+    "localidad": "Algeciras",
+    "lat": 36.1501932,
+    "lon": -5.4445652,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/XE176vKdWXvqiVT27",
+    "enlaces": [
+      "https://goo.gl/maps/XE176vKdWXvqiVT27"
+    ],
+    "descripcion": "Playa del Barranco, España\nCoordenadas: 36.15017, -5.44484\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-012",
+    "nombre": "Playa Piedra Paloma, Casares (Málaga)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Andalucía",
+    "provincia": "Málaga",
+    "localidad": "Casares",
+    "lat": 36.3859395,
+    "lon": -5.2064292,
+    "web": "http://www.redcanina.es/playa-de-piedra-paloma-para-perros-en-estepona/",
+    "google_maps": "https://goo.gl/maps/2AxZp647mW7BWfKX9",
+    "enlaces": [
+      "http://www.redcanina.es/playa-de-piedra-paloma-para-perros-en-estepona/",
+      "http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-de-piedra-paloma/",
+      "https://goo.gl/maps/2AxZp647mW7BWfKX9"
+    ],
+    "descripcion": "Urbanizacion la Roquita Beach, 3, 29690 Casares, Málaga, España\nCoordenadas: 36.38586, -5.20717\nMás Información:\nhttp://www.redcanina.es/playa-de-piedra-paloma-para-perros-en-estepona/\nAlojamientos que Admiten Perros Cercanos que no son campings ni áreas:\nhttp://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-de-piedra-paloma/\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-013",
+    "nombre": "Playa Canina Ventura del Mar",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Andalucía",
+    "provincia": "Málaga",
+    "localidad": "Marbella",
+    "lat": 36.4802755,
+    "lon": -4.9696213,
+    "web": "http://www.redcanina.es/playa-para-perros-ventura-del-mar-en-nueva-andalucia-marbella/",
+    "google_maps": "https://goo.gl/maps/tALVi8aiDkAtHgce7",
+    "enlaces": [
+      "http://www.redcanina.es/playa-para-perros-ventura-del-mar-en-nueva-andalucia-marbella/",
+      "http://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-cerca-de-la-playa-de-ventura-de-mar/",
+      "https://goo.gl/maps/tALVi8aiDkAtHgce7"
+    ],
+    "descripcion": "Ventura del Mar, 29660 Marbella, Málaga, España\nCoordenadas: 36.47994, -4.9698\nMás Información:\nhttp://www.redcanina.es/playa-para-perros-ventura-del-mar-en-nueva-andalucia-marbella/\nAlojamientos que Admiten Perros Cercanos que no son campings ni áreas:\nhttp://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-cerca-de-la-playa-de-ventura-de-mar/\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-014",
+    "nombre": "Playa del Pinillo",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Andalucía",
+    "provincia": "Málaga",
+    "localidad": "Marbella",
+    "lat": 36.5077102,
+    "lon": -4.8619492,
+    "web": "http://www.redcanina.es/playa-para-perros-el-pinillo-en-marbella/",
+    "google_maps": "https://goo.gl/maps/CxYMNpdhE6dSKtm26",
+    "enlaces": [
+      "http://www.redcanina.es/playa-para-perros-el-pinillo-en-marbella/",
+      "http://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-cerca-de-la-playa-el-pinillo/",
+      "https://goo.gl/maps/CxYMNpdhE6dSKtm26"
+    ],
+    "descripcion": "Playa del Pinillo, España\nCoordenadas: 36.50756, -4.85878\nMás Información:\nhttp://www.redcanina.es/playa-para-perros-el-pinillo-en-marbella/\nAlojamientos que Admiten Perros Cercanos\nhttp://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-cerca-de-la-playa-el-pinillo/\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-015",
+    "nombre": "Playa del Castillo Sohail (Fuengirola, Málaga)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Andalucía",
+    "provincia": "Málaga",
+    "localidad": "Fuengirola",
+    "lat": 36.51886,
+    "lon": -4.62985,
+    "web": "http://www.redcanina.es/playa-para-perros-en-fuengirola-malaga/",
+    "google_maps": "https://goo.gl/maps/L7LKGds2vPGANRbr5",
+    "enlaces": [
+      "http://www.redcanina.es/playa-para-perros-en-fuengirola-malaga/",
+      "http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-canina-de-fuengirola/",
+      "https://goo.gl/maps/L7LKGds2vPGANRbr5"
+    ],
+    "descripcion": "Urb. Marina del Sol, 32L, 29649 Las Lagunas de Mijas, Málaga, España\nCoordenadas: 36.51886, -4.62985\nMás Información:\nhttp://www.redcanina.es/playa-para-perros-en-fuengirola-malaga/\nAlojamientos que Admiten Perros Cercanos\nhttp://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-canina-de-fuengirola/\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-016",
+    "nombre": "Playa de Arroyo Hondo",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Andalucía",
+    "provincia": "Málaga",
+    "localidad": "Benalmádena",
+    "lat": 36.5796488,
+    "lon": -4.5607501,
+    "web": "http://www.redcanina.es/benalcan-playa-para-perros-en-benalmadena/",
+    "google_maps": "https://goo.gl/maps/P8M5nsJuMFHRpebv5",
+    "enlaces": [
+      "http://www.redcanina.es/benalcan-playa-para-perros-en-benalmadena/",
+      "http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-benalcan-en-benalmadena/",
+      "https://goo.gl/maps/P8M5nsJuMFHRpebv5"
+    ],
+    "descripcion": "Playa de Arroyo Hondo, 29631 Benalmádena, Málaga, España\nCoordenadas: 36.57991, -4.56071\nMás Información:\nhttp://www.redcanina.es/benalcan-playa-para-perros-en-benalmadena/\nAlojamientos que Admiten Perros Cercanos\nhttp://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-benalcan-en-benalmadena/\nGoogle:\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-017",
+    "nombre": "Playa Canina Cala del Moral",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Andalucía",
+    "provincia": "Málaga",
+    "localidad": "Rincón de la Victoria",
+    "lat": 36.7131112,
+    "lon": -4.3160833,
+    "web": "http://www.redcanina.es/playa-de-la-arana-para-perros-en-malaga/",
+    "google_maps": "https://goo.gl/maps/awvJ1scH9ThAziFR6",
+    "enlaces": [
+      "http://www.redcanina.es/playa-de-la-arana-para-perros-en-malaga/",
+      "http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-arroyo-totalan-en-malaga/",
+      "https://goo.gl/maps/awvJ1scH9ThAziFR6"
+    ],
+    "descripcion": "29720 La Cala del Moral, Málaga, España\nCoordenadas: 36.71294, -4.31689\nMás Información:\nhttp://www.redcanina.es/playa-de-la-arana-para-perros-en-malaga/\nAlojamientos que Admiten Perros Cercanos\nhttp://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-arroyo-totalan-en-malaga/\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-018",
+    "nombre": "Playa L'Estany, Alcossebre (Castellón)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Comunitat Valenciana",
+    "provincia": "Castellón",
+    "localidad": "Alcalà de Xivert",
+    "lat": 40.211108,
+    "lon": 0.265038,
+    "web": "http://www.redcanina.es/playa-para-perros-en-alcossebre/",
+    "google_maps": "https://goo.gl/maps/3Cm3XCHbrE1c9et9A",
+    "enlaces": [
+      "http://www.redcanina.es/playa-para-perros-en-alcossebre/",
+      "http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-canina-de-alcossebre/",
+      "https://goo.gl/maps/3Cm3XCHbrE1c9et9A"
+    ],
+    "descripcion": "Platja del Serradal, Castelló, España\nCoordenadas:40.2111, 0.26503\nDescripción: Abierta todo el año. Sin restricciones horarias\nMás Información:: http://www.redcanina.es/playa-para-perros-en-alcossebre/\nAlojamientos que Admiten Perros Cercanos: http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-canina-de-alcossebre/\nDirección: 40.209813,0.2644805\nDescripción: Abierta todo el año. Sin restricciones horarias\nMás Información:: http://www.redcanina.es/playa-para-perros-en-alcossebre/\nAlojamientos que Admiten Perros Cercanos: http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-canina-de-alcossebre/"
+  },
+  {
+    "id": "playa-canina-019",
+    "nombre": "Zona canina Playa de Lóngara",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Galicia",
+    "provincia": "Lugo",
+    "localidad": "Barreiros",
+    "lat": 43.5611353,
+    "lon": -7.1883789,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/rWJzNnoMaK8goyXQ9",
+    "enlaces": [
+      "https://goo.gl/maps/rWJzNnoMaK8goyXQ9"
+    ],
+    "descripcion": "Barreiros, 27792, Lugo, España\nCoordenadas: 43.56113, -7.18837\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-020",
+    "nombre": "Playa el Puntal",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cantabria",
+    "provincia": "Cantabria",
+    "localidad": "Ribamontán al Mar",
+    "lat": 43.452798,
+    "lon": -3.747884,
+    "web": "http://www.redcanina.es/playa-para-perros-en-somo-cantabria/",
+    "google_maps": "https://goo.gl/maps/34JrmyeyPa7YvX3X8",
+    "enlaces": [
+      "http://www.redcanina.es/playa-para-perros-en-somo-cantabria/",
+      "http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-del-puntal-en-somo/",
+      "https://goo.gl/maps/34JrmyeyPa7YvX3X8"
+    ],
+    "descripcion": "Calle el Puntal, 39140, Cantabria, España\nCoordenadas:43.45279, -3.74788\nDescripción: Abierta todo el año. Sin restricciones horarias\nMás Información:: http://www.redcanina.es/playa-para-perros-en-somo-cantabria/\nAlojamientos que Admiten Perros Cercanos: http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-del-puntal-en-somo/\nDirección:\nDescripción: Abierta todo el año. Sin restricciones horarias\nMás Información:: http://www.redcanina.es/playa-para-perros-en-somo-cantabria/\nAlojamientos que Admiten Perros Cercanos: http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-del-puntal-en-somo/"
+  },
+  {
+    "id": "playa-canina-021",
+    "nombre": "Arenal de Jortín, Soto de la Marina, Bezana (Cantabria)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cantabria",
+    "provincia": "Cantabria",
+    "localidad": "Santa Cruz de Bezana",
+    "lat": 43.473057,
+    "lon": -3.892,
+    "web": "http://www.redcanina.es/playa-para-perros-en-bezana/",
+    "google_maps": "https://goo.gl/maps/6qQDmMLKM6FhM1oT8",
+    "enlaces": [
+      "http://www.redcanina.es/playa-para-perros-en-bezana/",
+      "http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-del-arenal-de-jortin-en-bezana/",
+      "https://goo.gl/maps/6qQDmMLKM6FhM1oT8"
+    ],
+    "descripcion": "Av. Playa San Juan de la Canal, 18E, 39110 Santa Cruz de Bezana, Cantabria, España\nCoordenadas: 43.47305, -3.89199\nMás Información:\nhttp://www.redcanina.es/playa-para-perros-en-bezana/\nAlojamientos que Admiten Perros Cercanos\nhttp://www.redcanina.es/alojamientos-que-admiten-perros-cerca-del-arenal-de-jortin-en-bezana/\nDirección:\nDescripción: Pequeña cala de Soto de la Marina. Abierta todo el año. Sin restricciones horarias en verano\nMás Información:: http://www.redcanina.es/playa-para-perros-en-bezana/\nAlojamientos que Admiten Perros Cercanos: http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-del-arenal-de-jortin-en-bezana/"
+  },
+  {
+    "id": "playa-canina-022",
+    "nombre": "Chapela, Redondela (Pontevedra)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Galicia",
+    "provincia": "Pontevedra",
+    "localidad": "Redondela",
+    "lat": 42.26729,
+    "lon": -8.675321,
+    "web": "http://www.redcanina.es/playas-para-perros-en-redondela-pontevedra/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=42.26729,-8.675321",
+    "enlaces": [
+      "http://www.redcanina.es/playas-para-perros-en-redondela-pontevedra/",
+      "http://www.redcanina.es/aojamientos-que-admiten-perros-en-redondela/"
+    ],
+    "descripcion": "Coordenadas: 42.26729, -8.67532\nMás Información:\nhttp://www.redcanina.es/playas-para-perros-en-redondela-pontevedra/\nAlojamientos que Admiten Perros Cercanos\nhttp://www.redcanina.es/aojamientos-que-admiten-perros-en-redondela/\nDirección:\nDescripción: Una pequeña cala situada entre los 2 puertos deportivos, sólo accesible en marea baja\nMás Información:: http://www.redcanina.es/playas-para-perros-en-redondela-pontevedra/\nAlojamientos que Admiten Perros Cercanos: http://www.redcanina.es/aojamientos-que-admiten-perros-en-redondela/"
+  },
+  {
+    "id": "playa-canina-023",
+    "nombre": "Playa de Cesantes, Redondela (Pontevedra)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Galicia",
+    "provincia": "Pontevedra",
+    "localidad": "Redondela",
+    "lat": 42.307514,
+    "lon": -8.619568,
+    "web": "http://www.redcanina.es/playas-para-perros-en-redondela-pontevedra/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=42.307514,-8.619568",
+    "enlaces": [
+      "http://www.redcanina.es/playas-para-perros-en-redondela-pontevedra/",
+      "http://www.redcanina.es/aojamientos-que-admiten-perros-en-redondela/"
+    ],
+    "descripcion": "Coordenadas: 42.30751, -8.61956\nMás Información:\nhttp://www.redcanina.es/playas-para-perros-en-redondela-pontevedra/\nAlojamientos que Admiten Perros Cercanos\nhttp://www.redcanina.es/aojamientos-que-admiten-perros-en-redondela/\nDirección:\nDescripción: Disponible en verano. Sin restricciones horarias\nMás Información:: http://www.redcanina.es/playas-para-perros-en-redondela-pontevedra/\nAlojamientos que Admiten Perros Cercanos: http://www.redcanina.es/aojamientos-que-admiten-perros-en-redondela/"
+  },
+  {
+    "id": "playa-canina-024",
+    "nombre": "O Castelete, Vilagarcía de Arousa (Pontevedra)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Galicia",
+    "provincia": "Pontevedra",
+    "localidad": "Vilagarcía de Arousa",
+    "lat": 42.590824,
+    "lon": -8.787024,
+    "web": "http://www.redcanina.es/playa-para-perros-o-castelete-en-vilagarcia-de-arousa/",
+    "google_maps": "https://goo.gl/maps/Ne3bS1XmrBvt6NGP9",
+    "enlaces": [
+      "http://www.redcanina.es/playa-para-perros-o-castelete-en-vilagarcia-de-arousa/",
+      "http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-de-o-castelete/",
+      "https://goo.gl/maps/Ne3bS1XmrBvt6NGP9"
+    ],
+    "descripcion": "Praia do Castelete, 36611, España\nCoordenadas: 42.59082, -8.78702\nMás Información:\nhttp://www.redcanina.es/playa-para-perros-o-castelete-en-vilagarcia-de-arousa/\nAlojamientos que Admiten Perros Cercanos\nhttp://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-de-o-castelete/\nDirección:\nDescripción: Abierta todo el año.Sin restricciones horarias en verano\nMás Información:: http://www.redcanina.es/playa-para-perros-o-castelete-en-vilagarcia-de-arousa/\nAlojamientos que Admiten Perros Cercanos: http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-de-o-castelete/"
+  },
+  {
+    "id": "playa-canina-025",
+    "nombre": "Cala de les Llanetes",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Comunitat Valenciana",
+    "provincia": "Castellón",
+    "localidad": "Vinaròs",
+    "lat": 40.51132,
+    "lon": 0.507399,
+    "web": "http://www.redcanina.es/playa-de-les-llanetes-para-perros-en-vinaros/",
+    "google_maps": "https://goo.gl/maps/KZJbvXGkCt5JREyh8",
+    "enlaces": [
+      "http://www.redcanina.es/playa-de-les-llanetes-para-perros-en-vinaros/",
+      "http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-les-llanetes/",
+      "https://goo.gl/maps/KZJbvXGkCt5JREyh8"
+    ],
+    "descripcion": "Avinguda de Francisco José Balada, 257, 12500 Vinaròs, Castellón, España\nCoordenadas: 40.51131, 0.50739\nMás Información:\nhttp://www.redcanina.es/playa-de-les-llanetes-para-perros-en-vinaros/\nAlojamientos que Admiten Perros Cercanos\nhttp://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-les-llanetes/\nDirección:\nDescripción: Es la segunda playa canina de Vinarós, inaugurada en julio de 2016. Sin restricciones horarias en verano\nMás Información:: http://www.redcanina.es/playa-de-les-llanetes-para-perros-en-vinaros/\nAlojamientos que Admiten Perros Cercanos: http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-les-llanetes/"
+  },
+  {
+    "id": "playa-canina-026",
+    "nombre": "Playa Mar y Montaña, Altea (Alicante)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Comunitat Valenciana",
+    "provincia": "Alicante",
+    "localidad": "Altea",
+    "lat": 38.62202,
+    "lon": -0.0220694,
+    "web": "http://www.redcanina.es/playa-para-perros-en-altea/",
+    "google_maps": "https://goo.gl/maps/Gt2HibHTYZtJXL4B7",
+    "enlaces": [
+      "http://www.redcanina.es/playa-para-perros-en-altea/",
+      "http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-mar-y-montana/",
+      "https://goo.gl/maps/Gt2HibHTYZtJXL4B7"
+    ],
+    "descripcion": "Plaça Mar y Montaña, S.U, 4, 2, 03599, Alicante, España\nCoordenadas: 38.62234, -0.0221\nMás Información:\nhttp://www.redcanina.es/playa-para-perros-en-altea/\nAlojamientos que Admiten Perros Cercanos\nhttp://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-mar-y-montana/\nDirección:\nDescripción: Siempre ha sido frecuentada por bañistas con perro, pero ahora ya es \"legal\". Sin restricciones horarias en verano.\nMás Información:: http://www.redcanina.es/playa-para-perros-en-altea/\nAlojamientos que Admiten Perros Cercanos: http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-mar-y-montana/"
+  },
+  {
+    "id": "playa-canina-027",
+    "nombre": "Playa Cunchina, Cangas (Pontevedra)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Galicia",
+    "provincia": "Pontevedra",
+    "localidad": "Cangas",
+    "lat": 42.252773,
+    "lon": -8.788134,
+    "web": "http://www.redcanina.es/playa-cunchina-para-perros-en-cangas-pontevedra/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=42.252773,-8.788134",
+    "enlaces": [
+      "http://www.redcanina.es/playa-cunchina-para-perros-en-cangas-pontevedra/",
+      "http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-playa-cunchina/"
+    ],
+    "descripcion": "Coordenadas: 42.25277, -8.78813\nMás Información:\nhttp://www.redcanina.es/playa-cunchina-para-perros-en-cangas-pontevedra/\nAlojamientos que Admiten Perros Cercanos\nhttp://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-playa-cunchina/\nDirección: 42.252772730116035, -8.788134288042784\nDescripción: Pequeña playa habilitada para ir con mascota en verano. Sin restricciones horarias\nMás Información:: http://www.redcanina.es/playa-cunchina-para-perros-en-cangas-pontevedra/\nAlojamientos que Admiten Perros Cercanos: http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-playa-cunchina/"
+  },
+  {
+    "id": "playa-canina-028",
+    "nombre": "Playa Canina de Torre del Mar, Málaga",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Andalucía",
+    "provincia": "Málaga",
+    "localidad": "Vélez-Málaga",
+    "lat": 36.727813,
+    "lon": -4.104621,
+    "web": "http://www.redcanina.es/playa-para-perros-en-torre-del-mar-malaga/",
+    "google_maps": "https://goo.gl/maps/yyo4gWDwA4P17SS57",
+    "enlaces": [
+      "http://www.redcanina.es/playa-para-perros-en-torre-del-mar-malaga/",
+      "http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-de-torre-del-mar/",
+      "https://goo.gl/maps/yyo4gWDwA4P17SS57"
+    ],
+    "descripcion": "Diseminado Huertas Bajas, 156, 29740, Málaga, España\nCoordenadas: 36.72781, -4.10462\nMás Información:\nhttp://www.redcanina.es/playa-para-perros-en-torre-del-mar-malaga/\nAlojamientos que Admiten Perros Cercanos\nhttp://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-de-torre-del-mar/\nDirección: 36.747055, -4.079773\nDescripción: Es una de las mejores playas caninas de Málaga, formada por fina arena ideal para toda la familia. Sin restricciones horarias en verano\nMás Información:: http://www.redcanina.es/playa-para-perros-en-torre-del-mar-malaga/\nAlojamientos que Admiten Perros Cercanos: http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-de-torre-del-mar/"
+  },
+  {
+    "id": "playa-canina-029",
+    "nombre": "Playa El Rec del Molí",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cataluña",
+    "provincia": "Girona",
+    "localidad": "L'Escala",
+    "lat": 42.127697,
+    "lon": 3.124213,
+    "web": "http://www.redcanina.es/playa-para-perros-en-lescala-rec-del-moli/",
+    "google_maps": "https://goo.gl/maps/goBfkEubs79b9Hqi8",
+    "enlaces": [
+      "http://www.redcanina.es/playa-para-perros-en-lescala-rec-del-moli/",
+      "http://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-cerca-de-la-playa-del-rec-del-moli/",
+      "https://goo.gl/maps/goBfkEubs79b9Hqi8"
+    ],
+    "descripcion": "Platja del Rec, España\nCoordenadas: 42.12769, 3.12421\nMás Información:\nhttp://www.redcanina.es/playa-para-perros-en-lescala-rec-del-moli/\nAlojamientos que Admiten Perros Cercanos\nhttp://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-cerca-de-la-playa-del-rec-del-moli/\nDirección:\nDescripción: Abierta sólo en verano. Sin restricciones horarias\nMás Información:: http://www.redcanina.es/playa-para-perros-en-lescala-rec-del-moli/\nAlojamientos que Admiten Perros Cercanos: http://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-cerca-de-la-playa-del-rec-del-moli/"
+  },
+  {
+    "id": "playa-canina-030",
+    "nombre": "Punta des Marroig, Palmanova",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Illes Balears",
+    "provincia": "Illes Balears",
+    "localidad": "Calvià",
+    "lat": 39.521464,
+    "lon": 2.53885,
+    "web": "http://www.redcanina.es/playa-para-perros-punta-marroig-en-palmanova/",
+    "google_maps": "https://goo.gl/maps/W52W5ae45qWUD45n9",
+    "enlaces": [
+      "http://www.redcanina.es/playa-para-perros-punta-marroig-en-palmanova/",
+      "https://goo.gl/maps/W52W5ae45qWUD45n9"
+    ],
+    "descripcion": "07181 Palmanova, Islas Baleares, España\nCoordenadas: 39.52146, 2.53885\nMás Información:\nhttp://www.redcanina.es/playa-para-perros-punta-marroig-en-palmanova/\nDirección:\nDescripción: Pequeña cala de piedra y arena\nMás Información:: http://www.redcanina.es/playa-para-perros-punta-marroig-en-palmanova/\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-031",
+    "nombre": "Cala dels Gats, Costa de la Calma",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Illes Balears",
+    "provincia": "Illes Balears",
+    "localidad": "Calvià",
+    "lat": 39.526065,
+    "lon": 2.464907,
+    "web": "http://www.redcanina.es/cala-dels-gats-playa-para-perros-en-costa-de-la-calma-calvia/",
+    "google_maps": "https://goo.gl/maps/cJZi7XaARVdVRypp7",
+    "enlaces": [
+      "http://www.redcanina.es/cala-dels-gats-playa-para-perros-en-costa-de-la-calma-calvia/",
+      "https://goo.gl/maps/cJZi7XaARVdVRypp7"
+    ],
+    "descripcion": "Carrer de la Bella Vista, 175-133, 07183 Costa de la Calma, Illes Balears, España\nCoordenadas: 39.52606, 2.4649\nMás Información:\nhttp://www.redcanina.es/cala-dels-gats-playa-para-perros-en-costa-de-la-calma-calvia/\nDirección:\nDescripción: Pequeña cala de piedras y arena. Se accede a ella a través del Carrer Bellavista 106\nMás Información:: http://www.redcanina.es/cala-dels-gats-playa-para-perros-en-costa-de-la-calma-calvia/\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-032",
+    "nombre": "Zona Canina de Pineda de Mar",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cataluña",
+    "provincia": "Barcelona",
+    "localidad": "Pineda de Mar",
+    "lat": 41.617416,
+    "lon": 2.67899,
+    "web": "http://www.redcanina.es/playa-para-para-perros-de-pineda-de-mar/",
+    "google_maps": "https://goo.gl/maps/2FHY4tqr4wCpr4U8A",
+    "enlaces": [
+      "http://www.redcanina.es/playa-para-para-perros-de-pineda-de-mar/",
+      "http://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-cerca-de-la-playa-canina-de-pineda-de-mar/",
+      "https://goo.gl/maps/2FHY4tqr4wCpr4U8A"
+    ],
+    "descripcion": "Playa de La Riera, Passeig Marítim, 08397 Pineda de Mar, Barcelona, España\nCoordenadas: 41.61741, 2.67899\nMás Información:\nhttp://www.redcanina.es/playa-para-para-perros-de-pineda-de-mar/\nAlojamientos que Admiten Perros Cercanos\nhttp://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-cerca-de-la-playa-canina-de-pineda-de-mar/\nDirección:\nDescripción: Abierta todo el año. Sin restricciones horarias\nMás Información:: http://www.redcanina.es/playa-para-para-perros-de-pineda-de-mar/\nAlojamientos que Admiten Perros Cercanos: http://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-cerca-de-la-playa-canina-de-pineda-de-mar/"
+  },
+  {
+    "id": "playa-canina-033",
+    "nombre": "Playa Belcaire, Moncófar (Castellón)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Comunitat Valenciana",
+    "provincia": "Castellón",
+    "localidad": "Moncofa",
+    "lat": 39.788852,
+    "lon": -0.138702,
+    "web": "http://www.redcanina.es/playa-para-perros-en-moncofar/",
+    "google_maps": "https://goo.gl/maps/PveCaxq6VjSxYnA28",
+    "enlaces": [
+      "http://www.redcanina.es/playa-para-perros-en-moncofar/",
+      "http://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-cerca-de-playa-belcaire-en-moncofa/",
+      "https://goo.gl/maps/PveCaxq6VjSxYnA28"
+    ],
+    "descripcion": "C. Playa Camino Cabres, 2, 12593 Moncófar, Castellón, España\nCoordenadas: 39.78885, -0.1387\nMás Información:\nhttp://www.redcanina.es/playa-para-perros-en-moncofar/\nAlojamientos que Admiten Perros Cercanos\nhttp://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-cerca-de-playa-belcaire-en-moncofa/\nDirección:\nDescripción: Inaugurada el 28 de julio de 2017. Sin restricciones horarias\nMás Información:: http://www.redcanina.es/playa-para-perros-en-moncofar/\nAlojamientos que Admiten Perros Cercanos: http://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-cerca-de-playa-belcaire-en-moncofa/"
+  },
+  {
+    "id": "playa-canina-034",
+    "nombre": "Punta Corveira",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Galicia",
+    "provincia": "Lugo",
+    "localidad": "Barreiros",
+    "lat": 43.562312,
+    "lon": -7.18541,
+    "web": "http://www.redcanina.es/playa-para-perros-en-punta-corveira-barreiros-lugo/",
+    "google_maps": "https://goo.gl/maps/Kseou8efgFZSoAZP9",
+    "enlaces": [
+      "http://www.redcanina.es/playa-para-perros-en-punta-corveira-barreiros-lugo/",
+      "http://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-cerca-de-punta-corveira-en-lugo/",
+      "https://goo.gl/maps/Kseou8efgFZSoAZP9"
+    ],
+    "descripcion": "Praia de Lóngara, 27792, Lugo, España\nCoordenadas: 43.56231, -7.18541\nMás Información:\nhttp://www.redcanina.es/playa-para-perros-en-punta-corveira-barreiros-lugo/\nAlojamientos que Admiten Perros Cercanos\nhttp://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-cerca-de-punta-corveira-en-lugo/\nDirección:\nDescripción: Aprobada el 31 de julio de 2017. Sin restricciones horarias\nMás Información:: http://www.redcanina.es/playa-para-perros-en-punta-corveira-barreiros-lugo/\nAlojamientos que Admiten Perros Cercanos: http://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-cerca-de-punta-corveira-en-lugo/"
+  },
+  {
+    "id": "playa-canina-035",
+    "nombre": "El Barranquet, Benicarló (Castellón)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Comunitat Valenciana",
+    "provincia": "Castellón",
+    "localidad": "Benicarló",
+    "lat": 40.403399,
+    "lon": 0.420731,
+    "web": "http://www.redcanina.es/playa-el-barranquet-playa-para-perros-en-benicarlo/",
+    "google_maps": "https://goo.gl/maps/CLj2gFDRG9MQqTD8A",
+    "enlaces": [
+      "http://www.redcanina.es/playa-el-barranquet-playa-para-perros-en-benicarlo/",
+      "http://www.redcanina.es/alojamientos-que-admiten-perros-en-playa-el-barranquet/",
+      "https://goo.gl/maps/CLj2gFDRG9MQqTD8A"
+    ],
+    "descripcion": "Partida Solaes, 263, 12580 Benicarló, Castellón, España\nCoordenadas: 40.40339, 0.42073\nMás Información:\nhttp://www.redcanina.es/playa-el-barranquet-playa-para-perros-en-benicarlo/\nAlojamientos que Admiten Perros Cercanos\nhttp://www.redcanina.es/alojamientos-que-admiten-perros-en-playa-el-barranquet/\nDirección:\nDescripción: Abierta todo el año. Sin restricciones horarias\nMás Información:: http://www.redcanina.es/playa-el-barranquet-playa-para-perros-en-benicarlo/\nAlojamientos que Admiten Perros Cercanos: http://www.redcanina.es/alojamientos-que-admiten-perros-en-playa-el-barranquet/"
+  },
+  {
+    "id": "playa-canina-036",
+    "nombre": "Playas da Foz y da Calzoa, Vigo (Pontevedra)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Galicia",
+    "provincia": "Pontevedra",
+    "localidad": "Vigo",
+    "lat": 42.202195,
+    "lon": -8.782339,
+    "web": "http://www.redcanina.es/playas-para-perros-en-vigo-a-foz-y-a-calzoa/",
+    "google_maps": "https://goo.gl/maps/wLZk9BhdCkXFsZvr6",
+    "enlaces": [
+      "http://www.redcanina.es/playas-para-perros-en-vigo-a-foz-y-a-calzoa/",
+      "http://www.redcanina.es/alojamientos-que-admiten-perros-en-playa-calzoa/",
+      "https://goo.gl/maps/wLZk9BhdCkXFsZvr6"
+    ],
+    "descripcion": "Praia da Calzoa, Rúa de Canido, 6, 36331 Vigo, Pontevedra, España\nCoordenadas: 42.20219, -8.78233\nMás Información:\nhttp://www.redcanina.es/playas-para-perros-en-vigo-a-foz-y-a-calzoa/\nAlojamientos que Admiten Perros Cercanos\nhttp://www.redcanina.es/alojamientos-que-admiten-perros-en-playa-calzoa/\nDirección: 42.201941, -8.781888\nDescripción: Abiertas todo el año. Sin restricciones horarias\nMás Información:: http://www.redcanina.es/playas-para-perros-en-vigo-a-foz-y-a-calzoa/\nAlojamientos que Admiten Perros Cercanos: http://www.redcanina.es/alojamientos-que-admiten-perros-en-playa-calzoa/"
+  },
+  {
+    "id": "playa-canina-037",
+    "nombre": "Playa canina de Torrox",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Andalucía",
+    "provincia": "Málaga",
+    "localidad": "Torrox",
+    "lat": 36.72719,
+    "lon": -3.956795,
+    "web": "http://www.redcanina.es/playa-para-perros-en-torrox-malaga/",
+    "google_maps": "https://goo.gl/maps/zzSERxMXwYERp39F7",
+    "enlaces": [
+      "http://www.redcanina.es/playa-para-perros-en-torrox-malaga/",
+      "http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-de-torrox/",
+      "https://goo.gl/maps/zzSERxMXwYERp39F7"
+    ],
+    "descripcion": "29770 Torrox, Málaga, España\nCoordenadas: 36.72719, -3.95679\nMás Información:\nhttp://www.redcanina.es/playa-para-perros-en-torrox-malaga/\nAlojamientos que Admiten Perros Cercanos\nhttp://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-de-torrox/\nDirección:\nDescripción: Inaugurada el 7 de julio de 2018. Abierta todo el año. Sin restricciones horarias.\nMás Información:: http://www.redcanina.es/playa-para-perros-en-torrox-malaga/\nAlojamientos que Admiten Perros Cercanos: http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-de-torrox/"
+  },
+  {
+    "id": "playa-canina-038",
+    "nombre": "Playa canina de Alboraya",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Comunitat Valenciana",
+    "provincia": "Valencia",
+    "localidad": "Alboraia",
+    "lat": 39.503859,
+    "lon": -0.32223,
+    "web": "http://www.redcanina.es/port-saplaya-playa-para-perros-en-alboraya-valencia/",
+    "google_maps": "https://goo.gl/maps/QygPtFQsLJME7kQb9",
+    "enlaces": [
+      "http://www.redcanina.es/port-saplaya-playa-para-perros-en-alboraya-valencia/",
+      "http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-canina-de-alboraya/",
+      "https://goo.gl/maps/QygPtFQsLJME7kQb9"
+    ],
+    "descripcion": "Camí Sèquia de la Mosquera, 15, 46120 Alboraia, Valencia, España\nCoordenadas: 39.50385, -0.32222\nMás Información:\nhttp://www.redcanina.es/port-saplaya-playa-para-perros-en-alboraya-valencia/\nAlojamientos que Admiten Perros Cercanos\nhttp://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-canina-de-alboraya/\nDirección:\nDescripción: Acceso todo el año. Sin restricciones horarias\nMás Información:: http://www.redcanina.es/port-saplaya-playa-para-perros-en-alboraya-valencia/\nAlojamientos que Admiten Perros Cercanos: http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-canina-de-alboraya/"
+  },
+  {
+    "id": "playa-canina-039",
+    "nombre": "Playa de Valdearenas, Iznájar (Córdoba)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Andalucía",
+    "provincia": "Córdoba",
+    "localidad": "Iznájar",
+    "lat": 37.262992,
+    "lon": -4.324389,
+    "web": "http://www.redcanina.es/playa-de-valdearenas-playa-para-perros-en-iznajar-cordoba/",
+    "google_maps": "https://goo.gl/maps/uzLU5rfCWciyuhhx6",
+    "enlaces": [
+      "http://www.redcanina.es/playa-de-valdearenas-playa-para-perros-en-iznajar-cordoba/",
+      "http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-de-valdearenas/",
+      "https://goo.gl/maps/uzLU5rfCWciyuhhx6"
+    ],
+    "descripcion": "Paraje de, 14978, Córdoba, España\nCoordenadas: 37.26299, -4.32438\nMás Información:\nhttp://www.redcanina.es/playa-de-valdearenas-playa-para-perros-en-iznajar-cordoba/\nAlojamientos que Admiten Perros Cercanos\nhttp://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-de-valdearenas/\nDirección: 37.2633872,-4.3282807\nDescripción: Embalse. Acceso todo el año. Sin restricciones horarias\nMás Información:: http://www.redcanina.es/playa-de-valdearenas-playa-para-perros-en-iznajar-cordoba/\nAlojamientos que Admiten Perros Cercanos: http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-de-valdearenas/"
+  },
+  {
+    "id": "playa-canina-040",
+    "nombre": "Playa La Calera, Cartagena (Murcia)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Región de Murcia",
+    "provincia": "Murcia",
+    "localidad": "Cartagena",
+    "lat": 37.571861,
+    "lon": -1.194625,
+    "web": "http://www.redcanina.es/playa-para-perros-en-cartagena-isla-plana/",
+    "google_maps": "https://goo.gl/maps/PYaxUPvyqEg7ELkq8",
+    "enlaces": [
+      "http://www.redcanina.es/playa-para-perros-en-cartagena-isla-plana/",
+      "http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-de-la-calera/",
+      "https://goo.gl/maps/PYaxUPvyqEg7ELkq8"
+    ],
+    "descripcion": "Playa de la Calera, 30868, Murcia, España\nCoordenadas: 37.57186, -1.19462\nMás Información:\nhttp://www.redcanina.es/playa-para-perros-en-cartagena-isla-plana/\nAlojamientos que Admiten Perros Cercanos\nhttp://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-de-la-calera/\nDirección: 37.571487, -1.195440\nDescripción: Habilitada en 2018. Sin restricciones horarias\nMás Información:: http://www.redcanina.es/playa-para-perros-en-cartagena-isla-plana/\nAlojamientos que Admiten Perros Cercanos: http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-de-la-calera/"
+  },
+  {
+    "id": "playa-canina-041",
+    "nombre": "Playa de las Barcas, Colera (Girona)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cataluña",
+    "provincia": "Girona",
+    "localidad": "Colera",
+    "lat": 42.404326,
+    "lon": 3.157221,
+    "web": "http://www.redcanina.es/playa-de-las-barcas-playa-para-perros-en-colera-girona/",
+    "google_maps": "https://goo.gl/maps/GVhbykcnPXVgbufZA",
+    "enlaces": [
+      "http://www.redcanina.es/playa-de-las-barcas-playa-para-perros-en-colera-girona/",
+      "http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-de-las-barcas/",
+      "https://goo.gl/maps/GVhbykcnPXVgbufZA"
+    ],
+    "descripcion": "beach les Portes, 17496 Colera, Girona, España\nCoordenadas: 42.40432, 3.15722\nMás Información:\nhttp://www.redcanina.es/playa-de-las-barcas-playa-para-perros-en-colera-girona/\nAlojamientos que Admiten Perros Cercanos\nhttp://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-de-las-barcas/\nDirección: 42.404326, 3.157221\nDescripción:\nMás Información:: http://www.redcanina.es/playa-de-las-barcas-playa-para-perros-en-colera-girona/\nAlojamientos que Admiten Perros Cercanos: http://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-de-las-barcas/"
+  },
+  {
+    "id": "playa-canina-042",
+    "nombre": "Playa de Helgueras (Noja, Cantabria)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cantabria",
+    "provincia": "Cantabria",
+    "localidad": "Noja",
+    "lat": 43.469445,
+    "lon": -3.4812,
+    "web": "http://www.redcanina.es/playa-de-helgueras-playa-para-perros-en-noja/",
+    "google_maps": "https://goo.gl/maps/ERfPAejJZViRxLtY9",
+    "enlaces": [
+      "http://www.redcanina.es/playa-de-helgueras-playa-para-perros-en-noja/",
+      "https://goo.gl/maps/ERfPAejJZViRxLtY9"
+    ],
+    "descripcion": "Playa Trengandín, 39180 Noja, Cantabria, España\nCoordenadas: 43.46944, -3.4812\nMás Información:\nhttp://www.redcanina.es/playa-de-helgueras-playa-para-perros-en-noja/\nDirección:\nDescripción:\nMás Información:: http://www.redcanina.es/playa-de-helgueras-playa-para-perros-en-noja/\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-043",
+    "nombre": "Cala Les Urques (Calpe, Alicante)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Comunitat Valenciana",
+    "provincia": "Alicante",
+    "localidad": "Calp",
+    "lat": 38.632842,
+    "lon": 0.032414,
+    "web": "http://www.redcanina.es/cala-les-urques-playa-para-perros-en-calpe/",
+    "google_maps": "https://goo.gl/maps/SjbEHmC3XyQpu6AF7",
+    "enlaces": [
+      "http://www.redcanina.es/cala-les-urques-playa-para-perros-en-calpe/",
+      "http://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-cerca-de-cala-les-urques/",
+      "https://goo.gl/maps/SjbEHmC3XyQpu6AF7"
+    ],
+    "descripcion": "Partida Maryvilla, 11, 03710 Calpe, Alicante, España\nCoordenadas: 38.63284, 0.03241\nMás Información:\nhttp://www.redcanina.es/cala-les-urques-playa-para-perros-en-calpe/\nAlojamientos que Admiten Perros Cercanos\nhttp://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-cerca-de-cala-les-urques/\nDirección:\nDescripción:\nMás Información:: http://www.redcanina.es/cala-les-urques-playa-para-perros-en-calpe/\nAlojamientos que Admiten Perros Cercanos: http://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-cerca-de-cala-les-urques/"
+  },
+  {
+    "id": "playa-canina-044",
+    "nombre": "Playa El Callao, Arona",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Canarias",
+    "provincia": "Santa Cruz de Tenerife",
+    "localidad": "Arona",
+    "lat": 28.015476,
+    "lon": -16.706248,
+    "web": "https://www.redcanina.es/playa-para-perros-el-callao-en-las-bajas-tenerife/",
+    "google_maps": "https://goo.gl/maps/chRbERGGkfsy6Aku9",
+    "enlaces": [
+      "https://www.redcanina.es/playa-para-perros-el-callao-en-las-bajas-tenerife/",
+      "https://goo.gl/maps/chRbERGGkfsy6Aku9"
+    ],
+    "descripcion": "Playa El Callao, 38632 Arona, Santa Cruz de Tenerife, España\nCoordenadas: 28.01547, -16.70624\nMás Información:\nhttps://www.redcanina.es/playa-para-perros-el-callao-en-las-bajas-tenerife/\nDirección:\nDescripción:\nMás Información:: https://www.redcanina.es/playa-para-perros-el-callao-en-las-bajas-tenerife/\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-045",
+    "nombre": "Playa Laja los Cabritos, Tacorón",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Canarias",
+    "provincia": "Santa Cruz de Tenerife",
+    "localidad": "El Pinar",
+    "lat": 27.67121,
+    "lon": -18.026668,
+    "web": "https://www.playasparaperros.com/playa-perros-laja-los-cabritos-hierro/",
+    "google_maps": "https://goo.gl/maps/JtihwKAFAdzorybb9",
+    "enlaces": [
+      "https://www.playasparaperros.com/playa-perros-laja-los-cabritos-hierro/",
+      "https://goo.gl/maps/JtihwKAFAdzorybb9"
+    ],
+    "descripcion": "Playa de Tacorón, 38917, Santa Cruz de Tenerife, España\nCoordenadas: 27.67121, -18.02666\nMás Información:\nhttps://www.playasparaperros.com/playa-perros-laja-los-cabritos-hierro/\nDirección:\nDescripción:\nMás Información:: https://www.playasparaperros.com/playa-perros-laja-los-cabritos-hierro/\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-046",
+    "nombre": "Playa para Perros de Montgat-El Masnou (Barcelona)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cataluña",
+    "provincia": "Barcelona",
+    "localidad": "El Masnou",
+    "lat": 41.472681,
+    "lon": 2.297255,
+    "web": "https://www.redcanina.es/playa-para-perros-en-el-masnou-barcelona/",
+    "google_maps": "https://goo.gl/maps/aPcPzRXQrxx5mcEU7",
+    "enlaces": [
+      "https://www.redcanina.es/playa-para-perros-en-el-masnou-barcelona/",
+      "https://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-canina-de-el-masnou/",
+      "https://goo.gl/maps/aPcPzRXQrxx5mcEU7"
+    ],
+    "descripcion": "N-2, 58, 08320 El Masnou, Barcelona, España\nCoordenada: 41.47268, 2.29725\nMás Información:\nhttps://www.redcanina.es/playa-para-perros-en-el-masnou-barcelona/\nAlojamientos que Admiten Perros Cercanos\nhttps://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-canina-de-el-masnou/\nDirección:\nDescripción:\nMás Información:: https://www.redcanina.es/playa-para-perros-en-el-masnou-barcelona/\nAlojamientos que Admiten Perros Cercanos: https://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-canina-de-el-masnou/"
+  },
+  {
+    "id": "playa-canina-047",
+    "nombre": "Playa Punta del Riu, Mont-roig (Tarragona)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cataluña",
+    "provincia": "Tarragona",
+    "localidad": "Mont-roig del Camp",
+    "lat": 40.992239,
+    "lon": 0.93223,
+    "web": "https://www.redcanina.es/playa-para-perros-punta-del-riu-en-mont-roig-tarragona/",
+    "google_maps": "https://goo.gl/maps/Dz9QboQE5sTFA6B97",
+    "enlaces": [
+      "https://www.redcanina.es/playa-para-perros-punta-del-riu-en-mont-roig-tarragona/",
+      "https://goo.gl/maps/Dz9QboQE5sTFA6B97"
+    ],
+    "descripcion": "Carrer Ponent, 1, 43892 Mont-roig del Camp, Tarragona, España\nCoordenadas: 40.99223, 0.93223\nMás Información:\nhttps://www.redcanina.es/playa-para-perros-punta-del-riu-en-mont-roig-tarragona/\nDirección:\nDescripción:\nMás Información:: https://www.redcanina.es/playa-para-perros-punta-del-riu-en-mont-roig-tarragona/\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-048",
+    "nombre": "Playa Canina de Cambaredo, El Franco (Asturias)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Principado de Asturias",
+    "provincia": "Asturias",
+    "localidad": "El Franco",
+    "lat": 43.556217,
+    "lon": -6.81778,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/rVWc6QJn2bebxzTD8",
+    "enlaces": [
+      "https://goo.gl/maps/rVWc6QJn2bebxzTD8"
+    ],
+    "descripcion": "Playa de Cambaredo, Asturias, España\nCoordenadas: 43.55621, -6.81777\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-049",
+    "nombre": "Cala de la Torrota (Roda de Berà, Tarragona)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cataluña",
+    "provincia": "Tarragona",
+    "localidad": "Roda de Berà",
+    "lat": 41.167991,
+    "lon": 1.477038,
+    "web": "https://www.redcanina.es/cala-de-la-torrota-playa-para-perros-en-roda-de-bera-tarragona/",
+    "google_maps": "https://goo.gl/maps/x6pzf599pXzrH3VG7",
+    "enlaces": [
+      "https://www.redcanina.es/cala-de-la-torrota-playa-para-perros-en-roda-de-bera-tarragona/",
+      "https://goo.gl/maps/x6pzf599pXzrH3VG7"
+    ],
+    "descripcion": "Carrer Tírvia, 9, 43883 Roda de Berà, Tarragona, España\nCoordenadas: 41.16799, 1.47703\nMás Información:\nhttps://www.redcanina.es/cala-de-la-torrota-playa-para-perros-en-roda-de-bera-tarragona/\nDirección:\nDescripción:\nMás Información:: https://www.redcanina.es/cala-de-la-torrota-playa-para-perros-en-roda-de-bera-tarragona/\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-050",
+    "nombre": "Playa de Sant Jordi",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cataluña",
+    "provincia": "Girona",
+    "localidad": "Llançà",
+    "lat": 42.377757,
+    "lon": 3.1563735,
+    "web": "https://www.redcanina.es/playa-de-sant-jordi-playa-para-perros-en-llanca-girona/",
+    "google_maps": "https://goo.gl/maps/ZgouxtMsYEjB61fe6",
+    "enlaces": [
+      "https://www.redcanina.es/playa-de-sant-jordi-playa-para-perros-en-llanca-girona/",
+      "https://goo.gl/maps/ZgouxtMsYEjB61fe6"
+    ],
+    "descripcion": "Llansá, 17490, Girona, España\nCoordenadas: 42.37796, 3.1564\nMás Información:\nhttps://www.redcanina.es/playa-de-sant-jordi-playa-para-perros-en-llanca-girona/\nDirección:\nDescripción:\nMás Información:: https://www.redcanina.es/playa-de-sant-jordi-playa-para-perros-en-llanca-girona/\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-051",
+    "nombre": "Port de la Vall, Port de la Selva, Girona",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cataluña",
+    "provincia": "Girona",
+    "localidad": "El Port de la Selva",
+    "lat": 42.343653,
+    "lon": 3.18543,
+    "web": "https://www.redcanina.es/playas-para-perros-en-port-de-la-selva-girona/",
+    "google_maps": "https://goo.gl/maps/ZQ7V6QHWGmU4zDvj6",
+    "enlaces": [
+      "https://www.redcanina.es/playas-para-perros-en-port-de-la-selva-girona/",
+      "https://goo.gl/maps/ZQ7V6QHWGmU4zDvj6"
+    ],
+    "descripcion": "Platja de la Vall, 17489, España\nCoordenadas: 42.34365, 3.18543\nMás Información:\nhttps://www.redcanina.es/playas-para-perros-en-port-de-la-selva-girona/\nDirección:\nDescripción:\nMás Información:: https://www.redcanina.es/playas-para-perros-en-port-de-la-selva-girona/\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-052",
+    "nombre": "Playa de la Ribera, Port de la Selva (Girona)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cataluña",
+    "provincia": "Girona",
+    "localidad": "El Port de la Selva",
+    "lat": 42.33484,
+    "lon": 3.198935,
+    "web": "https://www.redcanina.es/playas-para-perros-en-port-de-la-selva-girona/",
+    "google_maps": "https://goo.gl/maps/3KQMS6Gk9viMRWc78",
+    "enlaces": [
+      "https://www.redcanina.es/playas-para-perros-en-port-de-la-selva-girona/",
+      "https://goo.gl/maps/3KQMS6Gk9viMRWc78"
+    ],
+    "descripcion": "Platja de la Ribera, Girona, España\nCoordenadas: 42.33484, 3.19893\nMás Información:\nhttps://www.redcanina.es/playas-para-perros-en-port-de-la-selva-girona/\nDirección:\nDescripción:\nMás Información:: https://www.redcanina.es/playas-para-perros-en-port-de-la-selva-girona/\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-053",
+    "nombre": "Cala Rocío, Torrevieja (Alicante)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Comunitat Valenciana",
+    "provincia": "Alicante",
+    "localidad": "Torrevieja",
+    "lat": 37.94758,
+    "lon": -0.704658,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/1ithbpwMCmnF4bPK6",
+    "enlaces": [
+      "https://goo.gl/maps/1ithbpwMCmnF4bPK6"
+    ],
+    "descripcion": "Playa Rocío del Mar, Alicante, España\nCoordenadas: 37.94757, -0.70465\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-054",
+    "nombre": "Playa Quintana, Valdés (Asturias)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Principado de Asturias",
+    "provincia": "Asturias",
+    "localidad": "Valdés",
+    "lat": 43.557429,
+    "lon": -6.408226,
+    "web": "https://www.redcanina.es/playas-para-perros-campiecho-y-quintana-en-valdes-asturias/",
+    "google_maps": "https://goo.gl/maps/MyKRvWYpUHFFRDbC9",
+    "enlaces": [
+      "https://www.redcanina.es/playas-para-perros-campiecho-y-quintana-en-valdes-asturias/",
+      "https://goo.gl/maps/MyKRvWYpUHFFRDbC9"
+    ],
+    "descripcion": "Playa Pluminero O Quintana, España\nCoordenadas: 43.55742, -6.40822\nMás Información:\nhttps://www.redcanina.es/playas-para-perros-campiecho-y-quintana-en-valdes-asturias/\nDirección:\nDescripción:\nMás Información:: https://www.redcanina.es/playas-para-perros-campiecho-y-quintana-en-valdes-asturias/\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-055",
+    "nombre": "Playa Campiecho, Valdés (Asturias)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Principado de Asturias",
+    "provincia": "Asturias",
+    "localidad": "Valdés",
+    "lat": 43.5585212,
+    "lon": -6.3934311,
+    "web": "https://www.redcanina.es/playas-para-perros-campiecho-y-quintana-en-valdes-asturias/",
+    "google_maps": "https://goo.gl/maps/ogR7z3iA6jF4P8oo6",
+    "enlaces": [
+      "https://www.redcanina.es/playas-para-perros-campiecho-y-quintana-en-valdes-asturias/",
+      "https://goo.gl/maps/ogR7z3iA6jF4P8oo6"
+    ],
+    "descripcion": "Playa de Campiechos, España\nCoordenadas: 43.55904, -6.39311\nMás Información:\nhttps://www.redcanina.es/playas-para-perros-campiecho-y-quintana-en-valdes-asturias/\nDirección:\nDescripción:\nMás Información:: https://www.redcanina.es/playas-para-perros-campiecho-y-quintana-en-valdes-asturias/\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-056",
+    "nombre": "Playa canina de la Conca, Malgrat de Mar (Barcelona)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cataluña",
+    "provincia": "Barcelona",
+    "localidad": "Malgrat de Mar",
+    "lat": 41.644122,
+    "lon": 2.749958,
+    "web": "https://www.redcanina.es/playa-para-perros-en-malgrat-de-mar-barcelona/",
+    "google_maps": "https://goo.gl/maps/JQtnZE8W8H8t8sNA9",
+    "enlaces": [
+      "https://www.redcanina.es/playa-para-perros-en-malgrat-de-mar-barcelona/",
+      "https://goo.gl/maps/JQtnZE8W8H8t8sNA9"
+    ],
+    "descripcion": "Camí de la Pomereda, 1, 08380 Malgrat de Mar, Barcelona, España\nCoordenadas: 41.64412, 2.74995\nMás Información:\nhttps://www.redcanina.es/playa-para-perros-en-malgrat-de-mar-barcelona/\nDirección:\nDescripción:\nMás Información:: https://www.redcanina.es/playa-para-perros-en-malgrat-de-mar-barcelona/\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-057",
+    "nombre": "Playa La Renegá, Oropesa (Castellón)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Comunitat Valenciana",
+    "provincia": "Castellón",
+    "localidad": "Oropesa del Mar",
+    "lat": 40.061838,
+    "lon": 0.117232,
+    "web": "https://www.redcanina.es/playa-para-perros-en-oropesa-del-mar/",
+    "google_maps": "https://goo.gl/maps/DsLLV4vqDrJZ8zjE9",
+    "enlaces": [
+      "https://www.redcanina.es/playa-para-perros-en-oropesa-del-mar/",
+      "https://goo.gl/maps/DsLLV4vqDrJZ8zjE9"
+    ],
+    "descripcion": "Platja de la Renegá, España\nCoordenadas: 40.06183, 0.11723\nMás Información:\nhttps://www.redcanina.es/playa-para-perros-en-oropesa-del-mar/\nDirección:\nDescripción:\nMás Información:: https://www.redcanina.es/playa-para-perros-en-oropesa-del-mar/\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-058",
+    "nombre": "Playa canina de Cabanas (A Coruña)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Galicia",
+    "provincia": "A Coruña",
+    "localidad": "Cabanas",
+    "lat": 43.4132187,
+    "lon": -8.1737886,
+    "web": "https://www.redcanina.es/playa-para-perros-en-cabanas-a-coruna/",
+    "google_maps": "https://goo.gl/maps/PPQtP7jGqPyZitp68",
+    "enlaces": [
+      "https://www.redcanina.es/playa-para-perros-en-cabanas-a-coruna/",
+      "https://goo.gl/maps/PPQtP7jGqPyZitp68",
+      "https://www.redcanina.es/playa-para-perros-en-cabanas-a-coruna/(abre"
+    ],
+    "descripcion": "Playa Madalena, 15621 Cabanas, A Coruña, España\nCoordenadas: 43.41335, -8.17408\nMás Información:\nhttps://www.redcanina.es/playa-para-perros-en-cabanas-a-coruna/\nDirección:\nDescripción:\nMás Información:: https://www.redcanina.es/playa-para-perros-en-cabanas-a-coruna/(abre en una nueva pestaña)\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-059",
+    "nombre": "Playa Larga",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Región de Murcia",
+    "provincia": "Murcia",
+    "localidad": "Cartagena",
+    "lat": 37.477396,
+    "lon": -1.467753,
+    "web": "https://www.redcanina.es/playa-para-perros-en-lorca/",
+    "google_maps": "https://goo.gl/maps/tC9zFwJ5faYsVZhf9",
+    "enlaces": [
+      "https://www.redcanina.es/playa-para-perros-en-lorca/",
+      "https://www.redcanina.es/alojamientos-que-admiten-perros-en-la-playa-larga-de-garrobillo/",
+      "https://goo.gl/maps/tC9zFwJ5faYsVZhf9"
+    ],
+    "descripcion": "Playa Larga, Murcia, España\nCoordenadas: 37.47739, -1.46775\nMás Información:\nhttps://www.redcanina.es/playa-para-perros-en-lorca/\nAlojamientos que Admiten Perros Cercanos\nhttps://www.redcanina.es/alojamientos-que-admiten-perros-en-la-playa-larga-de-garrobillo/\nDirección:\nDescripción:\nMás Información:: https://www.redcanina.es/playa-para-perros-en-lorca/\nAlojamientos que Admiten Perros Cercanos: https://www.redcanina.es/alojamientos-que-admiten-perros-en-la-playa-larga-de-garrobillo/"
+  },
+  {
+    "id": "playa-canina-060",
+    "nombre": "Cala Cabo Peñas, Orihuela (Alicante)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Comunitat Valenciana",
+    "provincia": "Alicante",
+    "localidad": "Orihuela",
+    "lat": 37.933882,
+    "lon": -0.71892,
+    "web": "https://www.redcanina.es/playa-para-perros-en-orihuela/",
+    "google_maps": "https://goo.gl/maps/8X873Baqz6k5DxEy6",
+    "enlaces": [
+      "https://www.redcanina.es/playa-para-perros-en-orihuela/",
+      "https://goo.gl/maps/8X873Baqz6k5DxEy6"
+    ],
+    "descripcion": "Plaça D-1 la Mosca y la Campana, 30, 03189 Orihuela, Alicante, España\nCoordenadas: 37.93388, -0.71892\nMás Información:\nhttps://www.redcanina.es/playa-para-perros-en-orihuela/\nDirección:\nDescripción:\nMás Información:: https://www.redcanina.es/playa-para-perros-en-orihuela/\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-061",
+    "nombre": "Playa de Poniente, Mataró (Barcelona)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cataluña",
+    "provincia": "Barcelona",
+    "localidad": "Mataró",
+    "lat": 41.52887,
+    "lon": 2.440817,
+    "web": "https://www.redcanina.es/playa-para-perros-en-mataro-barcelona/",
+    "google_maps": "https://goo.gl/maps/S3vkaSL67bAfYnA37",
+    "enlaces": [
+      "https://www.redcanina.es/playa-para-perros-en-mataro-barcelona/",
+      "https://goo.gl/maps/S3vkaSL67bAfYnA37"
+    ],
+    "descripcion": "Av. del Port, 95, 08302 Mataró, Barcelona, España\nCoordenadas: 41.52887, 2.44081\nMás Información:\nhttps://www.redcanina.es/playa-para-perros-en-mataro-barcelona/\nDirección:\nDescripción:\nMás Información:: https://www.redcanina.es/playa-para-perros-en-mataro-barcelona/\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-062",
+    "nombre": "Playa El Bobar (Almería)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Andalucía",
+    "provincia": "Almería",
+    "localidad": "Almería",
+    "lat": 36.813096,
+    "lon": -2.424179,
+    "web": "https://www.redcanina.es/playa-para-perros-el-bobar-en-almeria/",
+    "google_maps": "https://goo.gl/maps/g3QnQKVpFc1nPJXk7",
+    "enlaces": [
+      "https://www.redcanina.es/playa-para-perros-el-bobar-en-almeria/",
+      "https://goo.gl/maps/g3QnQKVpFc1nPJXk7"
+    ],
+    "descripcion": "Playa del Bobar, 04120, Almería, España\nCoordenadas: 36.81309, -2.42417\nMás Información:\nhttps://www.redcanina.es/playa-para-perros-el-bobar-en-almeria/\nDirección:\nDescripción:\nMás Información:: https://www.redcanina.es/playa-para-perros-el-bobar-en-almeria/\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-063",
+    "nombre": "Playa para Perros de Salinas, Los Alcázares (Murcia)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Región de Murcia",
+    "provincia": "Murcia",
+    "localidad": "Los Alcázares",
+    "lat": 37.76112,
+    "lon": -0.821732,
+    "web": "https://www.redcanina.es/las-salinas-playa-para-perros-en-el-mar-menor/",
+    "google_maps": "https://goo.gl/maps/9GvKeg6ESVvfAjPo6",
+    "enlaces": [
+      "https://www.redcanina.es/las-salinas-playa-para-perros-en-el-mar-menor/",
+      "https://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-cerca-de-la-playa-canina-de-las-salinas-en-los-alcazares-mar-menor/",
+      "https://goo.gl/maps/9GvKeg6ESVvfAjPo6"
+    ],
+    "descripcion": "Playa de la Hita, 30710, Murcia, España\nCoordenadas: 37.76112, -0.82173\nMás Información:\nhttps://www.redcanina.es/las-salinas-playa-para-perros-en-el-mar-menor/\nAlojamientos que Admiten Perros Cercanos\nhttps://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-cerca-de-la-playa-canina-de-las-salinas-en-los-alcazares-mar-menor/\nDirección:\nDescripción:\nMás Información:: https://www.redcanina.es/las-salinas-playa-para-perros-en-el-mar-menor/\nAlojamientos que Admiten Perros Cercanos: https://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-cerca-de-la-playa-canina-de-las-salinas-en-los-alcazares-mar-menor/"
+  },
+  {
+    "id": "playa-canina-064",
+    "nombre": "Playa canina La Veintiuna",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Andalucía",
+    "provincia": "Granada",
+    "localidad": "Almuñécar",
+    "lat": 36.73267,
+    "lon": -3.707925,
+    "web": "https://www.redcanina.es/playa-para-perros-en-almunecar-playa-la-veintiuna/",
+    "google_maps": "https://goo.gl/maps/WTibADLQouygP7Mq8",
+    "enlaces": [
+      "https://www.redcanina.es/playa-para-perros-en-almunecar-playa-la-veintiuna/",
+      "https://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-cerca-de-la-playa-canina-de-almunecar/",
+      "https://goo.gl/maps/WTibADLQouygP7Mq8"
+    ],
+    "descripcion": "P.º de Cotobro, 7b, 18690 Almuñécar, Granada, España\nCoordenadas: 36.73266, -3.70792\nMás Información:\nhttps://www.redcanina.es/playa-para-perros-en-almunecar-playa-la-veintiuna/\nAlojamientos que Admiten Perros Cercanos\nhttps://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-cerca-de-la-playa-canina-de-almunecar/\nDirección:\nDescripción:\nMás Información:: https://www.redcanina.es/playa-para-perros-en-almunecar-playa-la-veintiuna/\nAlojamientos que Admiten Perros Cercanos: https://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-cerca-de-la-playa-canina-de-almunecar/"
+  },
+  {
+    "id": "playa-canina-065",
+    "nombre": "Boca del Riu, Vinarós (Castellón)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Comunitat Valenciana",
+    "provincia": "Castellón",
+    "localidad": "Vinaròs",
+    "lat": 40.475928,
+    "lon": 0.484237,
+    "web": "https://www.redcanina.es/playa-boca-del-riu-playa-para-perros-en-vinaros/",
+    "google_maps": "https://goo.gl/maps/b2GLtQmjkH1Md2tB7",
+    "enlaces": [
+      "https://www.redcanina.es/playa-boca-del-riu-playa-para-perros-en-vinaros/",
+      "https://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-cerca-de-la-playa-boca-del-riu-en-vinaros/",
+      "https://goo.gl/maps/b2GLtQmjkH1Md2tB7"
+    ],
+    "descripcion": "Punta de los Cosis, España\nCoordenadas: 40.47592, 0.48423\nMás Información:\nhttps://www.redcanina.es/playa-boca-del-riu-playa-para-perros-en-vinaros/\nAlojamientos que Admiten Perros Cercanos\nhttps://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-cerca-de-la-playa-boca-del-riu-en-vinaros/\nDirección:\nDescripción:\nMás Información:: https://www.redcanina.es/playa-boca-del-riu-playa-para-perros-en-vinaros/\nAlojamientos que Admiten Perros Cercanos: https://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-cerca-de-la-playa-boca-del-riu-en-vinaros/"
+  },
+  {
+    "id": "playa-canina-066",
+    "nombre": "Playa del Patins a Vela (Badalona)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cataluña",
+    "provincia": "Barcelona",
+    "localidad": "Badalona",
+    "lat": 41.445881,
+    "lon": 2.250563,
+    "web": "https://www.redcanina.es/playa-para-perros-en-badalona-2022/",
+    "google_maps": "https://goo.gl/maps/6cC3wKJFGCZosmoG9",
+    "enlaces": [
+      "https://www.redcanina.es/playa-para-perros-en-badalona-2022/",
+      "https://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-cerca-de-la-playa-para-perros-de-badalona/",
+      "https://goo.gl/maps/6cC3wKJFGCZosmoG9"
+    ],
+    "descripcion": "Platja de l'Estació, C/ d'Eduard Maristany, 31, 08912 Badalona, Barcelona, España\nCoordenadas: 41.44588, 2.25056\nMás Información:\nhttps://www.redcanina.es/playa-para-perros-en-badalona-2022/\nAlojamientos que Admiten Perros Cercanos\nhttps://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-cerca-de-la-playa-para-perros-de-badalona/\nDirección:\nDescripción:\nMás Información:: https://www.redcanina.es/playa-para-perros-en-badalona-2022/\nAlojamientos que Admiten Perros Cercanos: https://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-cerca-de-la-playa-para-perros-de-badalona/"
+  },
+  {
+    "id": "playa-canina-067",
+    "nombre": "Playa para perros de Calella",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cataluña",
+    "provincia": "Barcelona",
+    "localidad": "Calella",
+    "lat": 41.611362,
+    "lon": 2.657545,
+    "web": "https://www.redcanina.es/playa-para-perros-en-calella/",
+    "google_maps": "https://goo.gl/maps/ptQxVUPcq8LhUXTb9",
+    "enlaces": [
+      "https://www.redcanina.es/playa-para-perros-en-calella/",
+      "https://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-gratis-cerca-de-la-playa-para-perros-de-calella/",
+      "https://goo.gl/maps/ptQxVUPcq8LhUXTb9"
+    ],
+    "descripcion": "08370 Calella, Barcelona, España\nCoordenadas: 41.61136, 2.65754\nMás Información:\nhttps://www.redcanina.es/playa-para-perros-en-calella/\nAlojamientos que Admiten Perros Cercanos\nhttps://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-gratis-cerca-de-la-playa-para-perros-de-calella/\nDirección:\nDescripción:\nMás Información:: https://www.redcanina.es/playa-para-perros-en-calella/\nAlojamientos que Admiten Perros Cercanos: https://www.redcanina.es/hoteles-y-apartamentos-que-admiten-perros-gratis-cerca-de-la-playa-para-perros-de-calella/"
+  },
+  {
+    "id": "playa-canina-068",
+    "nombre": "Playa para perros de Gavá",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cataluña",
+    "provincia": "Barcelona",
+    "localidad": "Gavà",
+    "lat": 41.265454,
+    "lon": 2.008746,
+    "web": "https://www.redcanina.es/playa-para-perros-en-gava-barcelona/",
+    "google_maps": "https://goo.gl/maps/fX4rZabtGcwVEDkA8",
+    "enlaces": [
+      "https://www.redcanina.es/playa-para-perros-en-gava-barcelona/",
+      "https://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-para-perros-de-gava/",
+      "https://goo.gl/maps/fX4rZabtGcwVEDkA8"
+    ],
+    "descripcion": "Carrer de Vandellòs, 08850, Barcelona, España\nCoordenadas: 41.26545, 2.00874\nMás Información:\nhttps://www.redcanina.es/playa-para-perros-en-gava-barcelona/\nAlojamientos que Admiten Perros Cercanos\nhttps://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-para-perros-de-gava/\nDirección:\nDescripción:\nMás Información:: https://www.redcanina.es/playa-para-perros-en-gava-barcelona/\nAlojamientos que Admiten Perros Cercanos: https://www.redcanina.es/alojamientos-que-admiten-perros-cerca-de-la-playa-para-perros-de-gava/"
+  },
+  {
+    "id": "playa-canina-069",
+    "nombre": "Playa para Perros",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Región de Murcia",
+    "provincia": "Murcia",
+    "localidad": "Mazarrón",
+    "lat": 37.5607725,
+    "lon": -1.2962945,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/DgvZBoNAut6A7Fyo7",
+    "enlaces": [
+      "https://goo.gl/maps/DgvZBoNAut6A7Fyo7"
+    ],
+    "descripcion": "Playa para Perros, P.º Marítimo del Castellar, 41, 30860 Mazarrón, Murcia, España\nCoordenadas: 37.56077, -1.29629\nwww.redcanina.es\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-070",
+    "nombre": "Playa para perros",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Comunitat Valenciana",
+    "provincia": "Valencia",
+    "localidad": "El Puig de Santa Maria",
+    "lat": 39.5968755,
+    "lon": -0.2691577,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/gpZzg4FPSj652cQx9",
+    "enlaces": [
+      "https://goo.gl/maps/gpZzg4FPSj652cQx9"
+    ],
+    "descripcion": "playa para perros, 46540 El Puig de Santa Maria, Valencia, España\nCoordenadas: 39.59687, -0.26915\nwww.playasparaperros.com\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-071",
+    "nombre": "playa para perros",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Comunitat Valenciana",
+    "provincia": "Alicante",
+    "localidad": "Altea",
+    "lat": 38.6202953,
+    "lon": -0.0240919,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/wzsa1jLH65Afj4Kt5",
+    "enlaces": [
+      "https://goo.gl/maps/wzsa1jLH65Afj4Kt5"
+    ],
+    "descripcion": "playa para perros, Altea, Alicante, España\nwww.altea.es\nCoordenadas: 38.62029, -0.02409\n+34 965 84 13 00\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-072",
+    "nombre": "Playa de La Maza",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cantabria",
+    "provincia": "Cantabria",
+    "localidad": "San Vicente de la Barquera",
+    "lat": 43.3836703,
+    "lon": -4.389671,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/Hsm538VtyP4f25GX7",
+    "enlaces": [
+      "https://goo.gl/maps/Hsm538VtyP4f25GX7"
+    ],
+    "descripcion": "Playa de La Maza, 39540, Cantabria, España\nCoordenadas: 43.38367, -4.38967\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-073",
+    "nombre": "La Riberuca",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cantabria",
+    "provincia": "Cantabria",
+    "localidad": "Suances",
+    "lat": 43.4287831,
+    "lon": -4.0346943,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/hfP9dua3xPxpzpzG7",
+    "enlaces": [
+      "https://goo.gl/maps/hfP9dua3xPxpzpzG7"
+    ],
+    "descripcion": "playa la riberuca, 39340 Suances, Cantabria, España\nCoordenadas: 43.42878, -4.03469\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-074",
+    "nombre": "Playa de Oriñón",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cantabria",
+    "provincia": "Cantabria",
+    "localidad": "Castro-Urdiales",
+    "lat": 43.4003412,
+    "lon": -3.3247266,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/xsC7bFyzMu5otdGV6",
+    "enlaces": [
+      "https://goo.gl/maps/xsC7bFyzMu5otdGV6"
+    ],
+    "descripcion": "Playa de Oriñón, 39798, Cantabria, España\nCoordenadas: 43.40034, -3.32472\noriñon.es\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-075",
+    "nombre": "Playa del Puntal",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Principado de Asturias",
+    "provincia": "Asturias",
+    "localidad": "Villaviciosa",
+    "lat": 43.5292888,
+    "lon": -5.3875749,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/SRoZBGie66x9SkYn8",
+    "enlaces": [
+      "https://goo.gl/maps/SRoZBGie66x9SkYn8"
+    ],
+    "descripcion": "Playa del Puntal, 33315, Asturias, España\nCoordenadas: 43.52928, -5.38757\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-076",
+    "nombre": "Platja de La Rubina",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cataluña",
+    "provincia": "Girona",
+    "localidad": "Castelló d'Empúries",
+    "lat": 42.2511975,
+    "lon": 3.1381688,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/v49cvPqtDNAE1CrVA",
+    "enlaces": [
+      "https://goo.gl/maps/v49cvPqtDNAE1CrVA"
+    ],
+    "descripcion": "Platja de La Rubina, 17486 Castelló d'Empúries, Girona, España\nCoordenadas: 42.25119, 3.13816\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-077",
+    "nombre": "Platja per a gossos",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cataluña",
+    "provincia": "Girona",
+    "localidad": "Torroella de Montgrí",
+    "lat": 42.0380546,
+    "lon": 3.1954638,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/ShPrJVZgUTJZsWxM9",
+    "enlaces": [
+      "https://goo.gl/maps/ShPrJVZgUTJZsWxM9"
+    ],
+    "descripcion": "25QW+65, 17258 Els Griells, Girona, España\nCoordenadas: 42.03805, 3.19546\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-078",
+    "nombre": "Playa Cala de Vallcarca",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cataluña",
+    "provincia": "Barcelona",
+    "localidad": "Sitges",
+    "lat": 41.2398735,
+    "lon": 1.8665708,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/5nqxoLXSKab83Qti8",
+    "enlaces": [
+      "https://goo.gl/maps/5nqxoLXSKab83Qti8"
+    ],
+    "descripcion": "Playa Cala de Vallcarca, 08872 Sitges, Barcelona, España\nCoordenadas: 41.23987, 1.86657\nwww.catalunya.com\n+34 920 94 42 51\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-079",
+    "nombre": "Playa de Llevant",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cataluña",
+    "provincia": "Barcelona",
+    "localidad": "Barcelona",
+    "lat": 41.4041678,
+    "lon": 2.2175083,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/QZRRtzmbf7Dh1Tpm8",
+    "enlaces": [
+      "https://goo.gl/maps/QZRRtzmbf7Dh1Tpm8"
+    ],
+    "descripcion": "Passeig Marítim del Bogatell, 145, 08005 Barcelona, España\nCoordenadas: 41.40416, 2.2175\nwww.barcelona.cat\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-080",
+    "nombre": "Platja de les Salines a Cubelles",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cataluña",
+    "provincia": "Barcelona",
+    "localidad": "Cubelles",
+    "lat": 41.196285,
+    "lon": 1.657361,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/2VjU4zXE3FjdqGu26",
+    "enlaces": [
+      "https://goo.gl/maps/2VjU4zXE3FjdqGu26"
+    ],
+    "descripcion": "Platja de les Salines a Cubelles, Carrer de Pau Claris, 19, 08880 Cubelles, Barcelona, España\nCoordenadas: 41.19628, 1.65736\nwww.cubelles.cat\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-081",
+    "nombre": "Platja Malgrat Centre",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cataluña",
+    "provincia": "Barcelona",
+    "localidad": "Malgrat de Mar",
+    "lat": 41.6420551,
+    "lon": 2.7416698,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/pnPCsUK6wRoxarfn7",
+    "enlaces": [
+      "https://goo.gl/maps/pnPCsUK6wRoxarfn7"
+    ],
+    "descripcion": "Platja Malgrat Centre, Passeig de Llevant, 3-4, 08380 Malgrat de Mar, Barcelona, España\nCoordenadas: 41.64205, 2.74166\nwww.ajmalgrat.cat\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-082",
+    "nombre": "Platja de la Bassa de l'Arena",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cataluña",
+    "provincia": "Tarragona",
+    "localidad": "Deltebre",
+    "lat": 40.7496837,
+    "lon": 0.8108776,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/22CF1bJqHnhLxRyZ6",
+    "enlaces": [
+      "https://goo.gl/maps/22CF1bJqHnhLxRyZ6"
+    ],
+    "descripcion": "Platja de la Bassa de l'Arena, 43580, Tarragona, España\nCoordenadas: 40.74968, 0.81087\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-083",
+    "nombre": "Playa para perros Cambrils",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cataluña",
+    "provincia": "Tarragona",
+    "localidad": "Cambrils",
+    "lat": 41.0636317,
+    "lon": 1.0548002,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/572zZUouNWAX6nXJ9",
+    "enlaces": [
+      "https://goo.gl/maps/572zZUouNWAX6nXJ9"
+    ],
+    "descripcion": "Barranc Torrent del Gene, 9999, 43850 Cambrils, Tarragona, España\nCoordenadas: 41.06363, 1.0548\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-084",
+    "nombre": "Playa para perros Santa Pola",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Comunitat Valenciana",
+    "provincia": "Alicante",
+    "localidad": "Santa Pola",
+    "lat": 38.214906,
+    "lon": -0.507634,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/FtiHftoVBG81nFfv8",
+    "enlaces": [
+      "https://goo.gl/maps/FtiHftoVBG81nFfv8"
+    ],
+    "descripcion": "03130 Santa Pola, Alicante, España\nCoordenadas: 38.2149, -0.50763\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-085",
+    "nombre": "Playa Can campello",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Comunitat Valenciana",
+    "provincia": "Alicante",
+    "localidad": "El Campello",
+    "lat": 38.4173961,
+    "lon": -0.3907476,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/3mXRQ5vjkyywAZUa7",
+    "enlaces": [
+      "https://goo.gl/maps/3mXRQ5vjkyywAZUa7"
+    ],
+    "descripcion": "Platja de gossos del Campello Punta del Riu, C. de Sant Vicent, 113, 03560 El Campello, Alicante, España\nCoordenadas: 38.41739, -0.39074\nwww.elcampelloturismo.com\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-086",
+    "nombre": "Playa El Xarco - Villajoyosa",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Comunitat Valenciana",
+    "provincia": "Alicante",
+    "localidad": "Villajoyosa",
+    "lat": 38.4896589,
+    "lon": -0.2820085,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/R1zfkWq7fSwjMBs3A",
+    "enlaces": [
+      "https://goo.gl/maps/R1zfkWq7fSwjMBs3A"
+    ],
+    "descripcion": "Playa El Xarco - Villajoyosa, Polígono Charco 1 Pp 30, 43, 03570 Villajoyosa, Alicante, España\nCoordenadas: 38.48965, -0.282\nwww.redcanina.es\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-087",
+    "nombre": "Playa Perros Alicante",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Comunitat Valenciana",
+    "provincia": "Alicante",
+    "localidad": "Alicante",
+    "lat": 38.2995343,
+    "lon": -0.5191009,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/eGNPrGjCyweex2uU9",
+    "enlaces": [
+      "https://goo.gl/maps/eGNPrGjCyweex2uU9"
+    ],
+    "descripcion": "Agua Amarga Playa, 03008 Alicante (Alacant), Alicante, España\nCoordenadas: 38.29953, -0.5191\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-088",
+    "nombre": "Playa autorizada para perros",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Comunitat Valenciana",
+    "provincia": "Alicante",
+    "localidad": "Orihuela",
+    "lat": 37.933427,
+    "lon": -0.718989,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/xV5NbwvWK5LRAr8RA",
+    "enlaces": [
+      "https://goo.gl/maps/xV5NbwvWK5LRAr8RA"
+    ],
+    "descripcion": "Plaça D-1 la Mosca y la Campana, 30, 03189 Orihuela, Alicante, España\nCoordenadas: 37.93342, -0.71898\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-089",
+    "nombre": "Playa de Pinedo",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Comunitat Valenciana",
+    "provincia": "Valencia",
+    "localidad": "Valencia",
+    "lat": 39.4218939,
+    "lon": -0.3330735,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/YVNtzn2Asgsx4Ahs8",
+    "enlaces": [
+      "https://goo.gl/maps/YVNtzn2Asgsx4Ahs8"
+    ],
+    "descripcion": "Playa de Pinedo, España\nCoordenada: 39.42189, -0.33307\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-090",
+    "nombre": "Playa de las Piedras de la Paloma",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Andalucía",
+    "provincia": "Málaga",
+    "localidad": "Casares",
+    "lat": 36.382426,
+    "lon": -5.2098678,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/sN35f5iY36PTP6ag9",
+    "enlaces": [
+      "https://goo.gl/maps/sN35f5iY36PTP6ag9"
+    ],
+    "descripcion": "Playa de las Piedras de la Paloma, España\nCoordenadas: 36.38242, -5.20986\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-091",
+    "nombre": "Playa de la Sirena Loca",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Andalucía",
+    "provincia": "Almería",
+    "localidad": "Adra",
+    "lat": 36.7464068,
+    "lon": -3.0282569,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/rHyTRmEHkfRwYAfy7",
+    "enlaces": [
+      "https://goo.gl/maps/rHyTRmEHkfRwYAfy7"
+    ],
+    "descripcion": "Playa de la Sirena Loca, Calle Pte., 1, 04770 Adra, Almería, España\nCoordenadas: 36.7464, -3.02825\nwww.adra.es\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-092",
+    "nombre": "Playa Canina - Playacan",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Andalucía",
+    "provincia": "Granada",
+    "localidad": "Motril",
+    "lat": 36.7220068,
+    "lon": -3.532263,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/J7oPnVcHA6uDqbiP8",
+    "enlaces": [
+      "https://goo.gl/maps/J7oPnVcHA6uDqbiP8"
+    ],
+    "descripcion": "Playa Canina - Playacan, Puerto, 11, 18613 Motril, Granada, España\nCoordenadas: 36.722, -3.53226\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-093",
+    "nombre": "Playa de la Casita Azul",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Andalucía",
+    "provincia": "Huelva",
+    "localidad": "Isla Cristina",
+    "lat": 37.1998003,
+    "lon": -7.2865307,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/WLnKYFwiDPNVhJLLA",
+    "enlaces": [
+      "https://goo.gl/maps/WLnKYFwiDPNVhJLLA"
+    ],
+    "descripcion": "Playa de la Casita Azul, Huelva, España\nCoordenadas: 37.1998, -7.28653\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-094",
+    "nombre": "Playa de Punta Umbría",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Andalucía",
+    "provincia": "Huelva",
+    "localidad": "Punta Umbría",
+    "lat": 37.1737869,
+    "lon": -6.960506,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/p4kaxNMuA5bG5A8Q7",
+    "enlaces": [
+      "https://goo.gl/maps/p4kaxNMuA5bG5A8Q7"
+    ],
+    "descripcion": "Playa de Punta Umbría, España\nCoordenadas: 37.17378, -6.9605\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-095",
+    "nombre": "Playa del Gachero",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Región de Murcia",
+    "provincia": "Murcia",
+    "localidad": "Mazarrón",
+    "lat": 37.5605156,
+    "lon": -1.2657868,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/mXSFosnGngudXHMg8",
+    "enlaces": [
+      "https://goo.gl/maps/mXSFosnGngudXHMg8"
+    ],
+    "descripcion": "Playa del Gachero, Murcia, España\nCoordenadas: 37.56051, -1.26578\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-096",
+    "nombre": "Playa de las Covaticas",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Región de Murcia",
+    "provincia": "Murcia",
+    "localidad": "Mazarrón",
+    "lat": 37.5377972,
+    "lon": -1.3697587,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/iDQ537gXjwvJodXK8",
+    "enlaces": [
+      "https://goo.gl/maps/iDQ537gXjwvJodXK8"
+    ],
+    "descripcion": "Playa de las Covaticas, 30876, España\nCoordenadas: 37.53779, -1.36975\nwww.visitamazarron.com\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-097",
+    "nombre": "Playa de la Cañada del Negro",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Región de Murcia",
+    "provincia": "Murcia",
+    "localidad": "Águilas",
+    "lat": 37.3954844,
+    "lon": -1.6024506,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/rcRFvmTHGAagM6zz7",
+    "enlaces": [
+      "https://goo.gl/maps/rcRFvmTHGAagM6zz7"
+    ],
+    "descripcion": "Playa de la Cañada del Negro, 30880, Murcia, España\nCoordenadas: 37.39548, -1.60245\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-098",
+    "nombre": "Playa de Calarreona",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Región de Murcia",
+    "provincia": "Murcia",
+    "localidad": "Águilas",
+    "lat": 37.3833412,
+    "lon": -1.6211373,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/NW9TM4U1wJFJRoJ9A",
+    "enlaces": [
+      "https://goo.gl/maps/NW9TM4U1wJFJRoJ9A"
+    ],
+    "descripcion": "Playa de Calarreona, España\nCoordenadas: 37.38334, -1.62113\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-099",
+    "nombre": "Cala Mijo",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Región de Murcia",
+    "provincia": "Murcia",
+    "localidad": "Águilas",
+    "lat": 37.3845426,
+    "lon": -1.6125699,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/yeBwEvzgA7BAHMbk6",
+    "enlaces": [
+      "https://goo.gl/maps/yeBwEvzgA7BAHMbk6"
+    ],
+    "descripcion": "Cala Mijo, 30889, Murcia, España\nCoordenadas: 37.38454, -1.61256\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-100",
+    "nombre": "Praia do Espiño",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Galicia",
+    "provincia": "Pontevedra",
+    "localidad": "O Grove",
+    "lat": 42.4595534,
+    "lon": -8.9191015,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/k7eBDi3py3NWcKSX6",
+    "enlaces": [
+      "https://goo.gl/maps/k7eBDi3py3NWcKSX6"
+    ],
+    "descripcion": "Praia do Espiño, España\nCoordenadas: 42.45955, -8.9191\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-101",
+    "nombre": "Praia Da Lagoelas",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Galicia",
+    "provincia": "Pontevedra",
+    "localidad": "Cangas",
+    "lat": 42.3020244,
+    "lon": -8.820341,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/uLSRTXc3iNpzpJkq9",
+    "enlaces": [
+      "https://goo.gl/maps/uLSRTXc3iNpzpJkq9"
+    ],
+    "descripcion": "Praia Da Lagoelas, Pontevedra, España\nCoordenadas: 42.30202, -8.82034\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-102",
+    "nombre": "Playa de la Calzoa",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Galicia",
+    "provincia": "Pontevedra",
+    "localidad": "Vigo",
+    "lat": 42.2019263,
+    "lon": -8.7823536,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/gHd1LRMX1AXAzTZ36",
+    "enlaces": [
+      "https://goo.gl/maps/gHd1LRMX1AXAzTZ36"
+    ],
+    "descripcion": "Praia da Calzoa, Rúa de Canido, 6, 36331 Vigo, Pontevedra, España\nCoordenadas: 42.20192, -8.78235\nhoxe.vigo.org\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-103",
+    "nombre": "Praia de Fonteiña",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Galicia",
+    "provincia": "Pontevedra",
+    "localidad": "Vigo",
+    "lat": 42.2031981,
+    "lon": -8.7810784,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/EwCMC6rd9KB5RpP5A",
+    "enlaces": [
+      "https://goo.gl/maps/EwCMC6rd9KB5RpP5A"
+    ],
+    "descripcion": "Praia de Fonteiña, España\nCoordenadas: 42.20319, -8.78107\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-104",
+    "nombre": "Praia de Ares",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Galicia",
+    "provincia": "A Coruña",
+    "localidad": "Ares",
+    "lat": 43.4234295,
+    "lon": -8.2447132,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/piPHpquXHKZ8WUXNA",
+    "enlaces": [
+      "https://goo.gl/maps/piPHpquXHKZ8WUXNA"
+    ],
+    "descripcion": "Praia de Ares, España\nCoordenadas: 43.42342, -8.24471\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-105",
+    "nombre": "Playa del Cervigón",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Principado de Asturias",
+    "provincia": "Asturias",
+    "localidad": "Gijón",
+    "lat": 43.5483083,
+    "lon": -5.639263,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/PeicseNPi733rFvh7",
+    "enlaces": [
+      "https://goo.gl/maps/PeicseNPi733rFvh7"
+    ],
+    "descripcion": "Playa del Cervigón, Av. de José García Bernardo, 86, 33203 Gijón, Asturias, España\nCoordenadas:43.5483, -5.63926\nwww.turismoasturias.es\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-106",
+    "nombre": "Cala de Salencia, Novellana (Apta para perros)",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Principado de Asturias",
+    "provincia": "Asturias",
+    "localidad": "Cudillero",
+    "lat": 43.5727519,
+    "lon": -6.2784468,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/EsaxTdzkaNqfuLqeA",
+    "enlaces": [
+      "https://goo.gl/maps/EsaxTdzkaNqfuLqeA"
+    ],
+    "descripcion": "Cala de Salencia, Novellana (Apta para perros), 33157 Cudillero, Asturias, España\nCoordenadas: 43.57275, -6.27844\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-107",
+    "nombre": "Playa de El Sablón",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Principado de Asturias",
+    "provincia": "Asturias",
+    "localidad": "Castrillón",
+    "lat": 43.4226419,
+    "lon": -4.752819,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/YaDrufqLSngvMSJbA",
+    "enlaces": [
+      "https://goo.gl/maps/YaDrufqLSngvMSJbA"
+    ],
+    "descripcion": "Playa de El Sablón, España\nCoordenadas: 43.42264, -4.75281\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-108",
+    "nombre": "Playa de Marzán",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cantabria",
+    "provincia": "Cantabria",
+    "localidad": "Suances",
+    "lat": 43.4360438,
+    "lon": -4.0309121,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/2RCCjzY1q7F2zwpZ8",
+    "enlaces": [
+      "https://goo.gl/maps/2RCCjzY1q7F2zwpZ8"
+    ],
+    "descripcion": "Playa de Marzán, Cantabria, España\nCoordenadas: 43.43604, -4.03091\nturismodecantabria.com\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-109",
+    "nombre": "Playa de Brazomar",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cantabria",
+    "provincia": "Cantabria",
+    "localidad": "Castro-Urdiales",
+    "lat": 43.3741389,
+    "lon": -3.2119156,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/7qNtFJq3kstKnQTF7",
+    "enlaces": [
+      "https://goo.gl/maps/7qNtFJq3kstKnQTF7"
+    ],
+    "descripcion": "39700 Castro-Urdiales, Cantabria, España\nCoordenadas: 43.37413, -3.21191\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-110",
+    "nombre": "Cala de Mioño",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cantabria",
+    "provincia": "Cantabria",
+    "localidad": "Castro-Urdiales",
+    "lat": 43.3674042,
+    "lon": -3.1955295,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/cWxem6eB6H9yRW6t8",
+    "enlaces": [
+      "https://goo.gl/maps/cWxem6eB6H9yRW6t8"
+    ],
+    "descripcion": "39700 Castro-Urdiales, Cantabria, España\nCoordenadas: 43.3674, -3.19552\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-111",
+    "nombre": "Playa De Somo",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cantabria",
+    "provincia": "Cantabria",
+    "localidad": "Ribamontán al Mar",
+    "lat": 43.4587412,
+    "lon": -3.7336711,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/kRP9U7UWCSDitwbW6",
+    "enlaces": [
+      "https://goo.gl/maps/kRP9U7UWCSDitwbW6"
+    ],
+    "descripcion": "Playa De Somo, Cantabria, España\nCoordenadas: 43.45874, -3.73367\nLa playa de perros empieza en el embarcadero el horario para ellos es de 8 de la tarde a 9 de la mañana.\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-112",
+    "nombre": "Playa De Los Tranquilos",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Cantabria",
+    "provincia": "Cantabria",
+    "localidad": "Ribamontán al Mar",
+    "lat": 43.4634875,
+    "lon": -3.7263732,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/gKdYKDnhVghbesSr5",
+    "enlaces": [
+      "https://goo.gl/maps/gKdYKDnhVghbesSr5"
+    ],
+    "descripcion": "Playa De Los Tranquilos, Cantabria, España\nCoordenadas: 43.46348, -3.72637\nwww.ribamontanalmar.es\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-113",
+    "nombre": "Platja de cans - Pollença",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Illes Balears",
+    "provincia": "Illes Balears",
+    "localidad": "Pollença",
+    "lat": 39.8916206,
+    "lon": 3.0780692,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/gEcFgmKQDdC2buNYA",
+    "enlaces": [
+      "https://goo.gl/maps/gEcFgmKQDdC2buNYA"
+    ],
+    "descripcion": "Via Alemanya, 2, 07470 Pollença, Illes Balears, España\nCoordenadas: 39.89162, 3.07806\nwww.redcanina.es\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-114",
+    "nombre": "Na Patana",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Illes Balears",
+    "provincia": "Illes Balears",
+    "localidad": "Santa Margalida",
+    "lat": 39.7572051,
+    "lon": 3.1756125,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/JG4fHgRhEuh4SWUPA",
+    "enlaces": [
+      "https://goo.gl/maps/JG4fHgRhEuh4SWUPA"
+    ],
+    "descripcion": "Na Patana, 07450, Balearic Islands, España\nCoordenadas: 39.7572, 3.17561\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-115",
+    "nombre": "Playa perros Es Carnatge",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Illes Balears",
+    "provincia": "Illes Balears",
+    "localidad": "Palma",
+    "lat": 39.540123,
+    "lon": 2.7056495,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/pTAKoTbc4hABZRUu8",
+    "enlaces": [
+      "https://goo.gl/maps/pTAKoTbc4hABZRUu8"
+    ],
+    "descripcion": "Carrer Prol Denton, 52, 07610 Palma, Illes Balears, España\nCoordenadas: 39.54012, 2.70564\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-116",
+    "nombre": "Cala Blanca",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Illes Balears",
+    "provincia": "Illes Balears",
+    "localidad": "Andratx",
+    "lat": 39.5369861,
+    "lon": 2.4057832,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/rwvTzNVt474Sex9g9",
+    "enlaces": [
+      "https://goo.gl/maps/rwvTzNVt474Sex9g9"
+    ],
+    "descripcion": "Cala Blanca, Camí Cala Blanca, 1Y, 07160 Andratx, Illes Balears, España\nCoordenadas: 39.53698, 2.40578\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-117",
+    "nombre": "Playa Los Tres Peos",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Canarias",
+    "provincia": "Las Palmas",
+    "localidad": "Agüimes",
+    "lat": 27.879599,
+    "lon": -15.3901071,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/MmWBVyZCc4H4yewX9",
+    "enlaces": [
+      "https://goo.gl/maps/MmWBVyZCc4H4yewX9"
+    ],
+    "descripcion": "35269, Las Palmas, España\nCoordenadas: 27.87959, -15.3901\nwww.redcanina.es\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-118",
+    "nombre": "Playa de Bocabarranco",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Canarias",
+    "provincia": "Las Palmas",
+    "localidad": "Telde",
+    "lat": 28.0313917,
+    "lon": -15.3963692,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/KCqXFgzBg125q4Zr9",
+    "enlaces": [
+      "https://goo.gl/maps/KCqXFgzBg125q4Zr9"
+    ],
+    "descripcion": "Playa de Bocabarranco, 35220 Las Palmas de Gran Canaria, Las Palmas, España\nCoordenadas: 28.03139, -15.39636\nsinpagina.com\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-119",
+    "nombre": "Playa Del Puertito De Adeje",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Canarias",
+    "provincia": "Santa Cruz de Tenerife",
+    "localidad": "Adeje",
+    "lat": 28.1127461,
+    "lon": -16.7677834,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/vq8Qvf2TWuc9k8fN9",
+    "enlaces": [
+      "https://goo.gl/maps/vq8Qvf2TWuc9k8fN9"
+    ],
+    "descripcion": "Playa Del Puertito De Adeje, Pje Puertito Sau, 18, 38678 El Puertito, Santa Cruz de Tenerife, España\nCoordenadas: 28.11274, -16.76778\n+34 638 73 99 46\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-120",
+    "nombre": "Playa del Horno",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Canarias",
+    "provincia": "Santa Cruz de Tenerife",
+    "localidad": "Granadilla de Abona",
+    "lat": 28.0313536,
+    "lon": -16.5706531,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/wySFXY1FqS5Z6ZoaA",
+    "enlaces": [
+      "https://goo.gl/maps/wySFXY1FqS5Z6ZoaA"
+    ],
+    "descripcion": "Playa del Horno, 38618, Santa Cruz de Tenerife, España\nCoordenadas: 28.03135, -16.57065\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  },
+  {
+    "id": "playa-canina-121",
+    "nombre": "Playa de Guasimeta",
+    "tipo": "playa_canina",
+    "admite_mascotas": true,
+    "pais": "España",
+    "comunidad_autonoma": "Canarias",
+    "provincia": "Las Palmas",
+    "localidad": "San Bartolomé",
+    "lat": 28.9367248,
+    "lon": -13.6088704,
+    "web": null,
+    "google_maps": "https://goo.gl/maps/7dH8DGug2QzR9NE46",
+    "enlaces": [
+      "https://goo.gl/maps/7dH8DGug2QzR9NE46"
+    ],
+    "descripcion": "Playa de Guasimeta, Las Palmas, España\nCoordenadas: 28.93672, -13.60887\nDirección:\nDescripción:\nMás Información::\nAlojamientos que Admiten Perros Cercanos:"
+  }
+]
