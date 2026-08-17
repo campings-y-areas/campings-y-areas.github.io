@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Zonas de acampadas controladas | Campings & Áreas</title>
+
+  <link rel="stylesheet" href="style.css?v=2">
+</head>
+
+<body>
+
+  <header>
+    <h1>
+      <img src="logo.png" alt="Campings & Áreas" class="logo">
+      Campings & Áreas
+    </h1>
+  </header>
+
+
+  <nav class="menu">
+
+    <a href="index.html">
+      🏠 Inicio
+    </a>
+
+    <a href="campings.html">
+      🏕️ Campings
+    </a>
+
+    <a href="areas.html?tipo=area">
+      🚐 Áreas
+    </a>
+
+    <a href="areas.html?tipo=parking">
+      🅿️ Parkings
+    </a>
+
+    <a href="acampadas.html">
+      🥾 Acampadas
+    </a>
+
+    <a href="#">
+      📍 Lugares
+    </a>
+
+    <a href="#">
+      🔧 Servicios
+    </a>
+
+  </nav>
+
+
+  <main>
+
+    <section class="bienvenida">
+
+      <h2>
+        🥾 Zonas de acampadas controladas
+      </h2>
+
+      <p>
+        Encuentra zonas de acampada controlada y espacios habilitados
+        para disfrutar de la naturaleza.
+      </p>
+
+      <p class="estado">
+        Consulta la ubicación, información disponible y condiciones
+        de cada zona antes de realizar la acampada.
+      </p>
+
+    </section>
+
+
+    <section class="buscador">
+
+      <h2>
+        🔎 Buscar zonas de acampadas controladas
+      </h2>
+
+
+      <div class="buscador-campos">
+
+        <input
+          type="text"
+          id="buscarAcampada"
+          placeholder="Nombre, localidad, provincia o comunidad autónoma"
+        >
+
+        <select id="comunidadAcampada">
+          <option value="">Todas las comunidades</option>
+        </select>
+
+        <button
+          type="button"
+          id="botonBuscarAcampada"
+        >
+          Buscar
+        </button>
+
+      </div>
+
+
+      <div class="filtros-camping">
+
+        <label>
+          <input
+            type="checkbox"
+            id="filtroPermiso"
+          >
+          📋 Requiere permiso
+        </label>
+
+        <label>
+          <input
+            type="checkbox"
+            id="filtroAbierta"
+          >
+          ✅ Abierta
+        </label>
+
+      </div>
+
+    </section>
+
+
+    <section
+      id="resultadosAcampadas"
+      class="resultados-campings">
+    </section>
+
+  </main>
+
+
+  <script src="acampadas.js?v=1"></script>
+
+</body>
+
+</html>
