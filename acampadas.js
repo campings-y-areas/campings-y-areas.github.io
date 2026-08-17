@@ -53,7 +53,9 @@ function normalizarUrl(url) {
 function crearEnlaceMapa(zona) {
 
   if (zona.google_maps) {
-    return normalizarUrl(zona.google_maps);
+    return normalizarUrl(
+      zona.google_maps
+    );
   }
 
   if (
@@ -86,6 +88,47 @@ function crearEnlaceMapa(zona) {
     "https://www.google.com/maps/search/?api=1&query=" +
     encodeURIComponent(consulta)
   );
+}
+
+
+// ==========================================
+// LIMPIAR DESCRIPCIÓN DEL KML
+// ==========================================
+
+function limpiarDescripcion(texto) {
+
+  if (!texto) {
+    return "";
+  }
+
+  const lineas =
+    texto
+      .split("\n")
+      .map(linea => linea.trim())
+      .filter(linea => {
+
+        if (!linea) {
+          return false;
+        }
+
+        const lineaNormalizada =
+          normalizarTexto(linea);
+
+        return !(
+          lineaNormalizada.startsWith("id:") ||
+          lineaNormalizada.startsWith("map_id:") ||
+          lineaNormalizada.startsWith("pic:") ||
+          lineaNormalizada.startsWith("lat:") ||
+          lineaNormalizada.startsWith("lng:") ||
+          lineaNormalizada.startsWith("admin:") ||
+          lineaNormalizada.startsWith("direccion:") ||
+          lineaNormalizada.startsWith("descripcion:") ||
+          lineaNormalizada.startsWith("mas informacion:")
+        );
+
+      });
+
+  return lineas.join("\n");
 }
 
 
@@ -514,6 +557,10 @@ function crearFichaAcampada(zona) {
   );
 
 
+  // ========================================
+  // UBICACIÓN
+  // ========================================
+
   const ubicacion = [
     zona.localidad,
     zona.provincia,
@@ -541,6 +588,10 @@ function crearFichaAcampada(zona) {
 
   }
 
+
+  // ========================================
+  // AVISOS
+  // ========================================
 
   const avisos = [];
 
@@ -596,9 +647,17 @@ function crearFichaAcampada(zona) {
   }
 
 
-  // DESCRIPCIÓN COMPLETA
+  // ========================================
+  // DESCRIPCIÓN LIMPIA
+  // ========================================
 
-  if (zona.descripcion_original) {
+  const descripcionLimpia =
+    limpiarDescripcion(
+      zona.descripcion_original
+    );
+
+
+  if (descripcionLimpia) {
 
     const descripcion =
       document.createElement("p");
@@ -610,7 +669,7 @@ function crearFichaAcampada(zona) {
       "pre-line";
 
     descripcion.textContent =
-      zona.descripcion_original;
+      descripcionLimpia;
 
     ficha.appendChild(
       descripcion
@@ -619,7 +678,9 @@ function crearFichaAcampada(zona) {
   }
 
 
+  // ========================================
   // ENLACES
+  // ========================================
 
   const enlaces =
     document.createElement("div");
