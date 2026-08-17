@@ -53,9 +53,7 @@ function normalizarUrl(url) {
 function crearEnlaceMapa(zona) {
 
   if (zona.google_maps) {
-    return normalizarUrl(
-      zona.google_maps
-    );
+    return normalizarUrl(zona.google_maps);
   }
 
   if (
@@ -66,9 +64,7 @@ function crearEnlaceMapa(zona) {
   ) {
     return (
       "https://www.google.com/maps/search/?api=1&query=" +
-      encodeURIComponent(
-        `${zona.lat},${zona.lon}`
-      )
+      encodeURIComponent(`${zona.lat},${zona.lon}`)
     );
   }
 
@@ -101,6 +97,26 @@ function limpiarDescripcion(texto) {
     return "";
   }
 
+  const camposTecnicos = [
+    "id:",
+    "map_id:",
+    "pic:",
+    "lat:",
+    "lng:",
+    "admin:",
+    "direccion:",
+    "descripcion:",
+    "mas informacion:",
+    "icon:",
+    "anim:",
+    "infoopen:",
+    "category:",
+    "approved:",
+    "retina:",
+    "unnamed",
+    "alojamientos que admiten perros cercanos:"
+  ];
+
   const lineas =
     texto
       .split("\n")
@@ -114,18 +130,25 @@ function limpiarDescripcion(texto) {
         const lineaNormalizada =
           normalizarTexto(linea);
 
-        return !(
-          lineaNormalizada.startsWith("id:") ||
-          lineaNormalizada.startsWith("map_id:") ||
-          lineaNormalizada.startsWith("pic:") ||
-          lineaNormalizada.startsWith("lat:") ||
-          lineaNormalizada.startsWith("lng:") ||
-          lineaNormalizada.startsWith("admin:") ||
-          lineaNormalizada.startsWith("direccion:") ||
-          lineaNormalizada.startsWith("descripcion:") ||
-          lineaNormalizada.startsWith("mas informacion:")
-        );
+        const esTecnica =
+          camposTecnicos.some(campo =>
+            lineaNormalizada.startsWith(campo)
+          );
 
+        if (esTecnica) {
+          return false;
+        }
+
+        // Google Maps ya tiene su propio botón.
+        if (
+          lineaNormalizada.includes("google.com/maps") ||
+          lineaNormalizada.includes("maps.app.goo.gl") ||
+          lineaNormalizada.includes("goo.gl/maps")
+        ) {
+          return false;
+        }
+
+        return true;
       });
 
   return lineas.join("\n");
@@ -139,22 +162,17 @@ function limpiarDescripcion(texto) {
 function cargarComunidades() {
 
   const selector =
-    document.getElementById(
-      "comunidadAcampada"
-    );
+    document.getElementById("comunidadAcampada");
 
   if (!selector) {
     return;
   }
 
-
   const comunidades =
     [
       ...new Set(
         acampadas
-          .map(zona =>
-            zona.comunidad_autonoma
-          )
+          .map(zona => zona.comunidad_autonoma)
           .filter(Boolean)
       )
     ]
@@ -162,28 +180,20 @@ function cargarComunidades() {
         a.localeCompare(
           b,
           "es",
-          {
-            sensitivity: "base"
-          }
+          { sensitivity: "base" }
         )
       );
-
 
   comunidades.forEach(comunidad => {
 
     const opcion =
       document.createElement("option");
 
-    opcion.value =
-      comunidad;
-
-    opcion.textContent =
-      comunidad;
+    opcion.value = comunidad;
+    opcion.textContent = comunidad;
 
     selector.appendChild(opcion);
-
   });
-
 }
 
 
@@ -194,35 +204,21 @@ function cargarComunidades() {
 function buscarAcampadas() {
 
   const campo =
-    document.getElementById(
-      "buscarAcampada"
-    );
+    document.getElementById("buscarAcampada");
 
   const texto =
     normalizarTexto(
-      campo
-        ? campo.value
-        : ""
+      campo ? campo.value : ""
     );
 
-
   const comunidad =
-    document.getElementById(
-      "comunidadAcampada"
-    )?.value || "";
-
+    document.getElementById("comunidadAcampada")?.value || "";
 
   const soloPermiso =
-    document.getElementById(
-      "filtroPermiso"
-    )?.checked || false;
-
+    document.getElementById("filtroPermiso")?.checked || false;
 
   const soloAbierta =
-    document.getElementById(
-      "filtroAbierta"
-    )?.checked || false;
-
+    document.getElementById("filtroAbierta")?.checked || false;
 
   resultadosActuales =
     acampadas.filter(zona => {
@@ -240,27 +236,22 @@ function buscarAcampadas() {
             .join(" ")
         );
 
-
       const coincideTexto =
         texto === "" ||
         contenido.includes(texto);
-
 
       const coincideComunidad =
         comunidad === "" ||
         zona.comunidad_autonoma === comunidad;
 
-
       const coincidePermiso =
         !soloPermiso ||
         zona.permiso_necesario === true;
-
 
       const coincideAbierta =
         !soloAbierta ||
         zona.estado === "abierta" ||
         zona.estado === "sin_indicacion_de_cierre";
-
 
       return (
         coincideTexto &&
@@ -268,14 +259,11 @@ function buscarAcampadas() {
         coincidePermiso &&
         coincideAbierta
       );
-
     });
-
 
   paginaActual = 1;
 
   mostrarPagina();
-
 }
 
 
@@ -286,28 +274,21 @@ function buscarAcampadas() {
 function mostrarPagina() {
 
   const resultados =
-    document.getElementById(
-      "resultadosAcampadas"
-    );
+    document.getElementById("resultadosAcampadas");
 
   if (!resultados) {
     return;
   }
 
-
   resultados.innerHTML = "";
-
 
   const total =
     resultadosActuales.length;
 
-
   const totalPaginas =
     Math.ceil(
-      total /
-      resultadosPorPagina
+      total / resultadosPorPagina
     );
-
 
   const cabecera =
     document.createElement("div");
@@ -315,24 +296,18 @@ function mostrarPagina() {
   cabecera.className =
     "cabecera-resultados";
 
-
   const contador =
     document.createElement("p");
 
   contador.className =
     "contador-resultados";
 
-
   contador.textContent =
     total === 1
       ? "1 zona encontrada"
       : `${total} zonas encontradas`;
 
-
-  cabecera.appendChild(
-    contador
-  );
-
+  cabecera.appendChild(contador);
 
   if (totalPaginas > 1) {
 
@@ -345,17 +320,10 @@ function mostrarPagina() {
     paginaInfo.textContent =
       `Página ${paginaActual} de ${totalPaginas}`;
 
-    cabecera.appendChild(
-      paginaInfo
-    );
-
+    cabecera.appendChild(paginaInfo);
   }
 
-
-  resultados.appendChild(
-    cabecera
-  );
-
+  resultados.appendChild(cabecera);
 
   if (total === 0) {
 
@@ -368,24 +336,18 @@ function mostrarPagina() {
     mensaje.textContent =
       "No se han encontrado zonas con esos criterios.";
 
-    resultados.appendChild(
-      mensaje
-    );
+    resultados.appendChild(mensaje);
 
     return;
-
   }
-
 
   const inicio =
     (paginaActual - 1) *
     resultadosPorPagina;
 
-
   const fin =
     inicio +
     resultadosPorPagina;
-
 
   const pagina =
     resultadosActuales.slice(
@@ -393,27 +355,20 @@ function mostrarPagina() {
       fin
     );
 
-
   const listado =
     document.createElement("div");
 
   listado.className =
     "lista-campings";
 
-
   pagina.forEach(zona => {
 
     listado.appendChild(
       crearFichaAcampada(zona)
     );
-
   });
 
-
-  resultados.appendChild(
-    listado
-  );
-
+  resultados.appendChild(listado);
 
   if (totalPaginas > 1) {
 
@@ -423,19 +378,13 @@ function mostrarPagina() {
     paginacion.className =
       "paginacion";
 
-
     const anterior =
       document.createElement("button");
 
-    anterior.type =
-      "button";
-
-    anterior.textContent =
-      "← Anterior";
-
+    anterior.type = "button";
+    anterior.textContent = "← Anterior";
     anterior.disabled =
       paginaActual === 1;
-
 
     anterior.addEventListener(
       "click",
@@ -448,12 +397,9 @@ function mostrarPagina() {
           mostrarPagina();
 
           irAResultados();
-
         }
-
       }
     );
-
 
     const indicador =
       document.createElement("span");
@@ -461,19 +407,13 @@ function mostrarPagina() {
     indicador.textContent =
       `${paginaActual} / ${totalPaginas}`;
 
-
     const siguiente =
       document.createElement("button");
 
-    siguiente.type =
-      "button";
-
-    siguiente.textContent =
-      "Siguiente →";
-
+    siguiente.type = "button";
+    siguiente.textContent = "Siguiente →";
     siguiente.disabled =
       paginaActual === totalPaginas;
-
 
     siguiente.addEventListener(
       "click",
@@ -489,32 +429,16 @@ function mostrarPagina() {
           mostrarPagina();
 
           irAResultados();
-
         }
-
       }
     );
 
+    paginacion.appendChild(anterior);
+    paginacion.appendChild(indicador);
+    paginacion.appendChild(siguiente);
 
-    paginacion.appendChild(
-      anterior
-    );
-
-    paginacion.appendChild(
-      indicador
-    );
-
-    paginacion.appendChild(
-      siguiente
-    );
-
-
-    resultados.appendChild(
-      paginacion
-    );
-
+    resultados.appendChild(paginacion);
   }
-
 }
 
 
@@ -530,7 +454,6 @@ function crearFichaAcampada(zona) {
   ficha.className =
     "resultado-camping";
 
-
   const titulo =
     document.createElement("h3");
 
@@ -538,10 +461,10 @@ function crearFichaAcampada(zona) {
     zona.nombre ||
     "Zona de acampada controlada";
 
-  ficha.appendChild(
-    titulo
-  );
+  ficha.appendChild(titulo);
 
+
+  // TIPO
 
   const tipo =
     document.createElement("p");
@@ -552,14 +475,10 @@ function crearFichaAcampada(zona) {
   tipo.textContent =
     "🥾 Zona de acampada controlada";
 
-  ficha.appendChild(
-    tipo
-  );
+  ficha.appendChild(tipo);
 
 
-  // ========================================
   // UBICACIÓN
-  // ========================================
 
   const ubicacion = [
     zona.localidad,
@@ -567,7 +486,6 @@ function crearFichaAcampada(zona) {
     zona.comunidad_autonoma
   ]
     .filter(Boolean);
-
 
   if (ubicacion.length > 0) {
 
@@ -582,52 +500,37 @@ function crearFichaAcampada(zona) {
       [...new Set(ubicacion)]
         .join(" · ");
 
-    ficha.appendChild(
-      zonaTexto
-    );
-
+    ficha.appendChild(zonaTexto);
   }
 
 
-  // ========================================
   // AVISOS
-  // ========================================
 
   const avisos = [];
-
 
   if (
     zona.permiso_necesario === true
   ) {
-
     avisos.push(
       "📋 Requiere permiso o autorización"
     );
-
   }
-
 
   if (
     zona.estado === "cerrada"
   ) {
-
     avisos.push(
       "🚫 Cerrada según la información disponible"
     );
-
   }
-
 
   if (
     zona.estado === "abierta"
   ) {
-
     avisos.push(
       "✅ Abierta"
     );
-
   }
-
 
   if (avisos.length > 0) {
 
@@ -640,22 +543,16 @@ function crearFichaAcampada(zona) {
     avisosTexto.textContent =
       avisos.join(" · ");
 
-    ficha.appendChild(
-      avisosTexto
-    );
-
+    ficha.appendChild(avisosTexto);
   }
 
 
-  // ========================================
   // DESCRIPCIÓN LIMPIA
-  // ========================================
 
   const descripcionLimpia =
     limpiarDescripcion(
       zona.descripcion_original
     );
-
 
   if (descripcionLimpia) {
 
@@ -671,16 +568,11 @@ function crearFichaAcampada(zona) {
     descripcion.textContent =
       descripcionLimpia;
 
-    ficha.appendChild(
-      descripcion
-    );
-
+    ficha.appendChild(descripcion);
   }
 
 
-  // ========================================
   // ENLACES
-  // ========================================
 
   const enlaces =
     document.createElement("div");
@@ -695,9 +587,7 @@ function crearFichaAcampada(zona) {
       document.createElement("a");
 
     web.href =
-      normalizarUrl(
-        zona.web
-      );
+      normalizarUrl(zona.web);
 
     web.target =
       "_blank";
@@ -710,10 +600,7 @@ function crearFichaAcampada(zona) {
         ? "📋 Información / Permiso"
         : "🌐 Web";
 
-    enlaces.appendChild(
-      web
-    );
-
+    enlaces.appendChild(web);
   }
 
 
@@ -733,16 +620,12 @@ function crearFichaAcampada(zona) {
       "☎️ " +
       zona.telefono;
 
-    enlaces.appendChild(
-      telefono
-    );
-
+    enlaces.appendChild(telefono);
   }
 
 
   const enlaceMapa =
     crearEnlaceMapa(zona);
-
 
   if (enlaceMapa) {
 
@@ -761,23 +644,15 @@ function crearFichaAcampada(zona) {
     mapa.textContent =
       "🗺️ Ver en el mapa";
 
-    enlaces.appendChild(
-      mapa
-    );
-
+    enlaces.appendChild(mapa);
   }
 
 
   if (
     enlaces.children.length > 0
   ) {
-
-    ficha.appendChild(
-      enlaces
-    );
-
+    ficha.appendChild(enlaces);
   }
-
 
   return ficha;
 }
@@ -794,16 +669,13 @@ function irAResultados() {
       "resultadosAcampadas"
     );
 
-
   if (resultados) {
 
     resultados.scrollIntoView({
       behavior: "smooth",
       block: "start"
     });
-
   }
-
 }
 
 
@@ -815,18 +687,15 @@ document.addEventListener(
   "DOMContentLoaded",
   () => {
 
-
     const campo =
       document.getElementById(
         "buscarAcampada"
       );
 
-
     const boton =
       document.getElementById(
         "botonBuscarAcampada"
       );
-
 
     const comunidad =
       document.getElementById(
@@ -840,7 +709,6 @@ document.addEventListener(
         "click",
         buscarAcampadas
       );
-
     }
 
 
@@ -853,14 +721,10 @@ document.addEventListener(
           if (
             event.key === "Enter"
           ) {
-
             buscarAcampadas();
-
           }
-
         }
       );
-
     }
 
 
@@ -870,7 +734,6 @@ document.addEventListener(
         "change",
         buscarAcampadas
       );
-
     }
 
 
@@ -889,9 +752,7 @@ document.addEventListener(
             "change",
             buscarAcampadas
           );
-
         }
-
       });
 
 
@@ -909,11 +770,9 @@ document.addEventListener(
           throw new Error(
             "No se pudo cargar la base de zonas de acampadas controladas"
           );
-
         }
 
         return response.json();
-
       })
 
       .then(data => {
@@ -928,7 +787,6 @@ document.addEventListener(
         cargarComunidades();
 
         buscarAcampadas();
-
       })
 
       .catch(error => {
@@ -938,21 +796,16 @@ document.addEventListener(
           error
         );
 
-
         const resultados =
           document.getElementById(
             "resultadosAcampadas"
           );
 
-
         if (resultados) {
 
           resultados.innerHTML =
             "<p>No se pudieron cargar las zonas de acampadas controladas.</p>";
-
         }
-
       });
-
   }
 );
