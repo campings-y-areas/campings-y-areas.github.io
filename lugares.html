@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Lugares | Campings & Áreas</title>
+
+  <link rel="stylesheet" href="style.css?v=2">
+</head>
+
+<body>
+
+  <header>
+    <h1>
+      <img src="logo.png" alt="Campings & Áreas" class="logo">
+      Campings & Áreas
+    </h1>
+  </header>
+
+
+  <nav class="menu">
+
+    <a href="index.html">
+      🏠 Inicio
+    </a>
+
+    <a href="campings.html">
+      🏕️ Campings
+    </a>
+
+    <a href="areas.html?tipo=area">
+      🚐 Áreas
+    </a>
+
+    <a href="areas.html?tipo=parking">
+      🅿️ Parkings
+    </a>
+
+    <a href="acampadas.html">
+      🥾 Acampadas
+    </a>
+
+    <a href="lugares.html">
+      📍 Lugares
+    </a>
+
+    <a href="#">
+      🔧 Servicios
+    </a>
+
+  </nav>
+
+
+  <main>
+
+    <section class="bienvenida">
+
+      <h2>
+        📍 Lugares
+      </h2>
+
+      <p>
+        Descubre lugares útiles e interesantes para disfrutar durante tus viajes.
+      </p>
+
+      <p class="estado">
+        Busca por nombre, localidad, provincia o comunidad autónoma
+        y selecciona el tipo de lugar que quieres encontrar.
+      </p>
+
+    </section>
+
+
+    <section class="buscador">
+
+      <h2>
+        🔎 Buscar lugares
+      </h2>
+
+
+      <div class="buscador-campos">
+
+        <input
+          type="text"
+          id="buscarLugar"
+          placeholder="Nombre, localidad, provincia o comunidad autónoma"
+        >
+
+        <select id="comunidadLugar">
+
+          <option value="">
+            Todas las comunidades
+          </option>
+
+        </select>
+
+
+        <button
+          type="button"
+          id="botonBuscarLugar"
+        >
+          Buscar
+        </button>
+
+      </div>
+
+
+      <div class="filtros-camping">
+
+        <label>
+
+          <input
+            type="radio"
+            name="tipoLugar"
+            value="playa_canina"
+            checked
+          >
+
+          🐕 Playas caninas
+
+        </label>
+
+      </div>
+
+    </section>
+
+
+    <section
+      id="resultadosLugares"
+      class="resultados-campings">
+    </section>
+
+  </main>
+
+
+  <script src="lugares.js?v=1"></script>
+
+</body>
+
+</html>
