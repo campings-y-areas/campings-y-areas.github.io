@@ -30,25 +30,25 @@
       🏕️ Campings
     </a>
 
-    <a href="areas.html?tipo=area"
-   onclick="cambiarTipoDesdeMenu('area'); return false;">
-  🚐 Áreas
-</a>
+    <a href="areas.html?tipo=area">
+      🚐 Áreas
+    </a>
 
-<a href="areas.html?tipo=parking"
-   onclick="cambiarTipoDesdeMenu('parking'); return false;">
-  🅿️ Parkings
-</a>
-<a href="acampadas.html">
-  🥾 Acampadas
-</a>
-   <a href="lugares.html">
-  📍 Lugares
-</a>
+    <a href="areas.html?tipo=parking">
+      🅿️ Parkings
+    </a>
+
+    <a href="acampadas.html">
+      🥾 Acampadas
+    </a>
+
+    <a href="lugares.html">
+      📍 Lugares
+    </a>
 
     <a href="servicios.html">
-  🔧 Servicios
-</a>
+      🔧 Servicios
+    </a>
 
   </nav>
 
@@ -57,18 +57,17 @@
 
     <section class="bienvenida">
 
-      <h2>
-        🚐 Áreas y 🅿️ Parkings
+      <h2 id="tituloAreas">
+        🚐 Áreas
       </h2>
 
-      <p>
-        Encuentra áreas para autocaravanas y caravanas,
-        además de parkings para estacionamiento y guarda.
+      <p id="textoAreas">
+        Encuentra áreas y parkings para tus viajes.
       </p>
 
       <p class="estado">
-        Busca por nombre, localidad, provincia o comunidad autónoma
-        y filtra según el tipo de vehículo y los servicios disponibles.
+        Busca por nombre, localidad, provincia o región
+        y utiliza los filtros para encontrar el lugar que necesitas.
       </p>
 
     </section>
@@ -77,7 +76,7 @@
     <section class="buscador">
 
       <h2>
-        🔎 Buscar áreas y parkings
+        🔎 Buscar
       </h2>
 
 
@@ -86,13 +85,35 @@
         <input
           type="text"
           id="buscarArea"
-          placeholder="Nombre, localidad, provincia o comunidad autónoma"
+          placeholder="Nombre, localidad, provincia o región"
         >
 
+
         <select id="paisArea">
-          <option value="">Todos los países</option>
-          <option value="ES">🇪🇸 España</option>
+
+          <option value="">
+            🌍 Todos los países
+          </option>
+
+          <option value="España">
+            🇪🇸 España
+          </option>
+
+          <option value="Italia">
+            🇮🇹 Italia
+          </option>
+
         </select>
+
+
+        <select id="regionArea">
+
+          <option value="">
+            Todas las regiones
+          </option>
+
+        </select>
+
 
         <button
           type="button"
@@ -109,20 +130,9 @@
         <label>
           <input
             type="radio"
-            name="tipoPunto"
-            id="tipoTodos"
-            value=""
-            checked
-          >
-          Todos
-        </label>
-
-        <label>
-          <input
-            type="radio"
-            name="tipoPunto"
-            id="tipoArea"
+            name="tipoArea"
             value="area"
+            checked
           >
           🚐 Áreas
         </label>
@@ -130,8 +140,7 @@
         <label>
           <input
             type="radio"
-            name="tipoPunto"
-            id="tipoParking"
+            name="tipoArea"
             value="parking"
           >
           🅿️ Parkings
@@ -145,54 +154,9 @@
         <label>
           <input
             type="checkbox"
-            id="filtroAdmiteCaravanas"
+            id="filtroCaravanas"
           >
-          🔴 Admite caravanas
-        </label>
-
-        <label>
-          <input
-            type="checkbox"
-            id="filtroNoAdmiteCaravanas"
-          >
-          🔵 No admite caravanas
-        </label>
-
-        <label>
-          <input
-            type="checkbox"
-            id="filtroPernocta"
-          >
-          🌙 Permite pernocta
-        </label>
-
-      </div>
-
-
-      <div class="filtros-camping">
-
-        <label>
-          <input
-            type="checkbox"
-            id="filtroAgua"
-          >
-          🚰 Agua
-        </label>
-
-        <label>
-          <input
-            type="checkbox"
-            id="filtroVaciado"
-          >
-          💧 Vaciado de aguas
-        </label>
-
-        <label>
-          <input
-            type="checkbox"
-            id="filtroElectricidad"
-          >
-          ⚡ Electricidad
+          🚐 Admite caravanas
         </label>
 
         <label>
@@ -206,10 +170,30 @@
         <label>
           <input
             type="checkbox"
-            id="filtroSinServicios"
+            id="filtroElectricidadArea"
           >
-          🚫 Sin servicios
+          ⚡ Electricidad
         </label>
+
+        <label>
+          <input
+            type="checkbox"
+            id="filtroAguaArea"
+          >
+          💧 Agua
+        </label>
+
+      </div>
+
+
+      <div class="acciones-filtros">
+
+        <button
+          type="button"
+          id="limpiarFiltrosArea"
+        >
+          Limpiar filtros
+        </button>
 
       </div>
 
@@ -224,7 +208,7 @@
   </main>
 
 
-  <script src="areas.js?v=8"></script>
+  <script src="areas.js?v=6"></script>
 
 </body>
 
