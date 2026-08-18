@@ -1541,8 +1541,8 @@ document.addEventListener(
     }
 
 
-    // ======================================
-    // CARGAR ESPAÑA + ITALIA
+        // ======================================
+    // CARGAR ESPAÑA + ITALIA + PORTUGAL
     // ======================================
 
     try {
@@ -1550,7 +1550,8 @@ document.addEventListener(
       const [
 
         campingsEspana,
-        campingsItalia
+        campingsItalia,
+        campingsPortugal
 
       ] = await Promise.all([
 
@@ -1562,6 +1563,11 @@ document.addEventListener(
 
         cargarJSON(
           "campings-italia-definitivo-final.json?v=3"
+        ),
+
+
+        cargarJSON(
+          "campings-portugal-definitivo.json?v=1"
         )
 
       ]);
@@ -1581,12 +1587,19 @@ document.addEventListener(
         );
 
 
+      const portugalNormalizado =
+        campingsPortugal.map(
+          normalizarCamping
+        );
+
+
       // UNIR
 
       campings = [
 
         ...espanaNormalizada,
-        ...italiaNormalizada
+        ...italiaNormalizada,
+        ...portugalNormalizado
 
       ];
 
@@ -1600,6 +1613,12 @@ document.addEventListener(
       console.log(
         "🇮🇹 Campings Italia:",
         italiaNormalizada.length
+      );
+
+
+      console.log(
+        "🇵🇹 Campings Portugal:",
+        portugalNormalizado.length
       );
 
 
