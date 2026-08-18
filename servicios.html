@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Servicios | Campings & Áreas</title>
+
+  <link rel="stylesheet" href="style.css?v=2">
+</head>
+
+<body>
+
+  <header>
+    <h1>
+      <img src="logo.png" alt="Campings & Áreas" class="logo">
+      Campings & Áreas
+    </h1>
+  </header>
+
+
+  <nav class="menu">
+
+    <a href="index.html">
+      🏠 Inicio
+    </a>
+
+    <a href="campings.html">
+      🏕️ Campings
+    </a>
+
+    <a href="areas.html?tipo=area">
+      🚐 Áreas
+    </a>
+
+    <a href="areas.html?tipo=parking">
+      🅿️ Parkings
+    </a>
+
+    <a href="acampadas.html">
+      🥾 Acampadas
+    </a>
+
+    <a href="lugares.html">
+      📍 Lugares
+    </a>
+
+    <a href="servicios.html">
+      🔧 Servicios
+    </a>
+
+  </nav>
+
+
+  <main>
+
+    <section class="bienvenida">
+
+      <h2>
+        🔧 Servicios
+      </h2>
+
+      <p>
+        Encuentra servicios útiles para tus viajes.
+      </p>
+
+      <p class="estado">
+        Busca por nombre, localidad, provincia o comunidad autónoma
+        y selecciona el tipo de servicio que necesitas.
+      </p>
+
+    </section>
+
+
+    <section class="buscador">
+
+      <h2>
+        🔎 Buscar servicios
+      </h2>
+
+
+      <div class="buscador-campos">
+
+        <input
+          type="text"
+          id="buscarServicio"
+          placeholder="Nombre, localidad, provincia o comunidad autónoma"
+        >
+
+        <select id="comunidadServicio">
+
+          <option value="">
+            Todas las comunidades
+          </option>
+
+        </select>
+
+
+        <button
+          type="button"
+          id="botonBuscarServicio"
+        >
+          Buscar
+        </button>
+
+      </div>
+
+
+      <div class="filtros-camping">
+
+        <label>
+
+          <input
+            type="radio"
+            name="tipoServicio"
+            value="restaurante"
+            checked
+          >
+
+          🍽️ Restaurantes
+
+        </label>
+
+      </div>
+
+    </section>
+
+
+    <section
+      id="resultadosServicios"
+      class="resultados-campings">
+    </section>
+
+  </main>
+
+
+  <script src="servicios.js?v=1"></script>
+
+</body>
+
+</html>
