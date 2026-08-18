@@ -29,10 +29,7 @@ function normalizarTexto(texto) {
 // ==========================================
 
 function normalizarUrl(url) {
-
-  if (!url) {
-    return "";
-  }
+  if (!url) return "";
 
   url = String(url).trim();
 
@@ -63,12 +60,9 @@ function crearEnlaceMapa(lugar) {
     lugar.lon !== null &&
     lugar.lon !== undefined
   ) {
-
     return (
       "https://www.google.com/maps/search/?api=1&query=" +
-      encodeURIComponent(
-        `${lugar.lat},${lugar.lon}`
-      )
+      encodeURIComponent(`${lugar.lat},${lugar.lon}`)
     );
   }
 
@@ -81,9 +75,7 @@ function crearEnlaceMapa(lugar) {
     .filter(Boolean)
     .join(", ");
 
-  if (!consulta) {
-    return "";
-  }
+  if (!consulta) return "";
 
   return (
     "https://www.google.com/maps/search/?api=1&query=" +
@@ -141,78 +133,50 @@ function coincideTipoLugar(lugar, tipo) {
 function cargarComunidades() {
 
   const selector =
-    document.getElementById(
-      "comunidadLugar"
-    );
+    document.getElementById("comunidadLugar");
 
-  if (!selector) {
-    return;
-  }
+  if (!selector) return;
 
-  const valorActual =
-    selector.value;
-
-  const tipo =
-    obtenerTipoSeleccionado();
+  const valorActual = selector.value;
+  const tipo = obtenerTipoSeleccionado();
 
   selector.innerHTML =
     '<option value="">Todas las comunidades</option>';
 
   const comunidades = [
     ...new Set(
-
       lugares
-
         .filter(lugar =>
-          coincideTipoLugar(
-            lugar,
-            tipo
-          )
+          coincideTipoLugar(lugar, tipo)
         )
-
         .map(lugar =>
           lugar.comunidad_autonoma
         )
-
         .filter(Boolean)
     )
-  ]
-    .sort((a, b) =>
-      a.localeCompare(
-        b,
-        "es",
-        {
-          sensitivity: "base"
-        }
-      )
-    );
+  ].sort((a, b) =>
+    a.localeCompare(
+      b,
+      "es",
+      { sensitivity: "base" }
+    )
+  );
 
   comunidades.forEach(comunidad => {
 
     const opcion =
-      document.createElement(
-        "option"
-      );
+      document.createElement("option");
 
-    opcion.value =
-      comunidad;
+    opcion.value = comunidad;
+    opcion.textContent = comunidad;
 
-    opcion.textContent =
-      comunidad;
-
-    selector.appendChild(
-      opcion
-    );
+    selector.appendChild(opcion);
   });
 
   if (
-    comunidades.includes(
-      valorActual
-    )
+    comunidades.includes(valorActual)
   ) {
-
-    selector.value =
-      valorActual;
+    selector.value = valorActual;
   }
 }
 
@@ -224,21 +188,16 @@ function cargarComunidades() {
 function buscarLugares() {
 
   const campo =
-    document.getElementById(
-      "buscarLugar"
-    );
+    document.getElementById("buscarLugar");
 
   const texto =
     normalizarTexto(
-      campo
-        ? campo.value
-        : ""
+      campo ? campo.value : ""
     );
 
   const comunidad =
-    document.getElementById(
-      "comunidadLugar"
-    )?.value || "";
+    document.getElementById("comunidadLugar")
+      ?.value || "";
 
   const tipo =
     obtenerTipoSeleccionado();
@@ -278,20 +237,14 @@ function buscarLugares() {
 
       const coincideTexto =
         texto === "" ||
-        contenido.includes(
-          texto
-        );
+        contenido.includes(texto);
 
       const coincideComunidad =
         comunidad === "" ||
-        lugar.comunidad_autonoma ===
-          comunidad;
+        lugar.comunidad_autonoma === comunidad;
 
       const coincideTipo =
-        coincideTipoLugar(
-          lugar,
-          tipo
-        );
+        coincideTipoLugar(lugar, tipo);
 
       return (
         coincideTexto &&
@@ -317,9 +270,7 @@ function mostrarPagina() {
       "resultadosLugares"
     );
 
-  if (!resultados) {
-    return;
-  }
+  if (!resultados) return;
 
   resultados.innerHTML = "";
 
@@ -328,22 +279,17 @@ function mostrarPagina() {
 
   const totalPaginas =
     Math.ceil(
-      total /
-      resultadosPorPagina
+      total / resultadosPorPagina
     );
 
   const cabecera =
-    document.createElement(
-      "div"
-    );
+    document.createElement("div");
 
   cabecera.className =
     "cabecera-resultados";
 
   const contador =
-    document.createElement(
-      "p"
-    );
+    document.createElement("p");
 
   contador.className =
     "contador-resultados";
@@ -353,16 +299,12 @@ function mostrarPagina() {
       ? "1 lugar encontrado"
       : `${total} lugares encontrados`;
 
-  cabecera.appendChild(
-    contador
-  );
+  cabecera.appendChild(contador);
 
   if (totalPaginas > 1) {
 
     const paginaInfo =
-      document.createElement(
-        "p"
-      );
+      document.createElement("p");
 
     paginaInfo.className =
       "pagina-info";
@@ -370,21 +312,16 @@ function mostrarPagina() {
     paginaInfo.textContent =
       `Página ${paginaActual} de ${totalPaginas}`;
 
-    cabecera.appendChild(
-      paginaInfo
-    );
+    cabecera.appendChild(paginaInfo);
   }
 
-  resultados.appendChild(
-    cabecera
-  );
+  resultados.appendChild(cabecera);
+
 
   if (total === 0) {
 
     const mensaje =
-      document.createElement(
-        "p"
-      );
+      document.createElement("p");
 
     mensaje.className =
       "sin-resultados";
@@ -392,12 +329,11 @@ function mostrarPagina() {
     mensaje.textContent =
       "No se han encontrado lugares con esos criterios.";
 
-    resultados.appendChild(
-      mensaje
-    );
+    resultados.appendChild(mensaje);
 
     return;
   }
+
 
   const inicio =
     (paginaActual - 1) *
@@ -414,23 +350,18 @@ function mostrarPagina() {
     );
 
   const listado =
-    document.createElement(
-      "div"
-    );
+    document.createElement("div");
 
   listado.className =
     "lista-campings";
 
   pagina.forEach(lugar => {
-
     listado.appendChild(
       crearFichaLugar(lugar)
     );
   });
 
-  resultados.appendChild(
-    listado
-  );
+  resultados.appendChild(listado);
 
 
   // ========================================
@@ -440,24 +371,17 @@ function mostrarPagina() {
   if (totalPaginas > 1) {
 
     const paginacion =
-      document.createElement(
-        "div"
-      );
+      document.createElement("div");
 
     paginacion.className =
       "paginacion";
 
+
     const anterior =
-      document.createElement(
-        "button"
-      );
+      document.createElement("button");
 
-    anterior.type =
-      "button";
-
-    anterior.textContent =
-      "← Anterior";
-
+    anterior.type = "button";
+    anterior.textContent = "← Anterior";
     anterior.disabled =
       paginaActual === 1;
 
@@ -465,41 +389,33 @@ function mostrarPagina() {
       "click",
       () => {
 
-        if (
-          paginaActual > 1
-        ) {
+        if (paginaActual > 1) {
 
           paginaActual--;
 
           mostrarPagina();
-
           irAResultados();
         }
       }
     );
 
+
     const indicador =
-      document.createElement(
-        "span"
-      );
+      document.createElement("span");
 
     indicador.textContent =
       `${paginaActual} / ${totalPaginas}`;
 
+
     const siguiente =
-      document.createElement(
-        "button"
-      );
+      document.createElement("button");
 
-    siguiente.type =
-      "button";
-
+    siguiente.type = "button";
     siguiente.textContent =
       "Siguiente →";
 
     siguiente.disabled =
-      paginaActual ===
-      totalPaginas;
+      paginaActual === totalPaginas;
 
     siguiente.addEventListener(
       "click",
@@ -513,27 +429,17 @@ function mostrarPagina() {
           paginaActual++;
 
           mostrarPagina();
-
           irAResultados();
         }
       }
     );
 
-    paginacion.appendChild(
-      anterior
-    );
 
-    paginacion.appendChild(
-      indicador
-    );
+    paginacion.appendChild(anterior);
+    paginacion.appendChild(indicador);
+    paginacion.appendChild(siguiente);
 
-    paginacion.appendChild(
-      siguiente
-    );
-
-    resultados.appendChild(
-      paginacion
-    );
+    resultados.appendChild(paginacion);
   }
 }
 
@@ -545,25 +451,19 @@ function mostrarPagina() {
 function crearFichaLugar(lugar) {
 
   const ficha =
-    document.createElement(
-      "article"
-    );
+    document.createElement("article");
 
   ficha.className =
     "resultado-camping";
 
+
   const titulo =
-    document.createElement(
-      "h3"
-    );
+    document.createElement("h3");
 
   titulo.textContent =
-    lugar.nombre ||
-    "Lugar";
+    lugar.nombre || "Lugar";
 
-  ficha.appendChild(
-    titulo
-  );
+  ficha.appendChild(titulo);
 
 
   // ========================================
@@ -571,17 +471,14 @@ function crearFichaLugar(lugar) {
   // ========================================
 
   const tipo =
-    document.createElement(
-      "p"
-    );
+    document.createElement("p");
 
   tipo.className =
     "tipo-punto";
 
 
   if (
-    lugar.tipo ===
-    "playa_canina"
+    lugar.tipo === "playa_canina"
   ) {
 
     tipo.textContent =
@@ -620,14 +517,11 @@ function crearFichaLugar(lugar) {
       "📍 Lugar";
   }
 
-
-  ficha.appendChild(
-    tipo
-  );
+  ficha.appendChild(tipo);
 
 
   // ========================================
-  // ACTIVIDADES
+  // ACTIVIDADES MARINAS
   // ========================================
 
   if (
@@ -651,9 +545,7 @@ function crearFichaLugar(lugar) {
     }
 
     const actividad =
-      document.createElement(
-        "p"
-      );
+      document.createElement("p");
 
     actividad.className =
       "tipo-punto";
@@ -661,9 +553,7 @@ function crearFichaLugar(lugar) {
     actividad.textContent =
       actividades.join(" · ");
 
-    ficha.appendChild(
-      actividad
-    );
+    ficha.appendChild(actividad);
   }
 
 
@@ -677,38 +567,29 @@ function crearFichaLugar(lugar) {
     lugar.comunidad_autonoma
   ].filter(Boolean);
 
+
   if (
     lugar.pais &&
     lugar.pais !== "España"
   ) {
-
-    ubicacion.push(
-      lugar.pais
-    );
+    ubicacion.push(lugar.pais);
   }
 
-  if (
-    ubicacion.length > 0
-  ) {
+
+  if (ubicacion.length > 0) {
 
     const zona =
-      document.createElement(
-        "p"
-      );
+      document.createElement("p");
 
     zona.className =
       "zona-camping";
 
     zona.textContent =
       "📌 " +
-      [...new Set(
-        ubicacion
-      )]
+      [...new Set(ubicacion)]
         .join(" · ");
 
-    ficha.appendChild(
-      zona
-    );
+    ficha.appendChild(zona);
   }
 
 
@@ -719,9 +600,7 @@ function crearFichaLugar(lugar) {
   if (lugar.descripcion) {
 
     const descripcion =
-      document.createElement(
-        "p"
-      );
+      document.createElement("p");
 
     descripcion.className =
       "descripcion-acampada";
@@ -732,9 +611,7 @@ function crearFichaLugar(lugar) {
     descripcion.textContent =
       lugar.descripcion;
 
-    ficha.appendChild(
-      descripcion
-    );
+    ficha.appendChild(descripcion);
   }
 
 
@@ -743,9 +620,7 @@ function crearFichaLugar(lugar) {
   // ========================================
 
   const enlaces =
-    document.createElement(
-      "div"
-    );
+    document.createElement("div");
 
   enlaces.className =
     "enlaces-camping";
@@ -754,17 +629,12 @@ function crearFichaLugar(lugar) {
   if (lugar.web) {
 
     const web =
-      document.createElement(
-        "a"
-      );
+      document.createElement("a");
 
     web.href =
-      normalizarUrl(
-        lugar.web
-      );
+      normalizarUrl(lugar.web);
 
-    web.target =
-      "_blank";
+    web.target = "_blank";
 
     web.rel =
       "noopener noreferrer";
@@ -772,29 +642,22 @@ function crearFichaLugar(lugar) {
     web.textContent =
       "🌐 Web";
 
-    enlaces.appendChild(
-      web
-    );
+    enlaces.appendChild(web);
   }
 
 
   const enlaceMapa =
-    crearEnlaceMapa(
-      lugar
-    );
+    crearEnlaceMapa(lugar);
+
 
   if (enlaceMapa) {
 
     const mapa =
-      document.createElement(
-        "a"
-      );
+      document.createElement("a");
 
-    mapa.href =
-      enlaceMapa;
+    mapa.href = enlaceMapa;
 
-    mapa.target =
-      "_blank";
+    mapa.target = "_blank";
 
     mapa.rel =
       "noopener noreferrer";
@@ -802,19 +665,14 @@ function crearFichaLugar(lugar) {
     mapa.textContent =
       "🗺️ Ver en el mapa";
 
-    enlaces.appendChild(
-      mapa
-    );
+    enlaces.appendChild(mapa);
   }
 
 
   if (
     enlaces.children.length > 0
   ) {
-
-    ficha.appendChild(
-      enlaces
-    );
+    ficha.appendChild(enlaces);
   }
 
 
@@ -859,8 +717,35 @@ function cambiarCategoria() {
   }
 
   cargarComunidades();
-
   buscarLugares();
+}
+
+
+// ==========================================
+// CARGAR JSON
+// ==========================================
+
+async function cargarJSON(archivo) {
+
+  const response =
+    await fetch(archivo);
+
+  if (!response.ok) {
+    throw new Error(
+      `No se pudo cargar ${archivo}`
+    );
+  }
+
+  const datos =
+    await response.json();
+
+  if (!Array.isArray(datos)) {
+    throw new Error(
+      `${archivo} no contiene una lista válida`
+    );
+  }
+
+  return datos;
 }
 
 
@@ -870,7 +755,7 @@ function cambiarCategoria() {
 
 document.addEventListener(
   "DOMContentLoaded",
-  () => {
+  async () => {
 
     const campo =
       document.getElementById(
@@ -888,6 +773,8 @@ document.addEventListener(
       );
 
 
+    // BOTÓN BUSCAR
+
     if (boton) {
 
       boton.addEventListener(
@@ -897,23 +784,23 @@ document.addEventListener(
     }
 
 
+    // ENTER EN BUSCADOR
+
     if (campo) {
 
       campo.addEventListener(
         "keydown",
         event => {
 
-          if (
-            event.key ===
-            "Enter"
-          ) {
-
+          if (event.key === "Enter") {
             buscarLugares();
           }
         }
       );
     }
 
+
+    // CAMBIO DE COMUNIDAD
 
     if (comunidad) {
 
@@ -923,6 +810,8 @@ document.addEventListener(
       );
     }
 
+
+    // CAMBIO DE TIPO
 
     document
       .querySelectorAll(
@@ -938,152 +827,97 @@ document.addEventListener(
 
 
     // ======================================
-    // CARGAR BASES DE LUGARES
+    // CARGAR LAS TRES BASES
     // ======================================
 
-    Promise.all([
+    try {
 
-
-      // PLAYAS CANINAS
-
-      fetch(
-        "playas-caninas-espana-v1.json?v=1"
-      )
-        .then(response => {
-
-          if (!response.ok) {
-
-            throw new Error(
-              "No se pudo cargar la base de playas caninas"
-            );
-          }
-
-          return response.json();
-        }),
-
-
-      // POZAS Y PISCINAS NATURALES
-
-      fetch(
-        "pozas-piscinas-naturales-espana-v1.json?v=1"
-      )
-        .then(response => {
-
-          if (!response.ok) {
-
-            throw new Error(
-              "No se pudo cargar la base de pozas y piscinas naturales"
-            );
-          }
-
-          return response.json();
-        }),
-
-
-      // BUCEO + SNORKEL + APNEA
-
-      fetch(
-        "zonas-buceo-snorkel-espana-v2.json?v=1"
-      )
-        .then(response => {
-
-          if (!response.ok) {
-
-            throw new Error(
-              "No se pudo cargar la base de buceo y snorkel"
-            );
-          }
-
-          return response.json();
-        })
-
-
-    ])
-
-
-      .then(([
+      const [
         playasCaninas,
         pozas,
         zonasMarinas
-      ]) => {
+      ] = await Promise.all([
+
+        cargarJSON(
+          "playas-caninas-espana-v2.json?v=2"
+        ),
+
+        cargarJSON(
+          "pozas-piscinas-naturales-espana-v1.json?v=2"
+        ),
+
+        cargarJSON(
+          "zonas-buceo-snorkel-espana-v2.json?v=2"
+        )
+
+      ]);
 
 
-        lugares = [
-          ...playasCaninas,
-          ...pozas,
-          ...zonasMarinas
-        ];
+      lugares = [
+        ...playasCaninas,
+        ...pozas,
+        ...zonasMarinas
+      ];
 
 
-        console.log(
-          "Playas caninas cargadas:",
-          playasCaninas.length
+      console.log(
+        "🐕 Playas caninas:",
+        playasCaninas.length
+      );
+
+      console.log(
+        "💧 Pozas y piscinas naturales:",
+        pozas.length
+      );
+
+      console.log(
+        "🤿 Buceo:",
+        zonasMarinas.filter(
+          lugar =>
+            lugar.buceo === true
+        ).length
+      );
+
+      console.log(
+        "🥽 Snorkel y apnea:",
+        zonasMarinas.filter(
+          lugar =>
+            lugar.snorkel === true ||
+            lugar.apnea === true
+        ).length
+      );
+
+      console.log(
+        "📍 Total lugares cargados:",
+        lugares.length
+      );
+
+
+      cargarComunidades();
+      buscarLugares();
+
+    }
+
+    catch (error) {
+
+      console.error(
+        "ERROR CARGANDO LUGARES:",
+        error
+      );
+
+      const resultados =
+        document.getElementById(
+          "resultadosLugares"
         );
 
+      if (resultados) {
 
-        console.log(
-          "Pozas y piscinas naturales cargadas:",
-          pozas.length
-        );
-
-
-        console.log(
-          "Zonas marinas cargadas:",
-          zonasMarinas.length
-        );
-
-
-        console.log(
-          "Buceo:",
-          zonasMarinas.filter(
-            lugar =>
-              lugar.buceo === true
-          ).length
-        );
-
-
-        console.log(
-          "Snorkel y apnea:",
-          zonasMarinas.filter(
-            lugar =>
-              lugar.snorkel === true ||
-              lugar.apnea === true
-          ).length
-        );
-
-
-        console.log(
-          "Lugares totales:",
-          lugares.length
-        );
-
-
-        cargarComunidades();
-
-        buscarLugares();
-      })
-
-
-      .catch(error => {
-
-        console.error(
-          "Error cargando lugares:",
-          error
-        );
-
-
-        const resultados =
-          document.getElementById(
-            "resultadosLugares"
-          );
-
-
-        if (resultados) {
-
-          resultados.innerHTML =
-            "<p>No se pudieron cargar los lugares.</p>";
-        }
-      });
+        resultados.innerHTML =
+          '<p class="sin-resultados">' +
+          '⚠️ No se pudieron cargar los datos de Lugares.' +
+          '</p>';
+      }
+    }
 
   }
 );
