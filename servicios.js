@@ -336,10 +336,6 @@ function mostrarPagina() {
     );
 
 
-  // ========================================
-  // CABECERA
-  // ========================================
-
   const cabecera =
     document.createElement(
       "div"
@@ -401,10 +397,6 @@ function mostrarPagina() {
   );
 
 
-  // ========================================
-  // SIN RESULTADOS
-  // ========================================
-
   if (total === 0) {
 
     const mensaje =
@@ -429,10 +421,6 @@ function mostrarPagina() {
     return;
   }
 
-
-  // ========================================
-  // RESULTADOS DE ESTA PÁGINA
-  // ========================================
 
   const inicio =
 
@@ -617,10 +605,6 @@ function crearFichaServicio(servicio) {
     "resultado-camping";
 
 
-  // ========================================
-  // NOMBRE
-  // ========================================
-
   const titulo =
     document.createElement(
       "h3"
@@ -676,6 +660,15 @@ function crearFichaServicio(servicio) {
 
     tipo.textContent =
       "🛠️ Taller";
+  }
+
+  else if (
+    servicio.tipo ===
+    "lavadero"
+  ) {
+
+    tipo.textContent =
+      "🧽 Lavadero de autocaravanas";
   }
 
   else {
@@ -841,8 +834,6 @@ function crearFichaServicio(servicio) {
     "enlaces-camping";
 
 
-  // WEB
-
   if (servicio.web) {
 
     const web =
@@ -875,8 +866,6 @@ function crearFichaServicio(servicio) {
   }
 
 
-  // TELÉFONO
-
   if (servicio.telefono) {
 
     const telefono =
@@ -908,8 +897,6 @@ function crearFichaServicio(servicio) {
     );
   }
 
-
-  // MAPA
 
   const enlaceMapa =
     crearEnlaceMapa(
@@ -1034,10 +1021,6 @@ document.addEventListener(
       );
 
 
-    // ======================================
-    // BOTÓN BUSCAR
-    // ======================================
-
     if (boton) {
 
       boton.addEventListener(
@@ -1046,10 +1029,6 @@ document.addEventListener(
       );
     }
 
-
-    // ======================================
-    // ENTER EN EL BUSCADOR
-    // ======================================
 
     if (campo) {
 
@@ -1069,10 +1048,6 @@ document.addEventListener(
     }
 
 
-    // ======================================
-    // COMUNIDAD
-    // ======================================
-
     if (comunidad) {
 
       comunidad.addEventListener(
@@ -1081,10 +1056,6 @@ document.addEventListener(
       );
     }
 
-
-    // ======================================
-    // TIPOS DE SERVICIO
-    // ======================================
 
     document
       .querySelectorAll(
@@ -1106,6 +1077,7 @@ document.addEventListener(
     // RESTAURANTES
     // DUCHAS
     // TALLERES
+    // LAVADEROS
     // ======================================
 
     Promise.all([
@@ -1165,6 +1137,25 @@ document.addEventListener(
           }
 
           return response.json();
+        }),
+
+
+      // LAVADEROS
+
+      fetch(
+        "lavaderos-autocaravanas-v1.json?v=1"
+      )
+
+        .then(response => {
+
+          if (!response.ok) {
+
+            throw new Error(
+              "No se pudo cargar la base de lavaderos"
+            );
+          }
+
+          return response.json();
         })
 
 
@@ -1174,7 +1165,8 @@ document.addEventListener(
       .then(([
         restaurantes,
         duchas,
-        talleres
+        talleres,
+        lavaderos
       ]) => {
 
 
@@ -1182,7 +1174,8 @@ document.addEventListener(
 
           ...restaurantes,
           ...duchas,
-          ...talleres
+          ...talleres,
+          ...lavaderos
 
         ];
 
@@ -1202,6 +1195,12 @@ document.addEventListener(
         console.log(
           "Talleres cargados:",
           talleres.length
+        );
+
+
+        console.log(
+          "Lavaderos cargados:",
+          lavaderos.length
         );
 
 
