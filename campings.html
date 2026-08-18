@@ -73,7 +73,7 @@
       </p>
 
       <p class="estado">
-        Busca por nombre, localidad, provincia o comunidad autónoma
+        Busca por nombre, localidad, provincia o región
         y combina los filtros según tus necesidades.
       </p>
 
@@ -92,14 +92,31 @@
         <input
           type="text"
           id="buscarCamping"
-          placeholder="Camping, localidad, provincia o comunidad autónoma"
+          placeholder="Camping, localidad, provincia o región"
         >
 
 
-        <select id="comunidadCamping">
+        <select id="paisCamping">
 
           <option value="">
-            Todas las comunidades
+            🌍 Todos los países
+          </option>
+
+          <option value="España">
+            🇪🇸 España
+          </option>
+
+          <option value="Italia">
+            🇮🇹 Italia
+          </option>
+
+        </select>
+
+
+        <select id="regionCamping">
+
+          <option value="">
+            Todas las regiones
           </option>
 
         </select>
@@ -204,7 +221,7 @@
   </main>
 
 
-  <script src="campings.js?v=7"></script>
+  <script src="campings.js?v=8"></script>
 
 </body>
 
