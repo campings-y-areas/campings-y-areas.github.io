@@ -1,6 +1,7 @@
 // ==========================================
 // CAMPINGS & ÁREAS
-// CAMPINGS
+// CAMPINGS INTERNACIONAL
+// ESPAÑA + ITALIA
 // ==========================================
 
 let campings = [];
@@ -49,6 +50,25 @@ function normalizarUrl(url) {
 
 
 // ==========================================
+// NORMALIZAR CAMPING
+// ==========================================
+
+function normalizarCamping(camping) {
+
+  return {
+
+    ...camping,
+
+    region:
+      camping.region ||
+      camping.comunidad_autonoma ||
+      null
+
+  };
+}
+
+
+// ==========================================
 // CREAR ENLACE DE MAPA
 // ==========================================
 
@@ -76,20 +96,24 @@ function crearEnlaceMapa(camping) {
     );
   }
 
+
   const consulta = [
 
     camping.nombre,
     camping.localidad,
     camping.provincia,
+    camping.region,
     camping.pais
 
   ]
     .filter(Boolean)
     .join(", ");
 
+
   if (!consulta) {
     return "";
   }
+
 
   return (
     "https://www.google.com/maps/search/?api=1&query=" +
@@ -99,7 +123,7 @@ function crearEnlaceMapa(camping) {
 
 
 // ==========================================
-// COMPROBAR ACCESIBILIDAD
+// ACCESIBILIDAD
 // ==========================================
 
 function campingAccesible(camping) {
@@ -112,35 +136,82 @@ function campingAccesible(camping) {
 
 
 // ==========================================
-// CARGAR COMUNIDADES
+// PAÍS SELECCIONADO
 // ==========================================
 
-function cargarComunidades() {
+function obtenerPaisSeleccionado() {
+
+  return (
+    document.getElementById(
+      "paisCamping"
+    )?.value || ""
+  );
+}
+
+
+// ==========================================
+// CARGAR REGIONES
+// ==========================================
+
+function cargarRegiones() {
 
   const selector =
     document.getElementById(
-      "comunidadCamping"
+      "regionCamping"
     );
 
   if (!selector) {
     return;
   }
 
+
+  const pais =
+    obtenerPaisSeleccionado();
+
+
   const valorActual =
     selector.value;
 
-  selector.innerHTML =
-    '<option value="">Todas las comunidades</option>';
+
+  // TEXTO DEL SELECTOR SEGÚN PAÍS
+
+  if (pais === "España") {
+
+    selector.innerHTML =
+      '<option value="">Todas las comunidades autónomas</option>';
+
+  }
+
+  else if (pais === "Italia") {
+
+    selector.innerHTML =
+      '<option value="">Todas las regiones</option>';
+
+  }
+
+  else {
+
+    selector.innerHTML =
+      '<option value="">Todas las regiones</option>';
+  }
 
 
-  const comunidades = [
+  const regiones = [
 
     ...new Set(
 
       campings
 
+        .filter(camping => {
+
+          return (
+            pais === "" ||
+            camping.pais === pais
+          );
+        })
+
         .map(camping =>
-          camping.comunidad_autonoma
+          camping.region
         )
 
         .filter(Boolean)
@@ -156,11 +227,10 @@ function cargarComunidades() {
         sensitivity: "base"
       }
     )
-
   );
 
 
-  comunidades.forEach(comunidad => {
+  regiones.forEach(region => {
 
     const opcion =
       document.createElement(
@@ -168,10 +238,10 @@ function cargarComunidades() {
       );
 
     opcion.value =
-      comunidad;
+      region;
 
     opcion.textContent =
-      comunidad;
+      region;
 
     selector.appendChild(
       opcion
@@ -180,13 +250,19 @@ function cargarComunidades() {
 
 
   if (
-    comunidades.includes(
+    regiones.includes(
       valorActual
     )
   ) {
 
     selector.value =
       valorActual;
+
+  }
+
+  else {
+
+    selector.value = "";
   }
 }
 
@@ -202,6 +278,7 @@ function buscarCampings() {
       "buscarCamping"
     );
 
+
   const texto =
     normalizarTexto(
       campo
@@ -210,9 +287,13 @@ function buscarCampings() {
     );
 
 
-  const comunidad =
+  const pais =
+    obtenerPaisSeleccionado();
+
+
+  const region =
     document.getElementById(
-      "comunidadCamping"
+      "regionCamping"
     )?.value || "";
 
 
@@ -257,6 +338,7 @@ function buscarCampings() {
             camping.nombre,
             camping.localidad,
             camping.provincia,
+            camping.region,
             camping.comunidad_autonoma,
             camping.direccion,
             camping.descripcion_original,
@@ -275,10 +357,14 @@ function buscarCampings() {
         );
 
 
-      const coincideComunidad =
-        comunidad === "" ||
-        camping.comunidad_autonoma ===
-          comunidad;
+      const coincidePais =
+        pais === "" ||
+        camping.pais === pais;
+
+
+      const coincideRegion =
+        region === "" ||
+        camping.region === region;
 
 
       const coincideMascotas =
@@ -311,7 +397,8 @@ function buscarCampings() {
       return (
 
         coincideTexto &&
-        coincideComunidad &&
+        coincidePais &&
+        coincideRegion &&
         coincideMascotas &&
         coincideTodoAno &&
         coincidePiscina &&
@@ -338,6 +425,7 @@ function mostrarPagina() {
     document.getElementById(
       "resultadosCampings"
     );
+
 
   if (!resultados) {
     return;
@@ -367,6 +455,7 @@ function mostrarPagina() {
       "div"
     );
 
+
   cabecera.className =
     "cabecera-resultados";
 
@@ -375,6 +464,7 @@ function mostrarPagina() {
     document.createElement(
       "p"
     );
+
 
   contador.className =
     "contador-resultados";
@@ -398,11 +488,14 @@ function mostrarPagina() {
         "p"
       );
 
+
     paginaInfo.className =
       "pagina-info";
 
+
     paginaInfo.textContent =
       `Página ${paginaActual} de ${totalPaginas}`;
+
 
     cabecera.appendChild(
       paginaInfo
@@ -426,22 +519,26 @@ function mostrarPagina() {
         "p"
       );
 
+
     mensaje.className =
       "sin-resultados";
+
 
     mensaje.textContent =
       "No se han encontrado campings con esos criterios.";
 
+
     resultados.appendChild(
       mensaje
     );
+
 
     return;
   }
 
 
   // ========================================
-  // RESULTADOS DE LA PÁGINA
+  // RESULTADOS DE PÁGINA
   // ========================================
 
   const inicio =
@@ -465,6 +562,7 @@ function mostrarPagina() {
     document.createElement(
       "div"
     );
+
 
   listado.className =
     "lista-campings";
@@ -496,6 +594,7 @@ function mostrarPagina() {
         "div"
       );
 
+
     paginacion.className =
       "paginacion";
 
@@ -505,11 +604,14 @@ function mostrarPagina() {
         "button"
       );
 
+
     anterior.type =
       "button";
 
+
     anterior.textContent =
       "← Anterior";
+
 
     anterior.disabled =
       paginaActual === 1;
@@ -538,6 +640,7 @@ function mostrarPagina() {
         "span"
       );
 
+
     indicador.textContent =
       `${paginaActual} / ${totalPaginas}`;
 
@@ -547,11 +650,14 @@ function mostrarPagina() {
         "button"
       );
 
+
     siguiente.type =
       "button";
 
+
     siguiente.textContent =
       "Siguiente →";
+
 
     siguiente.disabled =
       paginaActual ===
@@ -581,9 +687,11 @@ function mostrarPagina() {
       anterior
     );
 
+
     paginacion.appendChild(
       indicador
     );
+
 
     paginacion.appendChild(
       siguiente
@@ -598,7 +706,7 @@ function mostrarPagina() {
 
 
 // ==========================================
-// CREAR FICHA DE CAMPING
+// CREAR FICHA
 // ==========================================
 
 function crearFichaCamping(camping) {
@@ -607,6 +715,7 @@ function crearFichaCamping(camping) {
     document.createElement(
       "article"
     );
+
 
   ficha.className =
     "resultado-camping";
@@ -621,9 +730,11 @@ function crearFichaCamping(camping) {
       "h3"
     );
 
+
   titulo.textContent =
     camping.nombre ||
     "Camping";
+
 
   ficha.appendChild(
     titulo
@@ -631,7 +742,57 @@ function crearFichaCamping(camping) {
 
 
   // ========================================
-  // CAMPING CERRADO
+  // PAÍS
+  // ========================================
+
+  const pais =
+    document.createElement(
+      "p"
+    );
+
+
+  pais.className =
+    "tipo-punto";
+
+
+  if (
+    camping.pais ===
+    "España"
+  ) {
+
+    pais.textContent =
+      "🇪🇸 España";
+
+  }
+
+  else if (
+    camping.pais ===
+    "Italia"
+  ) {
+
+    pais.textContent =
+      "🇮🇹 Italia";
+
+  }
+
+  else {
+
+    pais.textContent =
+      "🌍 " +
+      (
+        camping.pais ||
+        "País no indicado"
+      );
+  }
+
+
+  ficha.appendChild(
+    pais
+  );
+
+
+  // ========================================
+  // CERRADO
   // ========================================
 
   if (
@@ -644,11 +805,14 @@ function crearFichaCamping(camping) {
         "p"
       );
 
+
     cerrado.className =
       "tipo-punto";
 
+
     cerrado.textContent =
       "⛔ Cerrado permanentemente";
+
 
     ficha.appendChild(
       cerrado
@@ -664,20 +828,9 @@ function crearFichaCamping(camping) {
 
     camping.localidad,
     camping.provincia,
-    camping.comunidad_autonoma
+    camping.region
 
   ].filter(Boolean);
-
-
-  if (
-    camping.pais &&
-    camping.pais !== "España"
-  ) {
-
-    ubicacion.push(
-      camping.pais
-    );
-  }
 
 
   if (
@@ -689,8 +842,10 @@ function crearFichaCamping(camping) {
         "p"
       );
 
+
     zona.className =
       "zona-camping";
+
 
     zona.textContent =
       "📌 " +
@@ -698,6 +853,7 @@ function crearFichaCamping(camping) {
         ubicacion
       )]
         .join(" · ");
+
 
     ficha.appendChild(
       zona
@@ -716,11 +872,14 @@ function crearFichaCamping(camping) {
         "p"
       );
 
+
     direccion.className =
       "descripcion-acampada";
 
+
     direccion.textContent =
       camping.direccion;
+
 
     ficha.appendChild(
       direccion
@@ -794,11 +953,14 @@ function crearFichaCamping(camping) {
         "p"
       );
 
+
     caracteristica.className =
       "tipo-punto";
 
+
     caracteristica.textContent =
       texto;
+
 
     ficha.appendChild(
       caracteristica
@@ -807,7 +969,7 @@ function crearFichaCamping(camping) {
 
 
   // ========================================
-  // DETALLES DE ACCESIBILIDAD
+  // DETALLES ACCESIBILIDAD
   // ========================================
 
   if (
@@ -820,153 +982,118 @@ function crearFichaCamping(camping) {
       camping.accesibilidad;
 
 
-    const bloqueAccesibilidad =
+    const bloque =
       document.createElement(
         "div"
       );
 
-    bloqueAccesibilidad.className =
+
+    bloque.className =
       "accesibilidad-camping";
 
 
-    const tituloAccesibilidad =
+    const tituloAcceso =
       document.createElement(
         "p"
       );
 
-    tituloAccesibilidad.className =
+
+    tituloAcceso.className =
       "tipo-punto";
 
-    tituloAccesibilidad.textContent =
+
+    tituloAcceso.textContent =
       "♿ Accesibilidad para personas con movilidad reducida";
 
 
-    bloqueAccesibilidad.appendChild(
-      tituloAccesibilidad
+    bloque.appendChild(
+      tituloAcceso
     );
 
-
-    // SANITARIOS
 
     if (
       acceso.sanitarios_adaptados === true
     ) {
 
       const dato =
-        document.createElement(
-          "p"
-        );
+        document.createElement("p");
 
       dato.textContent =
         "🚿 Sanitarios adaptados";
 
-      bloqueAccesibilidad.appendChild(
-        dato
-      );
+      bloque.appendChild(dato);
     }
 
-
-    // PARCELAS
 
     if (
       acceso.parcelas_accesibles === true
     ) {
 
       const dato =
-        document.createElement(
-          "p"
-        );
+        document.createElement("p");
 
       dato.textContent =
         "🚐 Parcelas accesibles";
 
-      bloqueAccesibilidad.appendChild(
-        dato
-      );
+      bloque.appendChild(dato);
     }
 
-
-    // INSTALACIONES
 
     if (
       acceso.instalaciones_accesibles === true
     ) {
 
       const dato =
-        document.createElement(
-          "p"
-        );
+        document.createElement("p");
 
       dato.textContent =
         "🏢 Instalaciones accesibles";
 
-      bloqueAccesibilidad.appendChild(
-        dato
-      );
+      bloque.appendChild(dato);
     }
 
-
-    // CAMINOS
 
     if (
       acceso.caminos_accesibles === true
     ) {
 
       const dato =
-        document.createElement(
-          "p"
-        );
+        document.createElement("p");
 
       dato.textContent =
         "🦽 Recorridos accesibles";
 
-      bloqueAccesibilidad.appendChild(
-        dato
-      );
+      bloque.appendChild(dato);
     }
 
-
-    // ALOJAMIENTOS
 
     if (
       acceso.alojamiento_adaptado === true
     ) {
 
       const dato =
-        document.createElement(
-          "p"
-        );
+        document.createElement("p");
 
       dato.textContent =
         "🏠 Alojamiento adaptado";
 
-      bloqueAccesibilidad.appendChild(
-        dato
-      );
+      bloque.appendChild(dato);
     }
 
-
-    // PISCINA
 
     if (
       acceso.piscina_accesible === true
     ) {
 
       const dato =
-        document.createElement(
-          "p"
-        );
+        document.createElement("p");
 
       dato.textContent =
         "🏊 Piscina accesible";
 
-      bloqueAccesibilidad.appendChild(
-        dato
-      );
+      bloque.appendChild(dato);
     }
 
-
-    // OBSERVACIONES
 
     if (
       acceso.observaciones
@@ -977,32 +1104,36 @@ function crearFichaCamping(camping) {
           "p"
         );
 
+
       observaciones.className =
         "descripcion-acampada";
+
 
       observaciones.textContent =
         acceso.observaciones;
 
-      bloqueAccesibilidad.appendChild(
+
+      bloque.appendChild(
         observaciones
       );
     }
 
 
     ficha.appendChild(
-      bloqueAccesibilidad
+      bloque
     );
   }
 
 
   // ========================================
-  // ENLACES Y CONTACTO
+  // ENLACES
   // ========================================
 
   const enlaces =
     document.createElement(
       "div"
     );
+
 
   enlaces.className =
     "enlaces-camping";
@@ -1017,19 +1148,24 @@ function crearFichaCamping(camping) {
         "a"
       );
 
+
     web.href =
       normalizarUrl(
         camping.web
       );
 
+
     web.target =
       "_blank";
+
 
     web.rel =
       "noopener noreferrer";
 
+
     web.textContent =
       "🌐 Web";
+
 
     enlaces.appendChild(
       web
@@ -1046,6 +1182,7 @@ function crearFichaCamping(camping) {
         "a"
       );
 
+
     telefono.href =
       "tel:" +
       String(
@@ -1055,9 +1192,11 @@ function crearFichaCamping(camping) {
         ""
       );
 
+
     telefono.textContent =
       "☎️ " +
       camping.telefono;
+
 
     enlaces.appendChild(
       telefono
@@ -1080,17 +1219,22 @@ function crearFichaCamping(camping) {
         "a"
       );
 
+
     mapa.href =
       enlaceMapa;
+
 
     mapa.target =
       "_blank";
 
+
     mapa.rel =
       "noopener noreferrer";
 
+
     mapa.textContent =
       "🗺️ Ver en el mapa";
+
 
     enlaces.appendChild(
       mapa
@@ -1113,6 +1257,29 @@ function crearFichaCamping(camping) {
 
 
 // ==========================================
+// CAMBIO DE PAÍS
+// ==========================================
+
+function cambiarPais() {
+
+  const selectorRegion =
+    document.getElementById(
+      "regionCamping"
+    );
+
+
+  if (selectorRegion) {
+    selectorRegion.value = "";
+  }
+
+
+  cargarRegiones();
+
+  buscarCampings();
+}
+
+
+// ==========================================
 // LIMPIAR FILTROS
 // ==========================================
 
@@ -1123,9 +1290,16 @@ function limpiarFiltros() {
       "buscarCamping"
     );
 
-  const comunidad =
+
+  const pais =
     document.getElementById(
-      "comunidadCamping"
+      "paisCamping"
+    );
+
+
+  const region =
+    document.getElementById(
+      "regionCamping"
     );
 
 
@@ -1134,21 +1308,29 @@ function limpiarFiltros() {
   }
 
 
-  if (comunidad) {
-    comunidad.value = "";
+  if (pais) {
+    pais.value = "";
+  }
+
+
+  if (region) {
+    region.value = "";
   }
 
 
   [
+
     "filtroMascotas",
     "filtroTodoAno",
     "filtroPiscina",
     "filtroParqueAcuatico",
     "filtroAccesibilidad"
+
   ].forEach(id => {
 
     const filtro =
       document.getElementById(id);
+
 
     if (filtro) {
       filtro.checked = false;
@@ -1156,12 +1338,14 @@ function limpiarFiltros() {
   });
 
 
+  cargarRegiones();
+
   buscarCampings();
 }
 
 
 // ==========================================
-// SCROLL A RESULTADOS
+// SCROLL
 // ==========================================
 
 function irAResultados() {
@@ -1170,6 +1354,7 @@ function irAResultados() {
     document.getElementById(
       "resultadosCampings"
     );
+
 
   if (resultados) {
 
@@ -1236,9 +1421,15 @@ document.addEventListener(
       );
 
 
-    const comunidad =
+    const pais =
       document.getElementById(
-        "comunidadCamping"
+        "paisCamping"
+      );
+
+
+    const region =
+      document.getElementById(
+        "regionCamping"
       );
 
 
@@ -1284,12 +1475,25 @@ document.addEventListener(
 
 
     // ======================================
-    // COMUNIDAD
+    // PAÍS
     // ======================================
 
-    if (comunidad) {
+    if (pais) {
 
-      comunidad.addEventListener(
+      pais.addEventListener(
+        "change",
+        cambiarPais
+      );
+    }
+
+
+    // ======================================
+    // REGIÓN
+    // ======================================
+
+    if (region) {
+
+      region.addEventListener(
         "change",
         buscarCampings
       );
@@ -1301,11 +1505,13 @@ document.addEventListener(
     // ======================================
 
     [
+
       "filtroMascotas",
       "filtroTodoAno",
       "filtroPiscina",
       "filtroParqueAcuatico",
       "filtroAccesibilidad"
+
     ].forEach(id => {
 
       const filtro =
@@ -1323,7 +1529,7 @@ document.addEventListener(
 
 
     // ======================================
-    // LIMPIAR FILTROS
+    // LIMPIAR
     // ======================================
 
     if (limpiar) {
@@ -1336,25 +1542,75 @@ document.addEventListener(
 
 
     // ======================================
-    // CARGAR BASE V4
+    // CARGAR ESPAÑA + ITALIA
     // ======================================
 
     try {
 
-      campings =
-        await cargarJSON(
-          "campings-espana-v4-definitivo.json?v=1"
+      const [
+
+        campingsEspana,
+        campingsItalia
+
+      ] = await Promise.all([
+
+
+        cargarJSON(
+          "campings-espana-v4-definitivo.json?v=2"
+        ),
+
+
+        cargarJSON(
+          "campings-italia-definitivo.json?v=2"
+        )
+
+      ]);
+
+
+      // NORMALIZAR REGIÓN
+
+      const espanaNormalizada =
+        campingsEspana.map(
+          normalizarCamping
         );
 
 
+      const italiaNormalizada =
+        campingsItalia.map(
+          normalizarCamping
+        );
+
+
+      // UNIR
+
+      campings = [
+
+        ...espanaNormalizada,
+        ...italiaNormalizada
+
+      ];
+
+
       console.log(
-        "🏕️ Campings cargados:",
+        "🇪🇸 Campings España:",
+        espanaNormalizada.length
+      );
+
+
+      console.log(
+        "🇮🇹 Campings Italia:",
+        italiaNormalizada.length
+      );
+
+
+      console.log(
+        "🌍 Campings totales:",
         campings.length
       );
 
 
       console.log(
-        "♿ Campings con accesibilidad confirmada:",
+        "♿ Accesibilidad confirmada:",
         campings.filter(
           camping =>
             campingAccesible(
@@ -1364,7 +1620,7 @@ document.addEventListener(
       );
 
 
-      cargarComunidades();
+      cargarRegiones();
 
       buscarCampings();
 
