@@ -15,6 +15,7 @@ let paginaActual = 1;
 // ==========================================
 
 function normalizarTexto(texto) {
+
   return String(texto || "")
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
@@ -29,6 +30,7 @@ function normalizarTexto(texto) {
 // ==========================================
 
 function normalizarUrl(url) {
+
   if (!url) {
     return "";
   }
@@ -53,7 +55,10 @@ function normalizarUrl(url) {
 function crearEnlaceMapa(servicio) {
 
   if (servicio.google_maps) {
-    return normalizarUrl(servicio.google_maps);
+
+    return normalizarUrl(
+      servicio.google_maps
+    );
   }
 
   if (
@@ -62,17 +67,22 @@ function crearEnlaceMapa(servicio) {
     servicio.lon !== null &&
     servicio.lon !== undefined
   ) {
+
     return (
       "https://www.google.com/maps/search/?api=1&query=" +
-      encodeURIComponent(`${servicio.lat},${servicio.lon}`)
+      encodeURIComponent(
+        `${servicio.lat},${servicio.lon}`
+      )
     );
   }
 
   const consulta = [
+
     servicio.nombre,
     servicio.localidad,
     servicio.provincia,
     servicio.pais
+
   ]
     .filter(Boolean)
     .join(", ");
@@ -112,51 +122,78 @@ function obtenerTipoSeleccionado() {
 function cargarComunidades() {
 
   const selector =
-    document.getElementById("comunidadServicio");
+    document.getElementById(
+      "comunidadServicio"
+    );
 
   if (!selector) {
     return;
   }
 
-  const valorActual = selector.value;
-  const tipo = obtenerTipoSeleccionado();
+  const valorActual =
+    selector.value;
+
+  const tipo =
+    obtenerTipoSeleccionado();
 
   selector.innerHTML =
     '<option value="">Todas las comunidades</option>';
 
   const comunidades = [
+
     ...new Set(
+
       servicios
+
         .filter(servicio =>
           tipo === "" ||
           servicio.tipo === tipo
         )
+
         .map(servicio =>
           servicio.comunidad_autonoma
         )
+
         .filter(Boolean)
     )
+
   ].sort((a, b) =>
+
     a.localeCompare(
       b,
       "es",
-      { sensitivity: "base" }
+      {
+        sensitivity: "base"
+      }
     )
   );
 
   comunidades.forEach(comunidad => {
 
     const opcion =
-      document.createElement("option");
+      document.createElement(
+        "option"
+      );
 
-    opcion.value = comunidad;
-    opcion.textContent = comunidad;
+    opcion.value =
+      comunidad;
 
-    selector.appendChild(opcion);
+    opcion.textContent =
+      comunidad;
+
+    selector.appendChild(
+      opcion
+    );
   });
 
-  if (comunidades.includes(valorActual)) {
-    selector.value = valorActual;
+  if (
+    comunidades.includes(
+      valorActual
+    )
+  ) {
+
+    selector.value =
+      valorActual;
   }
 }
 
@@ -168,15 +205,21 @@ function cargarComunidades() {
 function buscarServicios() {
 
   const campo =
-    document.getElementById("buscarServicio");
+    document.getElementById(
+      "buscarServicio"
+    );
 
   const texto =
     normalizarTexto(
-      campo ? campo.value : ""
+      campo
+        ? campo.value
+        : ""
     );
 
   const comunidad =
-    document.getElementById("comunidadServicio")?.value || "";
+    document.getElementById(
+      "comunidadServicio"
+    )?.value || "";
 
   const tipo =
     obtenerTipoSeleccionado();
@@ -187,12 +230,14 @@ function buscarServicios() {
       const contenido =
         normalizarTexto(
           [
+
             servicio.nombre,
             servicio.localidad,
             servicio.provincia,
             servicio.comunidad_autonoma,
             servicio.pais,
             servicio.descripcion
+
           ]
             .filter(Boolean)
             .join(" ")
@@ -200,20 +245,25 @@ function buscarServicios() {
 
       const coincideTexto =
         texto === "" ||
-        contenido.includes(texto);
+        contenido.includes(
+          texto
+        );
 
       const coincideComunidad =
         comunidad === "" ||
-        servicio.comunidad_autonoma === comunidad;
+        servicio.comunidad_autonoma ===
+          comunidad;
 
       const coincideTipo =
         tipo === "" ||
         servicio.tipo === tipo;
 
       return (
+
         coincideTexto &&
         coincideComunidad &&
         coincideTipo
+
       );
     });
 
@@ -230,7 +280,9 @@ function buscarServicios() {
 function mostrarPagina() {
 
   const resultados =
-    document.getElementById("resultadosServicios");
+    document.getElementById(
+      "resultadosServicios"
+    );
 
   if (!resultados) {
     return;
@@ -242,16 +294,27 @@ function mostrarPagina() {
     resultadosActuales.length;
 
   const totalPaginas =
-    Math.ceil(total / resultadosPorPagina);
+    Math.ceil(
+      total /
+      resultadosPorPagina
+    );
+
+
+  // CABECERA
 
   const cabecera =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   cabecera.className =
     "cabecera-resultados";
 
+
   const contador =
-    document.createElement("p");
+    document.createElement(
+      "p"
+    );
 
   contador.className =
     "contador-resultados";
@@ -261,12 +324,17 @@ function mostrarPagina() {
       ? "1 servicio encontrado"
       : `${total} servicios encontrados`;
 
-  cabecera.appendChild(contador);
+  cabecera.appendChild(
+    contador
+  );
+
 
   if (totalPaginas > 1) {
 
     const paginaInfo =
-      document.createElement("p");
+      document.createElement(
+        "p"
+      );
 
     paginaInfo.className =
       "pagina-info";
@@ -274,15 +342,25 @@ function mostrarPagina() {
     paginaInfo.textContent =
       `Página ${paginaActual} de ${totalPaginas}`;
 
-    cabecera.appendChild(paginaInfo);
+    cabecera.appendChild(
+      paginaInfo
+    );
   }
 
-  resultados.appendChild(cabecera);
+
+  resultados.appendChild(
+    cabecera
+  );
+
+
+  // SIN RESULTADOS
 
   if (total === 0) {
 
     const mensaje =
-      document.createElement("p");
+      document.createElement(
+        "p"
+      );
 
     mensaje.className =
       "sin-resultados";
@@ -290,17 +368,23 @@ function mostrarPagina() {
     mensaje.textContent =
       "No se han encontrado servicios con esos criterios.";
 
-    resultados.appendChild(mensaje);
+    resultados.appendChild(
+      mensaje
+    );
 
     return;
   }
+
+
+  // RESULTADOS DE LA PÁGINA
 
   const inicio =
     (paginaActual - 1) *
     resultadosPorPagina;
 
   const fin =
-    inicio + resultadosPorPagina;
+    inicio +
+    resultadosPorPagina;
 
   const pagina =
     resultadosActuales.slice(
@@ -309,7 +393,9 @@ function mostrarPagina() {
     );
 
   const listado =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   listado.className =
     "lista-campings";
@@ -317,11 +403,15 @@ function mostrarPagina() {
   pagina.forEach(servicio => {
 
     listado.appendChild(
-      crearFichaServicio(servicio)
+      crearFichaServicio(
+        servicio
+      )
     );
   });
 
-  resultados.appendChild(listado);
+  resultados.appendChild(
+    listado
+  );
 
 
   // ========================================
@@ -331,16 +421,25 @@ function mostrarPagina() {
   if (totalPaginas > 1) {
 
     const paginacion =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
 
     paginacion.className =
       "paginacion";
 
-    const anterior =
-      document.createElement("button");
 
-    anterior.type = "button";
-    anterior.textContent = "← Anterior";
+    const anterior =
+      document.createElement(
+        "button"
+      );
+
+    anterior.type =
+      "button";
+
+    anterior.textContent =
+      "← Anterior";
+
     anterior.disabled =
       paginaActual === 1;
 
@@ -348,7 +447,9 @@ function mostrarPagina() {
       "click",
       () => {
 
-        if (paginaActual > 1) {
+        if (
+          paginaActual > 1
+        ) {
 
           paginaActual--;
 
@@ -359,20 +460,30 @@ function mostrarPagina() {
       }
     );
 
+
     const indicador =
-      document.createElement("span");
+      document.createElement(
+        "span"
+      );
 
     indicador.textContent =
       `${paginaActual} / ${totalPaginas}`;
 
-    const siguiente =
-      document.createElement("button");
 
-    siguiente.type = "button";
-    siguiente.textContent = "Siguiente →";
+    const siguiente =
+      document.createElement(
+        "button"
+      );
+
+    siguiente.type =
+      "button";
+
+    siguiente.textContent =
+      "Siguiente →";
 
     siguiente.disabled =
-      paginaActual === totalPaginas;
+      paginaActual ===
+      totalPaginas;
 
     siguiente.addEventListener(
       "click",
@@ -392,35 +503,55 @@ function mostrarPagina() {
       }
     );
 
-    paginacion.appendChild(anterior);
-    paginacion.appendChild(indicador);
-    paginacion.appendChild(siguiente);
 
-    resultados.appendChild(paginacion);
+    paginacion.appendChild(
+      anterior
+    );
+
+    paginacion.appendChild(
+      indicador
+    );
+
+    paginacion.appendChild(
+      siguiente
+    );
+
+    resultados.appendChild(
+      paginacion
+    );
   }
 }
 
 
 // ==========================================
-// CREAR FICHA DE SERVICIO
+// CREAR FICHA
 // ==========================================
 
 function crearFichaServicio(servicio) {
 
   const ficha =
-    document.createElement("article");
+    document.createElement(
+      "article"
+    );
 
   ficha.className =
     "resultado-camping";
 
+
+  // NOMBRE
+
   const titulo =
-    document.createElement("h3");
+    document.createElement(
+      "h3"
+    );
 
   titulo.textContent =
     servicio.nombre ||
     "Servicio";
 
-  ficha.appendChild(titulo);
+  ficha.appendChild(
+    titulo
+  );
 
 
   // ========================================
@@ -428,47 +559,160 @@ function crearFichaServicio(servicio) {
   // ========================================
 
   const tipo =
-    document.createElement("p");
+    document.createElement(
+      "p"
+    );
 
   tipo.className =
     "tipo-punto";
 
-  if (servicio.tipo === "restaurante") {
+
+  if (
+    servicio.tipo ===
+    "restaurante"
+  ) {
+
     tipo.textContent =
       "🍽️ Restaurante";
   }
 
-  else if (servicio.tipo === "ducha") {
+  else if (
+    servicio.tipo ===
+    "ducha"
+  ) {
+
     tipo.textContent =
       "🚿 Ducha";
   }
 
-  else if (servicio.tipo === "taller") {
+  else if (
+    servicio.tipo ===
+    "taller"
+  ) {
+
     tipo.textContent =
       "🛠️ Taller";
   }
 
-  else if (servicio.tipo === "lavadero") {
+  else if (
+    servicio.tipo ===
+    "lavadero"
+  ) {
+
     tipo.textContent =
       "🧽 Lavadero de autocaravanas";
   }
 
-  else if (servicio.tipo === "lavanderia") {
+  else if (
+    servicio.tipo ===
+    "lavanderia"
+  ) {
+
     tipo.textContent =
       "🧺 Lavandería";
   }
 
-  else if (servicio.tipo === "vaciado_aguas") {
+  else if (
+    servicio.tipo ===
+    "vaciado_aguas"
+  ) {
+
     tipo.textContent =
       "🚰 Vaciado de aguas";
   }
 
+  else if (
+    servicio.tipo ===
+    "guarderia_vehiculos_camping"
+  ) {
+
+    tipo.textContent =
+      "🏠 Guardería de vehículos de camping";
+  }
+
   else {
+
     tipo.textContent =
       "🔧 Servicio";
   }
 
-  ficha.appendChild(tipo);
+
+  ficha.appendChild(
+    tipo
+  );
+
+
+  // ========================================
+  // CARACTERÍSTICAS DE GUARDERÍA
+  // ========================================
+
+  if (
+    servicio.tipo ===
+    "guarderia_vehiculos_camping"
+  ) {
+
+    if (
+      servicio.lavadero === true
+    ) {
+
+      const lavadero =
+        document.createElement(
+          "p"
+        );
+
+      lavadero.className =
+        "tipo-punto";
+
+      lavadero.textContent =
+        "🧽 Dispone de lavadero";
+
+      ficha.appendChild(
+        lavadero
+      );
+    }
+
+
+    if (
+      servicio.larga_estancia_explicita === true
+    ) {
+
+      const estancia =
+        document.createElement(
+          "p"
+        );
+
+      estancia.className =
+        "tipo-punto";
+
+      estancia.textContent =
+        "🅿️ Larga estancia";
+
+      ficha.appendChild(
+        estancia
+      );
+    }
+
+
+    if (
+      servicio.pernocta === false
+    ) {
+
+      const pernocta =
+        document.createElement(
+          "p"
+        );
+
+      pernocta.className =
+        "tipo-punto";
+
+      pernocta.textContent =
+        "🚫 No permite pernocta";
+
+      ficha.appendChild(
+        pernocta
+      );
+    }
+  }
 
 
   // ========================================
@@ -476,31 +720,47 @@ function crearFichaServicio(servicio) {
   // ========================================
 
   const ubicacion = [
+
     servicio.localidad,
     servicio.provincia,
     servicio.comunidad_autonoma
+
   ].filter(Boolean);
+
 
   if (
     servicio.pais &&
     servicio.pais !== "España"
   ) {
-    ubicacion.push(servicio.pais);
+
+    ubicacion.push(
+      servicio.pais
+    );
   }
 
-  if (ubicacion.length > 0) {
+
+  if (
+    ubicacion.length > 0
+  ) {
 
     const zona =
-      document.createElement("p");
+      document.createElement(
+        "p"
+      );
 
     zona.className =
       "zona-camping";
 
     zona.textContent =
       "📌 " +
-      [...new Set(ubicacion)].join(" · ");
+      [...new Set(
+        ubicacion
+      )]
+        .join(" · ");
 
-    ficha.appendChild(zona);
+    ficha.appendChild(
+      zona
+    );
   }
 
 
@@ -511,15 +771,20 @@ function crearFichaServicio(servicio) {
   if (servicio.precio) {
 
     const precio =
-      document.createElement("p");
+      document.createElement(
+        "p"
+      );
 
     precio.className =
       "precio-servicio";
 
     precio.textContent =
-      "💶 " + servicio.precio;
+      "💶 " +
+      servicio.precio;
 
-    ficha.appendChild(precio);
+    ficha.appendChild(
+      precio
+    );
   }
 
 
@@ -530,15 +795,20 @@ function crearFichaServicio(servicio) {
   if (servicio.horario) {
 
     const horario =
-      document.createElement("p");
+      document.createElement(
+        "p"
+      );
 
     horario.className =
       "horario-servicio";
 
     horario.textContent =
-      "🕒 " + servicio.horario;
+      "🕒 " +
+      servicio.horario;
 
-    ficha.appendChild(horario);
+    ficha.appendChild(
+      horario
+    );
   }
 
 
@@ -549,7 +819,9 @@ function crearFichaServicio(servicio) {
   if (servicio.descripcion) {
 
     const descripcion =
-      document.createElement("p");
+      document.createElement(
+        "p"
+      );
 
     descripcion.className =
       "descripcion-acampada";
@@ -560,7 +832,9 @@ function crearFichaServicio(servicio) {
     descripcion.textContent =
       servicio.descripcion;
 
-    ficha.appendChild(descripcion);
+    ficha.appendChild(
+      descripcion
+    );
   }
 
 
@@ -569,21 +843,30 @@ function crearFichaServicio(servicio) {
   // ========================================
 
   const enlaces =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   enlaces.className =
     "enlaces-camping";
 
 
+  // WEB
+
   if (servicio.web) {
 
     const web =
-      document.createElement("a");
+      document.createElement(
+        "a"
+      );
 
     web.href =
-      normalizarUrl(servicio.web);
+      normalizarUrl(
+        servicio.web
+      );
 
-    web.target = "_blank";
+    web.target =
+      "_blank";
 
     web.rel =
       "noopener noreferrer";
@@ -591,38 +874,59 @@ function crearFichaServicio(servicio) {
     web.textContent =
       "🌐 Web";
 
-    enlaces.appendChild(web);
+    enlaces.appendChild(
+      web
+    );
   }
 
+
+  // TELÉFONO
 
   if (servicio.telefono) {
 
     const telefono =
-      document.createElement("a");
+      document.createElement(
+        "a"
+      );
 
     telefono.href =
       "tel:" +
-      String(servicio.telefono)
-        .replace(/[^\d+]/g, "");
+      String(
+        servicio.telefono
+      ).replace(
+        /[^\d+]/g,
+        ""
+      );
 
     telefono.textContent =
-      "☎️ " + servicio.telefono;
+      "☎️ " +
+      servicio.telefono;
 
-    enlaces.appendChild(telefono);
+    enlaces.appendChild(
+      telefono
+    );
   }
 
 
+  // MAPA
+
   const enlaceMapa =
-    crearEnlaceMapa(servicio);
+    crearEnlaceMapa(
+      servicio
+    );
 
   if (enlaceMapa) {
 
     const mapa =
-      document.createElement("a");
+      document.createElement(
+        "a"
+      );
 
-    mapa.href = enlaceMapa;
+    mapa.href =
+      enlaceMapa;
 
-    mapa.target = "_blank";
+    mapa.target =
+      "_blank";
 
     mapa.rel =
       "noopener noreferrer";
@@ -630,13 +934,21 @@ function crearFichaServicio(servicio) {
     mapa.textContent =
       "🗺️ Ver en el mapa";
 
-    enlaces.appendChild(mapa);
+    enlaces.appendChild(
+      mapa
+    );
   }
 
 
-  if (enlaces.children.length > 0) {
-    ficha.appendChild(enlaces);
+  if (
+    enlaces.children.length > 0
+  ) {
+
+    ficha.appendChild(
+      enlaces
+    );
   }
+
 
   return ficha;
 }
@@ -649,7 +961,9 @@ function crearFichaServicio(servicio) {
 function irAResultados() {
 
   const resultados =
-    document.getElementById("resultadosServicios");
+    document.getElementById(
+      "resultadosServicios"
+    );
 
   if (resultados) {
 
@@ -668,7 +982,9 @@ function irAResultados() {
 function cambiarCategoria() {
 
   const selector =
-    document.getElementById("comunidadServicio");
+    document.getElementById(
+      "comunidadServicio"
+    );
 
   if (selector) {
     selector.value = "";
@@ -681,22 +997,61 @@ function cambiarCategoria() {
 
 
 // ==========================================
+// CARGAR JSON
+// ==========================================
+
+async function cargarJSON(archivo) {
+
+  const response =
+    await fetch(archivo);
+
+  if (!response.ok) {
+
+    throw new Error(
+      `No se pudo cargar ${archivo}`
+    );
+  }
+
+  const datos =
+    await response.json();
+
+  if (!Array.isArray(datos)) {
+
+    throw new Error(
+      `${archivo} no contiene una lista válida`
+    );
+  }
+
+  return datos;
+}
+
+
+// ==========================================
 // INICIO
 // ==========================================
 
 document.addEventListener(
   "DOMContentLoaded",
-  () => {
+  async () => {
+
 
     const campo =
-      document.getElementById("buscarServicio");
+      document.getElementById(
+        "buscarServicio"
+      );
 
     const boton =
-      document.getElementById("botonBuscarServicio");
+      document.getElementById(
+        "botonBuscarServicio"
+      );
 
     const comunidad =
-      document.getElementById("comunidadServicio");
+      document.getElementById(
+        "comunidadServicio"
+      );
 
+
+    // BOTÓN BUSCAR
 
     if (boton) {
 
@@ -707,19 +1062,27 @@ document.addEventListener(
     }
 
 
+    // ENTER
+
     if (campo) {
 
       campo.addEventListener(
         "keydown",
         event => {
 
-          if (event.key === "Enter") {
+          if (
+            event.key ===
+            "Enter"
+          ) {
+
             buscarServicios();
           }
         }
       );
     }
 
+
+    // COMUNIDAD
 
     if (comunidad) {
 
@@ -729,6 +1092,8 @@ document.addEventListener(
       );
     }
 
+
+    // TIPOS
 
     document
       .querySelectorAll(
@@ -744,193 +1109,169 @@ document.addEventListener(
 
 
     // ======================================
-    // CARGAR LAS 6 BASES DE SERVICIOS
+    // CARGAR LAS 7 BASES
     // ======================================
 
-    Promise.all([
+    try {
 
+      const [
 
-      // 1. RESTAURANTES
-
-      fetch(
-        "restaurantes-espana-v2.json?v=1"
-      )
-        .then(response => {
-
-          if (!response.ok) {
-            throw new Error(
-              "No se pudo cargar la base de restaurantes"
-            );
-          }
-
-          return response.json();
-        }),
-
-
-      // 2. DUCHAS
-
-      fetch(
-        "duchas-europa-v1.json?v=1"
-      )
-        .then(response => {
-
-          if (!response.ok) {
-            throw new Error(
-              "No se pudo cargar la base de duchas"
-            );
-          }
-
-          return response.json();
-        }),
-
-
-      // 3. TALLERES
-
-      fetch(
-        "talleres-espana-v1.json?v=1"
-      )
-        .then(response => {
-
-          if (!response.ok) {
-            throw new Error(
-              "No se pudo cargar la base de talleres"
-            );
-          }
-
-          return response.json();
-        }),
-
-
-      // 4. LAVADEROS
-
-      fetch(
-        "lavaderos-autocaravanas-v1.json?v=1"
-      )
-        .then(response => {
-
-          if (!response.ok) {
-            throw new Error(
-              "No se pudo cargar la base de lavaderos"
-            );
-          }
-
-          return response.json();
-        }),
-
-
-      // 5. LAVANDERÍAS
-
-      fetch(
-        "lavanderias-espana-v1.json?v=1"
-      )
-        .then(response => {
-
-          if (!response.ok) {
-            throw new Error(
-              "No se pudo cargar la base de lavanderías"
-            );
-          }
-
-          return response.json();
-        }),
-
-
-      // 6. VACIADO DE AGUAS
-
-      fetch(
-        "vaciado-aguas-espana-v1.json?v=1"
-      )
-        .then(response => {
-
-          if (!response.ok) {
-            throw new Error(
-              "No se pudo cargar la base de vaciado de aguas"
-            );
-          }
-
-          return response.json();
-        })
-
-    ])
-
-
-      .then(([
         restaurantes,
         duchas,
         talleres,
         lavaderos,
         lavanderias,
-        vaciadoAguas
-      ]) => {
+        vaciadoAguas,
+        guarderiasOriginales
 
-        servicios = [
-          ...restaurantes,
-          ...duchas,
-          ...talleres,
-          ...lavaderos,
-          ...lavanderias,
-          ...vaciadoAguas
-        ];
+      ] = await Promise.all([
 
 
-        console.log(
-          "Restaurantes cargados:",
-          restaurantes.length
+        cargarJSON(
+          "restaurantes-espana-v2.json?v=2"
+        ),
+
+
+        cargarJSON(
+          "duchas-europa-v1.json?v=2"
+        ),
+
+
+        cargarJSON(
+          "talleres-espana-v1.json?v=2"
+        ),
+
+
+        cargarJSON(
+          "lavaderos-autocaravanas-v1.json?v=2"
+        ),
+
+
+        cargarJSON(
+          "lavanderias-espana-v1.json?v=2"
+        ),
+
+
+        cargarJSON(
+          "vaciado-aguas-espana-v1.json?v=2"
+        ),
+
+
+        cargarJSON(
+          "guarderias-vehiculos-camping-espana-v1.json?v=2"
+        )
+
+      ]);
+
+
+      // ====================================
+      // NORMALIZAR GUARDERÍAS
+      //
+      // LOS 43 PUNTOS DE ESTE MAPA SON
+      // PARKINGS/GUARDERÍAS PARA VEHÍCULOS
+      // DE CAMPING.
+      // ====================================
+
+      const guarderias =
+        guarderiasOriginales.map(
+          servicio => ({
+
+            ...servicio,
+
+            tipo:
+              "guarderia_vehiculos_camping",
+
+            guarderia_vehiculos_camping:
+              true
+
+          })
         );
 
-        console.log(
-          "Duchas cargadas:",
-          duchas.length
+
+      // ====================================
+      // UNIR TODAS LAS BASES
+      // ====================================
+
+      servicios = [
+
+        ...restaurantes,
+        ...duchas,
+        ...talleres,
+        ...lavaderos,
+        ...lavanderias,
+        ...vaciadoAguas,
+        ...guarderias
+
+      ];
+
+
+      console.log(
+        "🍽️ Restaurantes:",
+        restaurantes.length
+      );
+
+      console.log(
+        "🚿 Duchas:",
+        duchas.length
+      );
+
+      console.log(
+        "🛠️ Talleres:",
+        talleres.length
+      );
+
+      console.log(
+        "🧽 Lavaderos:",
+        lavaderos.length
+      );
+
+      console.log(
+        "🧺 Lavanderías:",
+        lavanderias.length
+      );
+
+      console.log(
+        "🚰 Vaciado de aguas:",
+        vaciadoAguas.length
+      );
+
+      console.log(
+        "🏠 Guarderías de vehículos:",
+        guarderias.length
+      );
+
+      console.log(
+        "🔧 Servicios totales:",
+        servicios.length
+      );
+
+
+      cargarComunidades();
+
+      buscarServicios();
+
+    }
+
+    catch (error) {
+
+      console.error(
+        "ERROR CARGANDO SERVICIOS:",
+        error
+      );
+
+      const resultados =
+        document.getElementById(
+          "resultadosServicios"
         );
 
-        console.log(
-          "Talleres cargados:",
-          talleres.length
-        );
+      if (resultados) {
 
-        console.log(
-          "Lavaderos cargados:",
-          lavaderos.length
-        );
-
-        console.log(
-          "Lavanderías cargadas:",
-          lavanderias.length
-        );
-
-        console.log(
-          "Vaciado de aguas cargados:",
-          vaciadoAguas.length
-        );
-
-        console.log(
-          "Servicios totales:",
-          servicios.length
-        );
-
-
-        cargarComunidades();
-
-        buscarServicios();
-      })
-
-
-      .catch(error => {
-
-        console.error(
-          "Error cargando servicios:",
-          error
-        );
-
-        const resultados =
-          document.getElementById("resultadosServicios");
-
-        if (resultados) {
-
-          resultados.innerHTML =
-            "<p>No se pudieron cargar los servicios.</p>";
-        }
-      });
+        resultados.innerHTML =
+          '<p class="sin-resultados">' +
+          '⚠️ No se pudieron cargar los servicios.' +
+          '</p>';
+      }
+    }
 
   }
 );
