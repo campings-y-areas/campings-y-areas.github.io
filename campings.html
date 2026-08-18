@@ -1,50 +1,91 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Campings | Campings & Áreas</title>
+
   <link rel="stylesheet" href="style.css?v=2">
 </head>
 
 <body>
 
   <header>
+
     <h1>
-      <img src="logo.png" alt="Campings & Áreas" class="logo">
+      <img
+        src="logo.png"
+        alt="Campings & Áreas"
+        class="logo"
+      >
       Campings & Áreas
     </h1>
+
   </header>
 
+
   <nav class="menu">
-    <a href="index.html">🏠 Inicio</a>
-    <a href="campings.html">🏕️ Campings</a>
-   <a href="areas.html?tipo=area">🚐 Áreas</a>
-<a href="areas.html?tipo=parking">🅿️ Parkings</a>
-    <a href="acampadas.html">🥾 Acampadas</a>
-   <a href="lugares.html">
-  📍 Lugares
-</a>
-   <a href="servicios.html">
-  🔧 Servicios
-</a>
+
+    <a href="index.html">
+      🏠 Inicio
+    </a>
+
+    <a href="campings.html">
+      🏕️ Campings
+    </a>
+
+    <a href="areas.html?tipo=area">
+      🚐 Áreas
+    </a>
+
+    <a href="areas.html?tipo=parking">
+      🅿️ Parkings
+    </a>
+
+    <a href="acampadas.html">
+      🥾 Acampadas
+    </a>
+
+    <a href="lugares.html">
+      📍 Lugares
+    </a>
+
+    <a href="servicios.html">
+      🔧 Servicios
+    </a>
+
+  </nav>
+
 
   <main>
 
     <section class="bienvenida">
-      <h2>🏕️ Campings</h2>
+
+      <h2>
+        🏕️ Campings
+      </h2>
 
       <p>
-        Encuentra campings para tus próximas rutas, escapadas y vacaciones.
+        Encuentra campings para tus próximas rutas,
+        escapadas y vacaciones.
       </p>
 
       <p class="estado">
-        Busca por nombre, localidad, provincia o comunidad autónoma y combina los filtros según tus necesidades.
+        Busca por nombre, localidad, provincia o comunidad autónoma
+        y combina los filtros según tus necesidades.
       </p>
+
     </section>
 
+
     <section class="buscador">
-      <h2>🔎 Buscar campings</h2>
+
+      <h2>
+        🔎 Buscar campings
+      </h2>
+
 
       <div class="buscador-campos">
 
@@ -54,51 +95,117 @@
           placeholder="Camping, localidad, provincia o comunidad autónoma"
         >
 
-        <select id="paisCamping">
-          <option value="">Todos los países</option>
-          <option value="ES">🇪🇸 España</option>
+
+        <select id="comunidadCamping">
+
+          <option value="">
+            Todas las comunidades
+          </option>
+
         </select>
 
-        <button type="button" id="botonBuscarCamping">
+
+        <button
+          type="button"
+          id="botonBuscarCamping"
+        >
           Buscar
         </button>
 
       </div>
 
+
       <div class="filtros-camping">
 
+
         <label>
-          <input type="checkbox" id="filtroMascotas">
+
+          <input
+            type="checkbox"
+            id="filtroMascotas"
+          >
+
           🐕 Admite mascotas
+
         </label>
 
+
         <label>
-          <input type="checkbox" id="filtroTodoAno">
+
+          <input
+            type="checkbox"
+            id="filtroTodoAno"
+          >
+
           📅 Abierto todo el año
+
         </label>
 
+
         <label>
-          <input type="checkbox" id="filtroPiscina">
+
+          <input
+            type="checkbox"
+            id="filtroPiscina"
+          >
+
           🏊 Piscina climatizada/cubierta
+
         </label>
 
+
         <label>
-          <input type="checkbox" id="filtroAcuatico">
+
+          <input
+            type="checkbox"
+            id="filtroParqueAcuatico"
+          >
+
           🌊 Parque acuático/toboganes
+
         </label>
+
+
+        <label>
+
+          <input
+            type="checkbox"
+            id="filtroAccesibilidad"
+          >
+
+          ♿ Accesibilidad
+
+        </label>
+
+
+      </div>
+
+
+      <div class="acciones-filtros">
+
+        <button
+          type="button"
+          id="limpiarFiltrosCamping"
+        >
+          Limpiar filtros
+        </button>
 
       </div>
 
     </section>
 
+
     <section
       id="resultadosCampings"
-      class="resultados-campings">
+      class="resultados-campings"
+    >
     </section>
 
   </main>
 
-  <script src="campings.js?v=8"></script>
+
+  <script src="campings.js?v=6"></script>
 
 </body>
+
 </html>
