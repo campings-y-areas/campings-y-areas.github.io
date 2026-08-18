@@ -893,64 +893,99 @@ document.addEventListener(
       });
 
 
-    // ======================================
-    // CARGAR RESTAURANTES
-    // ======================================
+    // ==========================================
+// CARGAR SERVICIOS
+// RESTAURANTES + DUCHAS
+// ==========================================
 
-    fetch(
-      "restaurantes-espana-v2.json?v=1"
-    )
+Promise.all([
 
-      .then(response => {
+  fetch(
+    "restaurantes-espana-v2.json?v=1"
+  )
+    .then(response => {
 
-        if (!response.ok) {
+      if (!response.ok) {
 
-          throw new Error(
-            "No se pudo cargar la base de restaurantes"
-          );
-        }
-
-        return response.json();
-      })
-
-
-      .then(data => {
-
-        servicios = data;
-
-
-        console.log(
-          "Restaurantes cargados:",
-          servicios.length
+        throw new Error(
+          "No se pudo cargar la base de restaurantes"
         );
+      }
+
+      return response.json();
+    }),
 
 
-        cargarComunidades();
+  fetch(
+    "duchas-europa-v1.json?v=1"
+  )
+    .then(response => {
 
-        buscarServicios();
-      })
+      if (!response.ok) {
 
-
-      .catch(error => {
-
-        console.error(
-          "Error:",
-          error
+        throw new Error(
+          "No se pudo cargar la base de duchas"
         );
+      }
+
+      return response.json();
+    })
+
+])
+
+  .then(([
+    restaurantes,
+    duchas
+  ]) => {
+
+    servicios = [
+      ...restaurantes,
+      ...duchas
+    ];
 
 
-        const resultados =
-          document.getElementById(
-            "resultadosServicios"
-          );
+    console.log(
+      "Restaurantes cargados:",
+      restaurantes.length
+    );
+
+    console.log(
+      "Duchas cargadas:",
+      duchas.length
+    );
+
+    console.log(
+      "Servicios totales:",
+      servicios.length
+    );
 
 
-        if (resultados) {
+    cargarComunidades();
 
-          resultados.innerHTML =
-            "<p>No se pudieron cargar los servicios.</p>";
-        }
-      });
+    buscarServicios();
+  })
+
+
+  .catch(error => {
+
+    console.error(
+      "Error:",
+      error
+    );
+
+
+    const resultados =
+      document.getElementById(
+        "resultadosServicios"
+      );
+
+
+    if (resultados) {
+
+      resultados.innerHTML =
+        "<p>No se pudieron cargar los servicios.</p>";
+    }
+  });
 
   }
 );
