@@ -1561,7 +1561,7 @@ document.addEventListener(
 
 
         cargarJSON(
-          "campings-italia-definitivo.json?v=2"
+          "campings-italia-definitivo-final.json?v=3"
         )
 
       ]);
