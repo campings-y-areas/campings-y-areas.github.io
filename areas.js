@@ -1488,7 +1488,7 @@ document.addEventListener(
         ),
 
         cargarJSON(
-"areas-italia-definitivo-v2.json?v=2"
+"areas-italia-definitivo-v3.json?v=3"
         )
 
       ]);
