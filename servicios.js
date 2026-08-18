@@ -315,6 +315,7 @@ function mostrarPagina() {
     "lista-campings";
 
   pagina.forEach(servicio => {
+
     listado.appendChild(
       crearFichaServicio(servicio)
     );
@@ -455,6 +456,11 @@ function crearFichaServicio(servicio) {
   else if (servicio.tipo === "lavanderia") {
     tipo.textContent =
       "🧺 Lavandería";
+  }
+
+  else if (servicio.tipo === "vaciado_aguas") {
+    tipo.textContent =
+      "🚰 Vaciado de aguas";
   }
 
   else {
@@ -693,6 +699,7 @@ document.addEventListener(
 
 
     if (boton) {
+
       boton.addEventListener(
         "click",
         buscarServicios
@@ -737,12 +744,14 @@ document.addEventListener(
 
 
     // ======================================
-    // CARGAR BASES DE SERVICIOS
+    // CARGAR LAS 6 BASES DE SERVICIOS
     // ======================================
 
     Promise.all([
 
-      // RESTAURANTES
+
+      // 1. RESTAURANTES
+
       fetch(
         "restaurantes-espana-v2.json?v=1"
       )
@@ -758,7 +767,8 @@ document.addEventListener(
         }),
 
 
-      // DUCHAS
+      // 2. DUCHAS
+
       fetch(
         "duchas-europa-v1.json?v=1"
       )
@@ -774,7 +784,8 @@ document.addEventListener(
         }),
 
 
-      // TALLERES
+      // 3. TALLERES
+
       fetch(
         "talleres-espana-v1.json?v=1"
       )
@@ -790,7 +801,8 @@ document.addEventListener(
         }),
 
 
-      // LAVADEROS DE AUTOCARAVANAS
+      // 4. LAVADEROS
+
       fetch(
         "lavaderos-autocaravanas-v1.json?v=1"
       )
@@ -806,7 +818,8 @@ document.addEventListener(
         }),
 
 
-      // LAVANDERÍAS
+      // 5. LAVANDERÍAS
+
       fetch(
         "lavanderias-espana-v1.json?v=1"
       )
@@ -815,6 +828,23 @@ document.addEventListener(
           if (!response.ok) {
             throw new Error(
               "No se pudo cargar la base de lavanderías"
+            );
+          }
+
+          return response.json();
+        }),
+
+
+      // 6. VACIADO DE AGUAS
+
+      fetch(
+        "vaciado-aguas-espana-v1.json?v=1"
+      )
+        .then(response => {
+
+          if (!response.ok) {
+            throw new Error(
+              "No se pudo cargar la base de vaciado de aguas"
             );
           }
 
@@ -829,7 +859,8 @@ document.addEventListener(
         duchas,
         talleres,
         lavaderos,
-        lavanderias
+        lavanderias,
+        vaciadoAguas
       ]) => {
 
         servicios = [
@@ -837,7 +868,8 @@ document.addEventListener(
           ...duchas,
           ...talleres,
           ...lavaderos,
-          ...lavanderias
+          ...lavanderias,
+          ...vaciadoAguas
         ];
 
 
@@ -864,6 +896,11 @@ document.addEventListener(
         console.log(
           "Lavanderías cargadas:",
           lavanderias.length
+        );
+
+        console.log(
+          "Vaciado de aguas cargados:",
+          vaciadoAguas.length
         );
 
         console.log(
