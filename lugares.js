@@ -1,7 +1,6 @@
 // ==========================================
 // CAMPINGS & ÁREAS
 // LUGARES
-// PLAYAS CANINAS
 // ==========================================
 
 let lugares = [];
@@ -95,6 +94,111 @@ function crearEnlaceMapa(lugar) {
 
 
 // ==========================================
+// SABER TIPO SELECCIONADO
+// ==========================================
+
+function obtenerTipoSeleccionado() {
+
+  const seleccionado =
+    document.querySelector(
+      'input[name="tipoLugar"]:checked'
+    );
+
+  return seleccionado
+    ? seleccionado.value
+    : "";
+}
+
+
+// ==========================================
+// ACTUALIZAR TEXTOS DE LA PÁGINA
+// ==========================================
+
+function actualizarTextosTipo() {
+
+  const tipo =
+    obtenerTipoSeleccionado();
+
+  const titulo =
+    document.querySelector(
+      ".bienvenida h2"
+    );
+
+  const descripcion =
+    document.querySelector(
+      ".bienvenida p:not(.estado)"
+    );
+
+  const tituloBuscador =
+    document.querySelector(
+      ".buscador h2"
+    );
+
+
+  if (
+    tipo === "playa_canina"
+  ) {
+
+    if (titulo) {
+      titulo.textContent =
+        "🐕 Playas caninas";
+    }
+
+    if (descripcion) {
+      descripcion.textContent =
+        "Encuentra playas y zonas de baño donde está permitida la entrada con perros.";
+    }
+
+    if (tituloBuscador) {
+      tituloBuscador.textContent =
+        "🔎 Buscar playas caninas";
+    }
+
+    return;
+  }
+
+
+  if (
+    tipo === "poza_piscina_natural"
+  ) {
+
+    if (titulo) {
+      titulo.textContent =
+        "💧 Pozas y piscinas naturales";
+    }
+
+    if (descripcion) {
+      descripcion.textContent =
+        "Descubre pozas, piscinas naturales, zonas de baño fluvial y otros lugares naturales para refrescarte durante tus viajes.";
+    }
+
+    if (tituloBuscador) {
+      tituloBuscador.textContent =
+        "🔎 Buscar pozas y piscinas naturales";
+    }
+
+    return;
+  }
+
+
+  if (titulo) {
+    titulo.textContent =
+      "📍 Lugares";
+  }
+
+  if (descripcion) {
+    descripcion.textContent =
+      "Descubre lugares útiles e interesantes para disfrutar durante tus viajes.";
+  }
+
+  if (tituloBuscador) {
+    tituloBuscador.textContent =
+      "🔎 Buscar lugares";
+  }
+}
+
+
+// ==========================================
 // CARGAR COMUNIDADES
 // ==========================================
 
@@ -109,10 +213,27 @@ function cargarComunidades() {
     return;
   }
 
+
+  const valorActual =
+    selector.value;
+
+
+  selector.innerHTML =
+    '<option value="">Todas las comunidades</option>';
+
+
+  const tipo =
+    obtenerTipoSeleccionado();
+
+
   const comunidades =
     [
       ...new Set(
         lugares
+          .filter(lugar =>
+            tipo === "" ||
+            lugar.tipo === tipo
+          )
           .map(lugar =>
             lugar.comunidad_autonoma
           )
@@ -129,10 +250,13 @@ function cargarComunidades() {
         )
       );
 
+
   comunidades.forEach(comunidad => {
 
     const opcion =
-      document.createElement("option");
+      document.createElement(
+        "option"
+      );
 
     opcion.value =
       comunidad;
@@ -140,9 +264,21 @@ function cargarComunidades() {
     opcion.textContent =
       comunidad;
 
-    selector.appendChild(opcion);
+    selector.appendChild(
+      opcion
+    );
 
   });
+
+
+  if (
+    comunidades.includes(
+      valorActual
+    )
+  ) {
+    selector.value =
+      valorActual;
+  }
 }
 
 
@@ -157,9 +293,12 @@ function buscarLugares() {
       "buscarLugar"
     );
 
+
   const texto =
     normalizarTexto(
-      campo ? campo.value : ""
+      campo
+        ? campo.value
+        : ""
     );
 
 
@@ -169,20 +308,18 @@ function buscarLugares() {
     )?.value || "";
 
 
-  const tipoSeleccionado =
-    document.querySelector(
-      'input[name="tipoLugar"]:checked'
-    );
-
-
   const tipo =
-    tipoSeleccionado
-      ? tipoSeleccionado.value
-      : "";
+    obtenerTipoSeleccionado();
 
 
   resultadosActuales =
     lugares.filter(lugar => {
+
+      const descripcion =
+        lugar.descripcion ||
+        lugar.descripcion_original ||
+        "";
+
 
       const contenido =
         normalizarTexto(
@@ -191,7 +328,7 @@ function buscarLugares() {
             lugar.localidad,
             lugar.provincia,
             lugar.comunidad_autonoma,
-            lugar.descripcion
+            descripcion
           ]
             .filter(Boolean)
             .join(" ")
@@ -200,7 +337,9 @@ function buscarLugares() {
 
       const coincideTexto =
         texto === "" ||
-        contenido.includes(texto);
+        contenido.includes(
+          texto
+        );
 
 
       const coincideComunidad =
@@ -262,14 +401,18 @@ function mostrarPagina() {
   // CABECERA
 
   const cabecera =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   cabecera.className =
     "cabecera-resultados";
 
 
   const contador =
-    document.createElement("p");
+    document.createElement(
+      "p"
+    );
 
   contador.className =
     "contador-resultados";
@@ -286,10 +429,14 @@ function mostrarPagina() {
   );
 
 
-  if (totalPaginas > 1) {
+  if (
+    totalPaginas > 1
+  ) {
 
     const paginaInfo =
-      document.createElement("p");
+      document.createElement(
+        "p"
+      );
 
     paginaInfo.className =
       "pagina-info";
@@ -310,10 +457,14 @@ function mostrarPagina() {
 
   // SIN RESULTADOS
 
-  if (total === 0) {
+  if (
+    total === 0
+  ) {
 
     const mensaje =
-      document.createElement("p");
+      document.createElement(
+        "p"
+      );
 
     mensaje.className =
       "sin-resultados";
@@ -329,7 +480,7 @@ function mostrarPagina() {
   }
 
 
-  // PÁGINA ACTUAL
+  // RESULTADOS DE LA PÁGINA
 
   const inicio =
     (paginaActual - 1) *
@@ -349,7 +500,9 @@ function mostrarPagina() {
 
 
   const listado =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   listado.className =
     "lista-campings";
@@ -358,7 +511,9 @@ function mostrarPagina() {
   pagina.forEach(lugar => {
 
     listado.appendChild(
-      crearFichaLugar(lugar)
+      crearFichaLugar(
+        lugar
+      )
     );
 
   });
@@ -371,17 +526,23 @@ function mostrarPagina() {
 
   // PAGINACIÓN
 
-  if (totalPaginas > 1) {
+  if (
+    totalPaginas > 1
+  ) {
 
     const paginacion =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
 
     paginacion.className =
       "paginacion";
 
 
     const anterior =
-      document.createElement("button");
+      document.createElement(
+        "button"
+      );
 
     anterior.type =
       "button";
@@ -397,7 +558,9 @@ function mostrarPagina() {
       "click",
       () => {
 
-        if (paginaActual > 1) {
+        if (
+          paginaActual > 1
+        ) {
 
           paginaActual--;
 
@@ -410,14 +573,18 @@ function mostrarPagina() {
 
 
     const indicador =
-      document.createElement("span");
+      document.createElement(
+        "span"
+      );
 
     indicador.textContent =
       `${paginaActual} / ${totalPaginas}`;
 
 
     const siguiente =
-      document.createElement("button");
+      document.createElement(
+        "button"
+      );
 
     siguiente.type =
       "button";
@@ -426,7 +593,8 @@ function mostrarPagina() {
       "Siguiente →";
 
     siguiente.disabled =
-      paginaActual === totalPaginas;
+      paginaActual ===
+      totalPaginas;
 
 
     siguiente.addEventListener(
@@ -472,10 +640,14 @@ function mostrarPagina() {
 // CREAR FICHA
 // ==========================================
 
-function crearFichaLugar(lugar) {
+function crearFichaLugar(
+  lugar
+) {
 
   const ficha =
-    document.createElement("article");
+    document.createElement(
+      "article"
+    );
 
   ficha.className =
     "resultado-camping";
@@ -484,11 +656,13 @@ function crearFichaLugar(lugar) {
   // NOMBRE
 
   const titulo =
-    document.createElement("h3");
+    document.createElement(
+      "h3"
+    );
 
   titulo.textContent =
     lugar.nombre ||
-    "Playa canina";
+    "Lugar";
 
   ficha.appendChild(
     titulo
@@ -498,13 +672,38 @@ function crearFichaLugar(lugar) {
   // TIPO
 
   const tipo =
-    document.createElement("p");
+    document.createElement(
+      "p"
+    );
 
   tipo.className =
     "tipo-punto";
 
-  tipo.textContent =
-    "🐕 Playa canina";
+
+  if (
+    lugar.tipo ===
+    "playa_canina"
+  ) {
+
+    tipo.textContent =
+      "🐕 Playa canina";
+  }
+
+  else if (
+    lugar.tipo ===
+    "poza_piscina_natural"
+  ) {
+
+    tipo.textContent =
+      "💧 Poza / piscina natural";
+  }
+
+  else {
+
+    tipo.textContent =
+      "📍 Lugar";
+  }
+
 
   ficha.appendChild(
     tipo
@@ -521,17 +720,23 @@ function crearFichaLugar(lugar) {
     .filter(Boolean);
 
 
-  if (ubicacion.length > 0) {
+  if (
+    ubicacion.length > 0
+  ) {
 
     const zonaTexto =
-      document.createElement("p");
+      document.createElement(
+        "p"
+      );
 
     zonaTexto.className =
       "zona-camping";
 
     zonaTexto.textContent =
       "📌 " +
-      [...new Set(ubicacion)]
+      [...new Set(
+        ubicacion
+      )]
         .join(" · ");
 
     ficha.appendChild(
@@ -540,14 +745,19 @@ function crearFichaLugar(lugar) {
   }
 
 
-  // MASCOTAS
+  // CARACTERÍSTICAS
 
   if (
-    lugar.admite_mascotas === true
+    lugar.tipo ===
+      "playa_canina" &&
+    lugar.admite_mascotas ===
+      true
   ) {
 
     const mascotas =
-      document.createElement("p");
+      document.createElement(
+        "p"
+      );
 
     mascotas.className =
       "caracteristicas";
@@ -563,10 +773,20 @@ function crearFichaLugar(lugar) {
 
   // DESCRIPCIÓN
 
-  if (lugar.descripcion) {
+  const descripcionLugar =
+    lugar.descripcion ||
+    lugar.descripcion_original ||
+    "";
+
+
+  if (
+    descripcionLugar
+  ) {
 
     const descripcion =
-      document.createElement("p");
+      document.createElement(
+        "p"
+      );
 
     descripcion.className =
       "descripcion-acampada";
@@ -575,7 +795,7 @@ function crearFichaLugar(lugar) {
       "pre-line";
 
     descripcion.textContent =
-      lugar.descripcion;
+      descripcionLugar;
 
     ficha.appendChild(
       descripcion
@@ -586,7 +806,9 @@ function crearFichaLugar(lugar) {
   // ENLACES
 
   const enlaces =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   enlaces.className =
     "enlaces-camping";
@@ -594,10 +816,14 @@ function crearFichaLugar(lugar) {
 
   // WEB
 
-  if (lugar.web) {
+  if (
+    lugar.web
+  ) {
 
     const web =
-      document.createElement("a");
+      document.createElement(
+        "a"
+      );
 
     web.href =
       normalizarUrl(
@@ -619,16 +845,50 @@ function crearFichaLugar(lugar) {
   }
 
 
+  // TELÉFONO
+
+  if (
+    lugar.telefono
+  ) {
+
+    const telefono =
+      document.createElement(
+        "a"
+      );
+
+    telefono.href =
+      "tel:" +
+      lugar.telefono.replace(
+        /[^\d+]/g,
+        ""
+      );
+
+    telefono.textContent =
+      "☎️ " +
+      lugar.telefono;
+
+    enlaces.appendChild(
+      telefono
+    );
+  }
+
+
   // MAPA
 
   const enlaceMapa =
-    crearEnlaceMapa(lugar);
+    crearEnlaceMapa(
+      lugar
+    );
 
 
-  if (enlaceMapa) {
+  if (
+    enlaceMapa
+  ) {
 
     const mapa =
-      document.createElement("a");
+      document.createElement(
+        "a"
+      );
 
     mapa.href =
       enlaceMapa;
@@ -674,13 +934,42 @@ function irAResultados() {
     );
 
 
-  if (resultados) {
+  if (
+    resultados
+  ) {
 
     resultados.scrollIntoView({
       behavior: "smooth",
       block: "start"
     });
   }
+}
+
+
+// ==========================================
+// CAMBIO DE CATEGORÍA
+// ==========================================
+
+function cambiarCategoria() {
+
+  const selector =
+    document.getElementById(
+      "comunidadLugar"
+    );
+
+
+  if (
+    selector
+  ) {
+    selector.value = "";
+  }
+
+
+  actualizarTextosTipo();
+
+  cargarComunidades();
+
+  buscarLugares();
 }
 
 
@@ -713,7 +1002,9 @@ document.addEventListener(
 
     // BOTÓN BUSCAR
 
-    if (boton) {
+    if (
+      boton
+    ) {
 
       boton.addEventListener(
         "click",
@@ -724,14 +1015,17 @@ document.addEventListener(
 
     // ENTER
 
-    if (campo) {
+    if (
+      campo
+    ) {
 
       campo.addEventListener(
         "keydown",
         event => {
 
           if (
-            event.key === "Enter"
+            event.key ===
+            "Enter"
           ) {
 
             buscarLugares();
@@ -743,7 +1037,9 @@ document.addEventListener(
 
     // COMUNIDAD
 
-    if (comunidad) {
+    if (
+      comunidad
+    ) {
 
       comunidad.addEventListener(
         "change",
@@ -752,75 +1048,122 @@ document.addEventListener(
     }
 
 
-    // TIPOS DE LUGAR
+    // CAMBIO PLAYAS / POZAS
 
     document
       .querySelectorAll(
         'input[name="tipoLugar"]'
       )
-      .forEach(radio => {
+      .forEach(
+        radio => {
 
-        radio.addEventListener(
-          "change",
-          buscarLugares
-        );
+          radio.addEventListener(
+            "change",
+            cambiarCategoria
+          );
 
-      });
+        }
+      );
 
 
     // ======================================
-    // CARGAR PLAYAS CANINAS
+    // CARGAR LAS DOS BASES
     // ======================================
 
-    fetch(
-      "playas-caninas-espana-v2.json?v=1"
-    )
-      .then(response => {
+    Promise.all([
 
-        if (!response.ok) {
+      fetch(
+        "playas-caninas-espana-v2.json?v=2"
+      )
+        .then(response => {
 
-          throw new Error(
-            "No se pudo cargar la base de playas caninas"
+          if (
+            !response.ok
+          ) {
+            throw new Error(
+              "No se pudo cargar playas caninas"
+            );
+          }
+
+          return response.json();
+        }),
+
+
+      fetch(
+        "pozas-piscinas-naturales-espana-v1.json?v=1"
+      )
+        .then(response => {
+
+          if (
+            !response.ok
+          ) {
+            throw new Error(
+              "No se pudieron cargar las pozas y piscinas naturales"
+            );
+          }
+
+          return response.json();
+        })
+
+    ])
+
+      .then(
+        ([playas, pozas]) => {
+
+          lugares = [
+            ...playas,
+            ...pozas
+          ];
+
+
+          console.log(
+            "Playas caninas:",
+            playas.length
           );
-        }
 
-        return response.json();
-      })
+          console.log(
+            "Pozas y piscinas naturales:",
+            pozas.length
+          );
 
-      .then(data => {
-
-        lugares = data;
-
-        console.log(
-          "Lugares cargados:",
-          lugares.length
-        );
-
-        cargarComunidades();
-
-        buscarLugares();
-      })
-
-      .catch(error => {
-
-        console.error(
-          "Error:",
-          error
-        );
-
-
-        const resultados =
-          document.getElementById(
-            "resultadosLugares"
+          console.log(
+            "Lugares totales:",
+            lugares.length
           );
 
 
-        if (resultados) {
+          actualizarTextosTipo();
 
-          resultados.innerHTML =
-            "<p>No se pudieron cargar los lugares.</p>";
+          cargarComunidades();
+
+          buscarLugares();
         }
-      });
+      )
+
+      .catch(
+        error => {
+
+          console.error(
+            "Error:",
+            error
+          );
+
+
+          const resultados =
+            document.getElementById(
+              "resultadosLugares"
+            );
+
+
+          if (
+            resultados
+          ) {
+
+            resultados.innerHTML =
+              "<p>No se pudieron cargar los lugares.</p>";
+          }
+        }
+      );
 
   }
 );
