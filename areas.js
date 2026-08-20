@@ -1543,7 +1543,6 @@ puntos = [
   ...francia,
   ...alemania
 ];
-      ];
 
 
       console.log(
