@@ -1593,8 +1593,14 @@ document.addEventListener(
         );
 
 
-      const portugalNormalizado =
+            const portugalNormalizado =
         campingsPortugal.map(
+          normalizarCamping
+        );
+
+
+      const franciaNormalizada =
+        campingsFrancia.map(
           normalizarCamping
         );
 
@@ -1605,7 +1611,8 @@ document.addEventListener(
 
         ...espanaNormalizada,
         ...italiaNormalizada,
-        ...portugalNormalizado
+        ...portugalNormalizado,
+        ...franciaNormalizada
 
       ];
 
