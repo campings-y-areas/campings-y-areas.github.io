@@ -1541,8 +1541,8 @@ document.addEventListener(
     }
 
 
-        // ======================================
-    // CARGAR ESPAÑA + ITALIA + PORTUGAL
+    // ======================================
+    // CARGAR ESPAÑA + ITALIA + PORTUGAL + FRANCIA
     // ======================================
 
     try {
@@ -1551,7 +1551,8 @@ document.addEventListener(
 
         campingsEspana,
         campingsItalia,
-        campingsPortugal
+        campingsPortugal,
+        campingsFrancia
 
       ] = await Promise.all([
 
@@ -1568,6 +1569,11 @@ document.addEventListener(
 
         cargarJSON(
           "campings-portugal-definitivo.json?v=1"
+        ),
+
+
+        cargarJSON(
+          "campings-francia-definitivo.json?v=1"
         )
 
       ]);
