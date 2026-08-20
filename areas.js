@@ -1472,15 +1472,16 @@ document.addEventListener(
     }
 
 
-    // ======================================
-    // CARGAR ESPAÑA + ITALIA
+       // ======================================
+    // CARGAR ESPAÑA + ITALIA + PORTUGAL
     // ======================================
 
     try {
 
       const [
         datosEspana,
-        datosItalia
+        datosItalia,
+        datosPortugal
       ] = await Promise.all([
 
         cargarJSON(
@@ -1488,7 +1489,11 @@ document.addEventListener(
         ),
 
         cargarJSON(
-"areas-italia-definitivo-v3.json?v=3"
+          "areas-italia-definitivo-v3.json?v=3"
+        ),
+
+        cargarJSON(
+          "areas-portugal-definitivo.json?v=1"
         )
 
       ]);
@@ -1506,9 +1511,16 @@ document.addEventListener(
         );
 
 
+      const portugal =
+        datosPortugal.map(
+          normalizarPunto
+        );
+
+
       puntos = [
         ...espana,
-        ...italia
+        ...italia,
+        ...portugal
       ];
 
 
@@ -1521,6 +1533,12 @@ document.addEventListener(
       console.log(
         "🇮🇹 Puntos Italia:",
         italia.length
+      );
+
+
+      console.log(
+        "🇵🇹 Puntos Portugal:",
+        portugal.length
       );
 
 
