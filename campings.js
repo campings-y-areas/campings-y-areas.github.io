@@ -1578,9 +1578,9 @@ document.addEventListener(
         ),
 
 
-        cargarJSON(
-          "campings-alemania-definitivo-FINAL.json?v=2
-        )
+       cargarJSON(
+  "campings-alemania-definitivo-FINAL.json?v=2"
+)
 
       ]);
 
