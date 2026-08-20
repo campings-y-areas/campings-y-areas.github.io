@@ -1472,37 +1472,41 @@ document.addEventListener(
     }
 
 
-        // ======================================
-    // CARGAR ESPAÑA + ITALIA + PORTUGAL + FRANCIA
-    // ======================================
+      // ======================================
+// CARGAR ESPAÑA + ITALIA + PORTUGAL + FRANCIA + ALEMANIA
+// ======================================
 
-    try {
+try {
 
-      const [
-        datosEspana,
-        datosItalia,
-        datosPortugal,
-        datosFrancia
-      ] = await Promise.all([
+  const [
+    datosEspana,
+    datosItalia,
+    datosPortugal,
+    datosFrancia,
+    datosAlemania
+  ] = await Promise.all([
 
-        cargarJSON(
-          "areas-parkings-espana-v3.json?v=1"
-        ),
+    cargarJSON(
+      "areas-parkings-espana-v3.json?v=1"
+    ),
 
-        cargarJSON(
-          "areas-italia-definitivo-v3.json?v=3"
-        ),
+    cargarJSON(
+      "areas-italia-definitivo-v3.json?v=3"
+    ),
 
-        cargarJSON(
-          "areas-portugal-definitivo.json?v=1"
-        ),
+    cargarJSON(
+      "areas-portugal-definitivo.json?v=1"
+    ),
 
-        cargarJSON(
-          "areas-francia-definitivo.json?v=1"
-        )
+    cargarJSON(
+      "areas-francia-definitivo.json?v=1"
+    ),
 
-      ]);
+    cargarJSON(
+      "areas-alemania-definitivo.json?v=1"
+    )
 
+  ]);
 
       const espana =
         datosEspana.map(
