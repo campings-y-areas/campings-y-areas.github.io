@@ -1472,8 +1472,8 @@ document.addEventListener(
     }
 
 
-      // ======================================
-// CARGAR ESPAÑA + ITALIA + PORTUGAL + FRANCIA + ALEMANIA
+   // ======================================
+// CARGAR ESPAÑA + ITALIA + PORTUGAL + FRANCIA + ALEMANIA + SUIZA
 // ======================================
 
 try {
@@ -1483,7 +1483,8 @@ try {
     datosItalia,
     datosPortugal,
     datosFrancia,
-    datosAlemania
+    datosAlemania,
+    datosSuiza
   ] = await Promise.all([
 
     cargarJSON(
@@ -1504,45 +1505,59 @@ try {
 
     cargarJSON(
       "areas-alemania-definitivo.json?v=2"
+    ),
+
+    cargarJSON(
+      "areas-suiza-definitivo.json?v=1"
     )
 
   ]);
 
-      const espana =
-        datosEspana.map(
-          normalizarPunto
-        );
+
+  const espana =
+    datosEspana.map(
+      normalizarPunto
+    );
 
 
-      const italia =
-        datosItalia.map(
-          normalizarPunto
-        );
+  const italia =
+    datosItalia.map(
+      normalizarPunto
+    );
 
 
-            const portugal =
-        datosPortugal.map(
-          normalizarPunto
-        );
+  const portugal =
+    datosPortugal.map(
+      normalizarPunto
+    );
 
 
-      const francia =
-  datosFrancia.map(
-    normalizarPunto
-  );
+  const francia =
+    datosFrancia.map(
+      normalizarPunto
+    );
 
-const alemania =
-  datosAlemania.map(
-    normalizarPunto
-  );
 
-puntos = [
-  ...espana,
-  ...italia,
-  ...portugal,
-  ...francia,
-  ...alemania
-];
+  const alemania =
+    datosAlemania.map(
+      normalizarPunto
+    );
+
+
+  const suiza =
+    datosSuiza.map(
+      normalizarPunto
+    );
+
+
+  puntos = [
+    ...espana,
+    ...italia,
+    ...portugal,
+    ...francia,
+    ...alemania,
+    ...suiza
+  ];
 
 
       console.log(
