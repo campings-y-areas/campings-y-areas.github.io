@@ -1579,7 +1579,7 @@ document.addEventListener(
 
 
        cargarJSON(
-  "campings-alemania-definitivo-FINAL.json?v=2"
+  "campings-alemania-definitivo-FINAL.json?v=3"
 )
 
       ]);
