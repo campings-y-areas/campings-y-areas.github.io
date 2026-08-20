@@ -1516,8 +1516,14 @@ document.addEventListener(
         );
 
 
-      const portugal =
+            const portugal =
         datosPortugal.map(
+          normalizarPunto
+        );
+
+
+      const francia =
+        datosFrancia.map(
           normalizarPunto
         );
 
@@ -1525,7 +1531,8 @@ document.addEventListener(
       puntos = [
         ...espana,
         ...italia,
-        ...portugal
+        ...portugal,
+        ...francia
       ];
 
 
