@@ -1527,16 +1527,22 @@ try {
 
 
       const francia =
-        datosFrancia.map(
-          normalizarPunto
-        );
+  datosFrancia.map(
+    normalizarPunto
+  );
 
+const alemania =
+  datosAlemania.map(
+    normalizarPunto
+  );
 
-      puntos = [
-        ...espana,
-        ...italia,
-        ...portugal,
-        ...francia
+puntos = [
+  ...espana,
+  ...italia,
+  ...portugal,
+  ...francia,
+  ...alemania
+];
       ];
 
 
