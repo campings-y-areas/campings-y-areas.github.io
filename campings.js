@@ -1616,23 +1616,30 @@ try {
         );
 
 
-      const alemaniaNormalizada =
-        campingsAlemania.map(
-          normalizarCamping
-        );
+     const alemaniaNormalizada =
+  campingsAlemania.map(
+    normalizarCamping
+  );
 
 
-      // UNIR
+const suizaNormalizada =
+  campingsSuiza.map(
+    normalizarCamping
+  );
 
-      campings = [
 
-        ...espanaNormalizada,
-        ...italiaNormalizada,
-        ...portugalNormalizado,
-        ...franciaNormalizada,
-        ...alemaniaNormalizada
+// UNIR
 
-      ];
+campings = [
+
+  ...espanaNormalizada,
+  ...italiaNormalizada,
+  ...portugalNormalizado,
+  ...franciaNormalizada,
+  ...alemaniaNormalizada,
+  ...suizaNormalizada
+
+];
 
 
       console.log(
