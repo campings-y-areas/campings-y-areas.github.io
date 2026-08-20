@@ -1541,49 +1541,54 @@ document.addEventListener(
     }
 
 
-       // ======================================
-    // CARGAR ESPAÑA + ITALIA + PORTUGAL + FRANCIA + ALEMANIA
-    // ======================================
+     // ======================================
+// CARGAR ESPAÑA + ITALIA + PORTUGAL + FRANCIA + ALEMANIA + SUIZA
+// ======================================
 
-    try {
+try {
 
-      const [
+  const [
 
-        campingsEspana,
-        campingsItalia,
-        campingsPortugal,
-        campingsFrancia,
-        campingsAlemania
+    campingsEspana,
+    campingsItalia,
+    campingsPortugal,
+    campingsFrancia,
+    campingsAlemania,
+    campingsSuiza
 
-      ] = await Promise.all([
-
-
-        cargarJSON(
-          "campings-espana-v4-definitivo.json?v=2"
-        ),
+  ] = await Promise.all([
 
 
-        cargarJSON(
-          "campings-italia-definitivo-final.json?v=3"
-        ),
+    cargarJSON(
+      "campings-espana-v4-definitivo.json?v=2"
+    ),
 
 
-        cargarJSON(
-          "campings-portugal-definitivo.json?v=1"
-        ),
+    cargarJSON(
+      "campings-italia-definitivo-final.json?v=3"
+    ),
 
 
-        cargarJSON(
-          "campings-francia-definitivo.json?v=1"
-        ),
+    cargarJSON(
+      "campings-portugal-definitivo.json?v=1"
+    ),
 
 
-       cargarJSON(
-  "campings-alemania-definitivo-FINAL.json?v=3"
-)
+    cargarJSON(
+      "campings-francia-definitivo.json?v=1"
+    ),
 
-      ]);
 
+    cargarJSON(
+      "campings-alemania-definitivo-FINAL.json?v=3"
+    ),
+
+
+    cargarJSON(
+      "campings-suiza-definitivo.json?v=1"
+    )
+
+  ]);
 
       // NORMALIZAR REGIÓN
 
