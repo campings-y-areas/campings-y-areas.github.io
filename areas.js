@@ -1503,7 +1503,7 @@ try {
     ),
 
     cargarJSON(
-      "areas-alemania-definitivo.json?v=1"
+      "areas-alemania-definitivo.json?v=2"
     )
 
   ]);
