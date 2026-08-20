@@ -1585,7 +1585,7 @@ try {
 
 
     cargarJSON(
-      "campings-suiza-definitivo.json?v=1"
+      "campings-suiza-definitivo.json?v=2"
     )
 
   ]);
