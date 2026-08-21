@@ -291,10 +291,22 @@ function buscarCampings() {
     obtenerPaisSeleccionado();
 
 
-  const region =
-    document.getElementById(
-      "regionCamping"
-    )?.value || "";
+ const region =
+  document.getElementById(
+    "regionCamping"
+  )?.value || "";
+
+
+const provincia =
+  document.getElementById(
+    "provinciaCamping"
+  )?.value || "";
+
+
+const ciudad =
+  document.getElementById(
+    "ciudadCamping"
+  )?.value || "";
 
 
   const filtroMascotas =
@@ -365,7 +377,14 @@ function buscarCampings() {
       const coincideRegion =
         region === "" ||
         camping.region === region;
+const coincideProvincia =
+  provincia === "" ||
+  camping.provincia === provincia;
 
+
+const coincideCiudad =
+  ciudad === "" ||
+  camping.localidad === ciudad;
 
       const coincideMascotas =
         !filtroMascotas ||
@@ -394,18 +413,20 @@ function buscarCampings() {
         );
 
 
-      return (
+     return (
 
-        coincideTexto &&
-        coincidePais &&
-        coincideRegion &&
-        coincideMascotas &&
-        coincideTodoAno &&
-        coincidePiscina &&
-        coincideParque &&
-        coincideAccesibilidad
+  coincideTexto &&
+  coincidePais &&
+  coincideRegion &&
+  coincideProvincia &&
+  coincideCiudad &&
+  coincideMascotas &&
+  coincideTodoAno &&
+  coincidePiscina &&
+  coincideParque &&
+  coincideAccesibilidad
 
-      );
+);
     });
 
 
