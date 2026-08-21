@@ -488,100 +488,6 @@ function cargarCiudades() {
   }
 }
 
-  // TEXTO DEL SELECTOR SEGÚN PAÍS
-
-  if (pais === "España") {
-
-    selector.innerHTML =
-      '<option value="">Todas las comunidades autónomas</option>';
-
-  }
-
-  else if (pais === "Italia") {
-
-    selector.innerHTML =
-      '<option value="">Todas las regiones</option>';
-
-  }
-
-  else {
-
-    selector.innerHTML =
-      '<option value="">Todas las regiones</option>';
-  }
-
-
-  const regiones = [
-
-    ...new Set(
-
-      campings
-
-        .filter(camping => {
-
-          return (
-            pais === "" ||
-            camping.pais === pais
-          );
-        })
-
-        .map(camping =>
-          camping.region
-        )
-
-        .filter(Boolean)
-
-    )
-
-  ].sort((a, b) =>
-
-    a.localeCompare(
-      b,
-      "es",
-      {
-        sensitivity: "base"
-      }
-    )
-  );
-
-
-  regiones.forEach(region => {
-
-    const opcion =
-      document.createElement(
-        "option"
-      );
-
-    opcion.value =
-      region;
-
-    opcion.textContent =
-      region;
-
-    selector.appendChild(
-      opcion
-    );
-  });
-
-
-  if (
-    regiones.includes(
-      valorActual
-    )
-  ) {
-
-    selector.value =
-      valorActual;
-
-  }
-
-  else {
-
-    selector.value = "";
-  }
-}
-
-
 // ==========================================
 // BUSCAR CAMPINGS
 // ==========================================
@@ -1647,47 +1553,44 @@ function limpiarFiltros() {
       "buscarCamping"
     );
 
-
   const pais =
     document.getElementById(
       "paisCamping"
     );
-
 
   const region =
     document.getElementById(
       "regionCamping"
     );
 
+  const provincia =
+    document.getElementById(
+      "provinciaCamping"
+    );
 
-  if (campo) {
-    campo.value = "";
-  }
+  const ciudad =
+    document.getElementById(
+      "ciudadCamping"
+    );
 
 
-  if (pais) {
-    pais.value = "";
-  }
-
-
-  if (region) {
-    region.value = "";
-  }
+  if (campo) campo.value = "";
+  if (pais) pais.value = "";
+  if (region) region.value = "";
+  if (provincia) provincia.value = "";
+  if (ciudad) ciudad.value = "";
 
 
   [
-
     "filtroMascotas",
     "filtroTodoAno",
     "filtroPiscina",
     "filtroParqueAcuatico",
     "filtroAccesibilidad"
-
   ].forEach(id => {
 
     const filtro =
       document.getElementById(id);
-
 
     if (filtro) {
       filtro.checked = false;
@@ -1696,7 +1599,8 @@ function limpiarFiltros() {
 
 
   cargarRegiones();
-
+  cargarProvincias();
+  cargarCiudades();
   buscarCampings();
 }
 
@@ -1789,6 +1693,16 @@ document.addEventListener(
         "regionCamping"
       );
 
+    const provincia =
+      document.getElementById(
+        "provinciaCamping"
+      );
+
+    const ciudad =
+      document.getElementById(
+        "ciudadCamping"
+      );
+
 
     const limpiar =
       document.getElementById(
@@ -1851,6 +1765,46 @@ document.addEventListener(
     if (region) {
 
       region.addEventListener(
+        "change",
+        () => {
+
+          if (provincia) provincia.value = "";
+          if (ciudad) ciudad.value = "";
+
+          cargarProvincias();
+          cargarCiudades();
+          buscarCampings();
+        }
+      );
+    }
+
+
+    // ======================================
+    // PROVINCIA / CONDADO
+    // ======================================
+
+    if (provincia) {
+
+      provincia.addEventListener(
+        "change",
+        () => {
+
+          if (ciudad) ciudad.value = "";
+
+          cargarCiudades();
+          buscarCampings();
+        }
+      );
+    }
+
+
+    // ======================================
+    // CIUDAD
+    // ======================================
+
+    if (ciudad) {
+
+      ciudad.addEventListener(
         "change",
         buscarCampings
       );
@@ -2073,6 +2027,8 @@ campings = [
 
 
       cargarRegiones();
+      cargarProvincias();
+      cargarCiudades();
 
       buscarCampings();
 
