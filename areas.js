@@ -1549,20 +1549,27 @@ try {
     );
 
 
-  const suiza =
-    datosSuiza.map(
-      normalizarPunto
-    );
+ const suiza =
+  datosSuiza.map(
+    normalizarPunto
+  );
 
 
-  puntos = [
-    ...espana,
-    ...italia,
-    ...portugal,
-    ...francia,
-    ...alemania,
-    ...suiza
-  ];
+const austria =
+  datosAustria.map(
+    normalizarPunto
+  );
+
+
+puntos = [
+  ...espana,
+  ...italia,
+  ...portugal,
+  ...francia,
+  ...alemania,
+  ...suiza,
+  ...austria
+];
 
 
       console.log(
