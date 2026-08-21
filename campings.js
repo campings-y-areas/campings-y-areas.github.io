@@ -1633,6 +1633,12 @@ const suizaNormalizada =
   );
 
 
+const austriaNormalizada =
+  campingsAustria.map(
+    normalizarCamping
+  );
+
+
 // UNIR
 
 campings = [
@@ -1642,10 +1648,10 @@ campings = [
   ...portugalNormalizado,
   ...franciaNormalizada,
   ...alemaniaNormalizada,
-  ...suizaNormalizada
+  ...suizaNormalizada,
+  ...austriaNormalizada
 
 ];
-
 
       console.log(
         "🇪🇸 Campings España:",
