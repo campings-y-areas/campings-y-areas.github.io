@@ -1472,8 +1472,8 @@ document.addEventListener(
     }
 
 
-   // ======================================
-// CARGAR ESPAÑA + ITALIA + PORTUGAL + FRANCIA + ALEMANIA + SUIZA + AUSTRIA
+  // ======================================
+// CARGAR ESPAÑA + ITALIA + PORTUGAL + FRANCIA + ALEMANIA + SUIZA + AUSTRIA + BÉLGICA
 // ======================================
 
 try {
@@ -1485,7 +1485,8 @@ try {
     datosFrancia,
     datosAlemania,
     datosSuiza,
-    datosAustria
+    datosAustria,
+    datosBelgica
   ] = await Promise.all([
 
     cargarJSON(
@@ -1514,10 +1515,13 @@ try {
 
     cargarJSON(
       "areas-austria-definitivo.json?v=1"
+    ),
+
+    cargarJSON(
+      "areas-belgica-definitivo.json?v=1"
     )
 
   ]);
-
 
   const espana =
     datosEspana.map(
