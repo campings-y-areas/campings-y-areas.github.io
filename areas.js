@@ -1575,6 +1575,12 @@ const belgica =
   );
 
 
+const paisesBajos =
+  datosPaisesBajos.map(
+    normalizarPunto
+  );
+
+
 puntos = [
   ...espana,
   ...italia,
@@ -1583,7 +1589,8 @@ puntos = [
   ...alemania,
   ...suiza,
   ...austria,
-  ...belgica
+  ...belgica,
+  ...paisesBajos
 ];
 
       console.log(
