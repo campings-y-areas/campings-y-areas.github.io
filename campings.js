@@ -171,7 +171,221 @@ function cargarRegiones() {
 
   const valorActual =
     selector.value;
+// ==========================================
+// CARGAR PROVINCIAS / CONDADOS
+// ==========================================
 
+function cargarProvincias() {
+
+  const selector =
+    document.getElementById(
+      "provinciaCamping"
+    );
+
+  if (!selector) {
+    return;
+  }
+
+
+  const pais =
+    obtenerPaisSeleccionado();
+
+
+  const region =
+    document.getElementById(
+      "regionCamping"
+    )?.value || "";
+
+
+  const valorActual =
+    selector.value;
+
+
+  selector.innerHTML =
+    '<option value="">Todas las provincias/condados</option>';
+
+
+  const provincias = [
+
+    ...new Set(
+
+      campings
+
+        .filter(camping => {
+
+          return (
+            (pais === "" || camping.pais === pais) &&
+            (region === "" || camping.region === region)
+          );
+        })
+
+        .map(camping =>
+          camping.provincia
+        )
+
+        .filter(Boolean)
+
+    )
+
+  ].sort((a, b) =>
+
+    a.localeCompare(
+      b,
+      "es",
+      {
+        sensitivity: "base"
+      }
+    )
+  );
+
+
+  provincias.forEach(provincia => {
+
+    const opcion =
+      document.createElement(
+        "option"
+      );
+
+    opcion.value =
+      provincia;
+
+    opcion.textContent =
+      provincia;
+
+    selector.appendChild(
+      opcion
+    );
+  });
+
+
+  if (
+    provincias.includes(
+      valorActual
+    )
+  ) {
+
+    selector.value =
+      valorActual;
+
+  }
+
+  else {
+
+    selector.value = "";
+  }
+}
+
+
+// ==========================================
+// CARGAR CIUDADES
+// ==========================================
+
+function cargarCiudades() {
+
+  const selector =
+    document.getElementById(
+      "ciudadCamping"
+    );
+
+  if (!selector) {
+    return;
+  }
+
+
+  const pais =
+    obtenerPaisSeleccionado();
+
+
+  const region =
+    document.getElementById(
+      "regionCamping"
+    )?.value || "";
+
+
+  const provincia =
+    document.getElementById(
+      "provinciaCamping"
+    )?.value || "";
+
+
+  const valorActual =
+    selector.value;
+
+
+  selector.innerHTML =
+    '<option value="">Todas las ciudades</option>';
+
+
+  const ciudades = [
+
+    ...new Set(
+
+      campings
+
+        .filter(camping => {
+
+          return (
+            (pais === "" || camping.pais === pais) &&
+            (region === "" || camping.region === region) &&
+            (provincia === "" || camping.provincia === provincia)
+          );
+        })
+
+        .map(camping =>
+          camping.localidad
+        )
+
+        .filter(Boolean)
+
+    )
+
+  ].sort((a, b) =>
+
+    a.localeCompare(
+      b,
+      "es",
+      {
+        sensitivity: "base"
+      }
+    )
+  );
+
+
+  ciudades.forEach(ciudad => {
+
+    const opcion =
+      document.createElement(
+        "option"
+      );
+
+    opcion.value =
+      ciudad;
+
+    opcion.textContent =
+      ciudad;
+
+    selector.appendChild(
+      opcion
+    );
+  });
+
+
+  if (
+    ciudades.includes(
+      valorActual
+    )
+  ) {
+
+    selector.value =
+      valorActual;
+
+  }
+
+  else {
+
+    selector.value = "";
+  }
+}
 
   // TEXTO DEL SELECTOR SEGÚN PAÍS
 
