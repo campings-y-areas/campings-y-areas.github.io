@@ -1667,19 +1667,6 @@ campings = [
 ];
 
 
-// UNIR
-
-campings = [
-
-  ...espanaNormalizada,
-  ...italiaNormalizada,
-  ...portugalNormalizado,
-  ...franciaNormalizada,
-  ...alemaniaNormalizada,
-  ...suizaNormalizada,
-  ...austriaNormalizada
-
-];
 
       console.log(
         "🇪🇸 Campings España:",
