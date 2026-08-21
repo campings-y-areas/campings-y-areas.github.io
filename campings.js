@@ -1645,6 +1645,28 @@ const austriaNormalizada =
   );
 
 
+const belgicaNormalizada =
+  campingsBelgica.map(
+    normalizarCamping
+  );
+
+
+// UNIR
+
+campings = [
+
+  ...espanaNormalizada,
+  ...italiaNormalizada,
+  ...portugalNormalizado,
+  ...franciaNormalizada,
+  ...alemaniaNormalizada,
+  ...suizaNormalizada,
+  ...austriaNormalizada,
+  ...belgicaNormalizada
+
+];
+
+
 // UNIR
 
 campings = [
