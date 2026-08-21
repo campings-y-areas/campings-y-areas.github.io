@@ -171,6 +171,107 @@ function cargarRegiones() {
 
   const valorActual =
     selector.value;
+
+
+  // TEXTO DEL SELECTOR SEGÚN PAÍS
+
+  if (pais === "España") {
+
+    selector.innerHTML =
+      '<option value="">Todas las comunidades autónomas</option>';
+
+  }
+
+  else if (pais === "Italia") {
+
+    selector.innerHTML =
+      '<option value="">Todas las regiones</option>';
+
+  }
+
+  else {
+
+    selector.innerHTML =
+      '<option value="">Todas las regiones</option>';
+
+  }
+
+
+  const regiones = [
+
+    ...new Set(
+
+      campings
+
+        .filter(camping => {
+
+          return (
+            pais === "" ||
+            camping.pais === pais
+          );
+
+        })
+
+        .map(camping =>
+          camping.region
+        )
+
+        .filter(Boolean)
+
+    )
+
+  ].sort((a, b) =>
+
+    a.localeCompare(
+      b,
+      "es",
+      {
+        sensitivity: "base"
+      }
+    )
+
+  );
+
+
+  regiones.forEach(region => {
+
+    const opcion =
+      document.createElement(
+        "option"
+      );
+
+    opcion.value =
+      region;
+
+    opcion.textContent =
+      region;
+
+    selector.appendChild(
+      opcion
+    );
+
+  });
+
+
+  if (
+    regiones.includes(
+      valorActual
+    )
+  ) {
+
+    selector.value =
+      valorActual;
+
+  }
+
+  else {
+
+    selector.value = "";
+
+  }
+
+}
+
 // ==========================================
 // CARGAR PROVINCIAS / CONDADOS
 // ==========================================
