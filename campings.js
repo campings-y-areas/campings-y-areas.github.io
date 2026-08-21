@@ -1657,6 +1657,12 @@ const belgicaNormalizada =
   );
 
 
+const paisesBajosNormalizada =
+  campingsPaisesBajos.map(
+    normalizarCamping
+  );
+
+
 // UNIR
 
 campings = [
@@ -1668,10 +1674,10 @@ campings = [
   ...alemaniaNormalizada,
   ...suizaNormalizada,
   ...austriaNormalizada,
-  ...belgicaNormalizada
+  ...belgicaNormalizada,
+  ...paisesBajosNormalizada
 
 ];
-
 
 
       console.log(
