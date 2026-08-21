@@ -1565,6 +1565,12 @@ const austria =
   );
 
 
+const belgica =
+  datosBelgica.map(
+    normalizarPunto
+  );
+
+
 puntos = [
   ...espana,
   ...italia,
@@ -1572,9 +1578,9 @@ puntos = [
   ...francia,
   ...alemania,
   ...suiza,
-  ...austria
+  ...austria,
+  ...belgica
 ];
-
 
       console.log(
         "🇪🇸 Puntos España:",
