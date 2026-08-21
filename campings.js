@@ -1541,8 +1541,8 @@ document.addEventListener(
     }
 
 
-     // ======================================
-// CARGAR ESPAÑA + ITALIA + PORTUGAL + FRANCIA + ALEMANIA + SUIZA
+    // ======================================
+// CARGAR ESPAÑA + ITALIA + PORTUGAL + FRANCIA + ALEMANIA + SUIZA + AUSTRIA
 // ======================================
 
 try {
@@ -1554,7 +1554,8 @@ try {
     campingsPortugal,
     campingsFrancia,
     campingsAlemania,
-    campingsSuiza
+    campingsSuiza,
+    campingsAustria
 
   ] = await Promise.all([
 
@@ -1586,10 +1587,14 @@ try {
 
     cargarJSON(
       "campings-suiza-definitivo.json?v=2"
+    ),
+
+
+    cargarJSON(
+      "campings-austria-definitivo.json?v=1"
     )
 
   ]);
-
       // NORMALIZAR REGIÓN
 
       const espanaNormalizada =
