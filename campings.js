@@ -1502,17 +1502,38 @@ function cambiarPais() {
       "regionCamping"
     );
 
+  const selectorProvincia =
+    document.getElementById(
+      "provinciaCamping"
+    );
+
+  const selectorCiudad =
+    document.getElementById(
+      "ciudadCamping"
+    );
+
 
   if (selectorRegion) {
     selectorRegion.value = "";
   }
 
+  if (selectorProvincia) {
+    selectorProvincia.value = "";
+  }
+
+  if (selectorCiudad) {
+    selectorCiudad.value = "";
+  }
+
 
   cargarRegiones();
 
+  cargarProvincias();
+
+  cargarCiudades();
+
   buscarCampings();
 }
-
 
 // ==========================================
 // LIMPIAR FILTROS
