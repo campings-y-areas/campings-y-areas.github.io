@@ -1909,7 +1909,7 @@ try {
 
 
     cargarJSON(
-      "campings-belgica-definitivo.json?v=1"
+    "campings-belgica-definitivo-v2.json?v=2"
     ),
 
 
