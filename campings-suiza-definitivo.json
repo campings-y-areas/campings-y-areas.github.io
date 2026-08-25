@@ -17,7 +17,7 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -28,7 +28,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "relation/1183357",
-    "bfs_municipio": 5414
+    "bfs_municipio": 5414,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Le Mont",
@@ -177,13 +180,17 @@
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
-      "confirmada": null
+      "confirmada": true
     },
     "estado": "verificado_osm_swisstopo_2026",
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "relation/2255958",
-    "bfs_municipio": 2054
+    "bfs_municipio": 2054,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Les Sapins",
@@ -265,7 +272,7 @@
     "admite_caravanas": true,
     "autocaravanas": true,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -276,7 +283,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "relation/2494118",
-    "bfs_municipio": 4184
+    "bfs_municipio": 4184,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Muntelier",
@@ -363,13 +373,16 @@
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
-      "confirmada": null
+      "confirmada": true
     },
     "estado": "verificado_osm_swisstopo_2026",
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "relation/2615512",
-    "bfs_municipio": 2162
+    "bfs_municipio": 2162,
+    "verificacion_filtros": {
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Park Mumpf",
@@ -431,7 +444,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "relation/2816969",
-    "bfs_municipio": 5451
+    "bfs_municipio": 5451,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Adler",
@@ -482,8 +498,8 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": true,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -493,7 +509,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "relation/3166490",
-    "bfs_municipio": 791
+    "bfs_municipio": 791,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Ilôt Bosquet",
@@ -637,7 +657,7 @@
     "admite_caravanas": true,
     "autocaravanas": true,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -648,7 +668,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "relation/4768051",
-    "bfs_municipio": 2122
+    "bfs_municipio": 2122,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Seeland Camp",
@@ -673,13 +696,16 @@
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
-      "confirmada": null
+      "confirmada": true
     },
     "estado": "verificado_osm_swisstopo_2026",
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "relation/5252915",
-    "bfs_municipio": 390
+    "bfs_municipio": 390,
+    "verificacion_filtros": {
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping des 3 Lacs",
@@ -730,7 +756,7 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -741,7 +767,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "relation/5911093",
-    "bfs_municipio": 6076
+    "bfs_municipio": 6076,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Brigga",
@@ -761,18 +791,22 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
-      "confirmada": null
+      "confirmada": true
     },
     "estado": "verificado_osm_swisstopo_2026",
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "relation/6045563",
-    "bfs_municipio": 6077
+    "bfs_municipio": 6077,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Sursee",
@@ -854,7 +888,7 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -865,7 +899,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "relation/7041927",
-    "bfs_municipio": 4411
+    "bfs_municipio": 4411,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Strandbad und Camping Bruggerhorn",
@@ -916,7 +954,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -927,7 +965,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "relation/7292451",
-    "bfs_municipio": 4511
+    "bfs_municipio": 4511,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "See-Camping",
@@ -947,7 +988,7 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
+    "mascotas": false,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -958,7 +999,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "relation/7292613",
-    "bfs_municipio": 3298
+    "bfs_municipio": 3298,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Wydeli",
@@ -978,7 +1022,7 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -989,7 +1033,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "relation/8483309",
-    "bfs_municipio": 606
+    "bfs_municipio": 606,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Monte Generoso",
@@ -1009,7 +1056,7 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -1020,7 +1067,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "relation/8492802",
-    "bfs_municipio": 5240
+    "bfs_municipio": 5240,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Paradiso Lago",
@@ -1040,8 +1090,8 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": false,
+    "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -1051,7 +1101,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "relation/8492842",
-    "bfs_municipio": 5240
+    "bfs_municipio": 5240,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Brigerbad",
@@ -1133,18 +1187,22 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
-      "confirmada": null
+      "confirmada": true
     },
     "estado": "verificado_osm_swisstopo_2026",
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "relation/9083796",
-    "bfs_municipio": 766
+    "bfs_municipio": 766,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Fankhauser",
@@ -1381,7 +1439,7 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -1392,7 +1450,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "relation/9609613",
-    "bfs_municipio": 593
+    "bfs_municipio": 593,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Le Chandelier",
@@ -1567,7 +1628,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -1578,7 +1639,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "relation/10673970",
-    "bfs_municipio": 3788
+    "bfs_municipio": 3788,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Forest-Lodge",
@@ -1733,7 +1797,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026 + TCS",
     "osm_id": "relation/11105245",
-    "bfs_municipio": null
+    "bfs_municipio": null,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "TCS Flaach am rhein",
@@ -1789,13 +1857,16 @@
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
-      "confirmada": null
+      "confirmada": true
     },
     "estado": "verificado_osm_swisstopo_2026",
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "relation/13034512",
-    "bfs_municipio": 581
+    "bfs_municipio": 581,
+    "verificacion_filtros": {
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Delta Camping",
@@ -1815,18 +1886,23 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": false,
+    "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
-      "confirmada": null
+      "confirmada": true
     },
     "estado": "verificado_osm_swisstopo_2026",
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "relation/13161934",
-    "bfs_municipio": 5113
+    "bfs_municipio": 5113,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Balmweid",
@@ -1944,13 +2020,16 @@
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
-      "confirmada": null
+      "confirmada": true
     },
     "estado": "verificado_osm_swisstopo_2026",
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/13888714",
-    "bfs_municipio": 33
+    "bfs_municipio": 33,
+    "verificacion_filtros": {
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Stuhlegg",
@@ -1975,13 +2054,16 @@
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
-      "confirmada": null
+      "confirmada": true
     },
     "estado": "verificado_osm_swisstopo_2026",
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "relation/13986491",
-    "bfs_municipio": 566
+    "bfs_municipio": 566,
+    "verificacion_filtros": {
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Plan Curtinac",
@@ -2125,8 +2207,8 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -2136,7 +2218,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "relation/15711057",
-    "bfs_municipio": 5761
+    "bfs_municipio": 5761,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Palazzina",
@@ -2466,8 +2552,8 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": true,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -2477,7 +2563,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "relation/18420340",
-    "bfs_municipio": 5408
+    "bfs_municipio": 5408,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Zeltplatz Hüttenwiese",
@@ -2529,7 +2619,7 @@
     "autocaravanas": null,
     "tiendas": true,
     "mascotas": null,
-    "abierto_todo_ano": null,
+    "abierto_todo_ano": true,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -2539,7 +2629,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "relation/19339549",
-    "bfs_municipio": 6083
+    "bfs_municipio": 6083,
+    "verificacion_filtros": {
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Hasenweide",
@@ -2559,8 +2652,8 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": true,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -2570,7 +2663,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "relation/21104494",
-    "bfs_municipio": 792
+    "bfs_municipio": 792,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Eigernordwand",
@@ -2621,7 +2718,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -2632,7 +2729,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/22900824",
-    "bfs_municipio": 230
+    "bfs_municipio": 230,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Wagenhausen",
@@ -2652,7 +2752,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -2663,7 +2763,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/22978503",
-    "bfs_municipio": 4871
+    "bfs_municipio": 4871,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping du Val de l'Allondon",
@@ -2719,13 +2823,16 @@
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
-      "confirmada": null
+      "confirmada": true
     },
     "estado": "verificado_osm_swisstopo_2026",
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/24677528",
-    "bfs_municipio": 5586
+    "bfs_municipio": 5586,
+    "verificacion_filtros": {
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Maurholz",
@@ -2745,7 +2852,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -2756,7 +2863,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/24792101",
-    "bfs_municipio": 195
+    "bfs_municipio": 195,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Schaffhausen",
@@ -2776,7 +2886,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": false,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -2787,7 +2897,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/25728615",
-    "bfs_municipio": 27
+    "bfs_municipio": 27,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Burgistein",
@@ -2807,7 +2920,7 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -2818,7 +2931,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/26212239",
-    "bfs_municipio": 863
+    "bfs_municipio": 863,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping de la Murée",
@@ -2838,7 +2954,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -2849,7 +2965,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/26213021",
-    "bfs_municipio": 5411
+    "bfs_municipio": 5411,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Campingplatz Stampf",
@@ -2901,7 +3020,7 @@
     "autocaravanas": null,
     "tiendas": true,
     "mascotas": null,
-    "abierto_todo_ano": null,
+    "abierto_todo_ano": true,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -2911,7 +3030,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "node/26860577",
-    "bfs_municipio": 3396
+    "bfs_municipio": 3396,
+    "verificacion_filtros": {
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Gottardo",
@@ -2931,7 +3053,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -2942,7 +3064,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "node/26860662",
-    "bfs_municipio": 5072
+    "bfs_municipio": 5072,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Idyll",
@@ -3086,7 +3211,7 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -3097,7 +3222,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/28182471",
-    "bfs_municipio": 750
+    "bfs_municipio": 750,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Euthal",
@@ -3122,13 +3251,16 @@
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
-      "confirmada": null
+      "confirmada": true
     },
     "estado": "verificado_osm_swisstopo_2026",
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/30151715",
-    "bfs_municipio": 1301
+    "bfs_municipio": 1301,
+    "verificacion_filtros": {
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Viva",
@@ -3179,7 +3311,7 @@
     "admite_caravanas": false,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": false,
     "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -3190,7 +3322,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/33723317",
-    "bfs_municipio": 195
+    "bfs_municipio": 195,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Campingplatz Bleiche",
@@ -3241,8 +3377,8 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": true,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -3252,7 +3388,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/35081150",
-    "bfs_municipio": 593
+    "bfs_municipio": 593,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Campingplatz Tennwil",
@@ -3303,8 +3443,8 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -3314,7 +3454,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/36783991",
-    "bfs_municipio": 5464
+    "bfs_municipio": 5464,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Sattel-Aegeri",
@@ -3365,18 +3509,23 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": true,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
-      "confirmada": null
+      "confirmada": true
     },
     "estado": "verificado_osm_swisstopo_2026",
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/37882331",
-    "bfs_municipio": 297
+    "bfs_municipio": 297,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Werdenberg",
@@ -3463,13 +3612,16 @@
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
-      "confirmada": null
+      "confirmada": true
     },
     "estado": "verificado_osm_swisstopo_2026",
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/40797907",
-    "bfs_municipio": 1403
+    "bfs_municipio": 1403,
+    "verificacion_filtros": {
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Seepark Schiffenen",
@@ -3489,7 +3641,7 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -3500,7 +3652,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/41345182",
-    "bfs_municipio": 2293
+    "bfs_municipio": 2293,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "TCS Camping Unterägeri",
@@ -3520,8 +3675,8 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": false,
+    "abierto_todo_ano": true,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -3531,7 +3686,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/43034380",
-    "bfs_municipio": 1709
+    "bfs_municipio": 1709,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping des pêches",
@@ -3551,7 +3710,7 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -3562,7 +3721,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/43111623",
-    "bfs_municipio": 6455
+    "bfs_municipio": 6455,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Résidence les Pêches",
@@ -3613,18 +3775,22 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
-      "confirmada": null
+      "confirmada": true
     },
     "estado": "verificado_osm_swisstopo_2026",
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/44637170",
-    "bfs_municipio": 351
+    "bfs_municipio": 351,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping De La Piscine",
@@ -3644,8 +3810,8 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -3655,7 +3821,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/46950385",
-    "bfs_municipio": 5401
+    "bfs_municipio": 5401,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "TCS Camping Genève - Vésenaz",
@@ -3675,7 +3845,7 @@
     "admite_caravanas": true,
     "autocaravanas": true,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -3686,7 +3856,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/47222485",
-    "bfs_municipio": 6616
+    "bfs_municipio": 6616,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Zeltplatz Staad",
@@ -3861,18 +4034,23 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": true,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
-      "confirmada": null
+      "confirmada": true
     },
     "estado": "verificado_osm_swisstopo_2026",
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/49588395",
-    "bfs_municipio": 2601
+    "bfs_municipio": 2601,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Campingplatz Türlersee",
@@ -3892,7 +4070,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -3903,7 +4081,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/52948929",
-    "bfs_municipio": 4
+    "bfs_municipio": 4,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Baggersee Kriessern",
@@ -4016,7 +4197,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -4027,7 +4208,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/58208045",
-    "bfs_municipio": 5115
+    "bfs_municipio": 5115,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Giessen",
@@ -4109,7 +4293,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -4120,7 +4304,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/64549733",
-    "bfs_municipio": 1502
+    "bfs_municipio": 1502,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "TCS Camping Thunersee - Gwatt",
@@ -4151,7 +4338,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/68731828",
-    "bfs_municipio": 942
+    "bfs_municipio": 942,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Campingplatz Morteratsch",
@@ -4171,7 +4361,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -4182,7 +4372,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/72712084",
-    "bfs_municipio": 3784
+    "bfs_municipio": 3784,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Gadmen",
@@ -4233,8 +4426,8 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -4244,7 +4437,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/75916681",
-    "bfs_municipio": 5822
+    "bfs_municipio": 5822,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Campingplatz Diepoldsau",
@@ -4388,8 +4585,8 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -4399,7 +4596,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/87216544",
-    "bfs_municipio": 4806
+    "bfs_municipio": 4806,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping International Lido Luzern",
@@ -4419,8 +4620,8 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": true,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -4430,7 +4631,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/87220884",
-    "bfs_municipio": 1061
+    "bfs_municipio": 1061,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Fischerhaus",
@@ -4450,7 +4655,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": false,
     "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -4461,7 +4666,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/89313223",
-    "bfs_municipio": 4671
+    "bfs_municipio": 4671,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Sulz",
@@ -4481,18 +4690,22 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
-      "confirmada": null
+      "confirmada": true
     },
     "estado": "verificado_osm_swisstopo_2026",
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/90069852",
-    "bfs_municipio": 4031
+    "bfs_municipio": 4031,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Frassettes",
@@ -4574,7 +4787,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -4585,7 +4798,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/105064325",
-    "bfs_municipio": 355
+    "bfs_municipio": 355,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Campingplatz Waldruh",
@@ -4636,7 +4853,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -4647,7 +4864,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/106880133",
-    "bfs_municipio": 1058
+    "bfs_municipio": 1058,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Sihlwald",
@@ -4667,7 +4887,7 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -4678,7 +4898,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/111425523",
-    "bfs_municipio": 295
+    "bfs_municipio": 295,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Geissau",
@@ -4791,7 +5014,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -4802,7 +5025,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/118020795",
-    "bfs_municipio": 3790
+    "bfs_municipio": 3790,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping",
@@ -4853,7 +5079,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -4864,7 +5090,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/127067992",
-    "bfs_municipio": 195
+    "bfs_municipio": 195,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camp Au Chur",
@@ -4988,7 +5217,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/142096489",
-    "bfs_municipio": 6809
+    "bfs_municipio": 6809,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Naturistengelände Chläb \"Födlesonni\"",
@@ -5070,7 +5302,7 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -5081,7 +5313,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/148642887",
-    "bfs_municipio": 6110
+    "bfs_municipio": 6110,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Le Pécos",
@@ -5101,7 +5336,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -5112,7 +5347,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/155271832",
-    "bfs_municipio": 5561
+    "bfs_municipio": 5561,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Pra Collet",
@@ -5194,8 +5432,8 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": true,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -5205,7 +5443,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/157935585",
-    "bfs_municipio": 1010
+    "bfs_municipio": 1010,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Campingplatz Obsee",
@@ -5261,13 +5503,16 @@
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
-      "confirmada": null
+      "confirmada": true
     },
     "estado": "verificado_osm_swisstopo_2026",
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/161576491",
-    "bfs_municipio": 4163
+    "bfs_municipio": 4163,
+    "verificacion_filtros": {
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Piccolo Paradiso",
@@ -5287,7 +5532,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -5298,7 +5543,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/161584775",
-    "bfs_municipio": 5324
+    "bfs_municipio": 5324,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Campingplatz Gerbe",
@@ -5442,7 +5690,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -5453,7 +5701,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/167354110",
-    "bfs_municipio": 1301
+    "bfs_municipio": 1301,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "TCS Camping Morges",
@@ -5473,7 +5724,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -5484,7 +5735,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/168110635",
-    "bfs_municipio": 5642
+    "bfs_municipio": 5642,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping des Cases",
@@ -5597,7 +5851,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -5608,7 +5862,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/173073407",
-    "bfs_municipio": 5254
+    "bfs_municipio": 5254,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "La Forêt",
@@ -5628,7 +5885,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -5639,7 +5896,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/174271418",
-    "bfs_municipio": 2153
+    "bfs_municipio": 2153,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Tariche",
@@ -5664,13 +5924,17 @@
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
-      "confirmada": null
+      "confirmada": true
     },
     "estado": "verificado_osm_swisstopo_2026",
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/175055792",
-    "bfs_municipio": 6758
+    "bfs_municipio": 6758,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping",
@@ -5752,7 +6016,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -5763,7 +6027,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/178774674",
-    "bfs_municipio": 573
+    "bfs_municipio": 573,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "TCS Camping Bönigen-Interlaken",
@@ -5907,8 +6174,8 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": true,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -5918,7 +6185,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/197583910",
-    "bfs_municipio": 3101
+    "bfs_municipio": 3101,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Aareschlucht",
@@ -5938,7 +6209,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -5949,7 +6220,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/197656656",
-    "bfs_municipio": 784
+    "bfs_municipio": 784,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Buchenhof",
@@ -5969,18 +6243,22 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
-      "confirmada": null
+      "confirmada": true
     },
     "estado": "verificado_osm_swisstopo_2026",
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/204358406",
-    "bfs_municipio": 1373
+    "bfs_municipio": 1373,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "St. Cassian",
@@ -6031,7 +6309,7 @@
     "admite_caravanas": true,
     "autocaravanas": true,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -6042,7 +6320,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/207740613",
-    "bfs_municipio": 5456
+    "bfs_municipio": 5456,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Cul",
@@ -6093,7 +6374,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -6104,7 +6385,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/211888177",
-    "bfs_municipio": 3783
+    "bfs_municipio": 3783,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Albula",
@@ -6155,8 +6439,8 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": true,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -6166,7 +6450,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/214130605",
-    "bfs_municipio": 3701
+    "bfs_municipio": 3701,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Le Berceau",
@@ -6186,8 +6474,8 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": true,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -6197,7 +6485,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/217896854",
-    "bfs_municipio": 5841
+    "bfs_municipio": 5841,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Talacker",
@@ -6217,7 +6509,7 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -6228,7 +6520,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/218655452",
-    "bfs_municipio": 590
+    "bfs_municipio": 590,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Eggmatte",
@@ -6248,8 +6543,8 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": true,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -6259,7 +6554,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/219299367",
-    "bfs_municipio": 762
+    "bfs_municipio": 762,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Neivilles TCS Camping",
@@ -6310,18 +6609,22 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
-      "confirmada": null
+      "confirmada": true
     },
     "estado": "verificado_osm_swisstopo_2026",
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/220124337",
-    "bfs_municipio": 593
+    "bfs_municipio": 593,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Rütti",
@@ -6372,7 +6675,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -6383,7 +6686,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/223063310",
-    "bfs_municipio": 590
+    "bfs_municipio": 590,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Simplonblick",
@@ -6403,8 +6709,8 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": true,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -6414,7 +6720,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/225927333",
-    "bfs_municipio": 6199
+    "bfs_municipio": 6199,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Oberei",
@@ -6434,7 +6744,7 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -6445,7 +6755,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/229998536",
-    "bfs_municipio": 594
+    "bfs_municipio": 594,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Breithorn",
@@ -6527,7 +6840,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -6538,7 +6851,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/230811699",
-    "bfs_municipio": 1102
+    "bfs_municipio": 1102,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Le Signal",
@@ -6589,8 +6906,8 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": true,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -6600,7 +6917,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/231502461",
-    "bfs_municipio": 3342
+    "bfs_municipio": 3342,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Aux Vernes",
@@ -6620,7 +6941,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -6631,7 +6952,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/232222116",
-    "bfs_municipio": 5861
+    "bfs_municipio": 5861,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping und Caravanningclub Bad Zurzach",
@@ -6930,18 +7255,22 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
-      "confirmada": null
+      "confirmada": true
     },
     "estado": "verificado_osm_swisstopo_2026",
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/236984494",
-    "bfs_municipio": 6266
+    "bfs_municipio": 6266,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Muglin",
@@ -7271,8 +7600,8 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": true,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -7282,7 +7611,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/248010209",
-    "bfs_municipio": 906
+    "bfs_municipio": 906,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Hübscher",
@@ -7612,8 +7945,8 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": true,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -7623,7 +7956,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/265244406",
-    "bfs_municipio": 6057
+    "bfs_municipio": 6057,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Surcuolm",
@@ -7705,18 +8042,22 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
-      "confirmada": null
+      "confirmada": true
     },
     "estado": "verificado_osm_swisstopo_2026",
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/270760359",
-    "bfs_municipio": 3561
+    "bfs_municipio": 3561,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Boomerang",
@@ -7736,8 +8077,8 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -7747,7 +8088,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/270760363",
-    "bfs_municipio": 3561
+    "bfs_municipio": 3561,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Campingplatz Blumenstein",
@@ -8015,7 +8360,7 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -8026,7 +8371,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/280063685",
-    "bfs_municipio": 1371
+    "bfs_municipio": 1371,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping & Schwimmbad Mühleye",
@@ -8046,7 +8394,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -8057,7 +8405,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/281362008",
-    "bfs_municipio": 6297
+    "bfs_municipio": 6297,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Drei Eidgenossen",
@@ -8140,7 +8491,7 @@
     "autocaravanas": null,
     "tiendas": true,
     "mascotas": true,
-    "abierto_todo_ano": null,
+    "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -8150,7 +8501,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/287791342",
-    "bfs_municipio": 1632
+    "bfs_municipio": 1632,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Campingplatz und Strandbad Amriswil",
@@ -8201,7 +8556,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -8212,7 +8567,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/288630307",
-    "bfs_municipio": 6154
+    "bfs_municipio": 6154,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Buchen",
@@ -8294,8 +8652,8 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -8305,7 +8663,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/290229522",
-    "bfs_municipio": 783
+    "bfs_municipio": 783,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "CLM - Camping Lago Maggiore",
@@ -8367,7 +8729,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/291377893",
-    "bfs_municipio": 5131
+    "bfs_municipio": 5131,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Tamaro Resort",
@@ -8387,8 +8752,8 @@
     "admite_caravanas": null,
     "autocaravanas": true,
     "tiendas": null,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": false,
+    "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -8398,7 +8763,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/291377896",
-    "bfs_municipio": 5131
+    "bfs_municipio": 5131,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Campeggio al Parco d'Oro",
@@ -8480,7 +8849,7 @@
     "admite_caravanas": true,
     "autocaravanas": true,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -8491,7 +8860,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/297101489",
-    "bfs_municipio": 6077
+    "bfs_municipio": 6077,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Santa Monica",
@@ -8604,8 +8976,8 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": true,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -8615,7 +8987,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/301707179",
-    "bfs_municipio": 5131
+    "bfs_municipio": 5131,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "TCS Camping Flims",
@@ -8635,8 +9011,8 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -8646,7 +9022,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/304136651",
-    "bfs_municipio": 3732
+    "bfs_municipio": 3732,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Zeltplatz-Mattli",
@@ -8697,7 +9077,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -8708,7 +9088,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/305359164",
-    "bfs_municipio": 5002
+    "bfs_municipio": 5002,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Bellinzona",
@@ -8728,7 +9111,7 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -8739,7 +9122,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/305359165",
-    "bfs_municipio": 5002
+    "bfs_municipio": 5002,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Au Grand-Bois",
@@ -8759,8 +9145,8 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": true,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -8770,7 +9156,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/306331129",
-    "bfs_municipio": 5403
+    "bfs_municipio": 5403,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Jungfrau",
@@ -8852,7 +9242,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -8863,7 +9253,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/308754336",
-    "bfs_municipio": 5324
+    "bfs_municipio": 5324,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Bucheli",
@@ -8914,8 +9308,8 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": true,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -8925,7 +9319,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/309848930",
-    "bfs_municipio": 3292
+    "bfs_municipio": 3292,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Molinazzo",
@@ -8945,8 +9343,8 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -8956,7 +9354,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/311925692",
-    "bfs_municipio": 5141
+    "bfs_municipio": 5141,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "La Palma",
@@ -9069,7 +9471,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -9080,7 +9482,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/314260015",
-    "bfs_municipio": 1068
+    "bfs_municipio": 1068,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Bois Gentil",
@@ -9131,7 +9536,7 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -9142,7 +9547,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/317228830",
-    "bfs_municipio": 4271
+    "bfs_municipio": 4271,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping du Bois de Fey",
@@ -9193,8 +9601,8 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": true,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -9204,7 +9612,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/320466936",
-    "bfs_municipio": 3734
+    "bfs_municipio": 3734,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Bella-Tola",
@@ -9255,7 +9667,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -9266,7 +9678,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/320651619",
-    "bfs_municipio": 576
+    "bfs_municipio": 576,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping de Belle-Rive",
@@ -9379,8 +9794,8 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -9390,7 +9805,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/325121445",
-    "bfs_municipio": 3911
+    "bfs_municipio": 3911,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Isola",
@@ -9410,7 +9829,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": false,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -9421,7 +9840,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/326453705",
-    "bfs_municipio": 5002
+    "bfs_municipio": 5002,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Park Camping Riarena",
@@ -9441,7 +9863,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -9452,7 +9874,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/328276660",
-    "bfs_municipio": 5138
+    "bfs_municipio": 5138,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "La Chataigneraie",
@@ -9534,7 +9959,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -9545,7 +9970,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/335526670",
-    "bfs_municipio": 6140
+    "bfs_municipio": 6140,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Swiss-Plage",
@@ -9669,7 +10097,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/343001757",
-    "bfs_municipio": 5872
+    "bfs_municipio": 5872,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Moretto",
@@ -9689,8 +10120,8 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -9700,7 +10131,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/344172597",
-    "bfs_municipio": 5180
+    "bfs_municipio": 5180,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Wang",
@@ -9720,7 +10155,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -9731,7 +10166,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/345171476",
-    "bfs_municipio": 571
+    "bfs_municipio": 571,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Village des chasseurs cueilleurs",
@@ -9844,7 +10282,7 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -9855,7 +10293,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/355832829",
-    "bfs_municipio": 586
+    "bfs_municipio": 586,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Güntlenau",
@@ -9968,18 +10409,22 @@
     "admite_caravanas": true,
     "autocaravanas": true,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
-      "confirmada": null
+      "confirmada": true
     },
     "estado": "verificado_osm_swisstopo_2026",
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/359544467",
-    "bfs_municipio": 492
+    "bfs_municipio": 492,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Fafleralp",
@@ -10216,7 +10661,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -10227,7 +10672,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/377948570",
-    "bfs_municipio": 1364
+    "bfs_municipio": 1364,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Urmiberg",
@@ -10464,7 +10912,7 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -10475,7 +10923,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/402952895",
-    "bfs_municipio": 11
+    "bfs_municipio": 11,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Les Oeuchettes",
@@ -10526,18 +10977,22 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
-      "confirmada": null
+      "confirmada": true
     },
     "estado": "verificado_osm_swisstopo_2026",
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/410091248",
-    "bfs_municipio": 563
+    "bfs_municipio": 563,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Alpencamping",
@@ -10588,18 +11043,23 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": true,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
-      "confirmada": null
+      "confirmada": true
     },
     "estado": "verificado_osm_swisstopo_2026",
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/414879499",
-    "bfs_municipio": 3359
+    "bfs_municipio": 3359,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping de l'Arpille",
@@ -10650,7 +11110,7 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -10661,7 +11121,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/418086330",
-    "bfs_municipio": 5239
+    "bfs_municipio": 5239,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Hostetten",
@@ -10681,7 +11144,7 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -10692,7 +11155,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "node/418836038",
-    "bfs_municipio": 1506
+    "bfs_municipio": 1506,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    },
+    "mascotas_observaciones": "Admisión de perros con restricción estacional según la fuente consultada."
   },
   {
     "nombre": "Camping du Val-de- Travers",
@@ -10712,7 +11179,7 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -10723,7 +11190,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/419855680",
-    "bfs_municipio": 6512
+    "bfs_municipio": 6512,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping des Glaciers",
@@ -10805,7 +11275,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -10816,7 +11286,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/426981364",
-    "bfs_municipio": 261
+    "bfs_municipio": 261,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping le Bivouac",
@@ -10836,7 +11309,7 @@
     "admite_caravanas": true,
     "autocaravanas": true,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -10847,7 +11320,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/427719626",
-    "bfs_municipio": 2325
+    "bfs_municipio": 2325,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Grund",
@@ -10872,13 +11348,16 @@
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
-      "confirmada": null
+      "confirmada": true
     },
     "estado": "verificado_osm_swisstopo_2026",
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/428554768",
-    "bfs_municipio": 784
+    "bfs_municipio": 784,
+    "verificacion_filtros": {
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Seefeld",
@@ -10929,7 +11408,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -10940,7 +11419,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/432689456",
-    "bfs_municipio": 3955
+    "bfs_municipio": 3955,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "TCS Camping Thusis Viamala",
@@ -10960,8 +11442,8 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -10971,7 +11453,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/438886348",
-    "bfs_municipio": 3668
+    "bfs_municipio": 3668,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Rania",
@@ -11115,7 +11601,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -11126,7 +11612,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/440249230",
-    "bfs_municipio": 784
+    "bfs_municipio": 784,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Pe da Munt",
@@ -11146,7 +11635,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -11157,7 +11646,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/440329925",
-    "bfs_municipio": 3847
+    "bfs_municipio": 3847,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Alphubel",
@@ -11456,7 +11948,7 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -11467,7 +11959,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/469924419",
-    "bfs_municipio": 6037
+    "bfs_municipio": 6037,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Campingplatz Gütighausen",
@@ -11549,18 +12044,22 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
-      "confirmada": null
+      "confirmada": true
     },
     "estado": "verificado_osm_swisstopo_2026",
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/509868829",
-    "bfs_municipio": 3396
+    "bfs_municipio": 3396,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Gotthard Camping Andermatt",
@@ -11802,13 +12301,16 @@
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
-      "confirmada": null
+      "confirmada": true
     },
     "estado": "verificado_osm_swisstopo_2026",
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/617854656",
-    "bfs_municipio": 853
+    "bfs_municipio": 853,
+    "verificacion_filtros": {
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping",
@@ -12076,18 +12578,22 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
-      "confirmada": null
+      "confirmada": true
     },
     "estado": "verificado_osm_swisstopo_2026",
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/695831729",
-    "bfs_municipio": 593
+    "bfs_municipio": 593,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Campingplatz Altreu",
@@ -12515,13 +13021,16 @@
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
-      "confirmada": null
+      "confirmada": true
     },
     "estado": "verificado_osm_swisstopo_2026",
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/799422903",
-    "bfs_municipio": 902
+    "bfs_municipio": 902,
+    "verificacion_filtros": {
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Oberiberg",
@@ -12546,13 +13055,16 @@
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
-      "confirmada": null
+      "confirmada": true
     },
     "estado": "verificado_osm_swisstopo_2026",
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/799423517",
-    "bfs_municipio": 1368
+    "bfs_municipio": 1368,
+    "verificacion_filtros": {
+      "accesibilidad": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Tannenbodenalp",
@@ -12665,7 +13177,7 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -12676,7 +13188,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/799461255",
-    "bfs_municipio": 3786
+    "bfs_municipio": 3786,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "TCS Camping Scuol",
@@ -12738,7 +13253,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/799463161",
-    "bfs_municipio": 3764
+    "bfs_municipio": 3764,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Manser",
@@ -12769,7 +13288,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/799463651",
-    "bfs_municipio": 4411
+    "bfs_municipio": 4411,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Husky-Lodge Campingfläche",
@@ -12789,7 +13311,7 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -12800,7 +13322,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/799465323",
-    "bfs_municipio": 1367
+    "bfs_municipio": 1367,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping du Lac",
@@ -12852,7 +13377,7 @@
     "autocaravanas": null,
     "tiendas": null,
     "mascotas": null,
-    "abierto_todo_ano": null,
+    "abierto_todo_ano": true,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -12862,7 +13387,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/815015652",
-    "bfs_municipio": 6436
+    "bfs_municipio": 6436,
+    "verificacion_filtros": {
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping FSCK",
@@ -13068,8 +13596,8 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": false,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -13079,7 +13607,12 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/907803417",
-    "bfs_municipio": 4826
+    "bfs_municipio": 4826,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    },
+    "mascotas_observaciones": "Perros admitidos en temporada alta; no en temporada baja."
   },
   {
     "nombre": "Camping Creux-des-Biches",
@@ -13657,7 +14190,7 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -13668,7 +14201,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/1134504129",
-    "bfs_municipio": 5072
+    "bfs_municipio": 5072,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Bauen / Holzplatz Isen AG",
@@ -13936,7 +14472,7 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -13947,7 +14483,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/1274041096",
-    "bfs_municipio": 6110
+    "bfs_municipio": 6110,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Stellplatz Camp Bietschhorn",
@@ -14091,7 +14630,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -14102,7 +14641,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/1306453004",
-    "bfs_municipio": 6090
+    "bfs_municipio": 6090,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Van d'en Haut",
@@ -14153,7 +14695,7 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -14164,7 +14706,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/1317964778",
-    "bfs_municipio": 5049
+    "bfs_municipio": 5049,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Frutigresort",
@@ -14184,8 +14729,8 @@
     "admite_caravanas": true,
     "autocaravanas": null,
     "tiendas": true,
-    "mascotas": null,
-    "abierto_todo_ano": null,
+    "mascotas": true,
+    "abierto_todo_ano": true,
     "piscina_climatizada": null,
     "parque_acuatico": null,
     "accesibilidad": {
@@ -14195,7 +14740,11 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "way/1318851875",
-    "bfs_municipio": 563
+    "bfs_municipio": 563,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales",
+      "abierto_todo_ano": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Gravatscha",
@@ -15889,7 +16438,7 @@
     "admite_caravanas": null,
     "autocaravanas": null,
     "tiendas": null,
-    "mascotas": null,
+    "mascotas": true,
     "abierto_todo_ano": null,
     "piscina_climatizada": null,
     "parque_acuatico": null,
@@ -15900,7 +16449,10 @@
     "verificado_el": "2026-08-24",
     "fuente_verificacion": "OpenStreetMap/Overpass + swissBOUNDARIES3D 2026",
     "osm_id": "node/9438511731",
-    "bfs_municipio": 1064
+    "bfs_municipio": 1064,
+    "verificacion_filtros": {
+      "mascotas": "OSM + PiNCAMP/TCS + camping.info + camping.ch + webs oficiales"
+    }
   },
   {
     "nombre": "Camping Seelisberg",
