@@ -1853,7 +1853,7 @@ document.addEventListener(
 
 
 // ======================================
-// CARGAR ESPAÑA + ITALIA + PORTUGAL + FRANCIA + ALEMANIA + SUIZA + AUSTRIA + BÉLGICA + PAÍSES BAJOS + LUXEMBURGO + ANDORRA + ESLOVENIA + CROACIA + MONTENEGRO
+// CARGAR ESPAÑA + ITALIA + PORTUGAL + FRANCIA + ALEMANIA + SUIZA + AUSTRIA + BÉLGICA + PAÍSES BAJOS + LUXEMBURGO + ANDORRA + ESLOVENIA + CROACIA + MONTENEGRO + BOSNIA Y HERZEGOVINA
 // ======================================
 
 try {
@@ -1873,7 +1873,8 @@ try {
     campingsAndorra,
     campingsEslovenia,
     campingsCroacia,
-    campingsMontenegro
+    campingsMontenegro,
+    campingsBosniaHerzegovina
 
   ] = await Promise.all([
 
@@ -1941,6 +1942,10 @@ try {
 
     cargarJSON(
       "campings-montenegro-definitivo.json?v=1"
+    ),
+
+    cargarJSON(
+      "campings-bosnia-herzegovina-definitivo.json?v=1"
     )
 
   ]);
@@ -2030,6 +2035,12 @@ const montenegroNormalizado =
   );
 
 
+const bosniaHerzegovinaNormalizada =
+  campingsBosniaHerzegovina.map(
+    normalizarCamping
+  );
+
+
 // UNIR
 
 campings = [
@@ -2047,7 +2058,8 @@ campings = [
   ...andorraNormalizada,
   ...esloveniaNormalizada,
   ...croaciaNormalizada,
-  ...montenegroNormalizado
+  ...montenegroNormalizado,
+  ...bosniaHerzegovinaNormalizada
 
 ];
 
