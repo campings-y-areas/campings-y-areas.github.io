@@ -1499,7 +1499,7 @@ try {
     ),
 
     cargarJSON(
-      "areas-portugal-definitivo.json?v=1"
+      "areas-portugal-definitivo.json?v=2"
     ),
 
     cargarJSON(
