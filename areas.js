@@ -1473,7 +1473,7 @@ document.addEventListener(
 
 
   // ======================================
-// CARGAR ESPAÑA + ITALIA + PORTUGAL + FRANCIA + ALEMANIA + SUIZA + AUSTRIA + BÉLGICA + PAÍSES BAJOS + LUXEMBURGO + ANDORRA + ESLOVENIA + CROACIA + SERBIA + BOSNIA Y HERZEGOVINA + MONTENEGRO + MACEDONIA DEL NORTE
+// CARGAR ESPAÑA + ITALIA + PORTUGAL + FRANCIA + ALEMANIA + SUIZA + AUSTRIA + BÉLGICA + PAÍSES BAJOS + LUXEMBURGO + ANDORRA + ESLOVENIA + CROACIA + SERBIA + BOSNIA Y HERZEGOVINA + MONTENEGRO + MACEDONIA DEL NORTE + ALBANIA
 // ======================================
 
 try {
@@ -1495,7 +1495,8 @@ try {
     datosSerbia,
     datosBosniaHerzegovina,
     datosMontenegro,
-    datosMacedoniaNorte
+    datosMacedoniaNorte,
+    datosAlbania
   ] = await Promise.all([
 
     cargarJSON(
@@ -1564,6 +1565,10 @@ try {
 
     cargarJSON(
       "areas-macedonia-del-norte-definitivo.json?v=1"
+    ),
+
+    cargarJSON(
+      "areas-albania-definitivo.json?v=1"
     )
 
   ]);
@@ -1669,6 +1674,12 @@ const macedoniaNorte =
   );
 
 
+const albania =
+  datosAlbania.map(
+    normalizarPunto
+  );
+
+
 puntos = [
   ...espana,
   ...italia,
@@ -1686,7 +1697,8 @@ puntos = [
   ...serbia,
   ...bosniaHerzegovina,
   ...montenegro,
-  ...macedoniaNorte
+  ...macedoniaNorte,
+  ...albania
 ];
 
       console.log(
