@@ -2045,6 +2045,12 @@ const bosniaHerzegovinaNormalizada =
     normalizarCamping
   );
 
+const dinamarcaNormalizada =
+  campingsDinamarca.map(
+    normalizarCamping
+  );
+
+
 
 // UNIR
 
