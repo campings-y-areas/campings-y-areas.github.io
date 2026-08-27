@@ -1853,7 +1853,7 @@ document.addEventListener(
 
 
 // ======================================
-// CARGAR ESPAÑA + ITALIA + PORTUGAL + FRANCIA + ALEMANIA + SUIZA + AUSTRIA + BÉLGICA + PAÍSES BAJOS + LUXEMBURGO + ANDORRA + ESLOVENIA + CROACIA + MONTENEGRO + BOSNIA Y HERZEGOVINA + DINAMARCA + SUECIA + NORUEGA + FINLANDIA + ISLANDIA + IRLANDA
+// CARGAR ESPAÑA + ITALIA + PORTUGAL + FRANCIA + ALEMANIA + SUIZA + AUSTRIA + BÉLGICA + PAÍSES BAJOS + LUXEMBURGO + ANDORRA + ESLOVENIA + CROACIA + MONTENEGRO + BOSNIA Y HERZEGOVINA + DINAMARCA + SUECIA + NORUEGA + FINLANDIA + ISLANDIA + IRLANDA + REINO UNIDO
 // ======================================
 
 try {
@@ -1880,7 +1880,8 @@ try {
     campingsNoruega,
     campingsFinlandia,
     campingsIslandia,
-    campingsIrlanda
+    campingsIrlanda,
+    campingsReinoUnido
 
   ] = await Promise.all([
 
@@ -1976,6 +1977,10 @@ try {
 
     cargarJSON(
       "campings-irlanda-definitivo.json?v=1"
+    ),
+
+    cargarJSON(
+      "campings-reino-unido-definitivo.json?v=1"
     )
 
   ]);
@@ -2107,6 +2112,12 @@ const irlandaNormalizada =
   );
 
 
+const reinoUnidoNormalizado =
+  campingsReinoUnido.map(
+    normalizarCamping
+  );
+
+
 // UNIR
 
 campings = [
@@ -2131,7 +2142,8 @@ campings = [
   ...noruegaNormalizada,
   ...finlandiaNormalizada,
   ...islandiaNormalizada,
-  ...irlandaNormalizada
+  ...irlandaNormalizada,
+  ...reinoUnidoNormalizado
 
 ];
 
