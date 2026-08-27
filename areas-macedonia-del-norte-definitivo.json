@@ -1,0 +1,32 @@
+[
+  {
+    "id": "mk-area-001",
+    "nombre": "Camperstop K'J Divono",
+    "tipo": "area",
+    "pais": "Macedonia del Norte",
+    "comunidad_autonoma": null,
+    "region": "Ohrid",
+    "provincia": "Ohrid",
+    "localidad": "Ohrid",
+    "lat": 41.09113,
+    "lon": 20.80038,
+    "admite_caravanas": true,
+    "permite_pernocta": true,
+    "agua": true,
+    "aguas_grises": true,
+    "aguas_negras": true,
+    "vaciado_aguas": true,
+    "electricidad": true,
+    "mascotas": true,
+    "sin_servicios": false,
+    "direccion": "Naum Ohridski no. 10, Ohrid, North Macedonia",
+    "telefono": "+389 78 472 482",
+    "web": "https://ohridcamping.com/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=41.09113,20.80038",
+    "descripcion_original": "Camper stop específico junto al lago Ohrid; agua, electricidad y dump station confirmados. La web oficial contempla RV sites y trailers.",
+    "style_original": null,
+    "fuente": "Web oficial Camper Stop KJ Divono / Campercontact",
+    "fuente_url": "https://ohridcamping.com/",
+    "verificado_el": "2026-08-27"
+  }
+]
