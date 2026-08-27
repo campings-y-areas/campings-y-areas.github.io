@@ -1473,7 +1473,7 @@ document.addEventListener(
 
 
   // ======================================
-// CARGAR ESPAÑA + ITALIA + PORTUGAL + FRANCIA + ALEMANIA + SUIZA + AUSTRIA + BÉLGICA + PAÍSES BAJOS + LUXEMBURGO
+// CARGAR ESPAÑA + ITALIA + PORTUGAL + FRANCIA + ALEMANIA + SUIZA + AUSTRIA + BÉLGICA + PAÍSES BAJOS + LUXEMBURGO + ANDORRA
 // ======================================
 
 try {
@@ -1488,7 +1488,8 @@ try {
     datosAustria,
     datosBelgica,
     datosPaisesBajos,
-    datosLuxemburgo
+    datosLuxemburgo,
+    datosAndorra
   ] = await Promise.all([
 
     cargarJSON(
@@ -1529,6 +1530,10 @@ try {
 
     cargarJSON(
       "areas-luxemburgo-definitivo.json?v=1"
+    ),
+
+    cargarJSON(
+      "areas-andorra-definitivo.json?v=1"
     )
 
   ]);
@@ -1592,6 +1597,12 @@ const luxemburgo =
   );
 
 
+const andorra =
+  datosAndorra.map(
+    normalizarPunto
+  );
+
+
 puntos = [
   ...espana,
   ...italia,
@@ -1602,7 +1613,8 @@ puntos = [
   ...austria,
   ...belgica,
   ...paisesBajos,
-  ...luxemburgo
+  ...luxemburgo,
+  ...andorra
 ];
 
       console.log(
