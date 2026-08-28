@@ -584,17 +584,7 @@ function crearFichaServicio(servicio) {
     tipo.textContent =
       "🚿 Ducha";
   }
-
-  else if (
-    servicio.tipo ===
-    "taller"
-  ) {
-
-    tipo.textContent =
-      "🛠️ Taller";
-  }
-
-  else if (
+else if (
     servicio.tipo ===
     "lavadero"
   ) {
@@ -1109,7 +1099,7 @@ document.addEventListener(
 
 
     // ======================================
-    // CARGAR LAS 7 BASES
+    // CARGAR LAS 6 BASES
     // ======================================
 
     try {
@@ -1118,7 +1108,6 @@ document.addEventListener(
 
         restaurantes,
         duchas,
-        talleres,
         lavaderos,
         lavanderias,
         vaciadoAguas,
@@ -1135,13 +1124,6 @@ document.addEventListener(
         cargarJSON(
           "duchas-europa-v1.json?v=2"
         ),
-
-
-        cargarJSON(
-          "talleres-espana-v1.json?v=2"
-        ),
-
-
         cargarJSON(
           "lavaderos-autocaravanas-v1.json?v=2"
         ),
@@ -1196,8 +1178,7 @@ document.addEventListener(
 
         ...restaurantes,
         ...duchas,
-        ...talleres,
-        ...lavaderos,
+...lavaderos,
         ...lavanderias,
         ...vaciadoAguas,
         ...guarderias
@@ -1214,13 +1195,7 @@ document.addEventListener(
         "🚿 Duchas:",
         duchas.length
       );
-
-      console.log(
-        "🛠️ Talleres:",
-        talleres.length
-      );
-
-      console.log(
+console.log(
         "🧽 Lavaderos:",
         lavaderos.length
       );
