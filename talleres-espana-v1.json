@@ -9,10 +9,10 @@
     "localidad": "Vitoria-Gasteiz",
     "lat": 42.8648435,
     "lon": -2.707283,
-    "telefono": null,
-    "web": "https://www.campingsyareas.de/talleres-autocaravanas-caravanas-campers/rumbo-norte-taller-caravaning",
+    "telefono": "+34 945 21 23 60",
+    "web": "https://www.rumbonortecaravaning.com/",
     "google_maps": "https://www.google.com/maps/search/?api=1&query=42.8648435,-2.707283",
-    "descripcion": "TALLER ESPECIALIZADO EN AUTOCARAVANAS, CARAVANAS Y CAMPERS."
+    "descripcion": "Taller especializado en autocaravanas, caravanas y campers. Mecánica/chasis, vivienda, accesorios y equipamiento. C/ San Miguel de Atxa 21, Pol. Ind. Ali Gobeo, 01010 Vitoria-Gasteiz, Álava, España."
   },
   {
     "id": "taller-002",
@@ -24,10 +24,10 @@
     "localidad": "Alcalá de Henares",
     "lat": 40.4876996,
     "lon": -3.3911088,
-    "telefono": null,
-    "web": "https://www.campingsyareas.de/talleres-autocaravanas-caravanas-campers/taller-autocaravanas-com",
+    "telefono": "+34 918 78 68 86",
+    "web": "https://tallerautocaravanas.com/",
     "google_maps": "https://www.google.com/maps/search/?api=1&query=40.4876996,-3.3911088",
-    "descripcion": "TALLER ESPECIALIZADO EN AUTOCARAVANAS, CHAPA Y PINTURA E INSTALACIONES:"
+    "descripcion": "Taller especializado en autocaravanas. C/ Francisco Alonso, 3, nave B12, 28806 Alcalá de Henares, Madrid, España."
   },
   {
     "id": "taller-003",
@@ -39,10 +39,10 @@
     "localidad": "Vitoria-Gasteiz",
     "lat": 42.860835,
     "lon": -2.7123208,
-    "telefono": null,
-    "web": "https://www.campingsyareas.de/talleres-autocaravanas-caravanas-campers/talleres-caravaning-zasecar",
+    "telefono": "+34 945 22 82 51",
+    "web": "https://www.tallerescaravaningzasecar.com/",
     "google_maps": "https://www.google.com/maps/search/?api=1&query=42.860835,-2.7123208",
-    "descripcion": "TALLER ESPECIALIZADO EN AUTOCARAVANAS, CARAVANAS Y CAMPERS"
+    "descripcion": "Taller especializado en mantenimiento, reparación e instalación de accesorios para autocaravanas, caravanas y campers. C/ Urartea 15-17, Vitoria-Gasteiz, Álava, España."
   },
   {
     "id": "taller-004",
@@ -355,7 +355,7 @@
     "lat": 40.4409246,
     "lon": -3.5359063,
     "telefono": "+34 611 16 19 59",
-    "web": "http://luancampers.com/?utm_source=gmb&utm_medium=referral",
+    "web": "http://luancampers.com/",
     "google_maps": "https://www.google.com/maps/search/?api=1&query=40.4409246,-3.5359063",
     "descripcion": "C. de los Teatinos, 7, Nave 42, 28823 Coslada, Madrid, España"
   },
@@ -2770,7 +2770,7 @@
     "lat": 42.7642996,
     "lon": -1.6347618,
     "telefono": "+34 601 88 60 50",
-    "web": "https://ajrepaircaravaning.negocio.site/?utm_source=gmb&utm_medium=referral",
+    "web": "https://ajrepaircaravaning.negocio.site/",
     "google_maps": "https://www.google.com/maps/search/?api=1&query=42.7642996,-1.6347618",
     "descripcion": "Pl. Valle de Elorz, s/n, 31110 Noáin, Navarra, España"
   },
@@ -2782,11 +2782,11 @@
     "comunidad_autonoma": "Andalucía",
     "provincia": "Granada",
     "localidad": "Granada",
-    "lat": 32.1359446,
-    "lon": -5.7239107,
+    "lat": null,
+    "lon": null,
     "telefono": null,
     "web": "https://www.facebook.com/profile.php?id=100057622712146",
-    "google_maps": "https://g.page/camperfactory?share",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Camperfactory+Granada+España",
     "descripcion": "Calle, Pje. de San José, 18004 Granada, España"
   },
   {
@@ -2859,10 +2859,10 @@
     "localidad": "Silla",
     "lat": 39.3520387,
     "lon": -0.4244934,
-    "telefono": null,
-    "web": "https://www.campingsyareas.de/talleres-autocaravanas-caravanas-campers/walabi-camper",
+    "telefono": "+34 960 71 65 21",
+    "web": "https://walabicamper.com/",
     "google_maps": "https://www.google.com/maps/search/?api=1&query=39.3520387,-0.4244934",
-    "descripcion": "Alquiler de Autocaravanas y Campers.\nTALLER ESPECIALIZADO EN AUTOCARAVANAS, CARAVANAS Y CAMPERS."
+    "descripcion": "Walabi Camper / Walabi Valcaravan. Servicio técnico especializado para autocaravanas, caravanas y campers. Avenida d'Espioca 185, Silla, Valencia, España."
   },
   {
     "id": "taller-192",
