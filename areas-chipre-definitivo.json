@@ -1,0 +1,32 @@
+[
+  {
+    "id": "cy-area-001",
+    "nombre": "Heaven Surf House Camper Stop",
+    "tipo": "area",
+    "pais": "Chipre",
+    "comunidad_autonoma": null,
+    "region": "Norte de Chipre",
+    "provincia": "Lefke",
+    "localidad": "Yedidalga / Gemikonağı",
+    "lat": 35.1484,
+    "lon": 32.8041,
+    "admite_caravanas": null,
+    "permite_pernocta": true,
+    "agua": true,
+    "aguas_grises": null,
+    "aguas_negras": null,
+    "vaciado_aguas": null,
+    "electricidad": true,
+    "mascotas": null,
+    "sin_servicios": false,
+    "direccion": "Ecevit Caddesi, Yedidalga / Gemikonağı",
+    "telefono": "+905338889666",
+    "web": "https://www.heavensurfhouse.com/heavencamping",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=35.1484,32.8041",
+    "descripcion_original": "Camper Stop junto al mar integrado en Heaven Surf House. La web oficial confirma estancia para campers, agua fresca, electricidad, duchas calientes, aseos y zonas comunes. Abierto todo el año según la ficha actual de park4night.",
+    "style_original": null,
+    "fuente": "Heaven Surf House / park4night",
+    "fuente_url": "https://www.heavensurfhouse.com/heavencamping",
+    "verificado_el": "2026-08-28"
+  }
+]
