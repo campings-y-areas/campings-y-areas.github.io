@@ -1473,7 +1473,7 @@ document.addEventListener(
 
 
   // ======================================
-// CARGAR ESPAÑA + ITALIA + PORTUGAL + FRANCIA + ALEMANIA + SUIZA + AUSTRIA + BÉLGICA + PAÍSES BAJOS + LUXEMBURGO + ANDORRA + ESLOVENIA + CROACIA + SERBIA + BOSNIA Y HERZEGOVINA + MONTENEGRO + MACEDONIA DEL NORTE + ALBANIA + BULGARIA + RUMANÍA + HUNGRÍA + ESLOVAQUIA + CHEQUIA + POLONIA + DINAMARCA + SUECIA + NORUEGA + FINLANDIA + ISLANDIA + IRLANDA + REINO UNIDO + GRECIA + ESTONIA + LETONIA
+// CARGAR ESPAÑA + ITALIA + PORTUGAL + FRANCIA + ALEMANIA + SUIZA + AUSTRIA + BÉLGICA + PAÍSES BAJOS + LUXEMBURGO + ANDORRA + ESLOVENIA + CROACIA + SERBIA + BOSNIA Y HERZEGOVINA + MONTENEGRO + MACEDONIA DEL NORTE + ALBANIA + BULGARIA + RUMANÍA + HUNGRÍA + ESLOVAQUIA + CHEQUIA + POLONIA + DINAMARCA + SUECIA + NORUEGA + FINLANDIA + ISLANDIA + IRLANDA + REINO UNIDO + GRECIA + ESTONIA + LETONIA + LITUANIA
 // ======================================
 
 try {
@@ -1512,7 +1512,8 @@ try {
     datosReinoUnido,
     datosGrecia,
     datosEstonia,
-    datosLetonia
+    datosLetonia,
+    datosLituania
   ] = await Promise.all([
 
     cargarJSON(
@@ -1649,6 +1650,10 @@ try {
 
     cargarJSON(
       "areas-letonia-definitivo.json?v=1"
+    ),
+
+    cargarJSON(
+      "areas-lituania-definitivo.json?v=1"
     )
 
   ]);
@@ -1856,6 +1861,12 @@ const letonia =
   );
 
 
+const lituania =
+  datosLituania.map(
+    normalizarPunto
+  );
+
+
 puntos = [
   ...espana,
   ...italia,
@@ -1890,7 +1901,8 @@ puntos = [
   ...reinoUnido,
   ...grecia,
   ...estonia,
-  ...letonia
+  ...letonia,
+  ...lituania
 ];
 
       console.log(
