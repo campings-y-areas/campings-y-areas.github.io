@@ -1,0 +1,47 @@
+[
+  {
+    "id": "taller-ad-001",
+    "nombre": "Maverick Automoció",
+    "tipo": "taller",
+    "pais": "Andorra",
+    "comunidad_autonoma": "Andorra la Vella",
+    "provincia": "Andorra la Vella",
+    "localidad": "Andorra la Vella",
+    "lat": null,
+    "lon": null,
+    "telefono": "+376 853 078",
+    "web": "https://www.maverick.ad/camper",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Maverick%20Automoci%C3%B3%2C%20Andorra%20la%20Vella%2C%20Andorra",
+    "descripcion": "Taller especializado en reparación mecánica y camperización de autocaravanas, instalación y reparación de equipos, homologaciones y certificaciones."
+  },
+  {
+    "id": "taller-ad-002",
+    "nombre": "Andorra Campers",
+    "tipo": "taller",
+    "pais": "Andorra",
+    "comunidad_autonoma": "Sant Julià de Lòria",
+    "provincia": "Sant Julià de Lòria",
+    "localidad": "Sant Julià de Lòria",
+    "lat": null,
+    "lon": null,
+    "telefono": "+376 814 440",
+    "web": "https://www.andorracampers.com/es/quienes-somos",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Andorra%20Campers%2C%20Av.%20Francesc%20Cairat%2C%2034%2C%20AD600%20Sant%20Juli%C3%A0%20de%20L%C3%B2ria%2C%20Andorra",
+    "descripcion": "Taller especializado para furgonetas, autocaravanas y caravanas, con instalación profesional de accesorios, climatización, calefacción, baterías, toldos, ventanas y otros equipamientos."
+  },
+  {
+    "id": "taller-ad-003",
+    "nombre": "WeCamper Andorra",
+    "tipo": "taller",
+    "pais": "Andorra",
+    "comunidad_autonoma": "Escaldes-Engordany",
+    "provincia": "Escaldes-Engordany",
+    "localidad": "Escaldes-Engordany",
+    "lat": null,
+    "lon": null,
+    "telefono": "+376 360 756",
+    "web": "https://andorrawecamper.com/es/menu-2/intro.html",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=WeCamper%20Andorra%2C%20Av.%20Carlemany%2070%2C%20planta%20-1%2C%20AD700%20Escaldes-Engordany%2C%20Andorra",
+    "descripcion": "Especialista en vans, campers y autocaravanas con servicio de instalación de accesorios, componentes y sistemas, además de camperizaciones a medida."
+  }
+]
