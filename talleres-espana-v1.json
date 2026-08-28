@@ -2878,5 +2878,20 @@
     "web": "https://www.reformcaravan.es",
     "google_maps": "https://www.google.com/maps/search/?api=1&query=38.4286672,-0.4506053",
     "descripcion": "avenida de alcoy, CV-773, 88, 03110 Mutxamel, Alicante, España\nwww.reformcaravan.es"
+  },
+  {
+    "id": "taller-193",
+    "nombre": "Zaravaning",
+    "tipo": "taller",
+    "pais": "España",
+    "comunidad_autonoma": "Aragón",
+    "provincia": "Zaragoza",
+    "localidad": "La Puebla de Alfindén",
+    "lat": null,
+    "lon": null,
+    "telefono": "+34 640 55 37 06",
+    "web": "https://www.caravaningymas.es/zaravaning",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=C.+Nogal,+43,+50171+La+Puebla+de+Alfinden,+Zaragoza,+España",
+    "descripcion": "Taller especializado en autocaravanas, caravanas y campers. Instalación de accesorios, reparaciones generales y mantenimiento. C. Nogal, 43, 50171 La Puebla de Alfindén, Zaragoza, España."
   }
 ]
