@@ -1,448 +1,482 @@
-// ==========================================
-// CAMPINGS & ÁREAS
-// TALLERES
-// ==========================================
-
-let talleres = [];
-let resultadosActuales = [];
-let paisCargado = "";
-
-const resultadosPorPagina = 20;
-let paginaActual = 1;
-
-const archivosTalleres = {
-  "España": "talleres-espana-v1.json?v=3",
-  "Portugal": "talleres-portugal-definitivo.json?v=1",
-  "Francia": "talleres-francia-definitivo.json?v=1",
-  "Alemania": "talleres-alemania-definitivo.json?v=1"
-};
-
-function normalizarTexto(texto) {
-  return String(texto || "")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function normalizarUrl(url) {
-  if (!url) return "";
-  url = String(url).trim();
-  if (url.startsWith("http://") || url.startsWith("https://")) return url;
-  return "https://" + url;
-}
-
-function crearEnlaceMapa(taller) {
-  if (taller.google_maps) return normalizarUrl(taller.google_maps);
-
-  if (
-    taller.lat !== null && taller.lat !== undefined &&
-    taller.lon !== null && taller.lon !== undefined
-  ) {
-    return "https://www.google.com/maps/search/?api=1&query=" +
-      encodeURIComponent(`${taller.lat},${taller.lon}`);
+[
+  {
+    "id": "taller-at-001",
+    "nombre": "A&O Camping",
+    "tipo": "taller",
+    "pais": "Austria",
+    "comunidad_autonoma": "Vorarlberg",
+    "provincia": "Vorarlberg",
+    "localidad": "Dornbirn",
+    "lat": null,
+    "lon": null,
+    "telefono": "+43 5572 374426",
+    "web": "https://aocamping.at/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Wallenmahd%2023%2C%206850%20Dornbirn%2C%20%C3%96sterreich",
+    "descripcion": "Taller o centro técnico especializado en autocaravanas, caravanas y vehículos de camping, verificado mediante directorios oficiales del sector."
+  },
+  {
+    "id": "taller-at-002",
+    "nombre": "A.B.C. Reisemobile",
+    "tipo": "taller",
+    "pais": "Austria",
+    "comunidad_autonoma": "Oberösterreich",
+    "provincia": "Oberösterreich",
+    "localidad": "Kirchham",
+    "lat": null,
+    "lon": null,
+    "telefono": "+43 7619 2002",
+    "web": "https://www.beiskammer.at/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Kirchham%20Nr.%2018%2C%204656%20Kirchham%2C%20%C3%96sterreich",
+    "descripcion": "Taller o centro técnico especializado en autocaravanas, caravanas y vehículos de camping, verificado mediante directorios oficiales del sector."
+  },
+  {
+    "id": "taller-at-003",
+    "nombre": "Auto & Technik Tresdorf",
+    "tipo": "taller",
+    "pais": "Austria",
+    "comunidad_autonoma": "Niederösterreich",
+    "provincia": "Niederösterreich",
+    "localidad": "Tresdorf",
+    "lat": null,
+    "lon": null,
+    "telefono": "+43 2262 72516-0",
+    "web": "https://www.autoundtechnik.at",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Lagerhausplatz%201a%2C%202111%20Tresdorf%2C%20%C3%96sterreich",
+    "descripcion": "Taller o centro técnico especializado en autocaravanas, caravanas y vehículos de camping, verificado mediante directorios oficiales del sector."
+  },
+  {
+    "id": "taller-at-004",
+    "nombre": "Camper Neugebauer",
+    "tipo": "taller",
+    "pais": "Austria",
+    "comunidad_autonoma": "Kärnten",
+    "provincia": "Kärnten",
+    "localidad": "Magdalensberg",
+    "lat": null,
+    "lon": null,
+    "telefono": "+43 677 61704907",
+    "web": "https://www.camper-neugebauer.at/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Geiersdorf%209%2C%209064%20Magdalensberg%2C%20%C3%96sterreich",
+    "descripcion": "Taller o centro técnico especializado en autocaravanas, caravanas y vehículos de camping, verificado mediante directorios oficiales del sector."
+  },
+  {
+    "id": "taller-at-005",
+    "nombre": "Camping Center Heiss",
+    "tipo": "taller",
+    "pais": "Austria",
+    "comunidad_autonoma": "Tirol",
+    "provincia": "Tirol",
+    "localidad": "Inzing",
+    "lat": null,
+    "lon": null,
+    "telefono": "+43 5238 54055",
+    "web": "https://www.campingheiss.at/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Schie%C3%9Fstand%203a%2C%206401%20Inzing%2C%20%C3%96sterreich",
+    "descripcion": "Taller o centro técnico especializado en autocaravanas, caravanas y vehículos de camping, verificado mediante directorios oficiales del sector."
+  },
+  {
+    "id": "taller-at-006",
+    "nombre": "Camping.holiday CRC GmbH",
+    "tipo": "taller",
+    "pais": "Austria",
+    "comunidad_autonoma": "Niederösterreich",
+    "provincia": "Niederösterreich",
+    "localidad": "Bruck an der Leitha",
+    "lat": null,
+    "lon": null,
+    "telefono": "+43 2162 62622",
+    "web": "https://www.camping.holiday/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Alte%20Wiener%20Stra%C3%9Fe%2048-50%2C%202460%20Bruck%20an%20der%20Leitha%2C%20%C3%96sterreich",
+    "descripcion": "Taller o centro técnico especializado en autocaravanas, caravanas y vehículos de camping, verificado mediante directorios oficiales del sector."
+  },
+  {
+    "id": "taller-at-007",
+    "nombre": "Campingtraum.at",
+    "tipo": "taller",
+    "pais": "Austria",
+    "comunidad_autonoma": "Oberösterreich",
+    "provincia": "Oberösterreich",
+    "localidad": "Weidenau",
+    "lat": null,
+    "lon": null,
+    "telefono": "+43 7248 63701",
+    "web": "http://www.campingtraum.at/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Gewerbepark%20Stritzing%2023%2C%204710%20Weidenau%2C%20%C3%96sterreich",
+    "descripcion": "Taller o centro técnico especializado en autocaravanas, caravanas y vehículos de camping, verificado mediante directorios oficiales del sector."
+  },
+  {
+    "id": "taller-at-008",
+    "nombre": "Campingworld Neugebauer",
+    "tipo": "taller",
+    "pais": "Austria",
+    "comunidad_autonoma": "Niederösterreich",
+    "provincia": "Niederösterreich",
+    "localidad": "Neunkirchen",
+    "lat": null,
+    "lon": null,
+    "telefono": "+43 2635 202220",
+    "web": "https://camping-world.at/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Wienerstra%C3%9Fe%2096%2C%202620%20Neunkirchen%2C%20%C3%96sterreich",
+    "descripcion": "Taller o centro técnico especializado en autocaravanas, caravanas y vehículos de camping, verificado mediante directorios oficiales del sector."
+  },
+  {
+    "id": "taller-at-009",
+    "nombre": "CARAmobil GesmbH",
+    "tipo": "taller",
+    "pais": "Austria",
+    "comunidad_autonoma": "Niederösterreich",
+    "provincia": "Niederösterreich",
+    "localidad": "Leopoldsdorf",
+    "lat": null,
+    "lon": null,
+    "telefono": "+43 2235 43800",
+    "web": "https://www.caramobil.at/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Arbeitergasse%2027A%2C%202333%20Leopoldsdorf%2C%20%C3%96sterreich",
+    "descripcion": "Taller o centro técnico especializado en autocaravanas, caravanas y vehículos de camping, verificado mediante directorios oficiales del sector."
+  },
+  {
+    "id": "taller-at-010",
+    "nombre": "Caravan Prattes",
+    "tipo": "taller",
+    "pais": "Austria",
+    "comunidad_autonoma": "Steiermark",
+    "provincia": "Steiermark",
+    "localidad": "Bad Schwanberg",
+    "lat": null,
+    "lon": null,
+    "telefono": "+43 676 7373212",
+    "web": "https://www.caravan-prattes.at/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Wieserstra%C3%9Fe%2079%2C%208541%20Bad%20Schwanberg%2C%20%C3%96sterreich",
+    "descripcion": "Taller o centro técnico especializado en autocaravanas, caravanas y vehículos de camping, verificado mediante directorios oficiales del sector."
+  },
+  {
+    "id": "taller-at-011",
+    "nombre": "CWN Sales & Service",
+    "tipo": "taller",
+    "pais": "Austria",
+    "comunidad_autonoma": "Oberösterreich",
+    "provincia": "Oberösterreich",
+    "localidad": "Vöcklabruck",
+    "lat": null,
+    "lon": null,
+    "telefono": "+43 2635 202220",
+    "web": "https://camping-world.at/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Telefunkenstra%C3%9Fe%2017%2C%204840%20V%C3%B6cklabruck%2C%20%C3%96sterreich",
+    "descripcion": "Taller o centro técnico especializado en autocaravanas, caravanas y vehículos de camping, verificado mediante directorios oficiales del sector."
+  },
+  {
+    "id": "taller-at-012",
+    "nombre": "Exmanco Steyr",
+    "tipo": "taller",
+    "pais": "Austria",
+    "comunidad_autonoma": "Oberösterreich",
+    "provincia": "Oberösterreich",
+    "localidad": "Steyr-Gleink",
+    "lat": null,
+    "lon": null,
+    "telefono": "+43 7252 47087",
+    "web": "https://www.exmanco-steyr.at/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Im%20Stadtgut%20Zone%20D%206%2C%204407%20Steyr-Gleink%2C%20%C3%96sterreich",
+    "descripcion": "Taller o centro técnico especializado en autocaravanas, caravanas y vehículos de camping, verificado mediante directorios oficiales del sector."
+  },
+  {
+    "id": "taller-at-013",
+    "nombre": "Falle Campingwelt",
+    "tipo": "taller",
+    "pais": "Austria",
+    "comunidad_autonoma": "Kärnten",
+    "provincia": "Kärnten",
+    "localidad": "Villach",
+    "lat": null,
+    "lon": null,
+    "telefono": "+43 4242 32540",
+    "web": "https://www.falle.at",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Maria-Gailer-Stra%C3%9Fe%2059%2C%209500%20Villach%2C%20%C3%96sterreich",
+    "descripcion": "Taller o centro técnico especializado en autocaravanas, caravanas y vehículos de camping, verificado mediante directorios oficiales del sector."
+  },
+  {
+    "id": "taller-at-014",
+    "nombre": "Falle Campingwelt Outdoor & Freizeit",
+    "tipo": "taller",
+    "pais": "Austria",
+    "comunidad_autonoma": "Niederösterreich",
+    "provincia": "Niederösterreich",
+    "localidad": "Föhrenhain",
+    "lat": null,
+    "lon": null,
+    "telefono": "+43 2246 27027",
+    "web": "https://campingwelt.at/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Br%C3%BCnner%20Stra%C3%9Fe%20176-178%2C%202201%20F%C3%B6hrenhain%2C%20%C3%96sterreich",
+    "descripcion": "Taller o centro técnico especializado en autocaravanas, caravanas y vehículos de camping, verificado mediante directorios oficiales del sector."
+  },
+  {
+    "id": "taller-at-015",
+    "nombre": "Ferdinand Berger GmbH & Co KG",
+    "tipo": "taller",
+    "pais": "Austria",
+    "comunidad_autonoma": "Oberösterreich",
+    "provincia": "Oberösterreich",
+    "localidad": "Redlham",
+    "lat": null,
+    "lon": null,
+    "telefono": "+43 660 4018689",
+    "web": "https://www.autowelt-berger.info/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Gewerbepark%20West%206%2C%204846%20Redlham%2C%20%C3%96sterreich",
+    "descripcion": "Taller o centro técnico especializado en autocaravanas, caravanas y vehículos de camping, verificado mediante directorios oficiales del sector."
+  },
+  {
+    "id": "taller-at-016",
+    "nombre": "Funmobil",
+    "tipo": "taller",
+    "pais": "Austria",
+    "comunidad_autonoma": "Steiermark",
+    "provincia": "Steiermark",
+    "localidad": "Dobl-Zwaring",
+    "lat": null,
+    "lon": null,
+    "telefono": "+43 3136 20070",
+    "web": "https://www.funmobil.at/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Liebochstra%C3%9Fe%2011%2C%208143%20Dobl-Zwaring%2C%20%C3%96sterreich",
+    "descripcion": "Taller o centro técnico especializado en autocaravanas, caravanas y vehículos de camping, verificado mediante directorios oficiales del sector."
+  },
+  {
+    "id": "taller-at-017",
+    "nombre": "Gebetsroither Weißenbach/Liezen",
+    "tipo": "taller",
+    "pais": "Austria",
+    "comunidad_autonoma": "Steiermark",
+    "provincia": "Steiermark",
+    "localidad": "Weißenbach bei Liezen",
+    "lat": null,
+    "lon": null,
+    "telefono": "+43 3612 26300201",
+    "web": "https://www.gebetsroither-camper.com",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Gebetsroitherweg%201%2C%208940%20Wei%C3%9Fenbach%20bei%20Liezen%2C%20%C3%96sterreich",
+    "descripcion": "Taller o centro técnico especializado en autocaravanas, caravanas y vehículos de camping, verificado mediante directorios oficiales del sector."
+  },
+  {
+    "id": "taller-at-018",
+    "nombre": "KfZ Zweirad Friedrich Huber",
+    "tipo": "taller",
+    "pais": "Austria",
+    "comunidad_autonoma": "Niederösterreich",
+    "provincia": "Niederösterreich",
+    "localidad": "Klosterneuburg",
+    "lat": null,
+    "lon": null,
+    "telefono": "+43 2243 26909",
+    "web": "https://www.friedrich-huber.at/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Inkustra%C3%9Fe%201-7%2C%203400%20Klosterneuburg%2C%20%C3%96sterreich",
+    "descripcion": "Taller o centro técnico especializado en autocaravanas, caravanas y vehículos de camping, verificado mediante directorios oficiales del sector."
+  },
+  {
+    "id": "taller-at-019",
+    "nombre": "Kledo Reisemobile",
+    "tipo": "taller",
+    "pais": "Austria",
+    "comunidad_autonoma": "Steiermark",
+    "provincia": "Steiermark",
+    "localidad": "Graz",
+    "lat": null,
+    "lon": null,
+    "telefono": "+43 316 272795",
+    "web": "https://kledo.at/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Gradnerstra%C3%9Fe%2066%2C%208055%20Graz%2C%20%C3%96sterreich",
+    "descripcion": "Taller o centro técnico especializado en autocaravanas, caravanas y vehículos de camping, verificado mediante directorios oficiales del sector."
+  },
+  {
+    "id": "taller-at-020",
+    "nombre": "Pfaff Camping",
+    "tipo": "taller",
+    "pais": "Austria",
+    "comunidad_autonoma": "Niederösterreich",
+    "provincia": "Niederösterreich",
+    "localidad": "Ober-Grafendorf",
+    "lat": null,
+    "lon": null,
+    "telefono": "+43 2747 2234",
+    "web": "https://www.pfaff-camping.at/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Fridau%2031%2C%203200%20Ober-Grafendorf%2C%20%C3%96sterreich",
+    "descripcion": "Taller o centro técnico especializado en autocaravanas, caravanas y vehículos de camping, verificado mediante directorios oficiales del sector."
+  },
+  {
+    "id": "taller-at-021",
+    "nombre": "Reisemobil & Wohnwagencenter Robert Harrer",
+    "tipo": "taller",
+    "pais": "Austria",
+    "comunidad_autonoma": "Steiermark",
+    "provincia": "Steiermark",
+    "localidad": "Passail",
+    "lat": null,
+    "lon": null,
+    "telefono": "+43 3179 27395",
+    "web": "https://www.robert-harrer.at/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Auen%2061%2C%208162%20Passail%2C%20%C3%96sterreich",
+    "descripcion": "Taller o centro técnico especializado en autocaravanas, caravanas y vehículos de camping, verificado mediante directorios oficiales del sector."
+  },
+  {
+    "id": "taller-at-022",
+    "nombre": "Reisemobile Wenger",
+    "tipo": "taller",
+    "pais": "Austria",
+    "comunidad_autonoma": "Salzburg",
+    "provincia": "Salzburg",
+    "localidad": "Kuchl",
+    "lat": null,
+    "lon": null,
+    "telefono": "+43 6244 4310",
+    "web": "https://www.reisemobile-wenger.at/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Moos%2083%2C%205431%20Kuchl%2C%20%C3%96sterreich",
+    "descripcion": "Taller o centro técnico especializado en autocaravanas, caravanas y vehículos de camping, verificado mediante directorios oficiales del sector."
+  },
+  {
+    "id": "taller-at-023",
+    "nombre": "RMC - Skohautil",
+    "tipo": "taller",
+    "pais": "Austria",
+    "comunidad_autonoma": "Niederösterreich",
+    "provincia": "Niederösterreich",
+    "localidad": "Sankt Pantaleon-Erla",
+    "lat": null,
+    "lon": null,
+    "telefono": "+43 7435 74310",
+    "web": "https://www.reisemobilcenter.at/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Erla%20100%2C%204303%20Sankt%20Pantaleon-Erla%2C%20%C3%96sterreich",
+    "descripcion": "Taller o centro técnico especializado en autocaravanas, caravanas y vehículos de camping, verificado mediante directorios oficiales del sector."
+  },
+  {
+    "id": "taller-at-024",
+    "nombre": "STAR-Caravan Wohnwagen & Wohnmobilhandel",
+    "tipo": "taller",
+    "pais": "Austria",
+    "comunidad_autonoma": "Niederösterreich",
+    "provincia": "Niederösterreich",
+    "localidad": "Gerasdorf bei Wien",
+    "lat": null,
+    "lon": null,
+    "telefono": "+43 2246 34111",
+    "web": "https://star-caravan.at/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Am%20Weichselgarten%204%2C%202201%20Gerasdorf%20bei%20Wien%2C%20%C3%96sterreich",
+    "descripcion": "Taller o centro técnico especializado en autocaravanas, caravanas y vehículos de camping, verificado mediante directorios oficiales del sector."
+  },
+  {
+    "id": "taller-at-025",
+    "nombre": "Sulzbacher",
+    "tipo": "taller",
+    "pais": "Austria",
+    "comunidad_autonoma": "Oberösterreich",
+    "provincia": "Oberösterreich",
+    "localidad": "Eferding",
+    "lat": null,
+    "lon": null,
+    "telefono": "+43 7272 2542",
+    "web": "https://www.sulzbacher.at/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Goldenberg%201%2C%204070%20Eferding%2C%20%C3%96sterreich",
+    "descripcion": "Taller o centro técnico especializado en autocaravanas, caravanas y vehículos de camping, verificado mediante directorios oficiales del sector."
+  },
+  {
+    "id": "taller-at-026",
+    "nombre": "Wagner Gas",
+    "tipo": "taller",
+    "pais": "Austria",
+    "comunidad_autonoma": "Tirol",
+    "provincia": "Tirol",
+    "localidad": "Kufstein",
+    "lat": null,
+    "lon": null,
+    "telefono": "+43 664 2030070",
+    "web": "https://www.wagner-gas.at",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Untere%20Sparchen%2020%2C%206330%20Kufstein%2C%20%C3%96sterreich",
+    "descripcion": "Taller o centro técnico especializado en autocaravanas, caravanas y vehículos de camping, verificado mediante directorios oficiales del sector."
+  },
+  {
+    "id": "taller-at-027",
+    "nombre": "Walter Wesely GmbH",
+    "tipo": "taller",
+    "pais": "Austria",
+    "comunidad_autonoma": "Niederösterreich",
+    "provincia": "Niederösterreich",
+    "localidad": "St. Pölten",
+    "lat": null,
+    "lon": null,
+    "telefono": "+43 2742 3930",
+    "web": "https://www.wesely.at/wohnmobil/uebersicht",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Praterstra%C3%9Fe%205%2C%203100%20St.%20P%C3%B6lten%2C%20%C3%96sterreich",
+    "descripcion": "Taller o centro técnico especializado en autocaravanas, caravanas y vehículos de camping, verificado mediante directorios oficiales del sector."
+  },
+  {
+    "id": "taller-at-028",
+    "nombre": "WebCamping.at",
+    "tipo": "taller",
+    "pais": "Austria",
+    "comunidad_autonoma": "Tirol",
+    "provincia": "Tirol",
+    "localidad": "Wiesing",
+    "lat": null,
+    "lon": null,
+    "telefono": "+43 660 6407701",
+    "web": "https://webcamping.at/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Bradl%20332%2C%206210%20Wiesing%2C%20%C3%96sterreich",
+    "descripcion": "Taller o centro técnico especializado en autocaravanas, caravanas y vehículos de camping, verificado mediante directorios oficiales del sector."
+  },
+  {
+    "id": "taller-at-029",
+    "nombre": "AL-KO Kundencenter Österreich",
+    "tipo": "taller",
+    "pais": "Austria",
+    "comunidad_autonoma": "Tirol",
+    "provincia": "Tirol",
+    "localidad": "Ramsau im Zillertal",
+    "lat": null,
+    "lon": null,
+    "telefono": "+43 5282 3360 449",
+    "web": "https://www.alko-tech.com/de_at/Service/Kundencenter",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Talstra%C3%9Fe%20150%2C%206284%20Ramsau%20im%20Zillertal%2C%20%C3%96sterreich",
+    "descripcion": "Taller o centro técnico especializado en autocaravanas, caravanas y vehículos de camping, verificado mediante directorios oficiales del sector."
+  },
+  {
+    "id": "taller-at-030",
+    "nombre": "WM Camper",
+    "tipo": "taller",
+    "pais": "Austria",
+    "comunidad_autonoma": "Oberösterreich",
+    "provincia": "Oberösterreich",
+    "localidad": "Walding",
+    "lat": null,
+    "lon": null,
+    "telefono": "+43 7234 87522",
+    "web": null,
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Greism%C3%BChlweg%201%2C%204111%20Walding%2C%20%C3%96sterreich",
+    "descripcion": "Taller o centro técnico especializado en autocaravanas, caravanas y vehículos de camping, verificado mediante directorios oficiales del sector."
+  },
+  {
+    "id": "taller-at-031",
+    "nombre": "Gritsch-Mobile",
+    "tipo": "taller",
+    "pais": "Austria",
+    "comunidad_autonoma": "Steiermark",
+    "provincia": "Steiermark",
+    "localidad": "Tillmitsch",
+    "lat": null,
+    "lon": null,
+    "telefono": "+43 664 4176269",
+    "web": null,
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=R%C3%B6merweg%201b%2C%208434%20Tillmitsch%2C%20%C3%96sterreich",
+    "descripcion": "Taller o centro técnico especializado en autocaravanas, caravanas y vehículos de camping, verificado mediante directorios oficiales del sector."
+  },
+  {
+    "id": "taller-at-032",
+    "nombre": "Caravan Technik Center",
+    "tipo": "taller",
+    "pais": "Austria",
+    "comunidad_autonoma": "Niederösterreich",
+    "provincia": "Niederösterreich",
+    "localidad": "Stetten",
+    "lat": null,
+    "lon": null,
+    "telefono": "+43 676 4480447",
+    "web": null,
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Sandstra%C3%9Fe%205A%2C%202100%20Stetten%2C%20%C3%96sterreich",
+    "descripcion": "Taller o centro técnico especializado en autocaravanas, caravanas y vehículos de camping, verificado mediante directorios oficiales del sector."
   }
-
-  const consulta = [
-    taller.nombre,
-    taller.localidad,
-    taller.provincia,
-    taller.pais
-  ].filter(Boolean).join(", ");
-
-  return consulta
-    ? "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(consulta)
-    : "";
-}
-
-async function cargarJSON(archivo) {
-  const response = await fetch(archivo);
-  if (!response.ok) throw new Error(`No se pudo cargar ${archivo}`);
-
-  const datos = await response.json();
-  if (!Array.isArray(datos)) {
-    throw new Error(`${archivo} no contiene una lista válida`);
-  }
-  return datos;
-}
-
-function regionDe(taller) {
-  return taller.comunidad_autonoma || taller.provincia || "";
-}
-
-function cargarRegiones() {
-  const selector = document.getElementById("regionTaller");
-  const pais = document.getElementById("paisTaller")?.value || "";
-  if (!selector) return;
-
-  const regiones = [
-    ...new Set(talleres.map(regionDe).filter(Boolean))
-  ].sort((a, b) => a.localeCompare(b, "es", { sensitivity: "base" }));
-
-  const etiqueta =
-    pais === "España" ? "Todas las comunidades" :
-    pais === "Portugal" ? "Todos los distritos" :
-    pais === "Alemania" ? "Todos los estados federados" :
-    "Todas las regiones";
-
-  selector.innerHTML = `<option value="">${etiqueta}</option>`;
-
-  regiones.forEach(region => {
-    const opcion = document.createElement("option");
-    opcion.value = region;
-    opcion.textContent = region;
-    selector.appendChild(opcion);
-  });
-
-  selector.disabled = talleres.length === 0;
-}
-
-function cargarCiudades() {
-  const selector = document.getElementById("ciudadTaller");
-  const region = document.getElementById("regionTaller")?.value || "";
-  if (!selector) return;
-
-  const ciudades = [
-    ...new Set(
-      talleres
-        .filter(taller => region === "" || regionDe(taller) === region)
-        .map(taller => taller.localidad)
-        .filter(Boolean)
-    )
-  ].sort((a, b) => a.localeCompare(b, "es", { sensitivity: "base" }));
-
-  selector.innerHTML = '<option value="">Todas las ciudades</option>';
-
-  ciudades.forEach(ciudad => {
-    const opcion = document.createElement("option");
-    opcion.value = ciudad;
-    opcion.textContent = ciudad;
-    selector.appendChild(opcion);
-  });
-
-  selector.disabled = talleres.length === 0;
-}
-
-async function cambiarPais() {
-  const pais = document.getElementById("paisTaller")?.value || "";
-  const resultados = document.getElementById("resultadosTalleres");
-  const region = document.getElementById("regionTaller");
-  const ciudad = document.getElementById("ciudadTaller");
-
-  talleres = [];
-  resultadosActuales = [];
-  paisCargado = "";
-  paginaActual = 1;
-
-  if (region) {
-    region.innerHTML = '<option value="">Todas las regiones</option>';
-    region.disabled = true;
-  }
-
-  if (ciudad) {
-    ciudad.innerHTML = '<option value="">Todas las ciudades</option>';
-    ciudad.disabled = true;
-  }
-
-  if (!pais) {
-    if (resultados) {
-      resultados.innerHTML =
-        '<p class="sin-resultados">Selecciona un país para ver sus talleres.</p>';
-    }
-    return;
-  }
-
-  const archivo = archivosTalleres[pais];
-
-  if (!archivo) {
-    if (resultados) {
-      resultados.innerHTML =
-        '<p class="sin-resultados">Todavía no hay talleres disponibles para este país.</p>';
-    }
-    return;
-  }
-
-  if (resultados) {
-    resultados.innerHTML =
-      '<p class="contador-resultados">Cargando talleres...</p>';
-  }
-
-  try {
-    talleres = await cargarJSON(archivo);
-    paisCargado = pais;
-
-    talleres = talleres.map(taller => ({
-      ...taller,
-      tipo: "taller",
-      pais: taller.pais || pais
-    }));
-
-    cargarRegiones();
-    cargarCiudades();
-    buscarTalleres();
-  } catch (error) {
-    console.error("ERROR CARGANDO TALLERES:", error);
-
-    if (resultados) {
-      resultados.innerHTML =
-        '<p class="sin-resultados">⚠️ No se pudieron cargar los talleres.</p>';
-    }
-  }
-}
-
-function buscarTalleres() {
-  const texto = normalizarTexto(
-    document.getElementById("buscarTaller")?.value || ""
-  );
-  const region = document.getElementById("regionTaller")?.value || "";
-  const ciudad = document.getElementById("ciudadTaller")?.value || "";
-
-  if (!paisCargado) {
-    resultadosActuales = [];
-    mostrarPagina();
-    return;
-  }
-
-  resultadosActuales = talleres.filter(taller => {
-    const contenido = normalizarTexto([
-      taller.nombre,
-      taller.localidad,
-      taller.provincia,
-      taller.comunidad_autonoma,
-      taller.pais,
-      taller.descripcion
-    ].filter(Boolean).join(" "));
-
-    return (
-      (texto === "" || contenido.includes(texto)) &&
-      (region === "" || regionDe(taller) === region) &&
-      (ciudad === "" || taller.localidad === ciudad)
-    );
-  });
-
-  resultadosActuales.sort((a, b) =>
-    String(a.nombre || "").localeCompare(
-      String(b.nombre || ""),
-      "es",
-      { sensitivity: "base" }
-    )
-  );
-
-  paginaActual = 1;
-  mostrarPagina();
-}
-
-function mostrarPagina() {
-  const resultados = document.getElementById("resultadosTalleres");
-  if (!resultados) return;
-
-  resultados.innerHTML = "";
-
-  if (!paisCargado) {
-    resultados.innerHTML =
-      '<p class="sin-resultados">Selecciona un país para ver sus talleres.</p>';
-    return;
-  }
-
-  const total = resultadosActuales.length;
-  const totalPaginas = Math.ceil(total / resultadosPorPagina);
-
-  const cabecera = document.createElement("div");
-  cabecera.className = "cabecera-resultados";
-
-  const contador = document.createElement("p");
-  contador.className = "contador-resultados";
-  contador.textContent =
-    total === 1 ? "1 taller encontrado" : `${total} talleres encontrados`;
-  cabecera.appendChild(contador);
-
-  if (totalPaginas > 1) {
-    const paginaInfo = document.createElement("p");
-    paginaInfo.className = "pagina-info";
-    paginaInfo.textContent = `Página ${paginaActual} de ${totalPaginas}`;
-    cabecera.appendChild(paginaInfo);
-  }
-
-  resultados.appendChild(cabecera);
-
-  if (total === 0) {
-    const mensaje = document.createElement("p");
-    mensaje.className = "sin-resultados";
-    mensaje.textContent = "No se han encontrado talleres con esos criterios.";
-    resultados.appendChild(mensaje);
-    return;
-  }
-
-  const inicio = (paginaActual - 1) * resultadosPorPagina;
-  const fin = inicio + resultadosPorPagina;
-  const pagina = resultadosActuales.slice(inicio, fin);
-
-  const listado = document.createElement("div");
-  listado.className = "lista-campings";
-
-  pagina.forEach(taller => {
-    listado.appendChild(crearFichaTaller(taller));
-  });
-
-  resultados.appendChild(listado);
-
-  if (totalPaginas > 1) {
-    const paginacion = document.createElement("div");
-    paginacion.className = "paginacion";
-
-    const anterior = document.createElement("button");
-    anterior.type = "button";
-    anterior.textContent = "← Anterior";
-    anterior.disabled = paginaActual === 1;
-    anterior.addEventListener("click", () => {
-      if (paginaActual > 1) {
-        paginaActual--;
-        mostrarPagina();
-        irAResultados();
-      }
-    });
-
-    const indicador = document.createElement("span");
-    indicador.textContent = `${paginaActual} / ${totalPaginas}`;
-
-    const siguiente = document.createElement("button");
-    siguiente.type = "button";
-    siguiente.textContent = "Siguiente →";
-    siguiente.disabled = paginaActual === totalPaginas;
-    siguiente.addEventListener("click", () => {
-      if (paginaActual < totalPaginas) {
-        paginaActual++;
-        mostrarPagina();
-        irAResultados();
-      }
-    });
-
-    paginacion.appendChild(anterior);
-    paginacion.appendChild(indicador);
-    paginacion.appendChild(siguiente);
-    resultados.appendChild(paginacion);
-  }
-}
-
-function crearFichaTaller(taller) {
-  const ficha = document.createElement("article");
-  ficha.className = "resultado-camping";
-
-  const titulo = document.createElement("h3");
-  titulo.textContent = taller.nombre || "Taller";
-  ficha.appendChild(titulo);
-
-  const tipo = document.createElement("p");
-  tipo.className = "tipo-punto";
-  tipo.textContent = "🛠️ Taller";
-  ficha.appendChild(tipo);
-
-  const ubicacion = [
-    taller.localidad,
-    taller.provincia,
-    taller.comunidad_autonoma
-  ].filter(Boolean);
-
-  if (taller.pais) ubicacion.push(taller.pais);
-
-  const ubicacionUnica = [...new Set(ubicacion)];
-  if (ubicacionUnica.length > 0) {
-    const zona = document.createElement("p");
-    zona.className = "zona-camping";
-    zona.textContent = "📌 " + ubicacionUnica.join(" · ");
-    ficha.appendChild(zona);
-  }
-
-  if (taller.descripcion) {
-    const descripcion = document.createElement("p");
-    descripcion.className = "descripcion-acampada";
-    descripcion.style.whiteSpace = "pre-line";
-    descripcion.textContent = taller.descripcion;
-    ficha.appendChild(descripcion);
-  }
-
-  const enlaces = document.createElement("div");
-  enlaces.className = "enlaces-camping";
-
-  if (taller.web) {
-    const web = document.createElement("a");
-    web.href = normalizarUrl(taller.web);
-    web.target = "_blank";
-    web.rel = "noopener noreferrer";
-    web.textContent = "🌐 Web";
-    enlaces.appendChild(web);
-  }
-
-  if (taller.telefono) {
-    const telefono = document.createElement("a");
-    telefono.href =
-      "tel:" + String(taller.telefono).replace(/[^\d+]/g, "");
-    telefono.textContent = "☎️ " + taller.telefono;
-    enlaces.appendChild(telefono);
-  }
-
-  const enlaceMapa = crearEnlaceMapa(taller);
-  if (enlaceMapa) {
-    const mapa = document.createElement("a");
-    mapa.href = enlaceMapa;
-    mapa.target = "_blank";
-    mapa.rel = "noopener noreferrer";
-    mapa.textContent = "🗺️ Ver en el mapa";
-    enlaces.appendChild(mapa);
-  }
-
-  if (enlaces.children.length > 0) ficha.appendChild(enlaces);
-
-  return ficha;
-}
-
-function irAResultados() {
-  const resultados = document.getElementById("resultadosTalleres");
-  if (resultados) {
-    resultados.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
-  }
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  const pais = document.getElementById("paisTaller");
-  const region = document.getElementById("regionTaller");
-  const ciudad = document.getElementById("ciudadTaller");
-  const campo = document.getElementById("buscarTaller");
-  const boton = document.getElementById("botonBuscarTaller");
-
-  if (pais) pais.addEventListener("change", cambiarPais);
-
-  if (region) {
-    region.addEventListener("change", () => {
-      if (ciudad) ciudad.value = "";
-      cargarCiudades();
-      buscarTalleres();
-    });
-  }
-
-  if (ciudad) ciudad.addEventListener("change", buscarTalleres);
-  if (boton) boton.addEventListener("click", buscarTalleres);
-
-  if (campo) {
-    campo.addEventListener("keydown", event => {
-      if (event.key === "Enter") buscarTalleres();
-    });
-  }
-
-  const resultados = document.getElementById("resultadosTalleres");
-
-  if (pais) {
-    pais.value = "España";
-  }
-
-  if (resultados) {
-    resultados.innerHTML =
-      '<p class="contador-resultados">🇪🇸 España seleccionada por defecto. Puedes cambiar de país en el desplegable.</p>';
-  }
-
-  cambiarPais();
-});
+]
