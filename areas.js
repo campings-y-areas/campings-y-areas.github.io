@@ -1473,7 +1473,7 @@ document.addEventListener(
 
 
   // ======================================
-// CARGAR ESPAÑA + ITALIA + PORTUGAL + FRANCIA + ALEMANIA + SUIZA + AUSTRIA + BÉLGICA + PAÍSES BAJOS + LUXEMBURGO + ANDORRA + ESLOVENIA + CROACIA + SERBIA + BOSNIA Y HERZEGOVINA + MONTENEGRO + MACEDONIA DEL NORTE + ALBANIA + BULGARIA + RUMANÍA + HUNGRÍA + ESLOVAQUIA + CHEQUIA + POLONIA + DINAMARCA + SUECIA + NORUEGA + FINLANDIA + ISLANDIA + IRLANDA + REINO UNIDO + GRECIA + ESTONIA + LETONIA + LITUANIA + UCRANIA + CHIPRE
+// CARGAR ESPAÑA + ITALIA + PORTUGAL + FRANCIA + ALEMANIA + SUIZA + AUSTRIA + BÉLGICA + PAÍSES BAJOS + LUXEMBURGO + ANDORRA + ESLOVENIA + CROACIA + SERBIA + BOSNIA Y HERZEGOVINA + MONTENEGRO + MACEDONIA DEL NORTE + ALBANIA + BULGARIA + RUMANÍA + HUNGRÍA + ESLOVAQUIA + CHEQUIA + POLONIA + DINAMARCA + SUECIA + NORUEGA + FINLANDIA + ISLANDIA + IRLANDA + REINO UNIDO + GRECIA + ESTONIA + LETONIA + LITUANIA + UCRANIA + CHIPRE + KOSOVO
 // ======================================
 
 try {
@@ -1515,7 +1515,8 @@ try {
     datosLetonia,
     datosLituania,
     datosUcrania,
-    datosChipre
+    datosChipre,
+    datosKosovo
   ] = await Promise.all([
 
     cargarJSON(
@@ -1664,6 +1665,10 @@ try {
 
     cargarJSON(
       "areas-chipre-definitivo.json?v=1"
+    ),
+
+    cargarJSON(
+      "areas-kosovo-definitivo.json?v=1"
     )
 
   ]);
@@ -1889,6 +1894,12 @@ const chipre =
   );
 
 
+const kosovo =
+  datosKosovo.map(
+    normalizarPunto
+  );
+
+
 puntos = [
   ...espana,
   ...italia,
@@ -1926,7 +1937,8 @@ puntos = [
   ...letonia,
   ...lituania,
   ...ucrania,
-  ...chipre
+  ...chipre,
+  ...kosovo
 ];
 
       console.log(
