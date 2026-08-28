@@ -1473,7 +1473,7 @@ document.addEventListener(
 
 
   // ======================================
-// CARGAR ESPAÑA + ITALIA + PORTUGAL + FRANCIA + ALEMANIA + SUIZA + AUSTRIA + BÉLGICA + PAÍSES BAJOS + LUXEMBURGO + ANDORRA + ESLOVENIA + CROACIA + SERBIA + BOSNIA Y HERZEGOVINA + MONTENEGRO + MACEDONIA DEL NORTE + ALBANIA + BULGARIA + RUMANÍA + HUNGRÍA + ESLOVAQUIA
+// CARGAR ESPAÑA + ITALIA + PORTUGAL + FRANCIA + ALEMANIA + SUIZA + AUSTRIA + BÉLGICA + PAÍSES BAJOS + LUXEMBURGO + ANDORRA + ESLOVENIA + CROACIA + SERBIA + BOSNIA Y HERZEGOVINA + MONTENEGRO + MACEDONIA DEL NORTE + ALBANIA + BULGARIA + RUMANÍA + HUNGRÍA + ESLOVAQUIA + CHEQUIA
 // ======================================
 
 try {
@@ -1500,7 +1500,8 @@ try {
     datosBulgaria,
     datosRumania,
     datosHungria,
-    datosEslovaquia
+    datosEslovaquia,
+    datosChequia
   ] = await Promise.all([
 
     cargarJSON(
@@ -1589,6 +1590,10 @@ try {
 
     cargarJSON(
       "areas-eslovaquia-definitivo.json?v=1"
+    ),
+
+    cargarJSON(
+      "areas-chequia-definitivo.json?v=1"
     )
 
   ]);
@@ -1724,6 +1729,12 @@ const eslovaquia =
   );
 
 
+const chequia =
+  datosChequia.map(
+    normalizarPunto
+  );
+
+
 puntos = [
   ...espana,
   ...italia,
@@ -1746,7 +1757,8 @@ puntos = [
   ...bulgaria,
   ...rumania,
   ...hungria,
-  ...eslovaquia
+  ...eslovaquia,
+  ...chequia
 ];
 
       console.log(
