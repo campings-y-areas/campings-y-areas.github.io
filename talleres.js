@@ -22,7 +22,8 @@ const archivosTalleres = {
   "Andorra": "talleres-andorra-definitivo.json?v=1",
   "Italia": "talleres-italia-definitivo.json?v=1",
   "Bélgica": "talleres-belgica-definitivo.json?v=1",
-  "Croacia": "talleres-croacia-definitivo.json?v=1"
+  "Croacia": "talleres-croacia-definitivo.json?v=1",
+  "Eslovenia": "talleres-eslovenia-definitivo.json?v=1"
 };
 
 function normalizarTexto(texto) {
