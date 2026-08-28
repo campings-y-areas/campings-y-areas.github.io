@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Talleres | Campings & Áreas</title>
+  <link rel="stylesheet" href="style.css?v=2">
+</head>
+
+<body>
+
+  <header>
+    <h1>
+      <img src="logo.png" alt="Campings & Áreas" class="logo">
+      Campings & Áreas
+    </h1>
+  </header>
+
+  <nav class="menu">
+    <a href="index.html">🏠 Inicio</a>
+    <a href="campings.html">🏕️ Campings</a>
+    <a href="areas.html?tipo=area">🚐 Áreas</a>
+    <a href="areas.html?tipo=parking">🅿️ Parkings</a>
+    <a href="acampadas.html">🥾 Acampadas</a>
+    <a href="lugares.html">📍 Lugares</a>
+    <a href="talleres.html">🛠️ Talleres</a>
+    <a href="servicios.html">🔧 Servicios</a>
+  </nav>
+
+  <main>
+
+    <section class="bienvenida">
+      <h2>🛠️ Talleres</h2>
+      <p>Talleres y servicios técnicos para autocaravanas, caravanas y vehículos de camping.</p>
+      <p class="estado">
+        Selecciona un país y filtra por región, comunidad, distrito o ciudad.
+      </p>
+    </section>
+
+    <section class="buscador">
+      <h2>🔎 Buscar talleres</h2>
+
+      <div class="buscador-campos">
+
+        <input
+          type="text"
+          id="buscarTaller"
+          placeholder="Nombre, localidad, provincia, región o distrito"
+        >
+
+        <select id="paisTaller">
+          <option value="">Selecciona un país</option>
+          <option value="España">España</option>
+          <option value="Portugal">Portugal</option>
+        </select>
+
+        <select id="regionTaller" disabled>
+          <option value="">Todas las regiones</option>
+        </select>
+
+        <select id="ciudadTaller" disabled>
+          <option value="">Todas las ciudades</option>
+        </select>
+
+        <button type="button" id="botonBuscarTaller">
+          Buscar
+        </button>
+
+      </div>
+    </section>
+
+    <section
+      id="resultadosTalleres"
+      class="resultados-campings">
+    </section>
+
+  </main>
+
+  <script src="talleres.js?v=1"></script>
+
+</body>
+</html>
