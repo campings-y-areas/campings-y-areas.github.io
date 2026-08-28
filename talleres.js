@@ -13,7 +13,8 @@ let paginaActual = 1;
 const archivosTalleres = {
   "España": "talleres-espana-v1.json?v=3",
   "Portugal": "talleres-portugal-definitivo.json?v=1",
-  "Francia": "talleres-francia-definitivo.json?v=1"
+  "Francia": "talleres-francia-definitivo.json?v=1",
+  "Alemania": "talleres-alemania-definitivo.json?v=1"
 };
 
 function normalizarTexto(texto) {
@@ -82,6 +83,7 @@ function cargarRegiones() {
   const etiqueta =
     pais === "España" ? "Todas las comunidades" :
     pais === "Portugal" ? "Todos los distritos" :
+    pais === "Alemania" ? "Todos los estados federados" :
     "Todas las regiones";
 
   selector.innerHTML = `<option value="">${etiqueta}</option>`;
