@@ -1520,7 +1520,7 @@ try {
   ] = await Promise.all([
 
     cargarJSON(
-      "areas-parkings-espana-v3.json?v=1"
+      "areas-parkings-espana-v4-corregido.json?v=1"
     ),
 
     cargarJSON(
