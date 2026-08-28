@@ -18,7 +18,8 @@ const archivosTalleres = {
   "Austria": "talleres-austria-definitivo.json?v=1",
   "Suiza": "talleres-suiza-definitivo.json?v=1",
   "Países Bajos": "talleres-paises-bajos-definitivo.json?v=1",
-  "Luxemburgo": "talleres-luxemburgo-definitivo.json?v=1"
+  "Luxemburgo": "talleres-luxemburgo-definitivo.json?v=1",
+  "Andorra": "talleres-andorra-definitivo.json?v=1"
 };
 
 function normalizarTexto(texto) {
