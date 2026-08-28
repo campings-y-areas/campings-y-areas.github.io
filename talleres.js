@@ -431,8 +431,15 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const resultados = document.getElementById("resultadosTalleres");
+
+  if (pais) {
+    pais.value = "España";
+  }
+
   if (resultados) {
     resultados.innerHTML =
-      '<p class="sin-resultados">Selecciona un país para ver sus talleres.</p>';
+      '<p class="contador-resultados">🇪🇸 España seleccionada por defecto. Puedes cambiar de país en el desplegable.</p>';
   }
+
+  cambiarPais();
 });
