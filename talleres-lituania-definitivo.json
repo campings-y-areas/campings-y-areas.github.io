@@ -1,0 +1,62 @@
+[
+  {
+    "id": "taller-lt-001",
+    "nombre": "Kertušas / Kemperių Dalys",
+    "tipo": "taller",
+    "pais": "Lituania",
+    "comunidad_autonoma": "Vilniaus",
+    "provincia": "Vilniaus",
+    "localidad": "Vilnius",
+    "lat": null,
+    "lon": null,
+    "telefono": "+370 674 89600",
+    "web": "https://www.kemperiudalys.lt/kemperiu-servisas/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Kertu%C5%A1as%20%2F%20Kemperi%C5%B3%20Dalys%2C%20Kirtim%C5%B3%20g.%202-5K%2C%20LT-02300%20Vilnius%2C%20Lithuania",
+    "descripcion": "Servicio autorizado de autocaravanas. Reparación, mantenimiento y reformas; representante Benimar y Rimor y partner Dometic, Truma, Thetford, Alugas, Campko y Reimo."
+  },
+  {
+    "id": "taller-lt-002",
+    "nombre": "Kemperiai 365 Servisas",
+    "tipo": "taller",
+    "pais": "Lituania",
+    "comunidad_autonoma": "Vilniaus",
+    "provincia": "Vilniaus",
+    "localidad": "Avižieniai",
+    "lat": null,
+    "lon": null,
+    "telefono": "+370 690 44110",
+    "web": "https://servisas.kemperiai365.lt/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Kemperiai%20365%20Servisas%2C%20Lubin%C5%B3%20g.%2012A%2C%20Avi%C5%BEieniai%2C%20Vilniaus%20r.%2C%20Lithuania",
+    "descripcion": "Servicio especializado de autocaravanas y caravanas; revisiones, reparaciones, electricidad, gas, calefacción, humedad, daños y equipamiento."
+  },
+  {
+    "id": "taller-lt-003",
+    "nombre": "Kempvila",
+    "tipo": "taller",
+    "pais": "Lituania",
+    "comunidad_autonoma": "Vilniaus",
+    "provincia": "Vilniaus",
+    "localidad": "Gudelių k.",
+    "lat": null,
+    "lon": null,
+    "telefono": "+370 618 17831",
+    "web": "https://www.kempvila.lt/veikla/kemperiu-servisas",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Kempvila%2C%20Gudeli%C5%B3%20k.%2C%20Mai%C5%A1iagalos%20sen.%2C%20Vilniaus%20r.%2C%20Lithuania",
+    "descripcion": "Taller de autocaravanas activo desde 2004. Reparación y mantenimiento de carrocería e interior, reconstrucción tras accidentes, daños por humedad, conversiones y montaje de equipamiento."
+  },
+  {
+    "id": "taller-lt-004",
+    "nombre": "Edvardo Servisas",
+    "tipo": "taller",
+    "pais": "Lituania",
+    "comunidad_autonoma": "Telšių",
+    "provincia": "Telšių",
+    "localidad": "Mažeikiai",
+    "lat": null,
+    "lon": null,
+    "telefono": "+370 698 73597",
+    "web": "https://kemperiuremontas.lt/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Edvardo%20Servisas%2C%20Gamyklos%20g.%2043A%2C%20Ma%C5%BEeikiai%2C%20Lithuania",
+    "descripcion": "Taller especializado en autocaravanas: carrocería, pintura, cristales, suspensión y nivelación, electricidad, solar, climatización, gas y calefacción."
+  }
+]
