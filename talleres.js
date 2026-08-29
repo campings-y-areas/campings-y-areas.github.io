@@ -29,7 +29,8 @@ const archivosTalleres = {
   "República Checa": "talleres-republica-checa-definitivo.json?v=1",
   "Polonia": "talleres-polonia-definitivo.json?v=1",
   "Lituania": "talleres-lituania-definitivo.json?v=1",
-  "Letonia": "talleres-letonia-definitivo.json?v=1"
+  "Letonia": "talleres-letonia-definitivo.json?v=1",
+  "Estonia": "talleres-estonia-definitivo.json?v=1"
 };
 
 function normalizarTexto(texto) {
