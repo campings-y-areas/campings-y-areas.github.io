@@ -1,0 +1,47 @@
+[
+  {
+    "id": "taller-is-001",
+    "nombre": "Útilegumaðurinn ehf. - Þjónustuverkstæði",
+    "tipo": "taller",
+    "pais": "Islandia",
+    "comunidad_autonoma": "Höfuðborgarsvæðið",
+    "provincia": "Mosfellsbær",
+    "localidad": "Mosfellsbær",
+    "lat": null,
+    "lon": null,
+    "telefono": "+354 551 5600",
+    "web": "https://utilegumadurinn.is/verkstaedi/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=%C3%9Atileguma%C3%B0urinn%20Bug%C3%B0uflj%C3%B3t%207%20270%20Mosfellsb%C3%A6r%20Iceland",
+    "descripcion": "Taller especializado en caravanas y otros vehículos recreativos. Realiza reparaciones, mantenimiento, revisiones de servicio, preparación para invierno e instalación de accesorios como placas solares, toldos, portabicicletas, convertidores, antenas y cámaras. Servicio abierto a vehículos de cualquier marca."
+  },
+  {
+    "id": "taller-is-002",
+    "nombre": "Roadside Iceland",
+    "tipo": "taller",
+    "pais": "Islandia",
+    "comunidad_autonoma": "",
+    "provincia": "",
+    "localidad": "",
+    "lat": null,
+    "lon": null,
+    "telefono": "+354 839 6777",
+    "web": "https://www.roadside.is/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Roadside%20Iceland",
+    "descripcion": "Servicio especializado en autocaravanas y otros vehículos recreativos, con dos talleres y asistencia en carretera. Atiende reparaciones, calefacción, frigoríficos, averías, rescate y remolque. Servicio estacional indicado por la empresa: aproximadamente del 15 de junio a finales de agosto."
+  },
+  {
+    "id": "taller-is-003",
+    "nombre": "Víkurvagnar ehf.",
+    "tipo": "taller",
+    "pais": "Islandia",
+    "comunidad_autonoma": "Höfuðborgarsvæðið",
+    "provincia": "Reykjavík",
+    "localidad": "Reykjavík",
+    "lat": null,
+    "lon": null,
+    "telefono": "+354 577 1090",
+    "web": "https://vikurvagnar.is/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=V%C3%ADkurvagnar%20Hyrjarh%C3%B6f%C3%B0a%208%20110%20Reykjav%C3%ADk%20Iceland",
+    "descripcion": "Especialista en remolques y vehículos remolcados. Ofrece reparación de remolques, caravanas ligeras, carros tienda y remolques plegables, además de componentes de enganche, ejes, frenos, ruedas y sistema eléctrico."
+  }
+]
