@@ -11,7 +11,8 @@
   <link rel="apple-touch-icon" href="logo.png">
 
   <link rel="stylesheet" href="style.css?v=2">
-  <link rel="stylesheet" href="rutas.css?v=1">
+  <link rel="stylesheet" href="rutas.css?v=2">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
 </head>
 
 <body>
@@ -260,8 +261,23 @@
     </section>
 
     <section id="resumenRuta" class="resumen-ruta oculto" aria-live="polite"></section>
+
+    <section id="resultadoReal" class="resultado-real oculto" aria-live="polite">
+      <div class="resultado-cabecera">
+        <div>
+          <h2>🧭 Tu ruta</h2>
+          <p id="estadoCalculo">Calculando recorrido…</p>
+        </div>
+        <button type="button" id="volverEditar" class="boton-secundario">✏️ Modificar viaje</button>
+      </div>
+      <div id="metricasRuta" class="metricas-ruta"></div>
+      <div id="mapaRuta" class="mapa-ruta" aria-label="Mapa de la ruta"></div>
+      <div id="etapasRuta" class="etapas-ruta"></div>
+    </section>
   </main>
 
-  <script src="rutas.js?v=1"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="rutas-config.js?v=2"></script>
+  <script src="rutas.js?v=2"></script>
 </body>
 </html>
