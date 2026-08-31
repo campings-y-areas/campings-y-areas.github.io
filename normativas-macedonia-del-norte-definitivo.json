@@ -1,0 +1,96 @@
+[
+  {
+    "id": "normativa-mk",
+    "pais": "Macedonia del Norte",
+    "actualizado": "2026-08-31",
+    "estado_general": "En Macedonia del Norte las autocaravanas deben respetar las normas generales de tráfico, parada y estacionamiento y la señalización local. No debe asumirse que un estacionamiento permitido autoriza automáticamente una actividad de camping. En parques nacionales y demás áreas protegidas se aplican la Ley de Protección de la Naturaleza, los planes de gestión y las reglas del gestor.",
+    "resumen": "La Ley de Seguridad del Tráfico regula el estacionamiento y permite que las autoridades determinen superficies, prohibiciones y zonas de estacionamiento limitado. La protección de espacios naturales se rige por legislación específica y por las reglas de cada área. En 2026 el Ministerio de Medio Ambiente está armonizando la gestión de los cuatro parques nacionales con el nuevo marco legal de naturaleza, por lo que es especialmente importante comprobar la normativa y señalización actual del parque visitado.",
+    "estacionamiento": {
+      "estado": "segun_ley_de_trafico_senalizacion_y_regulacion_local",
+      "detalle": "Las autoridades pueden determinar zonas de estacionamiento, formas de estacionar, prohibiciones y lugares de estacionamiento limitado. La autocaravana debe respetar esas reglas como cualquier otro vehículo de su categoría.",
+      "condiciones_practicas": [
+        "Respetar señales y marcas viales.",
+        "Utilizar aparcamientos adecuados a las dimensiones del vehículo.",
+        "Comprobar restricciones municipales y del gestor.",
+        "No interpretar el estacionamiento legal como permiso automático para acampar."
+      ]
+    },
+    "pernocta": {
+      "estado": "depende_del_lugar_y_reglas_aplicables",
+      "detalle": "No se ha identificado una regla nacional específica que conceda un derecho general a pernoctar con autocaravana en cualquier aparcamiento. Deben comprobarse señalización, reglas municipales, propiedad del terreno y normativa de espacios protegidos."
+    },
+    "acampada_libre": {
+      "estado": "sin_derecho_general_en_espacios_protegidos",
+      "detalle": "En parques nacionales y otras áreas protegidas las actividades están sujetas a la legislación de protección de la naturaleza, zonificación, planes de gestión y reglas del gestor. Deben utilizarse campings o lugares expresamente habilitados cuando así lo exija el espacio."
+    },
+    "elementos_exteriores": {
+      "estado": "solo_donde_este_permitido",
+      "detalle": "Toldos, mesas, sillas, barbacoas y otros elementos exteriores son propios de una actividad de camping y deben utilizarse únicamente donde esté autorizado.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "barbacoa",
+        "equipamiento exterior"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "sin_costa_maritima_reglas_especificas_en_lagos",
+      "detalle": "Macedonia del Norte no tiene costa marítima. En los lagos Ohrid, Prespa, Dojran y otras zonas ribereñas deben respetarse accesos, estacionamiento, propiedad, protección ambiental y normativa local; no existe un derecho general a acampar con autocaravana junto al agua."
+    },
+    "espacios_naturales": {
+      "estado": "sujetos_a_ley_planes_de_gestion_y_reglas_del_parque",
+      "detalle": "La Ley de Protección de la Naturaleza regula la biodiversidad, el paisaje y el patrimonio natural dentro y fuera de áreas protegidas. Los parques nacionales disponen de gestión propia. En abril de 2026 el Ministerio informó de un proceso de armonización de los cuatro parques nacionales con el nuevo marco legal de naturaleza."
+    },
+    "bosques": {
+      "estado": "sujetos_a_regulacion_y_gestion_especifica",
+      "detalle": "En terrenos forestales deben respetarse las restricciones de acceso, señalización, protección contra incendios y reglas del gestor. No debe asumirse que pistas o terrenos forestales son aparcamientos libres para autocaravanas."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "sujeto_a_restricciones_y_riesgo_de_incendio",
+      "detalle": "En bosques y espacios naturales el fuego y las barbacoas pueden estar prohibidos o limitados a lugares habilitados, especialmente durante periodos de alto riesgo de incendio. Deben seguirse las instrucciones de las autoridades y gestores."
+    },
+    "aguas_y_residuos": {
+      "estado": "usar_instalaciones_adecuadas",
+      "detalle": "Aguas negras, aguas grises y residuos deben gestionarse en instalaciones adecuadas. No deben realizarse vertidos ni abandonarse residuos en aparcamientos, riberas, bosques o áreas protegidas."
+    },
+    "limites_de_permanencia": {
+      "estado": "dependen_del_lugar",
+      "detalle": "No se ha identificado un límite nacional uniforme específico para todas las autocaravanas estacionadas. Los límites pueden proceder de señalización, municipio, propietario, aparcamiento o gestor del espacio protegido."
+    },
+    "multas": {
+      "estado": "dependen_de_la_infraccion",
+      "detalle": "Las sanciones dependen de la infracción concreta: estacionamiento indebido, incumplimiento de señalización, acceso o actividad no autorizada en espacios protegidos, fuego, vertidos u otras infracciones ambientales."
+    },
+    "normativa_local": {
+      "importancia": "alta",
+      "detalle": "Las autoridades locales y los gestores de parques pueden establecer reglas específicas. Debe comprobarse siempre la señalización y la normativa vigente del lugar concreto."
+    },
+    "nota_practica": {
+      "titulo": "En Macedonia del Norte, especial atención a parques nacionales y lagos",
+      "detalle": "La opción segura es utilizar campings, áreas o aparcamientos que admitan expresamente la estancia. En los cuatro parques nacionales y en zonas protegidas alrededor de lagos deben comprobarse las reglas actuales del gestor, especialmente porque en 2026 se está adaptando su gestión al nuevo marco legal de naturaleza."
+    },
+    "fuentes": [
+      {
+        "organismo": "Ministerio de Transporte de Macedonia del Norte",
+        "titulo": "Ley de Seguridad del Tráfico en las Carreteras — regulación y estacionamiento",
+        "url": "https://mtc.gov.mk/index.php/mk-MK/regulativa/paten-soobrakjaj"
+      },
+      {
+        "organismo": "Ministerio de Medio Ambiente y Planificación Física",
+        "titulo": "Protección de la naturaleza — legislación nacional",
+        "url": "https://www.moepp.gov.mk/mk-MK/regulativa/zastita-na-prirodata"
+      },
+      {
+        "organismo": "Ministerio de Medio Ambiente y Planificación Física",
+        "titulo": "Nuevo marco de naturaleza: armonización con los parques nacionales — 29/04/2026",
+        "url": "https://www.moepp.gov.mk/mk-MK/odnosi-so-javnost/novosti/nov-zakon-za-priroda-usoglasuvanje-so-nacionalnite-parkovi"
+      },
+      {
+        "organismo": "Boletín Oficial de la República de Macedonia del Norte",
+        "titulo": "Base oficial de legislación y normativa",
+        "url": "https://slvesnik.com.mk/"
+      }
+    ]
+  }
+]
