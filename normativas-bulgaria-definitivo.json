@@ -1,0 +1,96 @@
+[
+  {
+    "id": "normativa-bg",
+    "pais": "Bulgaria",
+    "actualizado": "2026-08-31",
+    "estado_general": "En Bulgaria las autocaravanas se rigen por las normas generales de circulación y estacionamiento y por la señalización local. No existe un derecho general a usar cualquier aparcamiento, playa, bosque o espacio natural como lugar de camping. En parques nacionales, reservas y otras áreas protegidas se aplican regímenes específicos de acceso, estacionamiento, acampada y fuego.",
+    "resumen": "La regla práctica es sencilla: estacionar legalmente no equivale automáticamente a poder acampar. Deben respetarse la señalización, las ordenanzas municipales y las condiciones del terreno. En espacios protegidos, y especialmente en los tres parques nacionales de Bulgaria —Rila, Pirin y Balcanes Centrales— las restricciones son más estrictas y pueden limitar fuertemente la entrada de vehículos, la acampada y el fuego.",
+    "estacionamiento": {
+      "estado": "segun_normas_generales_y_senalizacion",
+      "detalle": "Las autocaravanas deben respetar las reglas generales de parada y estacionamiento y la señalización del lugar. Los municipios pueden establecer zonas de pago, límites horarios, restricciones por dimensiones o prohibiciones específicas.",
+      "condiciones_practicas": [
+        "Respetar señales y marcas viales.",
+        "Comprobar ordenanzas municipales y condiciones del aparcamiento.",
+        "No ocupar zonas donde el vehículo exceda dimensiones o peso autorizados.",
+        "No asumir que estacionar implica permiso para acampar o desplegar elementos exteriores."
+      ]
+    },
+    "pernocta": {
+      "estado": "depende_del_lugar_y_normativa_local",
+      "detalle": "No existe una autorización nacional general para pernoctar con autocaravana en cualquier estacionamiento o terreno. La posibilidad de dormir dentro puede quedar condicionada por señalización, ordenanzas municipales, propiedad del terreno y normas ambientales."
+    },
+    "acampada_libre": {
+      "estado": "no_existe_derecho_general_y_es_restringida_en_areas_protegidas",
+      "detalle": "En reservas y parques nacionales las actividades recreativas están sometidas a planes de gestión y regímenes específicos. La acampada debe realizarse únicamente donde esté permitida por el gestor o la normativa del espacio."
+    },
+    "elementos_exteriores": {
+      "estado": "solo_donde_este_permitido",
+      "detalle": "Toldos, mesas, sillas, barbacoas y otros elementos exteriores representan una actividad de camping y deben utilizarse solo en lugares donde esté expresamente permitida.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "barbacoa",
+        "equipamiento exterior"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "restricciones_locales_y_ambientales",
+      "detalle": "En la costa del Mar Negro no existe un derecho general a entrar o acampar con autocaravana en playas y dunas. Deben respetarse accesos autorizados, propiedad, señalización y las reglas de protección de playas, dunas y espacios naturales costeros."
+    },
+    "espacios_naturales": {
+      "estado": "regimen_especifico_y_estricto",
+      "detalle": "Bulgaria cuenta con reservas, parques nacionales, parques naturales, áreas protegidas y monumentos naturales. El Ministerio de Medio Ambiente señala que reservas y parques nacionales tienen un régimen especialmente estricto; en reservas se excluye prácticamente la actividad humana y en parques nacionales se limita fuertemente."
+    },
+    "bosques": {
+      "estado": "acceso_motorizado_sujeto_a_restricciones",
+      "detalle": "La circulación y estacionamiento de vehículos en terrenos forestales están sujetos a la legislación forestal, señalización, gestión del bosque y posibles restricciones temporales o permanentes. No debe darse por permitido circular fuera de vías habilitadas."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "restringido_y_sujeto_a_prohibiciones",
+      "detalle": "En bosques y espacios protegidos el fuego puede estar prohibido o limitado a lugares especialmente habilitados. Deben respetarse las prohibiciones temporales por riesgo de incendios y las instrucciones de las autoridades forestales y del parque."
+    },
+    "aguas_y_residuos": {
+      "estado": "usar_instalaciones_adecuadas",
+      "detalle": "Las aguas grises, aguas negras y residuos deben gestionarse en instalaciones autorizadas. No deben realizarse vertidos ni abandonarse residuos en aparcamientos, playas, bosques o áreas protegidas."
+    },
+    "limites_de_permanencia": {
+      "estado": "dependen_del_lugar",
+      "detalle": "No existe un único límite nacional de permanencia aplicable a todos los aparcamientos de autocaravanas. Los límites pueden venir impuestos por señalización, ordenanzas municipales, gestores de aparcamientos o administraciones de espacios protegidos."
+    },
+    "multas": {
+      "estado": "dependen_de_la_infraccion",
+      "detalle": "Las sanciones dependen de la conducta: estacionamiento ilegal, incumplimiento de ordenanzas locales, entrada o estancia no autorizada en áreas protegidas, acampada o fuego prohibidos, vertidos u otras infracciones ambientales."
+    },
+    "normativa_local": {
+      "importancia": "alta",
+      "detalle": "Municipios, gestores de aparcamientos y administraciones de parques pueden imponer restricciones adicionales. En zonas turísticas, costeras y espacios naturales debe comprobarse siempre la señalización y las reglas específicas."
+    },
+    "nota_practica": {
+      "titulo": "En Bulgaria hay que diferenciar claramente aparcar de acampar",
+      "detalle": "La opción segura es utilizar campings, áreas para autocaravanas o aparcamientos que permitan expresamente la pernocta. En parques nacionales, reservas, bosques y zonas costeras protegidas las restricciones pueden ser mucho más estrictas."
+    },
+    "fuentes": [
+      {
+        "organismo": "Ministerio de Medio Ambiente y Agua de Bulgaria",
+        "titulo": "Áreas protegidas — información general y categorías",
+        "url": "https://www.moew.government.bg/bg/priroda/zastiteni-teritorii/obsta-informaciya-za-zastitenite-teritorii/"
+      },
+      {
+        "organismo": "Ministerio de Medio Ambiente y Agua de Bulgaria",
+        "titulo": "Áreas protegidas — legislación nacional",
+        "url": "https://www.moew.government.bg/bg/priroda/zakonodatelstvo/nacionalno-zakonodatelstvo/zakoni/"
+      },
+      {
+        "organismo": "Ministerio de Medio Ambiente y Agua de Bulgaria",
+        "titulo": "Planes de gestión de áreas protegidas",
+        "url": "https://www.moew.government.bg/bg/priroda/zastiteni-teritorii/planove-za-upravlenie-na-zastiteni-teritorii-vlezli-v-sila/"
+      },
+      {
+        "organismo": "Ministerio de Medio Ambiente y Agua de Bulgaria",
+        "titulo": "Registro de áreas protegidas",
+        "url": "https://www.moew.government.bg/bg/priroda/zastiteni-teritorii/registri-na-zastitenite-teritorii/"
+      }
+    ]
+  }
+]
