@@ -1,0 +1,110 @@
+[
+  {
+    "id": "normativa-ad",
+    "pais": "Andorra",
+    "actualizado": "2026-08-31",
+    "estado_general": "En Andorra la pernocta y la acampada de autocaravanas fuera de los espacios destinados expresamente a ello están prohibidas. La normativa turística distingue entre áreas de acogida de autocaravanas, de uso exclusivamente diurno, y áreas de estancia, donde sí se permite la ocupación durante toda la jornada y la pernocta.",
+    "resumen": "Para dormir en una autocaravana debe utilizarse un camping, zona de acampada o área de estancia autorizada. Las áreas de acogida de autocaravanas son únicamente para vehículos en tránsito y funcionan en horario diurno de 07:00 a 23:00; no permiten desplegar elementos de acampada ni elementos que excedan el perímetro del vehículo. Las áreas de estancia permiten ocupación durante las 24 horas y deben registrar las pernoctaciones en el ROAT.",
+    "estacionamiento": {
+      "estado": "permitido_segun_codigo_senalizacion_y_normas_comunales",
+      "detalle": "El estacionamiento ordinario debe respetar el Codi de Circulació, la señalización y las reglas del Comú correspondiente. Que una autocaravana pueda estacionar legalmente no autoriza a utilizar el lugar como zona de pernocta o acampada.",
+      "condiciones_practicas": [
+        "Respetar señalización y normas del Comú.",
+        "No confundir estacionamiento con pernocta.",
+        "Para dormir utilizar camping, zona de acampada o área de estancia autorizada.",
+        "Las áreas de acogida son únicamente diurnas, de 07:00 a 23:00."
+      ]
+    },
+    "pernocta": {
+      "estado": "prohibida_fuera_de_espacios_destinados",
+      "detalle": "La normativa andorrana prohíbe la pernocta de autocaravanas fuera de los espacios destinados a este efecto. Las áreas de estancia de autocaravanas permiten ocupación durante toda la jornada y están sometidas al registro de las pernoctaciones en el Registre d'Ocupació d'Allotjaments Turístics (ROAT)."
+    },
+    "acampada_libre": {
+      "estado": "prohibida_fuera_de_espacios_destinados",
+      "detalle": "La acampada de autocaravanas fuera de los espacios habilitados está prohibida. Deben utilizarse establecimientos o zonas legalmente reconocidos dentro de la modalidad de camping."
+    },
+    "elementos_exteriores": {
+      "estado": "prohibidos_en_areas_de_acogida",
+      "detalle": "En las áreas de acogida de autocaravanas no está permitido desplegar elementos de acampada ni ningún elemento que exceda el perímetro del vehículo. En campings o áreas de estancia deben respetarse las condiciones específicas del establecimiento.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "patas estabilizadoras",
+        "elementos que excedan el perímetro del vehículo"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "no_aplicable",
+      "detalle": "Andorra no tiene costa marítima. En riberas, montaña y espacios naturales deben respetarse las restricciones ambientales y locales correspondientes."
+    },
+    "espacios_naturales": {
+      "estado": "sujetos_a_proteccion_y_regulacion_especifica",
+      "detalle": "El acceso, estacionamiento, fuego, acampada y otras actividades en espacios naturales pueden estar sujetos a normativa ambiental y comunal específica. La prohibición general de pernoctar o acampar con autocaravana fuera de espacios destinados sigue siendo aplicable."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "solo_donde_este_autorizado",
+      "detalle": "El uso de fuego o barbacoas debe limitarse a lugares donde esté expresamente permitido y respetar las restricciones temporales por riesgo de incendio y las normas ambientales o comunales."
+    },
+    "aguas_y_residuos": {
+      "estado": "usar_instalaciones_autorizadas",
+      "detalle": "Las aguas grises y negras y los residuos deben gestionarse mediante instalaciones adecuadas. La normativa de las áreas para autocaravanas contempla servicios específicos según la categoría del establecimiento."
+    },
+    "limites_de_permanencia": {
+      "estado": "segun_tipo_de_area",
+      "detalle": "Las áreas de acogida son exclusivamente diurnas, de 07:00 a 23:00, por lo que no permiten pernocta. Las áreas de estancia permiten ocupación durante toda la jornada. Deben respetarse además los límites y condiciones particulares establecidos por cada instalación."
+    },
+    "multas": {
+      "estado": "dependen_de_la_infraccion",
+      "detalle": "Las sanciones dependen de la infracción concreta y de la normativa aplicable: pernocta o acampada fuera de espacios destinados, incumplimiento de las condiciones de un área, infracciones de circulación, ambientales o comunales."
+    },
+    "normativa_local": {
+      "importancia": "alta",
+      "detalle": "Los Comuns gestionan competencias locales relevantes, incluida la ordenación y señalización de espacios. Deben respetarse las reglas del Comú y las condiciones concretas de cada aparcamiento o área."
+    },
+    "tipos_de_area": {
+      "area_acogida": {
+        "horario": "07:00-23:00",
+        "pernocta": "no",
+        "detalle": "Espacio delimitado para ocupación exclusiva de autocaravanas en tránsito durante horario diurno. No se permite desplegar elementos de acampada ni elementos que excedan el perímetro del vehículo."
+      },
+      "area_estancia": {
+        "horario": "24_horas",
+        "pernocta": "si",
+        "detalle": "Permite la ocupación durante toda la jornada. Las pernoctaciones deben inscribirse en el ROAT y están sujetas a la tasa turística correspondiente."
+      }
+    },
+    "nota_practica": {
+      "titulo": "Para dormir, buscar un área de estancia",
+      "detalle": "En Andorra hay que fijarse en la categoría del área: un área de acogida no permite pasar la noche; un área de estancia sí. Fuera de espacios destinados, la pernocta y la acampada de autocaravanas están prohibidas."
+    },
+    "fuentes": [
+      {
+        "organismo": "Govern d'Andorra",
+        "titulo": "Modalitat de càmping — normativa vigente y categorías",
+        "url": "https://www.govern.ad/ca/ministeris-i-secretaries-d-estat/ministeri-de-turisme-i-comerc/normativa-allotjaments/campings"
+      },
+      {
+        "organismo": "Govern d'Andorra",
+        "titulo": "Reglamento de alojamientos turísticos — áreas de acogida y estancia de autocaravanas",
+        "fecha": "2023-03-08",
+        "url": "https://www.govern.ad/ca/w/el-reglament-d-allotjaments-turistics-inclou-les-noves-categories-de-glamping-i-arees-d-acollida-i-d-estada-d-autocaravanes-1"
+      },
+      {
+        "organismo": "Govern d'Andorra",
+        "titulo": "Normativa d'allotjaments",
+        "url": "https://www.govern.ad/ca/ministeris-i-secretaries-d-estat/ministeri-de-turisme-i-comerc/normativa-allotjaments"
+      },
+      {
+        "organismo": "Govern d'Andorra",
+        "titulo": "Llei 5/2025 — creixement sostenible i dret a l'habitatge",
+        "url": "https://www.govern.ad/ca/ministeris-i-secretaries-d-estat/ministeri-de-turisme-i-comerc/normativa-allotjaments/campings"
+      },
+      {
+        "organismo": "Portal Jurídic d'Andorra / BOPA",
+        "titulo": "Portal Jurídic — legislación consolidada vigente",
+        "url": "https://www.portaljuridicandorra.ad/"
+      }
+    ]
+  }
+]
