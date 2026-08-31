@@ -1,0 +1,96 @@
+[
+  {
+    "id": "normativa-hu",
+    "pais": "Hungría",
+    "actualizado": "2026-08-31",
+    "estado_general": "En Hungría las autocaravanas se someten a las reglas generales de circulación y estacionamiento del KRESZ (1/1975 KPM-BM). No existe una autorización nacional que permita convertir cualquier aparcamiento en lugar de camping o alojamiento. Además, los municipios pueden imponer restricciones específicas a la pernocta en vehículos, y los bosques y espacios naturales protegidos están sujetos a normas adicionales.",
+    "resumen": "La regla práctica es estacionar únicamente conforme al KRESZ y a la señalización, y comprobar siempre las ordenanzas municipales y las condiciones del aparcamiento antes de dormir dentro. En 2026 existen ejemplos oficiales de municipios que permiten estacionar una autocaravana pero prohíben expresamente utilizarla como alojamiento en aparcamientos públicos. En bosques y áreas protegidas deben respetarse las restricciones de acceso motorizado, fuego y protección de la naturaleza.",
+    "estacionamiento": {
+      "estado": "segun_kresz_senalizacion_y_normas_locales",
+      "detalle": "El KRESZ regula la parada y el estacionamiento de vehículos. Como regla general se estaciona junto al borde derecho de la calzada, salvo las excepciones previstas, y fuera de poblado debe utilizarse en lo posible espacio fuera de la calzada. Zonas residenciales/de descanso permiten estacionar solo en lugares designados.",
+      "condiciones_practicas": [
+        "Respetar señales, líneas y restricciones del KRESZ.",
+        "Comprobar límites de dimensiones, peso y categorías del aparcamiento.",
+        "En zonas residenciales/de descanso, utilizar únicamente lugares designados.",
+        "Comprobar ordenanzas municipales antes de pernoctar."
+      ]
+    },
+    "pernocta": {
+      "estado": "no_equivale_automaticamente_a_estacionamiento_permitido",
+      "detalle": "Que la autocaravana pueda estacionar no significa necesariamente que pueda utilizarse como alojamiento. Las autoridades locales pueden prohibir expresamente dormir o acampar en vehículos en determinados aparcamientos o espacios públicos. Por ejemplo, Bánk aprobó en 2026 que caravanas y autocaravanas pueden estacionar en aparcamientos públicos designados pero no funcionar como alojamiento, y prohíbe entre el 1 de junio y el 31 de agosto utilizar determinadas zonas públicas para alojamiento/camping."
+    },
+    "acampada_libre": {
+      "estado": "depende_del_terreno_propietario_y_restricciones_ambientales",
+      "detalle": "No existe un derecho nacional general a instalar un campamento con autocaravana en cualquier terreno. Deben respetarse propiedad, normativa municipal, legislación forestal y reglas de espacios protegidos."
+    },
+    "elementos_exteriores": {
+      "estado": "solo_donde_este_permitido",
+      "detalle": "Toldos, mesas, sillas, barbacoas y otros elementos exteriores representan un uso de camping y no deben desplegarse en un aparcamiento ordinario salvo que esté autorizado.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "barbacoa",
+        "equipamiento exterior"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "sin_costa_maritima_reglas_locales_en_lagos",
+      "detalle": "Hungría no tiene costa marítima. En Balaton y otros lagos, playas y zonas recreativas se aplican reglas de acceso, aparcamiento, propiedad y ordenanzas municipales; no existe un derecho general a pernoctar con autocaravana junto al agua."
+    },
+    "espacios_naturales": {
+      "estado": "proteccion_especifica",
+      "detalle": "La Ley LIII de 1996 protege parques nacionales, áreas de protección paisajística, reservas naturales y monumentos naturales. Está prohibido alterar el estado o carácter de un área natural protegida de forma contraria a sus objetivos de conservación, y pueden aplicarse restricciones y autorizaciones específicas del espacio."
+    },
+    "bosques": {
+      "estado": "sujetos_a_ley_forestal_y_restricciones_de_acceso",
+      "detalle": "Los bosques están regulados por la Ley XXXVII de 2009. El acceso y las actividades recreativas deben respetar la gestión forestal, señalización, cierres y reglas de protección; la circulación motorizada no debe darse por permitida fuera de vías autorizadas."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "sujeto_a_normas_forestales_y_prohibiciones_temporales",
+      "detalle": "El fuego en zonas forestales está regulado y puede quedar sometido a prohibiciones temporales por riesgo de incendio. Barbacoas y fuego deben realizarse únicamente donde y cuando estén autorizados."
+    },
+    "aguas_y_residuos": {
+      "estado": "usar_instalaciones_adecuadas",
+      "detalle": "Aguas negras, aguas grises y residuos deben eliminarse en instalaciones autorizadas de campings o áreas de servicio. No deben realizarse vertidos en aparcamientos, bosques, lagos o espacios naturales."
+    },
+    "limites_de_permanencia": {
+      "estado": "dependen_de_senalizacion_y_normativa_local",
+      "detalle": "No existe un único límite nacional de permanencia aplicable a todas las autocaravanas estacionadas. Los municipios y gestores pueden establecer horarios, límites o prohibiciones de pernocta."
+    },
+    "multas": {
+      "estado": "dependen_de_la_infraccion",
+      "detalle": "Las sanciones dependen de la infracción: estacionamiento contrario al KRESZ, incumplimiento de ordenanzas locales, acceso indebido a espacios naturales o forestales, fuego prohibido, vertidos u otras infracciones ambientales."
+    },
+    "normativa_local": {
+      "importancia": "muy_alta",
+      "detalle": "Las ordenanzas municipales pueden diferenciar claramente entre estacionar y utilizar un vehículo como alojamiento. Por ello, antes de pasar la noche debe comprobarse la señalización y las normas del municipio o gestor del aparcamiento."
+    },
+    "nota_practica": {
+      "titulo": "En Hungría, aparcar legalmente no garantiza poder dormir dentro",
+      "detalle": "La normativa local puede prohibir expresamente utilizar una autocaravana estacionada como alojamiento. La opción segura es usar campings, áreas de autocaravanas o aparcamientos donde la pernocta esté expresamente admitida."
+    },
+    "fuentes": [
+      {
+        "organismo": "Nemzeti Jogszabálytár",
+        "titulo": "1/1975. (II. 5.) KPM–BM — KRESZ, reglas de parada y estacionamiento",
+        "url": "https://njt.hu/jogszabaly/1975-1-20-24"
+      },
+      {
+        "organismo": "Nemzeti Jogszabálytár",
+        "titulo": "Ley LIII de 1996 — protección de la naturaleza",
+        "url": "https://njt.hu/jogszabaly/1996-53-00-00"
+      },
+      {
+        "organismo": "Nemzeti Jogszabálytár",
+        "titulo": "Ley XXXVII de 2009 — bosques, protección y gestión forestal",
+        "url": "https://njt.hu/jogszabaly/2009-37-00-00"
+      },
+      {
+        "organismo": "Nemzeti Jogszabálytár / Bánk",
+        "titulo": "Ordenanza municipal 4/2026 — camping y alojamiento en vehículos en espacios públicos",
+        "url": "https://njt.jog.gov.hu/jogszabaly/2026-4-SP-5Y492.0"
+      }
+    ]
+  }
+]
