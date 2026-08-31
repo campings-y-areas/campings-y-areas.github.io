@@ -1,0 +1,91 @@
+[
+  {
+    "id": "normativa-cy",
+    "pais": "Chipre",
+    "actualizado": "2026-08-31",
+    "estado_general": "En la República de Chipre las autocaravanas se someten a las normas generales de tráfico, estacionamiento y señalización. En los bosques estatales la regla oficial es especialmente clara: la acampada solo está permitida en campings autorizados. El fuego para cocinar se limita a barbacoas especialmente construidas en zonas recreativas y campings.",
+    "resumen": "El Departamento de Bosques confirma en agosto de 2026 que acampar dentro del bosque solo está permitido en campings. También exige respetar las restricciones de acceso y prohíbe abandonar basura o sustancias inflamables. Para autocaravanas, la opción segura es utilizar campings o aparcamientos donde la estancia esté expresamente permitida y no convertir un estacionamiento ordinario en campamento.",
+    "estacionamiento": {
+      "estado": "segun_senalizacion_y_reglas_del_lugar",
+      "detalle": "El estacionamiento ordinario se rige por las normas de tráfico y señalización. En bosques, áreas recreativas, playas y otros terrenos gestionados pueden existir restricciones adicionales de acceso o permanencia.",
+      "condiciones_practicas": [
+        "Respetar señales y restricciones de estacionamiento.",
+        "No bloquear accesos ni vías forestales.",
+        "Cumplir las prohibiciones temporales de acceso a bosques.",
+        "Para acampar, utilizar campings autorizados."
+      ]
+    },
+    "pernocta": {
+      "estado": "depende_del_lugar_y_no_equivale_a_derecho_de_camping",
+      "detalle": "No debe asumirse que cualquier aparcamiento legal autoriza una estancia de camping. En bosques estatales, la regla oficial exige utilizar campings para acampar. En otros lugares deben comprobarse señalización, municipio, propietario y gestor."
+    },
+    "acampada_libre": {
+      "estado": "prohibida_en_bosques_estatales_fuera_de_campings",
+      "detalle": "El Departamento de Bosques establece expresamente que la acampada dentro del bosque solo está permitida en campings. En julio de 2025 el Gobierno reiteró oficialmente esta prohibición ante casos de acampada ilegal en bosques estatales."
+    },
+    "elementos_exteriores": {
+      "estado": "usar_en_lugares_autorizados",
+      "detalle": "Toldos, mesas, sillas, barbacoas y demás equipamiento exterior deben utilizarse únicamente en lugares donde esté autorizada la actividad recreativa o de camping.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "barbacoa",
+        "equipamiento exterior"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "segun_senalizacion_gestion_y_normativa_local",
+      "detalle": "En playas y zonas costeras deben respetarse accesos, señalización, restricciones municipales y reglas del gestor. No existe un derecho general a instalar una autocaravana como campamento en cualquier playa."
+    },
+    "espacios_naturales": {
+      "estado": "restricciones_de_acceso_y_prevencion_de_incendios",
+      "detalle": "En bosques y áreas naturales deben seguirse las prohibiciones de acceso y las instrucciones del Departamento de Bosques. Durante episodios de riesgo extremo pueden cerrarse o evacuarse áreas recreativas y campings."
+    },
+    "bosques": {
+      "estado": "camping_solo_en_campings",
+      "detalle": "La guía oficial del Departamento de Bosques, actualizada el 20 de agosto de 2026, indica expresamente que acampar en el bosque solo está permitido en campings y que deben respetarse las restricciones de acceso."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "solo_en_lugares_especialmente_habilitados",
+      "detalle": "El fuego para preparar comida solo está permitido en barbacoas especialmente construidas en zonas recreativas y campings. Encender fuego dentro de bosques estatales o en su entorno está sometido a sanciones muy severas. Tras la modificación forestal de 2025, el Gobierno informa de penas de hasta 12 años de prisión o multa de hasta 100.000 €, o ambas, para determinados delitos de incendio."
+    },
+    "aguas_y_residuos": {
+      "estado": "prohibido_abandonar_residuos_en_bosques",
+      "detalle": "El Departamento de Bosques prohíbe arrojar o depositar basura y sustancias inflamables en bosques estatales. Las aguas negras y grises de autocaravana deben eliminarse en instalaciones adecuadas."
+    },
+    "limites_de_permanencia": {
+      "estado": "dependen_del_lugar",
+      "detalle": "No se ha identificado un límite nacional único específico para todas las autocaravanas estacionadas. Pueden existir límites mediante señalización, municipio, propietario, camping o gestor del espacio."
+    },
+    "multas": {
+      "estado": "muy_severas_para_infracciones_de_incendios",
+      "detalle": "Las sanciones dependen de la infracción. El Gobierno chipriota informó en 2025 que determinados delitos por encender fuego dentro de bosques estatales o a menos de 2 km de sus límites pueden castigarse con hasta 12 años de prisión o multa de hasta 100.000 €, o ambas."
+    },
+    "normativa_local": {
+      "importancia": "alta",
+      "detalle": "Municipios, gestores de playas, campings y el Departamento de Bosques pueden establecer restricciones adicionales. Debe comprobarse siempre la señalización y las condiciones del lugar."
+    },
+    "nota_practica": {
+      "titulo": "Chipre: en los bosques no hay duda, camping solo en campings",
+      "detalle": "Para una autocaravana, no debe utilizarse un bosque estatal como lugar de acampada libre. Hay que usar un camping autorizado y extremar las precauciones con el fuego. Las restricciones forestales pueden endurecerse o cerrarse accesos durante periodos de alto riesgo."
+    },
+    "fuentes": [
+      {
+        "organismo": "Departamento de Bosques de Chipre",
+        "titulo": "Fire Safety Guide for the Public — actualizado 20/08/2026",
+        "url": "https://www.moa.gov.cy/moa/fd/fd.nsf/fd52_en/fd52_en"
+      },
+      {
+        "organismo": "Gobierno de Chipre / Departamento de Bosques",
+        "titulo": "Prohibición de acampada dentro de los bosques estatales",
+        "url": "https://www.gov.cy/georgia-agrotiki-anaptyxi-perivallon/anakoinosi-tou-tmimatos-dason-anaforika-me-tin-apagorefsi-kataskinosis-entos-ton-kratikon-dason/"
+      },
+      {
+        "organismo": "Departamento de Bosques de Chipre",
+        "titulo": "Forest Fire Management — prevención, campings y legislación",
+        "url": "https://www.moa.gov.cy/moa/fd/fd.nsf/fd51_en/fd51_en%3FOpenDocument"
+      }
+    ]
+  }
+]
