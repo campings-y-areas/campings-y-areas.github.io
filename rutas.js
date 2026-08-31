@@ -176,11 +176,18 @@ async function pintarResultado(data,lugares,datos){
   if(legs.length){
     legs.forEach((leg,i)=>{html+=`<div class="etapa-card"><div class="etapa-numero">${i+1}</div><div><strong>${escapar(lugares[i]?.formatted||"Salida")} → ${escapar(lugares[i+1]?.formatted||"Destino")}</strong><p>${formatoKm(leg.distance||0)} · ${formatoTiempo(leg.time||0)}</p></div></div>`;});
   } else html+=`<p>${formatoKm(distancia)} · ${formatoTiempo(tiempo)}</p>`;
-  if(jornadas>1)html+=`<div class="aviso-ruta"><strong>Plan de conducción:</strong> con un máximo de ${escapar(maxHoras)} h al día, el trayecto necesita aproximadamente ${jornadas} jornadas. En la siguiente fase elegiremos las paradas reales de cada jornada según lugares interesantes y opciones de pernocta, no simples puntos matemáticos de la carretera.</div>`;
-  const plan=await crearPlanJornadas(feature,lugares,datos);
-  html+=htmlPlanJornadas(plan,datos);
-  document.getElementById("etapasRuta").innerHTML=html;
+  if(jornadas>1)html+=`<div class="aviso-ruta"><strong>Plan de conducción:</strong> con un máximo de ${escapar(maxHoras)} h al día, el trayecto necesita aproximadamente ${jornadas} jornadas.</div>`;
+
+  // Mostrar el resultado básico y el mapa inmediatamente. La búsqueda de lugares
+  // interesantes se hace después para que la página no parezca bloqueada.
+  document.getElementById("etapasRuta").innerHTML=html + (jornadas>1 ? '<div id="cargandoParadas" class="aviso-suave">🔎 Buscando las mejores zonas de parada según tus preferencias…</div>' : '');
   pintarRuta(data,lugares);
+
+  if(jornadas>1){
+    const plan=await crearPlanJornadas(feature,lugares,datos);
+    document.getElementById("cargandoParadas")?.remove();
+    document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlPlanJornadas(plan,datos));
+  }
 }
 
 
@@ -257,9 +264,9 @@ async function buscarPOIs(coord,datos){
   const categorias=categoriasSegunViaje(datos);
   const params=new URLSearchParams({
     categories:categorias.join(","),
-    filter:`circle:${coord[0]},${coord[1]},30000`,
+    filter:`circle:${coord[0]},${coord[1]},25000`,
     bias:`proximity:${coord[0]},${coord[1]}`,
-    limit:"40",lang:"es",apiKey:config.GEOAPIFY_API_KEY
+    limit:"18",lang:"es",apiKey:config.GEOAPIFY_API_KEY
   });
   const r=await fetch(`https://api.geoapify.com/v2/places?${params}`); if(!r.ok)return [];
   const d=await r.json();
@@ -294,10 +301,13 @@ async function crearPlanJornadas(feature,lugares,datos){
   const cortes=[]; let desde=0;
   for(let dia=1;dia<jornadas;dia++){
     const objetivo=geomTotal*(dia/jornadas), idx=indiceCercano(acum,objetivo,desde+1); desde=idx;
-    const corte={coord:coords[idx],nombre:"Buscando una parada interesante…",distRuta:totalDist*(dia/jornadas),tiempoRuta:totalTiempo*(dia/jornadas)};
-    cortes.push(await enriquecerCorte(corte,datos));
+    cortes.push({coord:coords[idx],nombre:"Buscando una parada interesante…",distRuta:totalDist*(dia/jornadas),tiempoRuta:totalTiempo*(dia/jornadas)});
   }
-  const puntos=[{nombre:lugares[0]?.formatted||datos.origen,distRuta:0,tiempoRuta:0},...cortes,{nombre:lugares.at(-1)?.formatted||datos.destinoPrincipal,distRuta:totalDist,tiempoRuta:totalTiempo}];
+
+  // Las búsquedas de las distintas jornadas son independientes: ejecutarlas en
+  // paralelo reduce mucho el tiempo total en viajes largos.
+  const cortesEnriquecidos=await Promise.all(cortes.map(c=>enriquecerCorte(c,datos)));
+  const puntos=[{nombre:lugares[0]?.formatted||datos.origen,distRuta:0,tiempoRuta:0},...cortesEnriquecidos,{nombre:lugares.at(-1)?.formatted||datos.destinoPrincipal,distRuta:totalDist,tiempoRuta:totalTiempo}];
   return puntos.slice(0,-1).map((a,i)=>{const b=puntos[i+1];return {dia:i+1,desde:a.nombre,hasta:b.nombre,distancia:b.distRuta-a.distRuta,tiempo:b.tiempoRuta-a.tiempoRuta,intermedia:i<puntos.length-2,pois:b.pois||[],poiPrincipal:b.poiPrincipal||null};});
 }
 function htmlPlanJornadas(plan,datos){
