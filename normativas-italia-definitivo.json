@@ -1,0 +1,108 @@
+[
+  {
+    "id": "normativa-it",
+    "pais": "Italia",
+    "actualizado": "2026-08-31",
+    "estado_general": "En Italia las autocaravanas están sujetas, en circulación y estacionamiento, a las mismas reglas generales que los demás vehículos de su categoría. El artículo 185 del Codice della Strada establece una distinción esencial: cuando el estacionamiento está permitido, no se considera camping si el vehículo apoya únicamente sobre sus ruedas, no ocupa más espacio que su propio gálibo y no realiza vertidos distintos de los del motor. La acampada y las áreas de estancia se regulan además a nivel regional y municipal.",
+    "resumen": "La regla nacional clave es el artículo 185 del Codice della Strada: estacionar una autocaravana donde esté permitido no equivale automáticamente a acampar, siempre que permanezca sobre sus ruedas, no despliegue elementos que aumenten su ocupación y no efectúe vertidos. Sin embargo, regiones y municipios regulan campings, áreas de sosta y camping libre, por lo que hay diferencias territoriales importantes.",
+    "estacionamiento": {
+      "estado": "permitido_conforme_al_codigo_de_circulacion",
+      "detalle": "Las autocaravanas están sometidas a las normas de circulación y estacionamiento aplicables a los demás vehículos. Los municipios pueden regular o limitar el estacionamiento por razones legalmente justificadas y mediante señalización.",
+      "condiciones_practicas": [
+        "Respetar señalización, dimensiones de la plaza y restricciones municipales.",
+        "Mantener el vehículo apoyado únicamente sobre sus ruedas.",
+        "No ocupar la calzada o plaza más allá del propio gálibo del vehículo.",
+        "No efectuar vertidos.",
+        "No desplegar elementos propios de acampada en un estacionamiento ordinario."
+      ]
+    },
+    "pernocta": {
+      "estado": "posible_dentro_de_un_estacionamiento_legal_sin_comportamiento_de_acampada_sujeto_a_normas_locales",
+      "detalle": "El artículo 185 define cuándo la sosta de una autocaravana no constituye camping. Por ello, permanecer dentro del vehículo durante un estacionamiento legal no transforma por sí solo la sosta en acampada si se cumplen esas condiciones. Deben respetarse siempre las prohibiciones, límites y reglamentos regionales o municipales aplicables al lugar."
+    },
+    "acampada_libre": {
+      "estado": "depende_de_normativa_regional_y_local",
+      "detalle": "Italia no tiene una autorización nacional uniforme de camping libre. Las regiones regulan las estructuras turísticas y pueden prohibir o limitar la estancia con medios móviles fuera de campings y áreas autorizadas. Debe comprobarse la legislación regional y las ordenanzas municipales."
+    },
+    "elementos_exteriores": {
+      "estado": "no_en_estacionamiento_ordinario_si_aumentan_el_galibo",
+      "detalle": "Para conservar la consideración de simple estacionamiento conforme al artículo 185, la autocaravana no debe ocupar la sede stradale en una medida superior a su propio gálibo. Sacar toldos, mesas, sillas u otros elementos exteriores puede convertir la situación en uso de camping y quedar sujeta a las normas correspondientes.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "escalones exteriores",
+        "equipamiento que exceda el gálibo"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "restricciones_locales_y_ambientales",
+      "detalle": "En costas, playas, parques y áreas protegidas pueden existir prohibiciones específicas de acceso, estacionamiento o acampada establecidas por municipios, regiones, autoridades del espacio protegido u otras administraciones competentes."
+    },
+    "espacios_naturales": {
+      "estado": "normativa_especifica",
+      "detalle": "Parques nacionales, parques regionales, reservas y otras zonas protegidas pueden limitar el acceso de vehículos, estacionamiento, pernocta, camping y fuego. Debe seguirse la señalización y la regulación del espacio concreto."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "segun_region_municipio_y_riesgo",
+      "detalle": "El fuego y las barbacoas están sujetos a normas forestales, regionales, municipales y de los espacios protegidos, además de prohibiciones temporales durante periodos de riesgo de incendio."
+    },
+    "aguas_y_residuos": {
+      "estado": "vertidos_prohibidos_fuera_de_instalaciones_adecuadas",
+      "detalle": "El artículo 185 prohíbe la descarga de residuos orgánicos y aguas claras o residuales de autocaravanas fuera de instalaciones higiénico-sanitarias destinadas a ello. Deben utilizarse camper service, áreas equipadas o instalaciones autorizadas."
+    },
+    "limites_de_permanencia": {
+      "estado": "dependen_del_area_region_y_municipio",
+      "detalle": "No existe un límite nacional único para todas las áreas. Las regiones y municipios pueden establecer duraciones máximas. Por ejemplo, la normativa del Veneto contempla para sus áreas attrezzate una estancia máxima general de 48 horas consecutivas, salvo decisión municipal distinta."
+    },
+    "multas": {
+      "estado": "dependen_de_la_infraccion",
+      "detalle": "Las sanciones dependen de la conducta: estacionamiento indebido, incumplimiento de ordenanzas, vertidos, camping donde esté prohibido, infracciones ambientales o acceso indebido a espacios protegidos."
+    },
+    "normativa_local": {
+      "importancia": "muy_alta",
+      "detalle": "Además del Codice della Strada, deben comprobarse la normativa regional de turismo y camping y las ordenanzas del Comune. Las condiciones de las áreas de sosta pueden variar considerablemente entre regiones y municipios."
+    },
+    "regiones": {
+      "Toscana": {
+        "estado": "regulacion_regional_especifica",
+        "detalle": "La Ley Regional Toscana 61/2024, vigente con modificaciones posteriores, reconoce las aree di sosta camper como estructuras receptivas al aire libre. El Reglamento 47/R de 2025 fija requisitos específicos para estas áreas."
+      },
+      "Veneto": {
+        "estado": "areas_temporales_reguladas",
+        "detalle": "La normativa regional contempla áreas attrezzate per la sosta temporanea, instituidas por los municipios, con un máximo general de 48 horas consecutivas salvo decisión municipal diferente."
+      }
+    },
+    "nota_practica": {
+      "titulo": "En Italia, sosta no es necesariamente campeggio",
+      "detalle": "La referencia esencial es el artículo 185: si el estacionamiento está permitido y la autocaravana permanece sobre sus ruedas, sin ampliar su ocupación ni realizar vertidos, la sosta no se considera camping. Para desplegar equipamiento o realizar una estancia propiamente de camping, debe utilizarse un lugar donde esté autorizado."
+    },
+    "fuentes": [
+      {
+        "organismo": "Ministero delle Infrastrutture e dei Trasporti",
+        "titulo": "Direttiva sobre circulación y estacionamiento de autocaravan — aplicación del artículo 185",
+        "url": "https://mit.gov.it/sites/default/files/media/normativa/2016-02/Decreto_Ministeriale_protocollo_777_27-04-2006_all_1.pdf"
+      },
+      {
+        "organismo": "Normattiva",
+        "titulo": "Decreto Legislativo 30 aprile 1992, n. 285 — Codice della Strada, art. 185",
+        "url": "https://www.normattiva.it/"
+      },
+      {
+        "organismo": "Regione Toscana",
+        "titulo": "Legge regionale 31 dicembre 2024, n. 61 — Testo unico del turismo, art. 31 Aree di sosta camper",
+        "url": "https://raccoltanormativa.consiglio.regione.toscana.it/articolo?anc=art31&urndoc=urn:nir:regione.toscana:legge:2024-12-31;61"
+      },
+      {
+        "organismo": "Regione Toscana",
+        "titulo": "Regolamento 11 agosto 2025, n. 47/R — requisiti delle aree di sosta camper",
+        "url": "https://raccoltanormativa.consiglio.regione.toscana.it/articolo?anc=art26&urndoc=urn:nir:regione.toscana:regolamento.giunta:2025-08-11;47/R"
+      },
+      {
+        "organismo": "Regione del Veneto",
+        "titulo": "Legge regionale 14 giugno 2013, n. 11 — art. 36 Aree attrezzate per la sosta temporanea",
+        "url": "https://bur.regione.veneto.it/BurvServices/pubblica/DettaglioLegge.aspx?id=251477"
+      }
+    ]
+  }
+]
