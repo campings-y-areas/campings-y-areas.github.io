@@ -1,0 +1,91 @@
+[
+  {
+    "id": "normativa-md",
+    "pais": "Moldavia",
+    "actualizado": "2026-08-31",
+    "estado_general": "En la República de Moldavia las autocaravanas se someten a las reglas generales de circulación y estacionamiento y a las restricciones del terreno. En bosques existe una regla especialmente clara: los vehículos solo pueden acceder por carreteras según las condiciones fijadas por el gestor forestal y solo pueden estacionarse en lugares especialmente acondicionados.",
+    "resumen": "El Código Forestal vigente establece que el acceso de vehículos a terrenos forestales y otras superficies con vegetación forestal se permite únicamente por carreteras y según las condiciones del gestor. El estacionamiento dentro de esos terrenos solo está permitido en lugares especialmente acondicionados. El acceso recreativo a pie puede ser libre en determinados bosques, pero esto no concede un derecho equivalente al vehículo. En áreas naturales protegidas se aplica además su régimen específico de protección y gestión.",
+    "estacionamiento": {
+      "estado": "segun_normas_generales_y_restricciones_del_terreno",
+      "detalle": "Fuera de terrenos con regulación especial se aplican las normas generales de tráfico, señalización y las condiciones del propietario o gestor. Dentro del fondo forestal, el Código Forestal exige que el estacionamiento de vehículos se realice únicamente en lugares especialmente acondicionados.",
+      "condiciones_practicas": [
+        "Respetar señales y reglas generales de estacionamiento.",
+        "En bosques, circular únicamente por carreteras autorizadas por el gestor.",
+        "En terrenos forestales, estacionar únicamente en lugares especialmente acondicionados.",
+        "No interpretar el acceso recreativo de personas como permiso para entrar con la autocaravana."
+      ]
+    },
+    "pernocta": {
+      "estado": "depende_del_lugar_y_no_crea_derecho_de_estacionamiento",
+      "detalle": "No se ha identificado un derecho nacional general que permita pernoctar con autocaravana en cualquier lugar. Para pasar la noche, el vehículo debe encontrarse primero en un lugar donde su estacionamiento esté permitido y deben respetarse las condiciones del municipio, propietario o gestor."
+    },
+    "acampada_libre": {
+      "estado": "sin_derecho_general_y_sujeta_a_gestion_del_terreno",
+      "detalle": "El acceso recreativo a determinados bosques no equivale a un derecho de camping motorizado. Las actividades recreativas organizadas en terrenos forestales están sometidas a coordinación con autoridades locales y gestores, y las áreas protegidas tienen regímenes específicos."
+    },
+    "elementos_exteriores": {
+      "estado": "solo_donde_este_autorizada_la_actividad_recreativa_o_camping",
+      "detalle": "Toldos, mesas, sillas, barbacoas y otros elementos exteriores deben utilizarse únicamente en lugares donde el propietario, municipio o gestor permita esa actividad.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "barbacoa",
+        "equipamiento exterior"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "sin_costa_maritima",
+      "detalle": "Moldavia no tiene costa marítima. Junto a ríos, lagos y embalses deben respetarse las zonas de protección de aguas, accesos, propiedad, señalización y normativa ambiental; no existe un derecho general a estacionar o acampar con autocaravana junto al agua."
+    },
+    "espacios_naturales": {
+      "estado": "regimen_especifico_de_proteccion",
+      "detalle": "La Ley del Fondo de Áreas Naturales Protegidas por el Estado establece categorías con regímenes propios de protección y gestión. Las actividades que puedan afectar significativamente a áreas protegidas, sitios Emerald, especies o hábitats quedan sometidas a la legislación ambiental aplicable."
+    },
+    "bosques": {
+      "estado": "vehiculos_solo_por_carreteras_y_parking_solo_en_lugares_acondicionados",
+      "detalle": "El artículo 25 del Código Forestal establece que los vehículos solo pueden acceder a terrenos forestales y otros terrenos con vegetación forestal por carreteras, según las condiciones establecidas por el gestor. El estacionamiento únicamente está permitido en lugares especialmente acondicionados."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "sujeto_a_normas_estrictas_de_prevencion_de_incendios",
+      "detalle": "Las personas que acceden al bosque deben respetar las reglas de defensa contra incendios. El Código Forestal considera infracción el daño causado por incendios o por uso negligente del fuego y el incumplimiento de las reglas de prevención de incendios forestales."
+    },
+    "aguas_y_residuos": {
+      "estado": "prohibido_contaminar_el_bosque_y_realizar_vertidos",
+      "detalle": "El Código Forestal obliga a evitar la contaminación de bosques y terrenos con vegetación forestal y considera infracción su contaminación con residuos, sustancias químicas u otras sustancias nocivas. Las aguas negras y grises deben vaciarse en instalaciones apropiadas."
+    },
+    "limites_de_permanencia": {
+      "estado": "dependen_del_lugar",
+      "detalle": "No se ha identificado un límite nacional único específico para todas las autocaravanas estacionadas. La duración puede depender de señalización, municipio, propietario, gestor forestal, aparcamiento o régimen de un espacio protegido."
+    },
+    "multas": {
+      "estado": "dependen_de_la_infraccion",
+      "detalle": "Las sanciones dependen de la conducta concreta. El Código Forestal contempla como infracciones, entre otras, circular o estacionar vehículos en lugares prohibidos del fondo forestal, contaminar el bosque, causar daños mediante fuego o incumplir las reglas de prevención de incendios."
+    },
+    "normativa_local": {
+      "importancia": "alta",
+      "detalle": "Deben comprobarse siempre la señalización, las condiciones del municipio o propietario y las reglas del gestor forestal o del área protegida."
+    },
+    "nota_practica": {
+      "titulo": "Moldavia: en bosques la regla para la autocaravana es muy clara",
+      "detalle": "Aunque las personas pueden disfrutar de determinados bosques con fines recreativos, la autocaravana no puede entrar libremente por cualquier pista ni aparcar donde se quiera. Debe circular por carreteras admitidas por el gestor y estacionar únicamente en lugares especialmente acondicionados."
+    },
+    "fuentes": [
+      {
+        "organismo": "Legis.md — legislación oficial de la República de Moldavia",
+        "titulo": "Código Forestal CS69/2024 — artículo 25, acceso y estacionamiento de vehículos",
+        "url": "https://www.legis.md/cautare/downloadpdf/147965"
+      },
+      {
+        "organismo": "Legis.md — legislación oficial de la República de Moldavia",
+        "titulo": "Ley del Fondo de Áreas Naturales Protegidas por el Estado",
+        "url": "https://www.legis.md/cautare/downloadpdf/141074"
+      },
+      {
+        "organismo": "Ministerio de Medio Ambiente de Moldavia",
+        "titulo": "Áreas naturales protegidas — información oficial 2026",
+        "url": "https://www.old.mediu.gov.md/ro/content/5578"
+      }
+    ]
+  }
+]
