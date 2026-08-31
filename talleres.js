@@ -40,7 +40,8 @@ const archivosTalleres = {
   "Reino Unido": "talleres-reino-unido-definitivo.json?v=1",
   "Bulgaria": "talleres-bulgaria-definitivo.json?v=1",
   "Rumanía": "talleres-rumania-definitivo.json?v=1",
-  "Grecia": "talleres-grecia-definitivo.json?v=1"
+  "Grecia": "talleres-grecia-definitivo.json?v=1",
+  "Serbia": "talleres-serbia-definitivo.json?v=1"
 };
 
 function normalizarTexto(texto) {
