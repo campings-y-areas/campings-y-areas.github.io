@@ -46,7 +46,8 @@ const archivosTalleres = {
   "Montenegro": "talleres-montenegro-definitivo.json?v=1",
   "Albania": "talleres-albania-definitivo.json?v=1",
   "Macedonia del Norte": "talleres-macedonia-del-norte-definitivo.json?v=1",
-  "Ucrania": "talleres-ucrania-definitivo.json?v=1"
+  "Ucrania": "talleres-ucrania-definitivo.json?v=1",
+  "Chipre": "talleres-chipre-definitivo.json?v=1"
 };
 
 function normalizarTexto(texto) {
