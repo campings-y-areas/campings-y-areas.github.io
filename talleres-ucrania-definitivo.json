@@ -1,0 +1,32 @@
+[
+  {
+    "id": "taller-ua-001",
+    "nombre": "Camper Master",
+    "tipo": "taller",
+    "pais": "Ucrania",
+    "comunidad_autonoma": "Óblast de Kyiv",
+    "provincia": "Óblast de Kyiv",
+    "localidad": "Boryspil",
+    "lat": null,
+    "lon": null,
+    "telefono": "+380 67 995 37 37",
+    "web": "https://camper-master.com/ua/servis.html",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Camper%20Master%2C%20Pryvokzalna%2042%2C%20Boryspil%2C%20Ukraine",
+    "descripcion": "Taller especializado en reparación, mantenimiento y restauración de autocaravanas, campers y caravanas. Diagnóstico y reparación de equipos eléctricos y de gas, frenos, chasis, filtraciones, suelo, paredes y techo; también instala equipamiento adicional."
+  },
+  {
+    "id": "taller-ua-002",
+    "nombre": "Camper Comfort",
+    "tipo": "taller",
+    "pais": "Ucrania",
+    "comunidad_autonoma": "Óblast de Zhytomyr",
+    "provincia": "Óblast de Zhytomyr",
+    "localidad": "Berdychiv",
+    "lat": null,
+    "lon": null,
+    "telefono": "+380 97 576 77 56",
+    "web": "https://campercomfort.com.ua/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Camper%20Comfort%2C%20Korolenko%2041R%2C%20Berdychiv%2C%20Ukraine",
+    "descripcion": "Especialista en fabricación, conversión, reparación y mantenimiento técnico de campers y autocaravanas. Trabaja también con equipamiento del habitáculo, climatización, calefacción y accesorios de caravaning."
+  }
+]
