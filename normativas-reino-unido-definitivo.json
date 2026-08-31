@@ -1,0 +1,120 @@
+[
+  {
+    "id": "normativa-uk",
+    "pais": "Reino Unido",
+    "actualizado": "2026-08-31",
+    "estado_general": "En el Reino Unido no existe una única regla nacional que permita pernoctar con autocaravana en cualquier aparcamiento o terreno. El estacionamiento se rige por la señalización, el Highway Code y las órdenes/restricciones locales. La normativa sobre campings y uso del suelo también varía entre Inglaterra, Gales, Escocia e Irlanda del Norte.",
+    "resumen": "La regla práctica es sencilla: aparcar legalmente no equivale automáticamente a poder pernoctar. Hay que comprobar señales, restricciones del aparcamiento y normas locales. En Inglaterra y Gales, la Caravan Sites and Control of Development Act 1960 regula el uso de terrenos como caravan sites; normalmente se requiere licencia y, previamente, planificación, salvo excepciones. Escocia tiene un régimen distinto y el derecho de acceso responsable no debe confundirse con un derecho general a estacionar una autocaravana en cualquier lugar.",
+    "estacionamiento": {
+      "estado": "permitido_donde_sea_legal_y_no_haya_restriccion",
+      "detalle": "El Highway Code establece las reglas generales de estacionamiento y las prohibiciones indicadas por líneas amarillas, señalización y controles locales. Los aparcamientos pueden además reservarse a determinadas clases de vehículos o imponer límites horarios.",
+      "condiciones_practicas": [
+        "Comprobar siempre señales y términos del aparcamiento.",
+        "No estacionar donde lo prohíban líneas amarillas u otras restricciones.",
+        "No asumir que una plaza legal durante el día permite dormir de noche.",
+        "Respetar límites de altura, longitud, peso y clases de vehículos."
+      ]
+    },
+    "pernocta": {
+      "estado": "depende_de_senalizacion_propietario_y_normativa_local",
+      "detalle": "No existe un derecho general a dormir en una autocaravana simplemente porque esté correctamente estacionada. Muchos aparcamientos, áreas forestales y autoridades locales establecen prohibiciones o sistemas específicos para pernocta. En Escocia, por ejemplo, Forestry and Land Scotland autoriza una noche únicamente en determinados aparcamientos participantes mediante su programa Stay the Night."
+    },
+    "acampada_libre": {
+      "estado": "no_hay_derecho_general_con_autocaravana",
+      "detalle": "El wild camping a pie, especialmente en Escocia, tiene reglas diferentes del uso de vehículos. El derecho escocés de acceso responsable no convierte cualquier aparcamiento o terreno en un lugar autorizado para motorhomes o campervans. En Inglaterra y Gales, el uso de terrenos como caravan site está regulado por legislación específica y planificación, con excepciones limitadas."
+    },
+    "elementos_exteriores": {
+      "estado": "solo_donde_este_permitido",
+      "detalle": "En un aparcamiento ordinario, desplegar toldos, mesas, sillas, barbacoas o equipamiento de camping puede incumplir las condiciones del lugar o transformar el uso en camping. Deben utilizarse campings o áreas donde esté expresamente permitido.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "barbacoa",
+        "equipamiento exterior"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "depende_de_acceso_senalizacion_propiedad_y_normas_locales",
+      "detalle": "No existe un derecho general a entrar, estacionar o pernoctar con autocaravana en playas o terrenos costeros. Deben comprobarse las restricciones de acceso motorizado, aparcamiento y overnight parking del lugar concreto."
+    },
+    "espacios_naturales": {
+      "estado": "restricciones_frecuentes",
+      "detalle": "Parques nacionales, bosques y otros espacios naturales pueden tener restricciones propias. La señalización y las reglas del gestor prevalecen. En Escocia, Forestry and Land Scotland dispone de aparcamientos concretos donde permite una noche mediante Stay the Night."
+    },
+    "bosques": {
+      "estado": "no_existe_derecho_general_de_pernocta_en_vehiculo",
+      "detalle": "El acceso recreativo a bosques no implica automáticamente permiso para pernoctar en vehículo. Forestry and Land Scotland señala expresamente que en algunos aparcamientos la pernocta solo está permitida si forman parte de Stay the Night."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "segun_gestor_y_riesgo",
+      "detalle": "El fuego y las barbacoas están sujetos a las reglas del camping, aparcamiento, bosque o espacio natural. Pueden prohibirse totalmente por riesgo de incendio o por condiciones del gestor."
+    },
+    "aguas_y_residuos": {
+      "estado": "usar_instalaciones_adecuadas",
+      "detalle": "Los residuos, aguas grises y WC químicos deben gestionarse en instalaciones apropiadas. El código de conducta oficial para actividades de camping exentas exige medidas adecuadas para residuos, aguas residuales y sanitarios."
+    },
+    "limites_de_permanencia": {
+      "estado": "dependen_del_aparcamiento_y_autoridad_local",
+      "detalle": "No existe un límite nacional único para todos los aparcamientos de autocaravanas. Cada aparcamiento, autoridad local, propietario o gestor puede imponer sus propios límites. Algunos programas oficiales, como Stay the Night en Escocia, permiten una sola noche."
+    },
+    "multas": {
+      "estado": "dependen_de_la_infraccion",
+      "detalle": "Las sanciones pueden derivarse de incumplir restricciones de estacionamiento, órdenes locales, condiciones de un aparcamiento, legislación de sitios de caravanas, normas de espacios protegidos o vertidos. En materia de caravan sites, la normativa prevé sanciones por operar sin la licencia requerida o incumplir condiciones."
+    },
+    "normativa_local": {
+      "importancia": "muy_alta",
+      "detalle": "En el Reino Unido la señalización y regulación local son esenciales. Antes de pernoctar debe revisarse la normativa del council, propietario o gestor del aparcamiento y las diferencias entre Inglaterra, Gales, Escocia e Irlanda del Norte."
+    },
+    "regiones": [
+      {
+        "estado": "Inglaterra y Gales",
+        "detalle": "La Caravan Sites and Control of Development Act 1960 regula el uso de terrenos como caravan sites. Normalmente hace falta licencia del council y planificación previa, con determinadas excepciones legales. Para el viajero, esto refuerza que no debe asumirse que cualquier terreno o aparcamiento puede utilizarse como camping."
+      },
+      {
+        "estado": "Escocia",
+        "detalle": "La legislación y el Scottish Outdoor Access Code son distintos. El acceso responsable a la naturaleza no equivale a derecho general a estacionar o pernoctar con motorhome. Forestry and Land Scotland ofrece el programa Stay the Night en aparcamientos concretos, normalmente para una noche."
+      },
+      {
+        "estado": "Irlanda del Norte",
+        "detalle": "Tiene su propio marco de planificación, carreteras y caravan sites. Deben comprobarse las reglas locales y del aparcamiento concreto; no se debe aplicar automáticamente la normativa de Inglaterra y Gales."
+      }
+    ],
+    "nota_practica": {
+      "titulo": "En Reino Unido, aparcar y pernoctar son dos permisos distintos",
+      "detalle": "La opción segura es utilizar campings, motorhome stopovers o aparcamientos que indiquen expresamente overnight parking. Si un aparcamiento solo permite estacionar, eso no garantiza que dormir dentro esté permitido."
+    },
+    "fuentes": [
+      {
+        "organismo": "GOV.UK / Department for Transport",
+        "titulo": "The Highway Code — Waiting and parking (Rules 238 to 252)",
+        "url": "https://www.gov.uk/guidance/the-highway-code/waiting-and-parking-238-to-252"
+      },
+      {
+        "organismo": "UK Legislation",
+        "titulo": "Caravan Sites and Control of Development Act 1960",
+        "url": "https://www.legislation.gov.uk/ukpga/1960/62/contents"
+      },
+      {
+        "organismo": "GOV.UK",
+        "titulo": "Caravan site licence",
+        "url": "https://www.gov.uk/find-licences/caravan-site-licence"
+      },
+      {
+        "organismo": "Forestry and Land Scotland",
+        "titulo": "Stay the Night destinations",
+        "url": "https://forestryandland.gov.scot/visit/stay-the-night/stay-the-night-destinations"
+      },
+      {
+        "organismo": "Traffic Scotland",
+        "titulo": "Motorhoming / Camping in Scotland",
+        "url": "https://www.traffic.gov.scot/camping-in-scotland"
+      },
+      {
+        "organismo": "GOV.UK",
+        "titulo": "Camping and caravanning exemption certificates — model code of conduct",
+        "url": "https://www.gov.uk/government/publications/camping-and-caravanning-exemption-certificates-model-code-of-conduct/camping-and-caravanning-exemption-certificates-model-code-of-conduct"
+      }
+    ]
+  }
+]
