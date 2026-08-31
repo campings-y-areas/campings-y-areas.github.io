@@ -1,0 +1,96 @@
+[
+  {
+    "id": "normativa-lt",
+    "pais": "Lituania",
+    "actualizado": "2026-08-31",
+    "estado_general": "En Lituania las autocaravanas se rigen por las normas generales de circulación y estacionamiento, pero en bosques, orillas y espacios protegidos existen restricciones ambientales adicionales. La autoridad ambiental recuerda en 2026 que el camping en la naturaleza solo está permitido en lugares preparados para ello.",
+    "resumen": "La regla práctica es clara: en bosques los vehículos solo pueden circular por caminos forestales y el descanso con autocaravana debe hacerse en instalaciones adecuadas. La autoridad ambiental distingue entre áreas de descanso temporal, campings para tiendas y campings que admiten campers. Cerca de masas de agua debe respetarse, como regla general, una distancia mínima de 25 m para estacionar el vehículo, salvo las excepciones previstas cuando existe una carretera más próxima.",
+    "estacionamiento": {
+      "estado": "segun_ket_senalizacion_y_restricciones_ambientales",
+      "detalle": "Las Kelių eismo taisyklės (KET) regulan parada y estacionamiento. En tramos no iluminados durante la noche o con mala visibilidad, estacionar solo está permitido en aparcamientos o fuera de la carretera. En bosques y espacios naturales se añaden restricciones ambientales.",
+      "condiciones_practicas": [
+        "Respetar señales y marcas viales.",
+        "En bosques circular únicamente por caminos forestales.",
+        "Estacionar en bosques en aparcamientos destinados a vehículos o, cuando esté permitido, junto al camino sin bloquearlo ni dañar el suelo forestal.",
+        "Mantener normalmente al menos 25 m respecto de la orilla de masas de agua."
+      ]
+    },
+    "pernocta": {
+      "estado": "con_autocaravana_usar_lugares_adecuados",
+      "detalle": "La autoridad ambiental indica que, para proteger el suelo forestal, la estancia recreativa en bosques se realiza en instalaciones públicas preparadas. Las áreas de descanso son solo para descanso temporal y no permiten permanecer con tiendas ni campers; los campings sí pueden admitir campers."
+    },
+    "acampada_libre": {
+      "estado": "solo_en_lugares_preparados",
+      "detalle": "El Departamento de Protección Ambiental recuerda en 2026 que acampar en la naturaleza está permitido únicamente en lugares adaptados: campings, zonas de acampada y otros espacios recreativos habilitados según su función. En algunas reservas la acampada está totalmente prohibida o requiere permiso especial."
+    },
+    "elementos_exteriores": {
+      "estado": "solo_en_lugares_donde_el_camping_este_permitido",
+      "detalle": "Toldos, mesas, sillas, barbacoas y otros elementos exteriores deben utilizarse en lugares destinados al camping o donde la normativa específica permita esa actividad.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "barbacoa",
+        "equipamiento exterior"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "respetar_proteccion_de_orillas_y_reglas_especificas",
+      "detalle": "Junto a lagos, ríos y otras masas de agua, la autoridad ambiental recuerda que los vehículos no deben estacionarse a menos de 25 m de la orilla. Si existe una carretera a menor distancia, puede estacionarse en el arcén situado más lejos del agua y sin obstaculizar el tráfico. En el litoral y parques costeros se aplican además sus reglas específicas."
+    },
+    "espacios_naturales": {
+      "estado": "reglas_especificas_y_posibles_prohibiciones",
+      "detalle": "En áreas protegidas deben cumplirse tanto las KET como las reglas concretas del espacio. Algunas reservas limitan las visitas estacionalmente y la acampada puede estar prohibida o permitida únicamente con autorización o en lugares oficiales."
+    },
+    "bosques": {
+      "estado": "vehiculos_solo_por_caminos_y_descanso_en_lugares_habilitados",
+      "detalle": "Los vehículos a motor pueden entrar y circular por el bosque únicamente por caminos. Las rodadas, claros o superficies utilizadas informalmente no se convierten por ello en caminos o aparcamientos. El estacionamiento debe realizarse en lugares destinados o conforme a las condiciones permitidas junto al camino."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "solo_en_lugares_preparados",
+      "detalle": "La autoridad ambiental recuerda que no se pueden encender hogueras en cualquier lugar; deben utilizarse fogones o lugares de fuego habilitados. Pueden existir prohibiciones adicionales por riesgo de incendio."
+    },
+    "aguas_y_residuos": {
+      "estado": "no_contaminar_y_usar_instalaciones_adecuadas",
+      "detalle": "No deben abandonarse residuos ni realizarse vertidos en bosques, riberas o espacios protegidos. Las aguas negras y grises de autocaravana deben vaciarse en instalaciones apropiadas."
+    },
+    "limites_de_permanencia": {
+      "estado": "dependen_del_lugar",
+      "detalle": "No existe un límite nacional único específico para todas las autocaravanas estacionadas. Los límites pueden venir dados por señalización, municipio, gestor del aparcamiento o normativa del espacio protegido. Algunas áreas recreativas son expresamente solo para descanso temporal."
+    },
+    "multas": {
+      "estado": "dependen_de_la_infraccion",
+      "detalle": "Las sanciones dependen de la conducta: estacionamiento ilegal, circulación fuera de caminos forestales, estacionamiento demasiado cerca del agua, camping o fuego en lugar prohibido, residuos o incumplimiento de las reglas de un espacio protegido."
+    },
+    "normativa_local": {
+      "importancia": "alta",
+      "detalle": "Debe comprobarse la señalización y las reglas del municipio, parque, reserva o gestor forestal. En zonas como el Parque Nacional de Curonian Spit existen restricciones específicas adicionales para vehículos y autocaravanas."
+    },
+    "nota_practica": {
+      "titulo": "Lituania: no confundir área de descanso con camping para autocaravanas",
+      "detalle": "La autoridad ambiental diferencia claramente los lugares: algunas áreas recreativas permiten solo una parada temporal y no campers; para pasar la noche con autocaravana conviene utilizar un camping o instalación que admita expresamente campers. Cerca del agua, recordar además la regla general de 25 metros."
+    },
+    "fuentes": [
+      {
+        "organismo": "Departamento de Protección Ambiental de Lituania",
+        "titulo": "Reglas para descansar en bosques y áreas protegidas — 2026",
+        "url": "https://aad.lrv.lt/lt/naujienos/poilsiaujantiems-gamtoje-aplinkosaugininkai-primena-svarbiausias-taisykles-miskuose-ir-saugomose-teritorijose-lUyp/"
+      },
+      {
+        "organismo": "Departamento de Protección Ambiental de Lituania",
+        "titulo": "Requisitos ambientales para estacionar vehículos en la naturaleza",
+        "url": "https://aad.lrv.lt/lt/naujienos/poilsiauk-atsakingai-gamtoje-transporto-priemones-statykite-laikydamiesi-aplinkosauginiu-reikalavimu/"
+      },
+      {
+        "organismo": "e-Seimas — legislación oficial",
+        "titulo": "Kelių eismo taisyklės — reglas de parada y estacionamiento",
+        "url": "https://e-seimas.lrs.lt/rs/actualedition/TAIS.203613/sGWXkPhvxT/"
+      },
+      {
+        "organismo": "e-Seimas — legislación oficial",
+        "titulo": "Reglas de visitantes del Parque Nacional de Curonian Spit",
+        "url": "https://e-seimas.lrs.lt/rs/legalact/TAD/TAIS.329178/"
+      }
+    ]
+  }
+]
