@@ -1,0 +1,91 @@
+[
+  {
+    "id": "normativa-ro",
+    "pais": "Rumanía",
+    "actualizado": "2026-08-31",
+    "estado_general": "En Rumanía las autocaravanas se someten a las reglas generales de circulación y estacionamiento y a la señalización local. No existe un derecho general a utilizar cualquier aparcamiento o terreno como camping. En áreas naturales protegidas la normativa nacional prohíbe acampar fuera de lugares especialmente acondicionados, y los reglamentos de cada parque pueden imponer restricciones adicionales.",
+    "resumen": "La opción práctica es estacionar únicamente donde esté permitido y utilizar campings, áreas o lugares expresamente autorizados para una estancia de camping. La legislación turística rumana reconoce los campings como estructuras acondicionadas para alojar turistas en tiendas o caravanas, con parcelas donde se estaciona el vehículo y se instala el equipo. En áreas naturales protegidas, acampar fuera de lugares habilitados constituye infracción y puede implicar multas importantes.",
+    "estacionamiento": {
+      "estado": "segun_normas_generales_y_senalizacion",
+      "detalle": "La autocaravana debe respetar las reglas generales de parada y estacionamiento, señalización, restricciones municipales y condiciones del aparcamiento. Un estacionamiento permitido no debe interpretarse automáticamente como autorización para desplegar un campamento.",
+      "condiciones_practicas": [
+        "Respetar señalización y restricciones de estacionamiento.",
+        "Comprobar normas municipales y del propietario o gestor.",
+        "No bloquear vías ni accesos.",
+        "Para acampar, utilizar lugares específicamente autorizados."
+      ]
+    },
+    "pernocta": {
+      "estado": "depende_del_lugar_y_de_las_restricciones_aplicables",
+      "detalle": "No hay una autorización nacional general para convertir cualquier plaza de estacionamiento en lugar de alojamiento con autocaravana. La pernocta puede quedar limitada por señalización, ordenanzas locales, propiedad del terreno y reglas de espacios protegidos."
+    },
+    "acampada_libre": {
+      "estado": "prohibida_en_areas_naturales_protegidas_fuera_de_lugares_habilitados",
+      "detalle": "La OUG 57/2007 considera infracción acampar en la superficie de áreas naturales protegidas fuera de lugares especialmente acondicionados y también incumplir los reglamentos específicos de los lugares de camping."
+    },
+    "elementos_exteriores": {
+      "estado": "solo_donde_este_autorizado",
+      "detalle": "Toldos, mesas, sillas, barbacoas y otros elementos son propios de una actividad de camping. Deben utilizarse en campings, áreas o terrenos donde esta actividad esté permitida.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "barbacoa",
+        "equipamiento exterior"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "sujetas_a_normas_locales_y_ambientales",
+      "detalle": "En la costa del Mar Negro y en playas, dunas y zonas protegidas deben respetarse accesos, señalización, propiedad y normativa ambiental. No existe un derecho general a entrar o acampar con autocaravana en la playa."
+    },
+    "espacios_naturales": {
+      "estado": "camping_solo_en_lugares_habilitados",
+      "detalle": "La OUG 57/2007 establece sanciones por acampar en áreas naturales protegidas fuera de lugares especialmente acondicionados. Los reglamentos de parques concretos pueden ser aún más precisos; por ejemplo, el Parque Natural Apuseni permite camping únicamente en zonas acondicionadas o autorizadas y señalizadas."
+    },
+    "bosques": {
+      "estado": "acceso_y_actividades_sujetos_a_normativa_forestal",
+      "detalle": "Los terrenos forestales están sujetos al Código Silvícola y a restricciones de acceso y protección. Cuando además forman parte de un área natural protegida, se aplican las reglas específicas del espacio protegido."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "fuertemente_restringido_en_espacios_naturales",
+      "detalle": "Los reglamentos de áreas protegidas pueden limitar el fuego a lugares especialmente acondicionados. En el Parque Natural Apuseni, por ejemplo, el fuego al aire libre solo está permitido en hogares especialmente habilitados dentro de espacios de camping legalmente establecidos."
+    },
+    "aguas_y_residuos": {
+      "estado": "usar_instalaciones_adecuadas",
+      "detalle": "Aguas negras, aguas grises y residuos deben eliminarse mediante instalaciones apropiadas. Los reglamentos de espacios protegidos prohíben el abandono de residuos."
+    },
+    "limites_de_permanencia": {
+      "estado": "dependen_del_lugar",
+      "detalle": "No existe un único límite nacional de permanencia aplicable a todos los aparcamientos de autocaravanas. Los límites pueden proceder de señalización, municipio, propietario, camping o gestor del espacio protegido."
+    },
+    "multas": {
+      "estado": "importantes_en_areas_protegidas",
+      "detalle": "La OUG 57/2007, en su artículo 53, incluye entre las infracciones acampar en áreas naturales protegidas fuera de lugares especialmente acondicionados. Para las infracciones incluidas en ese apartado establece multas de 3.000 a 6.000 lei para personas físicas y de 25.000 a 50.000 lei para personas jurídicas."
+    },
+    "normativa_local": {
+      "importancia": "alta",
+      "detalle": "Municipios, propietarios, gestores de aparcamientos y administraciones de parques pueden establecer restricciones adicionales. Debe comprobarse siempre la señalización y el reglamento del lugar concreto."
+    },
+    "nota_practica": {
+      "titulo": "En Rumanía hay que extremar la precaución dentro de espacios naturales protegidos",
+      "detalle": "Para estacionar se siguen las reglas generales y locales, pero en parques y otras áreas naturales protegidas el camping fuera de lugares habilitados está expresamente sancionado. Lo más seguro es utilizar campings, áreas de autocaravanas o lugares donde la pernocta esté expresamente autorizada."
+    },
+    "fuentes": [
+      {
+        "organismo": "Portal Legislativ — Gobierno de Rumanía",
+        "titulo": "OUG 57/2007 — régimen de áreas naturales protegidas",
+        "url": "https://legislatie.just.ro/Public/DetaliiDocument/83289"
+      },
+      {
+        "organismo": "Portal Legislativ — Gobierno de Rumanía",
+        "titulo": "Reglamento del Parque Natural Apuseni — camping, fuego y residuos",
+        "url": "https://legislatie.just.ro/Public/DetaliiDocumentAfis/257853"
+      },
+      {
+        "organismo": "Portal Legislativ — Gobierno de Rumanía",
+        "titulo": "Normas de clasificación turística — camping y parcelas de acampada, actualización 2026",
+        "url": "https://legislatie.just.ro/Public/DetaliiDocument/312184"
+      }
+    ]
+  }
+]
