@@ -1,0 +1,62 @@
+[
+  {
+    "id": "taller-rs-001",
+    "nombre": "Etno Kamp",
+    "tipo": "taller",
+    "pais": "Serbia",
+    "comunidad_autonoma": "Srem",
+    "provincia": "Srem",
+    "localidad": "Ruma",
+    "lat": null,
+    "lon": null,
+    "telefono": "+381 22 490 210",
+    "web": "https://etnokamp.rs/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Etno%20Kamp%2C%20Industrijska%20bb%2C%20Ruma%2C%20Serbia",
+    "descripcion": "Centro especializado en autocaravanas y camper. Distribuidor y servicio técnico; figura oficialmente como Service Partner de Sunlight. Venta, mantenimiento y soporte para vehículos camper."
+  },
+  {
+    "id": "taller-rs-002",
+    "nombre": "GMW Campers",
+    "tipo": "taller",
+    "pais": "Serbia",
+    "comunidad_autonoma": "Pomoravlje",
+    "provincia": "Pomoravlje",
+    "localidad": "Jagodina",
+    "lat": null,
+    "lon": null,
+    "telefono": "+381 62 567 000",
+    "web": "https://gmwcampers.com/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=GMW%20Campers%2C%20Bosanska%2040%2C%20Jagodina%2C%20Serbia",
+    "descripcion": "Empresa serbia especializada en transformación, personalización y equipamiento de camper vans. Trabaja con Fiat Ducato, Peugeot Boxer, Citroën Jumper, Renault Master, VW Crafter, Transporter y otros modelos; actividad registrada también como mantenimiento y reparación de vehículos."
+  },
+  {
+    "id": "taller-rs-003",
+    "nombre": "Galaxy Camper",
+    "tipo": "taller",
+    "pais": "Serbia",
+    "comunidad_autonoma": "Beograd",
+    "provincia": "Beograd",
+    "localidad": "Beograd",
+    "lat": null,
+    "lon": null,
+    "telefono": "+381 62 262 045",
+    "web": "https://www.galaxycamper.com/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Galaxy%20Camper%2C%20Beograd%2C%20Serbia",
+    "descripcion": "Especialista en diseño y fabricación de campers a medida. Realiza interiores personalizados, producción completa y soluciones de camperización en Belgrado."
+  },
+  {
+    "id": "taller-rs-004",
+    "nombre": "Pomoć na putu i servis",
+    "tipo": "taller",
+    "pais": "Serbia",
+    "comunidad_autonoma": "Beograd",
+    "provincia": "Beograd",
+    "localidad": "Beograd",
+    "lat": null,
+    "lon": null,
+    "telefono": "+381 60 51 51 724",
+    "web": "https://pomocnaputuiservis.rs/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Pomo%C4%87%20na%20putu%20i%20servis%2C%20Belostenska%209%2C%20Bor%C4%8Da%2C%20Beograd%2C%20Serbia",
+    "descripcion": "Servicio para vehículos camper y caravanas con reparación en taller o en carretera, mantenimiento básico, asistencia y remolque. Dispone de paquetes específicos para autocaravanas y caravanas."
+  }
+]
