@@ -1,0 +1,105 @@
+[
+  {
+    "id": "normativa-ch",
+    "pais": "Suiza",
+    "actualizado": "2026-08-31",
+    "estado_general": "En Suiza no existe una autorización federal única para pernoctar o acampar libremente con autocaravana en cualquier lugar. El estacionamiento se rige por la normativa federal de tráfico, pero la pernocta recreativa, el camping fuera de terrenos acondicionados y muchas restricciones concretas dependen de los cantones, municipios, propietarios del terreno y normas de protección de la naturaleza.",
+    "resumen": "Una autocaravana puede estacionar donde lo permita la Verkehrsregelnverordnung (VRV), la señalización y las normas locales. Sin embargo, que un vehículo pueda estacionar no significa automáticamente que esté permitido utilizarlo como alojamiento. Para pernoctar fuera de campings o Stellplätze debe comprobarse la regulación del cantón y municipio. En varios tipos de espacios protegidos el camping libre está expresamente prohibido.",
+    "estacionamiento": {
+      "estado": "permitido_con_condiciones",
+      "detalle": "El artículo 19 de la Verkehrsregelnverordnung (VRV) regula el estacionamiento general. Se considera estacionamiento dejar el vehículo más allá del tiempo necesario para subir o bajar personas o cargar y descargar. Está prohibido, entre otros lugares, donde esté prohibida la parada, en determinadas carreteras principales, en carriles bici, puentes y delante de accesos. El vehículo debe estacionarse ocupando el menor espacio posible y sin impedir la salida de otros.",
+      "condiciones_practicas": [
+        "Respetar señalización y marcas viales.",
+        "Comprobar restricciones específicas de la plaza o municipio.",
+        "Estacionar ocupando el menor espacio posible.",
+        "No bloquear otros vehículos, accesos ni zonas prohibidas.",
+        "No asumir que una plaza de estacionamiento autoriza automáticamente la pernocta."
+      ]
+    },
+    "pernocta": {
+      "estado": "depende_del_canton_y_municipio",
+      "detalle": "La legislación federal de tráfico consultada regula el estacionamiento, pero no establece un derecho general a dormir dentro de una autocaravana estacionada en cualquier lugar. La autorización para pernoctar fuera de campings o áreas habilitadas puede depender de normas cantonales, municipales, policiales, de planificación territorial o del propietario del terreno. La recomendación oficial de Suiza Turismo es utilizar campings y consultar al municipio o a la policía local si el camping libre está permitido."
+    },
+    "acampada_libre": {
+      "estado": "sin_regla_nacional_unica_y_con_restricciones_locales",
+      "detalle": "El camping libre no está regulado de forma uniforme para todo el país. Los cantones y municipios pueden permitirlo, restringirlo o prohibirlo. También puede ser necesario el consentimiento del propietario del terreno. En determinadas áreas protegidas existe prohibición expresa. Antes de acampar o pernoctar fuera de un camping debe comprobarse la normativa concreta del lugar."
+    },
+    "elementos_exteriores": {
+      "estado": "pueden_convertir_el_estacionamiento_en_camping",
+      "detalle": "Sacar mesas, sillas, desplegar toldos, utilizar patas estabilizadoras o instalar equipamiento exterior puede hacer que la estancia deje de considerarse simple estacionamiento y pase a estar sometida a las normas sobre camping y uso del terreno.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "patas estabilizadoras",
+        "equipamiento exterior de camping"
+      ]
+    },
+    "costas_y_lagos": {
+      "estado": "restricciones_locales_y_de_proteccion",
+      "detalle": "Suiza no tiene costa marítima, pero las orillas de lagos y ríos pueden estar sometidas a protección ambiental, regulación municipal o restricciones específicas de acceso y estacionamiento. No existe una autorización general para acampar junto a lagos o cursos de agua."
+    },
+    "espacios_naturales": {
+      "estado": "restricciones_importantes",
+      "detalle": "En determinados espacios naturales protegidos existen prohibiciones expresas. El BAFU indica, por ejemplo, que en los eidgenössische Jagdbanngebiete está prohibido el camping libre. Las zonas de tranquilidad para la fauna, reservas, humedales y otras áreas protegidas pueden tener restricciones adicionales que deben comprobarse individualmente."
+    },
+    "bosques": {
+      "estado": "acceso_a_pie_no_equivale_a_acceso_con_vehiculo_o_camping",
+      "detalle": "El derecho suizo permite en general el acceso recreativo a bosques y pastos en la medida habitual, pero esto no implica autorización para entrar con vehículos, estacionar una autocaravana o instalar un campamento. Las restricciones concretas dependen de la legislación forestal y cantonal."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "depende_del_riesgo_y_de_ordenes_cantonales_o_municipales",
+      "detalle": "El riesgo de incendio forestal y las prohibiciones de fuego son gestionados por las autoridades cantonales y, en algunos casos, municipales. El BAFU no dicta una prohibición nacional única de fuego. Antes de encender fuego o utilizar una barbacoa al aire libre debe comprobarse la situación local y respetar cualquier prohibición vigente.",
+      "nota_2026": "En agosto de 2026 el BAFU advierte de sequedad acusada y elevada peligrosidad de incendio en diversas regiones de Suiza, por lo que las restricciones pueden cambiar rápidamente."
+    },
+    "aguas_y_residuos": {
+      "estado": "usar_instalaciones_autorizadas",
+      "detalle": "Las aguas grises, aguas negras y residuos deben eliminarse mediante instalaciones apropiadas. Una plaza de estacionamiento ordinaria no autoriza a verter aguas residuales ni residuos en el terreno, alcantarillas no destinadas a ello o espacios naturales."
+    },
+    "limites_de_permanencia": {
+      "estado": "sin_limite_federal_unico_para_autocaravanas",
+      "detalle": "La normativa federal consultada no establece un límite único de horas o días aplicable a todas las autocaravanas estacionadas en Suiza. Los límites pueden establecerse mediante señalización, reglamentos cantonales, municipales o condiciones particulares de los aparcamientos y áreas."
+    },
+    "multas": {
+      "estado": "dependen_de_la_infraccion_y_del_canton",
+      "detalle": "No existe una multa única para la pernocta o camping de autocaravanas en todo el país. Las sanciones dependen de la infracción concreta: estacionamiento contrario a la normativa de tráfico, incumplimiento de reglamentos municipales o cantonales, entrada o camping en espacios protegidos, uso ilegal del fuego u otras normas aplicables."
+    },
+    "normativa_local": {
+      "importancia": "muy_alta",
+      "detalle": "La normativa cantonal y municipal es decisiva. Antes de pernoctar fuera de un camping o área autorizada conviene comprobar la señalización y consultar la normativa municipal o policial local. Suiza Turismo recomienda expresamente utilizar campings y preguntar al municipio o a la policía si el camping libre está permitido."
+    },
+    "fuentes": [
+      {
+        "organismo": "Fedlex — Confederación Suiza",
+        "titulo": "Verkehrsregelnverordnung (VRV) — Art. 19 Parkieren im allgemeinen",
+        "url": "https://www.fedlex.admin.ch/eli/cc/1962/1364_1409_1420/de"
+      },
+      {
+        "organismo": "Bundesamt für Umwelt (BAFU)",
+        "titulo": "Eidgenössische Jagdbanngebiete — Schutzbestimmungen",
+        "url": "https://www.bafu.admin.ch/de/jagdbanngebiete"
+      },
+      {
+        "organismo": "Bundesamt für Umwelt (BAFU)",
+        "titulo": "Freizeit und Erholung — Wald",
+        "url": "https://www.bafu.admin.ch/de/freizeit-und-erholung"
+      },
+      {
+        "organismo": "MeteoSchweiz / Confederación Suiza",
+        "titulo": "Waldbrand — Verhaltensempfehlungen",
+        "url": "https://www.meteoschweiz.admin.ch/wetter/gefahren/verhaltensempfehlungen/waldbrand.html"
+      },
+      {
+        "organismo": "Bundesamt für Umwelt (BAFU)",
+        "titulo": "Sommer 2026: Trockenheit und hohe Waldbrandgefahr",
+        "fecha": "2026-08-28",
+        "url": "https://www.bafu.admin.ch/de/sommer-2026-trockenheit-und-hohe-wassertemperaturen"
+      },
+      {
+        "organismo": "Schweiz Tourismus",
+        "titulo": "11 Tipps für verantwortungsvolles Reisen in der Schweiz",
+        "url": "https://www.myswitzerland.com/de/planung/ueber-die-schweiz/nachhaltigkeit/listicles/10-tipps-fuer-verantwortungsvolles-reisen-in-der-schweiz/"
+      }
+    ]
+  }
+]
