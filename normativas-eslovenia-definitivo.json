@@ -1,0 +1,97 @@
+[
+  {
+    "id": "normativa-si",
+    "pais": "Eslovenia",
+    "actualizado": "2026-08-31",
+    "estado_general": "En Eslovenia la acampada libre no está permitida. La información turística oficial indica que está prohibido acampar en lugares no designados y que la pernocta con autocaravana debe realizarse en campings o áreas específicas para autocaravanas. El estacionamiento ordinario sigue sujeto a las normas de tráfico y a las restricciones municipales.",
+    "resumen": "Para pasar la noche con una autocaravana debe utilizarse un camping o un postajališče za avtodome (PZA) autorizado. Un aparcamiento ordinario no debe interpretarse automáticamente como lugar de pernocta. En parques nacionales y espacios protegidos existen restricciones adicionales; en el Parque Nacional de Triglav, por ejemplo, está prohibido estacionar caravanas y autocaravanas fuera de los lugares designados.",
+    "estacionamiento": {
+      "estado": "permitido_segun_senalizacion_y_normas_locales",
+      "detalle": "Las autocaravanas pueden estacionar donde lo permitan las normas de circulación y la señalización, pero los municipios pueden establecer restricciones específicas. El estacionamiento legal no constituye por sí mismo autorización para utilizar el vehículo como alojamiento nocturno.",
+      "condiciones_practicas": [
+        "Respetar señales y marcas de estacionamiento.",
+        "Comprobar las normas municipales.",
+        "Para pernoctar utilizar camping o PZA autorizado.",
+        "En parques y espacios protegidos utilizar únicamente lugares expresamente designados."
+      ]
+    },
+    "pernocta": {
+      "estado": "solo_en_lugares_autorizados",
+      "detalle": "La información turística oficial recomienda y encuadra la pernocta de autocaravanas en campings y áreas específicas para autocaravanas. La acampada en lugares no designados está prohibida, y pueden existir ordenanzas municipales adicionales."
+    },
+    "acampada_libre": {
+      "estado": "prohibida",
+      "detalle": "La Oficina de Turismo de Eslovenia indica expresamente que el camping libre está prohibido y que solo se puede acampar en campings designados. Deben respetarse además las normas locales y de los espacios protegidos."
+    },
+    "elementos_exteriores": {
+      "estado": "solo_en_lugares_donde_este_permitido",
+      "detalle": "Toldos, mesas, sillas y demás equipamiento de camping deben utilizarse únicamente en campings o áreas donde las condiciones de uso lo permitan. No deben desplegarse en un aparcamiento ordinario.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "patas estabilizadoras",
+        "equipamiento exterior"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "restricciones_locales",
+      "detalle": "La costa eslovena es reducida y está intensamente regulada. Los municipios costeros pueden imponer restricciones de estacionamiento y acceso; la pernocta debe realizarse en instalaciones autorizadas."
+    },
+    "espacios_naturales": {
+      "estado": "restricciones_estrictas",
+      "detalle": "En áreas protegidas se aplican reglas específicas. En el Parque Nacional de Triglav está prohibido estacionar caravanas y autocaravanas fuera de los lugares designados, además de otras restricciones sobre camping, fuego y circulación."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "sujeto_a_prohibiciones_y_riesgo_de_incendio",
+      "detalle": "En espacios naturales y durante periodos de alto riesgo pueden existir prohibiciones de fuego. En el Parque Nacional de Triglav el fuego solo puede hacerse en lugares especialmente preparados y para fines permitidos."
+    },
+    "aguas_y_residuos": {
+      "estado": "usar_instalaciones_autorizadas",
+      "detalle": "Las aguas grises, negras y residuos deben eliminarse mediante instalaciones adecuadas de campings o PZA. Está prohibido contaminar o abandonar residuos en el medio natural."
+    },
+    "limites_de_permanencia": {
+      "estado": "dependen_del_area_y_municipio",
+      "detalle": "No existe un único límite nacional de estancia aplicable a todas las áreas para autocaravanas. Cada PZA, camping o municipio puede establecer condiciones y duración máxima propias."
+    },
+    "multas": {
+      "estado": "dependen_de_la_infraccion",
+      "detalle": "Las sanciones varían según la infracción: camping ilegal, incumplimiento de una ordenanza municipal, estacionamiento indebido, infracciones en espacios protegidos, fuego o abandono de residuos."
+    },
+    "normativa_local": {
+      "importancia": "muy_alta",
+      "detalle": "Los municipios regulan estacionamientos y pueden establecer restricciones específicas para autocaravanas. Antes de pernoctar debe comprobarse la señalización y utilizarse un camping o PZA reconocido."
+    },
+    "nota_practica": {
+      "titulo": "Buscar la señal PZA o un camping",
+      "detalle": "En Eslovenia la opción segura para pasar la noche es un postajališče za avtodome (PZA) o un camping. No conviene utilizar un aparcamiento normal como lugar de pernocta aunque el vehículo pueda estacionar allí."
+    },
+    "fuentes": [
+      {
+        "organismo": "Slovenian Tourist Board — I feel Slovenia",
+        "titulo": "Camping in Slovenia — reglas sobre camping libre",
+        "url": "https://www.slovenia.info/en/plan-your-trip/accommodation/campsites"
+      },
+      {
+        "organismo": "Slovenian Tourist Board — I feel Slovenia",
+        "titulo": "Motorhome travel and camper stops in Slovenia",
+        "url": "https://www.slovenia.info/en/stories/travelling-around-slovenia-by-motorhome"
+      },
+      {
+        "organismo": "Triglavski narodni park",
+        "titulo": "Rules of conduct in Triglav National Park",
+        "url": "https://www.tnp.si/en/visit/information/rules-of-conduct/"
+      },
+      {
+        "organismo": "PISRS — Pravno-informacijski sistem Republike Slovenije",
+        "titulo": "Zakon o pravilih cestnega prometa (ZPrCP)",
+        "url": "https://pisrs.si/"
+      },
+      {
+        "organismo": "Policija Republike Slovenije",
+        "titulo": "Traffic regulations and road safety information",
+        "url": "https://www.policija.si/eng/prevention/traffic-safety"
+      }
+    ]
+  }
+]
