@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Normativas | Campings & Áreas</title>
+
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="apple-touch-icon" href="logo.png">
+
+  <link rel="stylesheet" href="style.css?v=2">
+</head>
+
+<body>
+
+  <header>
+    <h1>
+      <img src="logo.png" alt="Campings & Áreas" class="logo">
+      Campings & Áreas
+    </h1>
+  </header>
+
+  <nav class="menu">
+
+    <a href="index.html">🏠 Inicio</a>
+    <a href="campings.html">🏕️ Campings</a>
+    <a href="areas.html?tipo=area">🚐 Áreas</a>
+    <a href="areas.html?tipo=parking">🅿️ Parkings</a>
+    <a href="acampadas.html">🥾 Acampadas</a>
+    <a href="lugares.html">📍 Lugares</a>
+    <a href="talleres.html">🛠️ Talleres</a>
+    <a href="servicios.html">🔧 Servicios</a>
+    <a href="normativas.html">📘 Normativas</a>
+
+  </nav>
+
+  <main>
+
+    <section class="bienvenida">
+
+      <h2>📘 Normativas</h2>
+
+      <p>
+        Consulta las normas principales para viajar en autocaravana,
+        camper o caravana: estacionamiento, pernocta, acampada,
+        playas, espacios naturales, vertidos y otras restricciones.
+      </p>
+
+      <p class="estado">
+        ⚠️ Las normas locales y regionales pueden establecer restricciones adicionales.
+        Comprueba siempre la señalización del lugar.
+      </p>
+
+    </section>
+
+
+    <section class="categorias">
+
+      <div class="buscador-campings">
+
+        <label for="paisNormativa">País</label>
+
+        <select id="paisNormativa">
+          <option value="España">España</option>
+        </select>
+
+      </div>
+
+
+      <div id="resultadosNormativas">
+
+        <p class="contador-resultados">
+          Cargando normativa de España...
+        </p>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <script src="normativas.js?v=1"></script>
+
+</body>
+
+</html>
