@@ -1,0 +1,102 @@
+[
+  {
+    "id": "normativa-no",
+    "pais": "Noruega",
+    "actualizado": "2026-08-31",
+    "estado_general": "En Noruega el derecho de acceso público (allemannsretten) se aplica a las personas, no concede libertad ilimitada a los vehículos. Una autocaravana puede estacionarse junto a una carretera pública en terreno no cultivado cuando el estacionamiento sea legal y no exista prohibición; en carreteras privadas también puede ser posible salvo prohibición del propietario. No está permitido conducir ni estacionar la autocaravana fuera de carretera en terreno natural.",
+    "resumen": "La Dirección Noruega de Medio Ambiente confirma que se puede acampar con autocaravana junto a una vía donde el estacionamiento sea legal, respetando las reglas de allemannsretten: al menos 150 metros de una casa o cabaña habitada y, como regla general, no más de dos noches en el mismo lugar sin permiso. No se puede conducir o estacionar campo a través. Pueden existir restricciones locales y en espacios protegidos.",
+    "estacionamiento": {
+      "estado": "permitido_junto_a_vias_donde_sea_legal",
+      "detalle": "Junto a carreteras públicas se permite estacionar en el arcén junto a terreno no cultivado salvo señalización o regulación que lo prohíba. En carreteras privadas también se admite en principio salvo que el propietario haya prohibido el tráfico o estacionamiento.",
+      "condiciones_practicas": [
+        "No conducir ni estacionar fuera de carretera en terreno natural.",
+        "Respetar señales de prohibición de estacionamiento, pernocta o acceso.",
+        "No utilizar apartaderos de cruce como estacionamiento.",
+        "Mantener al menos 150 metros respecto de casas y cabañas habitadas cuando se acampe.",
+        "Comprobar restricciones municipales y de espacios protegidos."
+      ]
+    },
+    "pernocta": {
+      "estado": "posible_con_condiciones",
+      "detalle": "La autoridad ambiental noruega contempla expresamente camping con coche, autocaravana o vehículo similar junto a carretera. Deben cumplirse las normas de acceso público: distancia mínima de 150 metros de casa o cabaña habitada y, como regla general, máximo dos noches en el mismo lugar, salvo permiso del propietario o excepciones aplicables en zonas remotas."
+    },
+    "acampada_libre": {
+      "estado": "permitida_con_limites_pero_sin_conducir_fuera_de_via",
+      "detalle": "Noruega permite una forma amplia de camping libre en terreno no cultivado bajo allemannsretten, pero el acceso motorizado no forma parte de ese derecho. Con autocaravana hay que permanecer en vías y lugares donde el vehículo pueda estacionarse legalmente."
+    },
+    "elementos_exteriores": {
+      "estado": "con_prudencia_y_segun_lugar",
+      "detalle": "El derecho de acceso exige consideración y no causar daños ni molestias. En aparcamientos, áreas de descanso o lugares con regulación específica deben respetarse las condiciones del lugar; desplegar equipamiento puede estar restringido.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "barbacoa",
+        "equipamiento exterior"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "sin_derecho_a_conducir_sobre_terreno_natural",
+      "detalle": "Aunque muchas costas forman parte del terreno no cultivado accesible a pie, la autocaravana no puede conducirse o estacionarse campo a través. Deben utilizarse carreteras, aparcamientos y lugares legalmente accesibles."
+    },
+    "espacios_naturales": {
+      "estado": "pueden_tener_reglas_especiales",
+      "detalle": "Reservas naturales, parques y áreas recreativas pueden prohibir o limitar camping, circulación, estacionamiento y fuego. Las reglas del espacio concreto prevalecen sobre la regla general."
+    },
+    "bosques": {
+      "estado": "acceso_a_pie_amplio_pero_no_motorizado",
+      "detalle": "Los bosques pueden formar parte de utmark y estar abiertos al acceso público, pero ello no autoriza a circular o estacionar una autocaravana fuera de carretera."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "prohibicion_general_estacional_con_excepcion_por_ausencia_evidente_de_riesgo",
+      "detalle": "Como regla general no se pueden encender hogueras en bosques u otro terreno natural entre el 15 de abril y el 15 de septiembre. Puede existir excepción cuando sea evidente que no hay riesgo de incendio, además de prohibiciones locales más estrictas."
+    },
+    "aguas_y_residuos": {
+      "estado": "usar_instalaciones_de_vaciado",
+      "detalle": "Los residuos deben retirarse y los WC químicos, aguas negras y demás residuos de autocaravana deben vaciarse únicamente en instalaciones destinadas a ello. Las áreas paisajísticas de descanso no deben utilizarse como puntos de vaciado salvo indicación expresa."
+    },
+    "limites_de_permanencia": {
+      "estado": "dos_noches_como_regla_general",
+      "detalle": "Como regla general del derecho de acceso, no se debe acampar en el mismo lugar más de dos noches sin permiso del propietario. En alta montaña o zonas remotas existen excepciones; además pueden existir normas locales más restrictivas."
+    },
+    "multas": {
+      "estado": "dependen_de_la_infraccion",
+      "detalle": "Las consecuencias dependen de la infracción concreta: conducción motorizada ilegal fuera de carretera, incumplimiento de señalización, restricciones locales o de espacios protegidos, fuego prohibido, residuos u otras normas ambientales."
+    },
+    "normativa_local": {
+      "importancia": "muy_alta_en_zonas_turisticas",
+      "detalle": "Municipios y áreas turísticas pueden establecer restricciones de camping o pernocta. En zonas muy visitadas, incluidas partes de Lofoten y del oeste de Noruega, existen restricciones locales y debe respetarse siempre la señalización."
+    },
+    "nota_practica": {
+      "titulo": "Noruega permite bastante, pero la autocaravana debe quedarse en la vía",
+      "detalle": "Puede encontrarse un lugar legal junto a una carretera y pasar la noche respetando 150 metros de viviendas y la regla general de dos noches. Lo que no permite allemannsretten es entrar con la autocaravana en un prado, bosque, playa o cualquier terreno natural fuera de carretera."
+    },
+    "fuentes": [
+      {
+        "organismo": "Miljødirektoratet",
+        "titulo": "Preguntas y respuestas sobre allemannsretten — camping con autocaravana",
+        "url": "https://www.miljodirektoratet.no/ansvarsomrader/friluftsliv/friluftsliv-og-allemannsretten/ofte-stilte-sporsmal-om-allemannsretten/"
+      },
+      {
+        "organismo": "Lovdata",
+        "titulo": "Friluftsloven — Ley de actividades al aire libre",
+        "url": "https://lovdata.no/nav/lov/1957-06-28-16"
+      },
+      {
+        "organismo": "Lovdata",
+        "titulo": "Motorferdselloven — circulación motorizada en terreno natural",
+        "url": "https://lovdata.no/nav/lov/1977-06-10-82"
+      },
+      {
+        "organismo": "Visit Norway",
+        "titulo": "The Camping Code — código de conducta para camping",
+        "url": "https://www.visitnorway.com/hotels-more/caravan-camping/the-camping-code/"
+      },
+      {
+        "organismo": "Visit Norway",
+        "titulo": "Right to roam — reglas para motorhomes y caravanas",
+        "url": "https://www.visitnorway.com/plan-your-trip/travel-tips-a-z/right-of-access/"
+      }
+    ]
+  }
+]
