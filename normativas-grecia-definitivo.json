@@ -1,0 +1,96 @@
+[
+  {
+    "id": "normativa-gr",
+    "pais": "Grecia",
+    "actualizado": "2026-08-31",
+    "estado_general": "Grecia distingue entre estacionamiento conforme al Código de Circulación y la instalación o camping. Tras las reformas de 2025, el nuevo Código de Circulación (Ley 5209/2025) regula expresamente el estacionamiento de autocaravanas, mientras que el artículo 7.18 de la Ley 4276/2014, modificado por la Ley 5170/2025, prohíbe la instalación de tiendas y la ocupación abusiva con caravanas/autocaravanas de espacios como yacimientos arqueológicos, costas, playas, bordes de bosques públicos y otros espacios comunes.",
+    "resumen": "Una autocaravana puede estacionar donde lo permita el Código de Circulación, pero durante el estacionamiento no puede ocupar espacio adicional alrededor del vehículo. Dentro de zonas habitadas, las autocaravanas de más de 7,50 m y las caravanas remolcadas tienen un máximo de 24 horas continuas; para autocaravanas de hasta 7,50 m esa limitación específica de 24 horas no aparece en el artículo 38. Fuera de zonas habitadas, el estacionamiento se permite en lugares destinados a ello o, si no existen, en el arcén conforme al artículo 38.5, salvo prohibición. Esto no autoriza montar un campamento.",
+    "estacionamiento": {
+      "estado": "permitido_segun_codigo_de_circulacion",
+      "detalle": "El artículo 38 de la Ley 5209/2025 permite la parada y estacionamiento cuando no generan peligro u obstrucción y no existen señales o marcas que lo prohíban. Dentro de zonas habitadas, las autocaravanas de más de 7,50 m y las caravanas remolcadas no pueden permanecer estacionadas más de 24 horas continuas. Fuera de zonas habitadas se aplica el artículo 38.5.",
+      "condiciones_practicas": [
+        "Respetar señalización y marcas viales.",
+        "Autocaravana de más de 7,50 m: máximo 24 horas continuas en zona habitada.",
+        "Autocaravana de hasta 7,50 m: no está sujeta a ese límite específico de 24 horas, sin perjuicio de otras restricciones.",
+        "No ocupar espacio adicional alrededor del vehículo."
+      ]
+    },
+    "pernocta": {
+      "estado": "no_confundir_con_camping",
+      "detalle": "La normativa distingue el estacionamiento del uso del espacio como instalación de camping. Una respuesta oficial del Ministerio de Turismo al Parlamento en septiembre de 2025 confirmó que el estacionamiento sigue rigiéndose por el Código de Circulación y que pueden utilizarse aparcamientos públicos, municipales o privados cuando sea legal, siempre que no se desplieguen mesas, sillas, toldos u otros elementos que evidencien una instalación de camping."
+    },
+    "acampada_libre": {
+      "estado": "prohibida_en_lugares_indicados_por_ley",
+      "detalle": "El artículo 7.18 de la Ley 4276/2014, modificado por la Ley 5170/2025, prohíbe instalar tiendas y estacionar/instalar caravanas y autocaravanas en yacimientos arqueológicos, costas, playas, bordes de bosques públicos y, en general, espacios comunes, sin perjuicio de las reglas de estacionamiento del Código de Circulación. La interpretación oficial posterior distingue el simple estacionamiento legal de la instalación abusiva o camping."
+    },
+    "elementos_exteriores": {
+      "estado": "prohibidos_durante_simple_estacionamiento",
+      "detalle": "La Ley 5170/2025 establece expresamente que, al estacionar donde lo permite el Código de Circulación, no puede ocuparse espacio adicional al del vehículo. La respuesta oficial del Ministerio de Turismo cita mesas, sillas y apertura de toldo como ejemplos de actos que indican instalación/camping.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "barbacoa",
+        "cualquier elemento que ocupe espacio adicional"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "camping_e_instalacion_prohibidos",
+      "detalle": "La Ley 4276/2014 modificada incluye expresamente costas (aigialos) y playas entre los lugares donde está prohibida la instalación de tiendas y caravanas/autocaravanas como camping. El estacionamiento vial legal debe analizarse separadamente conforme al Código de Circulación y a la señalización concreta."
+    },
+    "espacios_naturales": {
+      "estado": "restricciones_adicionales",
+      "detalle": "Bosques públicos, sus bordes, espacios protegidos y otros lugares naturales pueden estar sujetos a prohibiciones ambientales, forestales o locales adicionales. La Ley 4276/2014 incluye expresamente los bordes de bosques públicos dentro de las zonas protegidas frente a la instalación/camping."
+    },
+    "bosques": {
+      "estado": "camping_restringido_y_fuego_sujeto_a_normativa",
+      "detalle": "No debe instalarse un campamento con autocaravana en bosques o bordes de bosques públicos. Además se aplican las normas forestales y las prohibiciones estacionales de prevención de incendios."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "sujeto_a_prohibiciones_por_incendio_y_reglas_del_lugar",
+      "detalle": "En zonas forestales y durante periodos de alto riesgo pueden imponerse prohibiciones estrictas de fuego y barbacoas. Deben seguirse las instrucciones de Protección Civil, bomberos y autoridades locales."
+    },
+    "aguas_y_residuos": {
+      "estado": "usar_instalaciones_adecuadas",
+      "detalle": "Aguas negras, aguas grises y residuos deben vaciarse únicamente en instalaciones adecuadas de campings o puntos autorizados. No deben realizarse vertidos en aparcamientos, playas o espacios naturales."
+    },
+    "limites_de_permanencia": {
+      "estado": "24_horas_para_determinados_vehiculos_en_zona_habitada",
+      "detalle": "Dentro de zonas habitadas, el artículo 38.6 del nuevo Código prohíbe estacionar más de 24 horas continuas caravanas remolcadas y autocaravanas de longitud total superior a 7,50 m. La limitación específica no incluye las autocaravanas de hasta 7,50 m, aunque siguen sometidas a señalización y restricciones locales."
+    },
+    "multas": {
+      "estado": "300_euros_en_infracciones_de_camping_del_articulo_7_18",
+      "detalle": "La Ley 5170/2025 establece para las infracciones del artículo 7.18 una multa de 300 € por persona, elemento de camping o medio de transporte, además de prever hasta tres meses de prisión cuando corresponda y no exista una pena más grave. Las infracciones puramente de estacionamiento se sancionan conforme al Código de Circulación."
+    },
+    "normativa_local": {
+      "importancia": "alta",
+      "detalle": "Municipios, autoridades portuarias y gestores pueden establecer aparcamientos específicos y restricciones de circulación o estacionamiento. Siempre debe comprobarse la señalización del lugar."
+    },
+    "nota_practica": {
+      "titulo": "Grecia: desde 2025 está mucho más claro qué es estacionar y qué es acampar",
+      "detalle": "Puedes estacionar una autocaravana donde lo permita el Código de Circulación, pero debe mantenerse estrictamente dentro de su propio perímetro: sin toldo, mesas, sillas ni ocupación adicional. Para hacer vida exterior o instalarse, utiliza un camping o lugar autorizado."
+    },
+    "fuentes": [
+      {
+        "organismo": "Hellenic Parliament / Ministerio de Turismo",
+        "titulo": "Respuesta oficial de 03/09/2025 sobre estacionamiento de caravanas y autocaravanas",
+        "url": "https://www.hellenicparliament.gr/UserFiles/67715b2c-ec81-4f0c-ad6a-476a34d732bd/13040245.pdf"
+      },
+      {
+        "organismo": "ELINYAE",
+        "titulo": "Ley 5209/2025 — nuevo Código de Circulación, artículo 38",
+        "url": "https://www.elinyae.gr/ethniki-nomothesia/n-52092025-fek-100a-1362025"
+      },
+      {
+        "organismo": "ELINYAE",
+        "titulo": "Ley 4276/2014 — marco turístico y artículo 7",
+        "url": "https://www.elinyae.gr/ethniki-nomothesia/n-42762014-fek-155a-3072014"
+      },
+      {
+        "organismo": "TaxHeaven — texto legislativo",
+        "titulo": "Ley 5170/2025, artículo 27 — modificación del artículo 7.18",
+        "url": "https://www.taxheaven.gr/law/5170/2025/arthro/27"
+      }
+    ]
+  }
+]
