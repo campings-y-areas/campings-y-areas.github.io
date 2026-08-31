@@ -1,0 +1,17 @@
+[
+  {
+    "id": "taller-cy-001",
+    "nombre": "Black Rhino Cyprus",
+    "tipo": "taller",
+    "pais": "Chipre",
+    "comunidad_autonoma": "Nicosia",
+    "provincia": "Nicosia",
+    "localidad": "Strovolos",
+    "lat": null,
+    "lon": null,
+    "telefono": "+357 22 252424",
+    "web": "https://blackrhinocy.com/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Black%20Rhino%20Cyprus%2C%20Kampou%2018%2C%20Strovolos%202330%2C%20Nicosia%2C%20Cyprus",
+    "descripcion": "Especialista en campers, autocaravanas y caravanas. Ofrece instalación, mantenimiento, reparaciones, mejoras y construcción completa de campervans, además de equipamiento y repuestos para sistemas de vivienda, agua, electricidad, climatización, gas, ventanas y accesorios."
+  }
+]
