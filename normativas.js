@@ -9,7 +9,8 @@ const archivosNormativas = {
   "Francia": "normativas-francia-definitivo.json?v=1",
   "Alemania": "normativas-alemania-definitivo.json?v=1",
   "Suiza": "normativas-suiza-definitivo.json?v=1",
-  "Austria": "normativas-austria-definitivo.json?v=1"
+  "Austria": "normativas-austria-definitivo.json?v=1",
+  "Bélgica": "normativas-belgica-definitivo.json?v=1"
 };
 
 
@@ -346,6 +347,58 @@ function mostrarNormativa(normativa) {
           detalle.textContent =
             info.detalle;
 
+          seccion.appendChild(detalle);
+        }
+      });
+
+    resultados.appendChild(seccion);
+  }
+
+
+  // ========================================
+  // NORMATIVA POR REGIÓN
+  // ========================================
+
+  if (
+    normativa.regiones &&
+    typeof normativa.regiones === "object"
+  ) {
+
+    const seccion =
+      document.createElement("article");
+
+    seccion.className =
+      "resultado-camping";
+
+    const h3 =
+      document.createElement("h3");
+
+    h3.textContent =
+      "🗺️ Normativa por región";
+
+    seccion.appendChild(h3);
+
+    Object.entries(normativa.regiones)
+      .forEach(([nombre, info]) => {
+
+        const subtitulo =
+          document.createElement("h4");
+
+        subtitulo.textContent = nombre;
+        seccion.appendChild(subtitulo);
+
+        if (info?.estado) {
+          const estado = document.createElement("p");
+          estado.className = "tipo-punto";
+          estado.textContent =
+            `Estado: ${String(info.estado).replaceAll("_", " ")}`;
+          seccion.appendChild(estado);
+        }
+
+        if (info?.detalle) {
+          const detalle = document.createElement("p");
+          detalle.className = "descripcion-acampada";
+          detalle.textContent = info.detalle;
           seccion.appendChild(detalle);
         }
       });
