@@ -342,3 +342,9 @@
 .poi-etiqueta { display:inline-block; margin-top:6px; padding:3px 7px; border-radius:999px; background:#eef5f0; font-size:.78rem; }
 .poi-cargando { margin-top:8px; font-size:.9rem; opacity:.75; }
 @media (max-width:760px){ .poi-lista{grid-template-columns:1fr;} }
+
+
+/* ===== FASE 5: ruta recalculada por paradas elegidas ===== */
+.badge-recomendada { display:inline-block; margin-left:8px; padding:3px 7px; border-radius:999px; background:#fff1d6; border:1px solid #f0d39b; font-size:.76rem; font-weight:700; vertical-align:middle; }
+.aviso-optimizacion { margin:14px 0; padding:12px 14px; border-radius:10px; background:#edf8f1; border:1px solid #cce4d4; }
+.aviso-optimizacion strong { font-weight:800; }
