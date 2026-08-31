@@ -1,0 +1,101 @@
+[
+  {
+    "id": "normativa-pl",
+    "pais": "Polonia",
+    "actualizado": "2026-08-31",
+    "estado_general": "Polonia no dispone actualmente de una regulación nacional específica y completa que diferencie de forma uniforme el estacionamiento, la pernocta y el camping de autocaravanas. En 2026 el propio Parlamento planteó esta laguna normativa al Ministerio de Infraestructuras. En la práctica, una autocaravana puede estacionarse conforme a las reglas generales de tráfico y a la señalización, pero deben respetarse restricciones locales, forestales y de espacios protegidos.",
+    "resumen": "La legislación polaca trata el estacionamiento mediante las reglas generales aplicables a vehículos; no existe actualmente un límite nacional específico de 24 horas para autocaravanas. Sin embargo, en parques nacionales y reservas está prohibido acampar salvo en lugares designados, y la circulación de vehículos está restringida a vías autorizadas. En los bosques, el camping solo está permitido en lugares designados, incluido el programa oficial 'Zanocuj w lesie', que está orientado a pernocta en naturaleza y no constituye un derecho general a entrar con autocaravana.",
+    "estacionamiento": {
+      "estado": "segun_normas_generales_de_trafico_y_senalizacion",
+      "detalle": "Las autocaravanas se someten a las reglas generales de estacionamiento de vehículos y a la señalización. No existe actualmente una normativa nacional específica que establezca por sí sola un tiempo máximo uniforme de estacionamiento para campers.",
+      "condiciones_practicas": [
+        "Respetar señales, prohibiciones y zonas de estacionamiento de pago.",
+        "No ocupar lugares donde las dimensiones o señalización no permitan el vehículo.",
+        "No confundir estacionamiento permitido con autorización para acampar.",
+        "Comprobar restricciones municipales y del gestor del terreno."
+      ]
+    },
+    "pernocta": {
+      "estado": "sin_regla_nacional_especifica_uniforme",
+      "detalle": "El marco polaco carece de una regulación nacional específica que defina de forma uniforme cuándo dormir dentro de una autocaravana estacionada pasa a considerarse camping. Una interpelación parlamentaria de mayo de 2026 pidió precisamente crear definiciones y reglas específicas; el Ministerio respondió en junio de 2026. Por ello deben comprobarse señalización, normativa local y reglas del lugar."
+    },
+    "acampada_libre": {
+      "estado": "restringida_en_bosques_y_espacios_protegidos",
+      "detalle": "En bosques estatales, Lasy Państwowe indica que el camping está permitido en lugares designados y fuera de ellos está prohibido, aunque el programa 'Zanocuj w lesie' habilita áreas específicas para pernocta legal en naturaleza. En parques nacionales y reservas naturales, la Ley de Protección de la Naturaleza prohíbe acampar salvo en lugares designados por la autoridad competente."
+    },
+    "elementos_exteriores": {
+      "estado": "usar_solo_donde_sea_compatible_con_el_lugar",
+      "detalle": "Mesas, sillas, toldos, barbacoas y otros elementos convierten la estancia en una actividad claramente recreativa/camping y no deben desplegarse en un aparcamiento ordinario si las reglas del lugar no lo permiten.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "barbacoa",
+        "equipamiento exterior"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "dependen_de_accesos_senalizacion_y_normativa_local",
+      "detalle": "No existe un derecho general a conducir, estacionar o acampar con autocaravana en playas o dunas. Deben utilizarse accesos y aparcamientos autorizados y respetarse las restricciones de protección ambiental y municipales."
+    },
+    "espacios_naturales": {
+      "estado": "camping_solo_en_lugares_designados",
+      "detalle": "La Ley de Protección de la Naturaleza prohíbe en parques nacionales y reservas el tráfico de vehículos fuera de vías autorizadas y el camping fuera de lugares designados por el director del parque nacional o la autoridad ambiental regional."
+    },
+    "bosques": {
+      "estado": "camping_en_lugares_designados",
+      "detalle": "Lasy Państwowe señala que el camping forestal es legal en lugares designados. El programa 'Zanocuj w lesie' ofrece áreas adicionales para pasar la noche legalmente en el bosque, pero no supone autorización general para acceder o estacionar una autocaravana en cualquier zona forestal."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "fuertemente_restringido_en_bosques",
+      "detalle": "Según Lasy Państwowe y el artículo 30 de la Ley de Bosques, en terrenos forestales, terrenos entre bosques y hasta 100 metros del límite del bosque no se puede encender fuego fuera de lugares designados por el propietario o el nadleśniczy (responsable forestal)."
+    },
+    "aguas_y_residuos": {
+      "estado": "usar_instalaciones_adecuadas",
+      "detalle": "Aguas negras, aguas grises y residuos deben gestionarse mediante instalaciones apropiadas de campings o puntos de servicio. No deben realizarse vertidos en aparcamientos, bosques ni espacios naturales."
+    },
+    "limites_de_permanencia": {
+      "estado": "sin_limite_nacional_especifico_para_todas_las_autocaravanas",
+      "detalle": "No existe actualmente un máximo nacional uniforme específico para campers estacionados en todo el país. Los límites pueden venir dados por señalización, zonas de estacionamiento, municipios, propietarios o gestores de espacios naturales."
+    },
+    "multas": {
+      "estado": "dependen_de_la_infraccion",
+      "detalle": "Las sanciones dependen de la conducta concreta: estacionamiento ilegal, incumplimiento de señalización, acceso o camping no autorizado en parques/reservas, fuego ilegal en bosques, vertidos u otras infracciones ambientales."
+    },
+    "normativa_local": {
+      "importancia": "alta",
+      "detalle": "Las restricciones municipales y las reglas del gestor del aparcamiento o terreno son importantes debido a la ausencia de una regulación nacional específica y uniforme para la pernocta en autocaravanas."
+    },
+    "nota_practica": {
+      "titulo": "Polonia todavía no tiene una regla nacional específica para dormir en una autocaravana estacionada",
+      "detalle": "En 2026 el propio Sejm trató la necesidad de distinguir legalmente entre estacionamiento y camping de campers. Para viajar hoy, la regla prudente es estacionar únicamente donde sea legal, no desplegar elementos de camping y comprobar restricciones locales. En parques nacionales, reservas y bosques hay reglas específicas mucho más restrictivas."
+    },
+    "fuentes": [
+      {
+        "organismo": "Sejm Rzeczypospolitej Polskiej",
+        "titulo": "Interpelacja nr 17011 (2026) — estacionamiento y pernocta de vehículos camping",
+        "url": "https://www.sejm.gov.pl/sejm10.nsf/interpelacja.xsp?nr=17011&typ=INT"
+      },
+      {
+        "organismo": "ELI / Gobierno de Polonia",
+        "titulo": "Ustawa o ochronie przyrody — restricciones en parques nacionales y reservas",
+        "url": "https://eli.gov.pl/api/acts/DU/2024/1478/text.html"
+      },
+      {
+        "organismo": "Lasy Państwowe",
+        "titulo": "Biwakowanie — reglas de camping y fuego en bosques",
+        "url": "https://www.lasy.gov.pl/pl/informacje/faq/biwakowanie"
+      },
+      {
+        "organismo": "Lasy Państwowe",
+        "titulo": "Zanocuj w lesie — cómo pernoctar legalmente en el bosque",
+        "url": "https://www.lasy.gov.pl/pl/informacje/aktualnosci/zanocuj-w-lesie-2013-jak-legalnie-nocowac-w-naturze"
+      },
+      {
+        "organismo": "ELI / Gobierno de Polonia",
+        "titulo": "Ley de servicios hoteleros — definición legal de kemping para campobus y caravanas",
+        "url": "https://eli.gov.pl/api/acts/DU/2023/1944/text.html"
+      }
+    ]
+  }
+]
