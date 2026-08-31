@@ -15,27 +15,7 @@ const archivosNormativas = {
   "Luxemburgo": "normativas-luxemburgo-definitivo.json?v=1",
   "Andorra": "normativas-andorra-definitivo.json?v=1",
   "Italia": "normativas-italia-definitivo.json?v=1",
-  "Eslovenia": "normativas-eslovenia-definitivo.json?v=1",
-  "Croacia": "normativas-croacia-definitivo.json?v=1",
-  "Montenegro": "normativas-montenegro-definitivo.json?v=1",
-  "Bosnia y Herzegovina": "normativas-bosnia-y-herzegovina-definitivo.json?v=1",
-  "Dinamarca": "normativas-dinamarca-definitivo.json?v=1",
-  "Suecia": "normativas-suecia-definitivo.json?v=1",
-  "Noruega": "normativas-noruega-definitivo.json?v=1",
-  "Finlandia": "normativas-finlandia-definitivo.json?v=1",
-  "Islandia": "normativas-islandia-definitivo.json?v=1",
-  "Irlanda": "normativas-irlanda-definitivo.json?v=1",
-  "Reino Unido": "normativas-reino-unido-definitivo.json?v=1",
-  "Polonia": "normativas-polonia-definitivo.json?v=1",
-  "República Checa": "normativas-republica-checa-definitivo.json?v=1",
-  "Eslovaquia": "normativas-eslovaquia-definitivo.json?v=1",
-  "Hungría": "normativas-hungria-definitivo.json?v=1",
-  "Rumanía": "normativas-rumania-definitivo.json?v=1",
-  "Bulgaria": "normativas-bulgaria-definitivo.json?v=1",
-  "Serbia": "normativas-serbia-definitivo.json?v=1",
-  "Macedonia del Norte": "normativas-macedonia-del-norte-definitivo.json?v=1",
-  "Albania": "normativas-albania-definitivo.json?v=1",
-  "Grecia": "normativas-grecia-definitivo.json?v=1"
+  "Eslovenia": "normativas-eslovenia-definitivo.json?v=1"
 };
 
 
@@ -219,7 +199,7 @@ function mostrarNormativa(normativa) {
     document.createElement("h2");
 
   titulo.textContent =
-    `🇪🇸 ${normativa.pais}`;
+    normativa.pais;
 
   cabecera.appendChild(titulo);
 
@@ -284,13 +264,16 @@ function mostrarNormativa(normativa) {
     ["Pernocta", "🌙", normativa.pernocta],
     ["Acampada libre", "🏕️", normativa.acampada_libre],
     ["Elementos exteriores", "🪑", normativa.elementos_exteriores],
-    ["Costas y playas", "🏖️", normativa.costas_y_playas],
+    ["Costas, playas y lagos", "🏖️", normativa.costas_y_playas || normativa.costas_y_lagos],
     ["Espacios naturales", "🌲", normativa.espacios_naturales],
     ["Fuego y barbacoas", "🔥", normativa.fuego_y_barbacoa],
     ["Aguas y residuos", "🚰", normativa.aguas_y_residuos],
     ["Límites de permanencia", "⏱️", normativa.limites_de_permanencia],
     ["Multas", "💶", normativa.multas],
-    ["Normativa local", "🏛️", normativa.normativa_local]
+    ["Normativa local", "🏛️", normativa.normativa_local],
+    ["Bosques", "🌳", normativa.bosques],
+    ["Vehículos pesados y remolques", "🚛", normativa.vehiculos_pesados_y_remolques],
+    ["Nota práctica", "ℹ️", normativa.nota_practica]
 
   ];
 
@@ -312,6 +295,121 @@ function mostrarNormativa(normativa) {
       }
     }
   );
+
+
+  // ========================================
+  // BUNDESLÄNDER
+  // ========================================
+
+  if (
+    normativa.bundeslander &&
+    typeof normativa.bundeslander === "object"
+  ) {
+
+    const seccion =
+      document.createElement("article");
+
+    seccion.className =
+      "resultado-camping";
+
+    const h3 =
+      document.createElement("h3");
+
+    h3.textContent =
+      "🗺️ Normativa por Bundesland";
+
+    seccion.appendChild(h3);
+
+    Object.entries(normativa.bundeslander)
+      .forEach(([nombre, info]) => {
+
+        const subtitulo =
+          document.createElement("h4");
+
+        subtitulo.textContent = nombre;
+        seccion.appendChild(subtitulo);
+
+        if (info?.estado) {
+          const estado =
+            document.createElement("p");
+
+          estado.className =
+            "tipo-punto";
+
+          estado.textContent =
+            `Estado: ${String(info.estado).replaceAll("_", " ")}`;
+
+          seccion.appendChild(estado);
+        }
+
+        if (info?.detalle) {
+          const detalle =
+            document.createElement("p");
+
+          detalle.className =
+            "descripcion-acampada";
+
+          detalle.textContent =
+            info.detalle;
+
+          seccion.appendChild(detalle);
+        }
+      });
+
+    resultados.appendChild(seccion);
+  }
+
+
+  // ========================================
+  // NORMATIVA POR REGIÓN
+  // ========================================
+
+  if (
+    normativa.regiones &&
+    typeof normativa.regiones === "object"
+  ) {
+
+    const seccion =
+      document.createElement("article");
+
+    seccion.className =
+      "resultado-camping";
+
+    const h3 =
+      document.createElement("h3");
+
+    h3.textContent =
+      "🗺️ Normativa por región";
+
+    seccion.appendChild(h3);
+
+    Object.entries(normativa.regiones)
+      .forEach(([nombre, info]) => {
+
+        const subtitulo =
+          document.createElement("h4");
+
+        subtitulo.textContent = nombre;
+        seccion.appendChild(subtitulo);
+
+        if (info?.estado) {
+          const estado = document.createElement("p");
+          estado.className = "tipo-punto";
+          estado.textContent =
+            `Estado: ${String(info.estado).replaceAll("_", " ")}`;
+          seccion.appendChild(estado);
+        }
+
+        if (info?.detalle) {
+          const detalle = document.createElement("p");
+          detalle.className = "descripcion-acampada";
+          detalle.textContent = info.detalle;
+          seccion.appendChild(detalle);
+        }
+      });
+
+    resultados.appendChild(seccion);
+  }
 
 
   // ========================================
