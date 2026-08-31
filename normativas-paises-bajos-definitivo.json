@@ -1,0 +1,97 @@
+[
+  {
+    "id": "normativa-nl",
+    "pais": "Países Bajos",
+    "actualizado": "2026-08-31",
+    "estado_general": "En Países Bajos no existe un derecho general a pernoctar libremente con una autocaravana en cualquier aparcamiento. El estacionamiento se rige por las normas de tráfico y la señalización, mientras que dormir o recrearse dentro de un vehículo puede estar prohibido o limitado por la Algemene Plaatselijke Verordening (APV) de cada municipio. Para pernoctar, la opción jurídicamente más segura es utilizar campings o camperplaatsen autorizados.",
+    "resumen": "Una autocaravana puede estacionar donde esté permitido para su categoría y dimensiones, pero el estacionamiento legal no implica automáticamente que se pueda pasar la noche. Muchos municipios regulan en su APV el uso de vehículos como alojamiento o recreo y pueden prohibir dormir en la vía pública salvo en lugares designados. Las reglas cambian de un municipio a otro, por lo que debe comprobarse siempre la señalización y la APV local.",
+    "estacionamiento": {
+      "estado": "permitido_con_condiciones",
+      "detalle": "Las autocaravanas están sujetas a las reglas generales de estacionamiento y a la señalización. Los municipios pueden añadir restricciones mediante su APV, incluidas limitaciones para vehículos grandes, recreativos o utilizados como alojamiento.",
+      "condiciones_practicas": [
+        "Respetar señales, marcas y zonas de estacionamiento regulado.",
+        "Comprobar la APV del municipio.",
+        "Utilizar camperplaatsen señalizados cuando se pretenda pernoctar.",
+        "No asumir que un aparcamiento ordinario autoriza a dormir dentro del vehículo."
+      ]
+    },
+    "pernocta": {
+      "estado": "depende_del_municipio",
+      "detalle": "La pernocta en una autocaravana fuera de campings o camperplaatsen depende principalmente de las normas municipales. El modelo de APV de la VNG contempla expresamente que el municipio pueda prohibir utilizar vehículos como alojamiento o para recreo fuera de lugares designados. Por tanto, no existe una autorización nacional uniforme para dormir en cualquier aparcamiento."
+    },
+    "acampada_libre": {
+      "estado": "no_existe_un_derecho_general",
+      "detalle": "El camping libre fuera de terrenos o lugares autorizados puede ser restringido por las ordenanzas municipales y por las normas del propietario o gestor del terreno. Deben utilizarse campings, natuurkampeerterreinen u otros lugares autorizados cuando corresponda."
+    },
+    "elementos_exteriores": {
+      "estado": "pueden_convertir_la_estancia_en_uso_recreativo_o_camping",
+      "detalle": "Sacar toldos, mesas, sillas u otros elementos fuera de la autocaravana refuerza el carácter recreativo o de camping y puede infringir las normas del aparcamiento, camperplaats o municipio.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "patas estabilizadoras",
+        "equipamiento exterior"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "restricciones_locales",
+      "detalle": "Las zonas costeras, dunas, playas y aparcamientos turísticos pueden estar sometidos a restricciones municipales y de protección de la naturaleza. Debe comprobarse la señalización y la normativa del municipio o del gestor del espacio."
+    },
+    "espacios_naturales": {
+      "estado": "acceso_y_pernocta_sujetos_a_normas_del_gestor",
+      "detalle": "En espacios naturales gestionados por Staatsbosbeheer u otros gestores deben respetarse las condiciones de acceso y uso indicadas en cada zona. La posibilidad de acampar o pernoctar no se deduce del simple acceso público al espacio natural."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "segun_lugar_y_riesgo",
+      "detalle": "El uso de fuego y barbacoas depende de las normas del terreno, camping o espacio natural y de las medidas temporales por riesgo de incendio. En naturaleza debe seguirse siempre la señalización e instrucciones del gestor."
+    },
+    "aguas_y_residuos": {
+      "estado": "usar_instalaciones_autorizadas",
+      "detalle": "Las aguas negras y grises y los residuos deben eliminarse mediante instalaciones adecuadas. Los camperplaatsen y campings pueden disponer de puntos específicos de servicio; el estacionamiento ordinario no autoriza vertidos."
+    },
+    "limites_de_permanencia": {
+      "estado": "sin_limite_nacional_unico",
+      "detalle": "No existe un límite nacional único de permanencia para todas las autocaravanas. La señalización, el régimen del aparcamiento, el camperplaats y la APV municipal pueden fijar límites concretos."
+    },
+    "multas": {
+      "estado": "dependen_de_la_infraccion_y_municipio",
+      "detalle": "Las sanciones dependen de la infracción concreta: estacionamiento indebido, incumplimiento de una APV, pernocta donde esté prohibida, acceso indebido a espacios naturales, vertidos u otras conductas."
+    },
+    "normativa_local": {
+      "importancia": "muy_alta",
+      "detalle": "La APV municipal es fundamental. Dos municipios pueden aplicar reglas diferentes sobre pernocta y uso recreativo de vehículos. Antes de dormir fuera de un camping o camperplaats debe comprobarse la normativa del municipio concreto."
+    },
+    "nota_practica": {
+      "titulo": "Comprobar siempre la APV municipal",
+      "detalle": "En Países Bajos la regla práctica más segura es utilizar un camperplaats o camping autorizado. Una plaza donde sea legal estacionar no debe interpretarse automáticamente como autorización para pernoctar."
+    },
+    "fuentes": [
+      {
+        "organismo": "Rijksoverheid",
+        "titulo": "Verkeersregels — parkeren en verkeersborden",
+        "url": "https://www.rijksoverheid.nl/onderwerpen/verkeersregels"
+      },
+      {
+        "organismo": "Wetten.nl — Gobierno de Países Bajos",
+        "titulo": "Reglement verkeersregels en verkeerstekens 1990 (RVV 1990)",
+        "url": "https://wetten.overheid.nl/BWBR0004825/"
+      },
+      {
+        "organismo": "Vereniging van Nederlandse Gemeenten (VNG)",
+        "titulo": "Model Algemene Plaatselijke Verordening (APV)",
+        "url": "https://vng.nl/artikelen/model-algemene-plaatselijke-verordening"
+      },
+      {
+        "organismo": "Overheid.nl",
+        "titulo": "Lokale wet- en regelgeving — consulta de APV municipales",
+        "url": "https://lokaleregelgeving.overheid.nl/"
+      },
+      {
+        "organismo": "Staatsbosbeheer",
+        "titulo": "Regels en toegankelijkheid in natuurgebieden",
+        "url": "https://www.staatsbosbeheer.nl/contact/toegangsregels"
+      }
+    ]
+  }
+]
