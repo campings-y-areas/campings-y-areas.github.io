@@ -1,0 +1,96 @@
+[
+  {
+    "id": "normativa-ie",
+    "pais": "Irlanda",
+    "actualizado": "2026-08-31",
+    "estado_general": "En Irlanda no existe un derecho nacional general de acampada libre con autocaravana. Estacionar se rige por las normas de tráfico, la señalización y las ordenanzas (bye-laws) de cada autoridad local; en terreno privado se necesita el consentimiento del propietario para utilizarlo como lugar de estancia. Para pernoctar, la opción jurídicamente más segura son campings, caravan parks y áreas expresamente habilitadas para motorhomes.",
+    "resumen": "Las autoridades locales irlandesas tienen facultades legales para regular los aparcamientos, fijar duración máxima y determinar qué clases de vehículos pueden utilizarlos. Por eso un aparcamiento público no debe interpretarse automáticamente como un área de pernocta. Coillte, que gestiona gran parte de los bosques públicos, dirige caravanas y camper vans a emplazamientos específicos y sus zonas de wild camping están pensadas para tiendas.",
+    "estacionamiento": {
+      "estado": "permitido_segun_senalizacion_y_ordenanzas_locales",
+      "detalle": "La Road Traffic Act 1994 permite a las autoridades viarias regular los aparcamientos mediante bye-laws, incluyendo duración máxima, tarifas y clases de vehículos admitidas. Además, ningún vehículo puede estacionarse de forma que genere peligro.",
+      "condiciones_practicas": [
+        "Comprobar siempre señales y condiciones del aparcamiento.",
+        "Respetar límites horarios, altura, longitud y clases de vehículos admitidas.",
+        "No asumir que poder aparcar implica permiso para pernoctar.",
+        "En propiedad privada, obtener permiso del propietario para una estancia de camping."
+      ]
+    },
+    "pernocta": {
+      "estado": "depende_del_lugar_y_de_las_normas_locales",
+      "detalle": "No hay una regla nacional que convierta todos los aparcamientos legales en lugares autorizados para dormir en autocaravana. Las autoridades locales pueden establecer condiciones y límites mediante bye-laws. Deben utilizarse áreas que permitan expresamente motorhomes o campings cuando exista duda."
+    },
+    "acampada_libre": {
+      "estado": "sin_derecho_general_para_autocaravanas",
+      "detalle": "Irlanda no tiene un equivalente legal general a los derechos nórdicos de acceso que autorice camping libre con vehículos. Coillte dispone de algunos lugares de wild camping, pero los describe como pequeñas zonas para una o dos tiendas; para caravanas y camper vans remite a emplazamientos con servicios."
+    },
+    "elementos_exteriores": {
+      "estado": "solo_donde_este_autorizado",
+      "detalle": "En un aparcamiento ordinario no debe darse por autorizado el uso como camping. Toldos, mesas, sillas, barbacoas y otros elementos deben limitarse a campings o áreas donde sus condiciones lo permitan.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "barbacoa",
+        "equipamiento exterior"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "dependen_de_propiedad_senalizacion_y_bye_laws",
+      "detalle": "No existe una autorización nacional general para entrar, estacionar o acampar con autocaravana en playas y terrenos costeros. Deben respetarse accesos, propiedad del terreno, señalización y ordenanzas locales."
+    },
+    "espacios_naturales": {
+      "estado": "restricciones_segun_gestor_y_lugar",
+      "detalle": "Bosques, parques y espacios naturales pueden tener reglas específicas de acceso, estacionamiento y camping. Deben utilizarse las instalaciones indicadas por el gestor y comprobarse las normas del espacio concreto."
+    },
+    "bosques": {
+      "estado": "wild_camping_de_coillte_no_equivale_a_area_para_autocaravanas",
+      "detalle": "Coillte ofrece campings designados y algunos pequeños lugares de wild camping destinados a tiendas. Para caravanas o camper vans señala emplazamientos específicos con servicios, como Lough Key Forest Park y Curragh Chase Forest Park."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "solo_donde_el_gestor_lo_permita",
+      "detalle": "El uso de fuego o barbacoa depende de las reglas del camping, área, bosque o espacio natural. En zonas de wild camping deben seguirse estrictamente las normas del lugar y evitar cualquier riesgo o daño."
+    },
+    "aguas_y_residuos": {
+      "estado": "usar_instalaciones_adecuadas",
+      "detalle": "Aguas negras, aguas grises y residuos deben eliminarse únicamente mediante instalaciones adecuadas de campings o áreas de servicio. No deben verterse ni abandonarse en aparcamientos, carreteras o espacios naturales."
+    },
+    "limites_de_permanencia": {
+      "estado": "fijados_por_bye_laws_y_condiciones_del_lugar",
+      "detalle": "No existe un máximo nacional único aplicable a todos los aparcamientos. La Road Traffic Act permite a las autoridades locales especificar el periodo máximo de estacionamiento en cada lugar."
+    },
+    "multas": {
+      "estado": "dependen_de_la_infraccion_y_ordenanza",
+      "detalle": "Las sanciones dependen de la infracción concreta: estacionamiento contrario a señalización o bye-laws, estacionamiento peligroso, incumplimiento de restricciones del espacio, vertidos o abandono de residuos."
+    },
+    "normativa_local": {
+      "importancia": "muy_alta",
+      "detalle": "Las bye-laws locales son esenciales en Irlanda. Una autoridad viaria puede regular duración, tarifas y clases de vehículos que pueden utilizar un aparcamiento; por ello deben comprobarse las normas del condado o municipio y la señalización del lugar."
+    },
+    "nota_practica": {
+      "titulo": "En Irlanda, aparcar no garantiza poder pasar la noche",
+      "detalle": "La opción segura es buscar un camping, caravan park o área que admita expresamente motorhomes. Si se utiliza un aparcamiento público, hay que comprobar sus señales y bye-laws porque la autoridad local puede limitar horarios, vehículos e incluso el uso nocturno."
+    },
+    "fuentes": [
+      {
+        "organismo": "Irish Statute Book",
+        "titulo": "Road Traffic Act 1994, Section 36 — regulación local de aparcamientos",
+        "url": "https://www.irishstatutebook.ie/eli/1994/act/7/section/36/enacted/en/"
+      },
+      {
+        "organismo": "Irish Statute Book",
+        "titulo": "Road Traffic Act 1961, Section 55 — estacionamiento peligroso",
+        "url": "https://www.irishstatutebook.ie/eli/1961/act/24/section/55/enacted/en/html"
+      },
+      {
+        "organismo": "Coillte",
+        "titulo": "Camping — campings, wild camping y lugares para caravanas/camper vans",
+        "url": "https://www.coillte.ie/activity/camping/"
+      },
+      {
+        "organismo": "Fáilte Ireland",
+        "titulo": "Accommodation registers — Caravan and Camping",
+        "url": "https://www.failteireland.ie/en/quality-assured-accommodation/accommodation-registers"
+      }
+    ]
+  }
+]
