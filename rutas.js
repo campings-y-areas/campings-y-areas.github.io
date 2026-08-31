@@ -1,6 +1,6 @@
 // ==========================================
-// CAMPINGS & ÁREAS - RUTAS FASE 2
-// Geoapify: autocomplete + routing + mapa
+// CAMPINGS & ÁREAS - RUTAS FASE 4
+// Geoapify: autocomplete + routing + mapa + paradas interesantes
 // ==========================================
 
 let pasoActual = 1;
@@ -185,8 +185,7 @@ async function pintarResultado(data,lugares,datos){
 
 
 
-// ---------- Fase 3: división del recorrido en jornadas reales ----------
-function coordIgual(a,b){ return Math.abs(a[0]-b[0])<1e-7 && Math.abs(a[1]-b[1])<1e-7; }
+// ---------- Fase 4: jornadas + paradas interesantes ----------
 function puntosLinea(geometry){
   if(!geometry)return [];
   if(geometry.type==="LineString")return geometry.coordinates||[];
@@ -205,12 +204,85 @@ function distanciaAcumulada(coords){
 function indiceCercano(acum,objetivo,desde=0){
   let mejor=desde, dif=Infinity; for(let i=desde;i<acum.length;i++){const d=Math.abs(acum[i]-objetivo);if(d<dif){dif=d;mejor=i;}if(acum[i]>objetivo&&d>dif)break;} return mejor;
 }
-async function nombreParada(coord){
+async function reverseLugar(coord){
   try{
     const url=`https://api.geoapify.com/v1/geocode/reverse?lat=${coord[1]}&lon=${coord[0]}&format=json&lang=es&apiKey=${encodeURIComponent(config.GEOAPIFY_API_KEY)}`;
-    const r=await fetch(url); if(!r.ok)throw new Error(); const d=await r.json(); const x=d.results?.[0];
-    return x?.city||x?.town||x?.village||x?.municipality||x?.county||x?.formatted||"Zona de parada";
-  }catch{return "Zona de parada";}
+    const r=await fetch(url); if(!r.ok)throw new Error(); const d=await r.json(); return d.results?.[0]||null;
+  }catch{return null;}
+}
+function nombreLocalidad(x){ return x?.city||x?.town||x?.village||x?.municipality||x?.county||x?.formatted||"Zona de parada"; }
+
+function categoriasSegunViaje(datos){
+  const elegidas=new Set(datos.intereses||[]), cats=new Set(["tourism.attraction","tourism.sights"]);
+  if(elegidas.has("naturaleza")){ cats.add("leisure.park"); cats.add("leisure.park.nature_reserve"); cats.add("natural.protected_area"); }
+  if(elegidas.has("playa")){ cats.add("natural.coastal"); cats.add("natural.water"); }
+  if(elegidas.has("montana")){ cats.add("natural.mountain"); cats.add("tourism.attraction.viewpoint"); }
+  if(elegidas.has("monumentos")||elegidas.has("pueblos")){ cats.add("heritage"); cats.add("tourism.sights.castle"); }
+  if(elegidas.has("senderismo")){ cats.add("natural.protected_area"); cats.add("national_park"); }
+  if(elegidas.has("animales")){ cats.add("entertainment.zoo"); }
+  if(elegidas.has("acuarios")){ cats.add("entertainment.aquarium"); }
+  if(elegidas.has("parques")){ cats.add("entertainment.theme_park"); cats.add("entertainment.water_park"); cats.add("entertainment.activity_park"); }
+  if(elegidas.has("museos-ninos")){ cats.add("entertainment.museum"); }
+  if(Number(datos.ninos)>0 && datos.recomendacionesNinos){ cats.add("leisure.playground"); cats.add("entertainment"); }
+  return [...cats];
+}
+function etiquetaCategoria(categorias=[]){
+  const c=categorias.join(" ");
+  if(c.includes("theme_park")||c.includes("activity_park")||c.includes("water_park"))return "🎢 Diversión";
+  if(c.includes("zoo"))return "🦁 Animales";
+  if(c.includes("aquarium"))return "🐠 Acuario";
+  if(c.includes("museum"))return "🏛️ Museo";
+  if(c.includes("playground"))return "🛝 Niños";
+  if(c.includes("castle")||c.includes("heritage")||c.includes("sights"))return "🏰 Patrimonio";
+  if(c.includes("natural")||c.includes("park")||c.includes("viewpoint"))return "🌲 Naturaleza";
+  return "📍 Visita";
+}
+function puntuacionPOI(f,datos){
+  const p=f.properties||{}, cats=p.categories||[], texto=cats.join(" "); let puntos=0;
+  const intereses=new Set(datos.intereses||[]);
+  if(intereses.has("naturaleza") && /(natural|nature_reserve|park|viewpoint)/.test(texto))puntos+=8;
+  if(intereses.has("montana") && /(mountain|viewpoint)/.test(texto))puntos+=8;
+  if(intereses.has("playa") && /(coastal|water)/.test(texto))puntos+=8;
+  if(intereses.has("monumentos") && /(heritage|castle|sights)/.test(texto))puntos+=8;
+  if(intereses.has("animales") && /zoo/.test(texto))puntos+=12;
+  if(intereses.has("acuarios") && /aquarium/.test(texto))puntos+=12;
+  if(intereses.has("parques") && /(theme_park|water_park|activity_park)/.test(texto))puntos+=12;
+  if(intereses.has("museos-ninos") && /museum/.test(texto))puntos+=10;
+  if(Number(datos.ninos)>0 && datos.recomendacionesNinos && /(playground|zoo|aquarium|theme_park|water_park|activity_park|museum)/.test(texto))puntos+=7;
+  if(p.name)puntos+=2;
+  const dist=Number(p.distance)||0; puntos+=Math.max(0,6-dist/5000);
+  return puntos;
+}
+async function buscarPOIs(coord,datos){
+  const categorias=categoriasSegunViaje(datos);
+  const params=new URLSearchParams({
+    categories:categorias.join(","),
+    filter:`circle:${coord[0]},${coord[1]},30000`,
+    bias:`proximity:${coord[0]},${coord[1]}`,
+    limit:"40",lang:"es",apiKey:config.GEOAPIFY_API_KEY
+  });
+  const r=await fetch(`https://api.geoapify.com/v2/places?${params}`); if(!r.ok)return [];
+  const d=await r.json();
+  return (d.features||[]).filter(f=>f.properties?.name).sort((a,b)=>puntuacionPOI(b,datos)-puntuacionPOI(a,datos));
+}
+async function enriquecerCorte(corte,datos){
+  const pois=await buscarPOIs(corte.coord,datos);
+  const mejores=pois.slice(0,3);
+  // El POI mejor valorado sirve para desplazar la zona recomendada; todavía no altera la carretera.
+  if(mejores[0]){
+    const p=mejores[0].properties||{}, c=mejores[0].geometry?.coordinates;
+    corte.nombre=nombreLocalidad(p);
+    corte.poiPrincipal=p.name||null;
+    corte.coordRecomendada=Array.isArray(c)?c:corte.coord;
+  } else {
+    const rev=await reverseLugar(corte.coord); corte.nombre=nombreLocalidad(rev);
+  }
+  corte.pois=mejores.map(f=>({
+    nombre:f.properties?.name||"Lugar de interés", localidad:nombreLocalidad(f.properties),
+    distancia:Number(f.properties?.distance)||0, categorias:f.properties?.categories||[],
+    etiqueta:etiquetaCategoria(f.properties?.categories||[])
+  }));
+  return corte;
 }
 async function crearPlanJornadas(feature,lugares,datos){
   const p=feature.properties||{}, totalTiempo=p.time||0, totalDist=p.distance||0;
@@ -220,19 +292,29 @@ async function crearPlanJornadas(feature,lugares,datos){
   const coords=puntosLinea(feature.geometry); if(coords.length<2)return [];
   const acum=distanciaAcumulada(coords), geomTotal=acum.at(-1)||totalDist;
   const cortes=[]; let desde=0;
-  // Repartimos el trayecto para que ninguna jornada quede artificialmente muy corta.
   for(let dia=1;dia<jornadas;dia++){
-    const objetivo=geomTotal*(dia/jornadas); const idx=indiceCercano(acum,objetivo,desde+1); desde=idx;
-    const coord=coords[idx]; cortes.push({coord,nombre:await nombreParada(coord),distRuta:totalDist*(dia/jornadas),tiempoRuta:totalTiempo*(dia/jornadas)});
+    const objetivo=geomTotal*(dia/jornadas), idx=indiceCercano(acum,objetivo,desde+1); desde=idx;
+    const corte={coord:coords[idx],nombre:"Buscando una parada interesante…",distRuta:totalDist*(dia/jornadas),tiempoRuta:totalTiempo*(dia/jornadas)};
+    cortes.push(await enriquecerCorte(corte,datos));
   }
   const puntos=[{nombre:lugares[0]?.formatted||datos.origen,distRuta:0,tiempoRuta:0},...cortes,{nombre:lugares.at(-1)?.formatted||datos.destinoPrincipal,distRuta:totalDist,tiempoRuta:totalTiempo}];
-  return puntos.slice(0,-1).map((a,i)=>{const b=puntos[i+1];return {dia:i+1,desde:a.nombre,hasta:b.nombre,distancia:b.distRuta-a.distRuta,tiempo:b.tiempoRuta-a.tiempoRuta,intermedia:i<puntos.length-2};});
+  return puntos.slice(0,-1).map((a,i)=>{const b=puntos[i+1];return {dia:i+1,desde:a.nombre,hasta:b.nombre,distancia:b.distRuta-a.distRuta,tiempo:b.tiempoRuta-a.tiempoRuta,intermedia:i<puntos.length-2,pois:b.pois||[],poiPrincipal:b.poiPrincipal||null};});
 }
 function htmlPlanJornadas(plan,datos){
   if(!plan.length)return "";
-  let h='<div class="plan-etapas"><h3>🗓️ Etapas de conducción</h3>';
-  plan.forEach(e=>{h+=`<div class="etapa-real"><div class="etapa-dia">${e.dia}</div><div><strong>${escapar(e.desde)} → ${escapar(e.hasta)}</strong><p>${formatoKm(e.distancia)} · ${formatoTiempo(e.tiempo)}</p>${e.intermedia?`<div class="etapa-parada">📍 <strong>Zona recomendada para terminar la jornada: ${escapar(e.hasta)}</strong></div>`:""}</div></div>`;});
-  h+=`<div class="aviso-suave">Estas paradas respetan aproximadamente tu límite de conducción. En el siguiente paso las cruzaremos con lugares interesantes y con Campings, Áreas y Parkings para escoger dónde merece realmente la pena parar.</div></div>`;
+  let h='<div class="plan-etapas"><h3>🗓️ Etapas y paradas recomendadas</h3>';
+  plan.forEach(e=>{
+    h+=`<div class="etapa-real"><div class="etapa-dia">${e.dia}</div><div><strong>${escapar(e.desde)} → ${escapar(e.hasta)}</strong><p>${formatoKm(e.distancia)} · ${formatoTiempo(e.tiempo)}</p>`;
+    if(e.intermedia){
+      h+=`<div class="parada-inteligente"><h4>✨ Merece la pena parar en ${escapar(e.hasta)}</h4>`;
+      if(e.poiPrincipal)h+=`<p>La zona destaca por <strong>${escapar(e.poiPrincipal)}</strong> y encaja mejor con tus preferencias que un simple corte matemático de la ruta.</p>`;
+      if(e.pois.length){ h+='<div class="poi-lista">'; e.pois.forEach(x=>{h+=`<div class="poi-card"><strong>${escapar(x.nombre)}</strong><small>${escapar(x.localidad)}${x.distancia?` · a ${Math.round(x.distancia/1000)} km del punto ideal de etapa`:""}</small><span class="poi-etiqueta">${escapar(x.etiqueta)}</span></div>`;}); h+='</div>'; }
+      else h+='<p>No hemos encontrado suficientes visitas destacadas en 30 km; mantendremos esta zona como punto práctico de etapa.</p>';
+      h+='</div>';
+    }
+    h+='</div></div>';
+  });
+  h+=`<div class="aviso-suave"><strong>Fase 4:</strong> las paradas intermedias ya se valoran según tus intereses${Number(datos.ninos)>0?", la presencia y edades de los niños":""}. Todavía no modificamos la carretera para desviarnos hasta el lugar: primero comprobamos que las propuestas son buenas; después calcularemos el desvío real y las cruzaremos con Campings, Áreas y Parkings.</div></div>`;
   return h;
 }
 
