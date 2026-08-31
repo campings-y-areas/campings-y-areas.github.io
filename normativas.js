@@ -41,7 +41,8 @@ const archivosNormativas = {
   "Lituania": "normativas-lituania-definitivo.json?v=1",
   "Moldavia": "normativas-moldavia-definitivo.json?v=1",
   "Ucrania": "normativas-ucrania-definitivo.json?v=1",
-  "Chipre": "normativas-chipre-definitivo.json?v=1"
+  "Chipre": "normativas-chipre-definitivo.json?v=1",
+  "Kosovo": "normativas-kosovo-definitivo.json?v=1"
 };
 
 
