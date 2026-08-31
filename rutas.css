@@ -290,3 +290,31 @@
     flex: 1 1 140px;
   }
 }
+
+/* ==========================================
+   RUTAS - FASE 2: autocompletado, mapa y ruta
+   ========================================== */
+.autocomplete-wrap { position: relative; }
+.autocomplete-lista { position:absolute; z-index:1000; left:0; right:0; top:100%; margin-top:4px; background:#fff; border:1px solid #d7dce2; border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,.14); overflow:hidden; }
+.autocomplete-opcion { display:block; width:100%; padding:11px 12px; border:0; border-bottom:1px solid #edf0f2; background:#fff; text-align:left; cursor:pointer; color:#222; }
+.autocomplete-opcion:last-child { border-bottom:0; }
+.autocomplete-opcion:hover,.autocomplete-opcion:focus { background:#f2f7f4; }
+.autocomplete-opcion small { display:block; opacity:.72; margin-top:2px; }
+.resultado-real { max-width:1100px; margin:24px auto; padding:22px; background:#fff; border-radius:16px; box-shadow:0 4px 18px rgba(0,0,0,.08); }
+.resultado-cabecera { display:flex; justify-content:space-between; gap:16px; align-items:flex-start; flex-wrap:wrap; }
+.resultado-cabecera h2 { margin:0 0 4px; }
+.resultado-cabecera p { margin:0; }
+.metricas-ruta { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin:18px 0; }
+.metrica-ruta { padding:14px; border:1px solid #e2e7e4; border-radius:12px; background:#f8faf9; }
+.metrica-ruta strong { display:block; font-size:1.22rem; margin-top:3px; }
+.mapa-ruta { width:100%; height:460px; border-radius:14px; overflow:hidden; border:1px solid #dfe4e1; }
+.etapas-ruta { margin-top:20px; }
+.etapas-ruta h3 { margin-bottom:10px; }
+.etapa-card { display:grid; grid-template-columns:auto 1fr; gap:12px; padding:14px 0; border-bottom:1px solid #e7ebe9; }
+.etapa-numero { width:38px; height:38px; border-radius:50%; display:grid; place-items:center; background:#eef5f0; font-weight:700; }
+.etapa-card p { margin:4px 0 0; }
+.aviso-ruta { padding:12px 14px; margin-top:14px; border-radius:10px; background:#fff7df; border:1px solid #f0df9b; }
+.error-ruta { padding:14px; border-radius:10px; background:#fff0f0; border:1px solid #e5b4b4; }
+.cargando-ruta { opacity:.7; pointer-events:none; }
+@media (max-width:760px){ .metricas-ruta{grid-template-columns:repeat(2,minmax(0,1fr));}.mapa-ruta{height:360px;} }
+@media (max-width:430px){ .metricas-ruta{grid-template-columns:1fr 1fr;}.resultado-real{padding:14px}.mapa-ruta{height:320px;} }
