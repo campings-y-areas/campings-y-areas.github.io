@@ -330,3 +330,15 @@
 .etapa-parada strong { display:block; }
 .aviso-suave { margin-top:14px; padding:12px 14px; border-radius:10px; background:#f5f7f8; border:1px solid #e2e6e9; }
 @media (max-width:640px){ .etapa-real{grid-template-columns:44px 1fr}.etapa-dia{width:38px;height:38px} }
+
+/* ===== FASE 4: paradas interesantes ===== */
+.parada-inteligente { margin-top:10px; padding:12px 14px; border:1px solid #dfe8e2; border-radius:12px; background:#f8fbf9; }
+.parada-inteligente h4 { margin:0 0 6px; font-size:1rem; }
+.parada-inteligente p { margin:4px 0; }
+.poi-lista { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:9px; margin-top:10px; }
+.poi-card { padding:10px; border-radius:10px; background:#fff; border:1px solid #e2e8e4; }
+.poi-card strong { display:block; }
+.poi-card small { display:block; margin-top:4px; opacity:.72; }
+.poi-etiqueta { display:inline-block; margin-top:6px; padding:3px 7px; border-radius:999px; background:#eef5f0; font-size:.78rem; }
+.poi-cargando { margin-top:8px; font-size:.9rem; opacity:.75; }
+@media (max-width:760px){ .poi-lista{grid-template-columns:1fr;} }
