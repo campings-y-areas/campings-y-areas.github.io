@@ -160,7 +160,7 @@ function pintarRuta(data,lugares){
   mapa.fitBounds(capaRuta.getBounds(),{padding:[24,24]}); setTimeout(()=>mapa.invalidateSize(),100);
 }
 
-function pintarResultado(data,lugares,datos){
+async function pintarResultado(data,lugares,datos){
   const feature=data.features[0], p=feature.properties||{};
   const distancia=p.distance||0, tiempo=p.time||0;
   const maxHoras=Math.max(1,Number(datos.maxConduccion)||4);
@@ -177,10 +177,63 @@ function pintarResultado(data,lugares,datos){
     legs.forEach((leg,i)=>{html+=`<div class="etapa-card"><div class="etapa-numero">${i+1}</div><div><strong>${escapar(lugares[i]?.formatted||"Salida")} → ${escapar(lugares[i+1]?.formatted||"Destino")}</strong><p>${formatoKm(leg.distance||0)} · ${formatoTiempo(leg.time||0)}</p></div></div>`;});
   } else html+=`<p>${formatoKm(distancia)} · ${formatoTiempo(tiempo)}</p>`;
   if(jornadas>1)html+=`<div class="aviso-ruta"><strong>Plan de conducción:</strong> con un máximo de ${escapar(maxHoras)} h al día, el trayecto necesita aproximadamente ${jornadas} jornadas. En la siguiente fase elegiremos las paradas reales de cada jornada según lugares interesantes y opciones de pernocta, no simples puntos matemáticos de la carretera.</div>`;
-  const noAplicables=datos.evitar.filter(x=>["carreteras-complicadas","grandes-ciudades"].includes(x));
-  if(noAplicables.length)html+=`<div class="aviso-ruta">ℹ️ Las preferencias “${escapar(noAplicables.join(" / "))}” se conservarán para la planificación de etapas y lugares. No se aplican como exclusión directa al cálculo básico de carretera.</div>`;
+  const plan=await crearPlanJornadas(feature,lugares,datos);
+  html+=htmlPlanJornadas(plan,datos);
   document.getElementById("etapasRuta").innerHTML=html;
   pintarRuta(data,lugares);
+}
+
+
+
+// ---------- Fase 3: división del recorrido en jornadas reales ----------
+function coordIgual(a,b){ return Math.abs(a[0]-b[0])<1e-7 && Math.abs(a[1]-b[1])<1e-7; }
+function puntosLinea(geometry){
+  if(!geometry)return [];
+  if(geometry.type==="LineString")return geometry.coordinates||[];
+  if(geometry.type==="MultiLineString")return (geometry.coordinates||[]).flat();
+  return [];
+}
+function distanciaHaversine(a,b){
+  const R=6371000, rad=x=>x*Math.PI/180;
+  const dLat=rad(b[1]-a[1]), dLon=rad(b[0]-a[0]);
+  const q=Math.sin(dLat/2)**2+Math.cos(rad(a[1]))*Math.cos(rad(b[1]))*Math.sin(dLon/2)**2;
+  return 2*R*Math.asin(Math.sqrt(q));
+}
+function distanciaAcumulada(coords){
+  const out=[0]; for(let i=1;i<coords.length;i++)out.push(out[i-1]+distanciaHaversine(coords[i-1],coords[i])); return out;
+}
+function indiceCercano(acum,objetivo,desde=0){
+  let mejor=desde, dif=Infinity; for(let i=desde;i<acum.length;i++){const d=Math.abs(acum[i]-objetivo);if(d<dif){dif=d;mejor=i;}if(acum[i]>objetivo&&d>dif)break;} return mejor;
+}
+async function nombreParada(coord){
+  try{
+    const url=`https://api.geoapify.com/v1/geocode/reverse?lat=${coord[1]}&lon=${coord[0]}&format=json&lang=es&apiKey=${encodeURIComponent(config.GEOAPIFY_API_KEY)}`;
+    const r=await fetch(url); if(!r.ok)throw new Error(); const d=await r.json(); const x=d.results?.[0];
+    return x?.city||x?.town||x?.village||x?.municipality||x?.county||x?.formatted||"Zona de parada";
+  }catch{return "Zona de parada";}
+}
+async function crearPlanJornadas(feature,lugares,datos){
+  const p=feature.properties||{}, totalTiempo=p.time||0, totalDist=p.distance||0;
+  const maxSeg=Math.max(1,Number(datos.maxConduccion)||4)*3600;
+  const jornadas=Math.max(1,Math.ceil(totalTiempo/maxSeg));
+  if(jornadas<=1)return [];
+  const coords=puntosLinea(feature.geometry); if(coords.length<2)return [];
+  const acum=distanciaAcumulada(coords), geomTotal=acum.at(-1)||totalDist;
+  const cortes=[]; let desde=0;
+  // Repartimos el trayecto para que ninguna jornada quede artificialmente muy corta.
+  for(let dia=1;dia<jornadas;dia++){
+    const objetivo=geomTotal*(dia/jornadas); const idx=indiceCercano(acum,objetivo,desde+1); desde=idx;
+    const coord=coords[idx]; cortes.push({coord,nombre:await nombreParada(coord),distRuta:totalDist*(dia/jornadas),tiempoRuta:totalTiempo*(dia/jornadas)});
+  }
+  const puntos=[{nombre:lugares[0]?.formatted||datos.origen,distRuta:0,tiempoRuta:0},...cortes,{nombre:lugares.at(-1)?.formatted||datos.destinoPrincipal,distRuta:totalDist,tiempoRuta:totalTiempo}];
+  return puntos.slice(0,-1).map((a,i)=>{const b=puntos[i+1];return {dia:i+1,desde:a.nombre,hasta:b.nombre,distancia:b.distRuta-a.distRuta,tiempo:b.tiempoRuta-a.tiempoRuta,intermedia:i<puntos.length-2};});
+}
+function htmlPlanJornadas(plan,datos){
+  if(!plan.length)return "";
+  let h='<div class="plan-etapas"><h3>🗓️ Etapas de conducción</h3>';
+  plan.forEach(e=>{h+=`<div class="etapa-real"><div class="etapa-dia">${e.dia}</div><div><strong>${escapar(e.desde)} → ${escapar(e.hasta)}</strong><p>${formatoKm(e.distancia)} · ${formatoTiempo(e.tiempo)}</p>${e.intermedia?`<div class="etapa-parada">📍 <strong>Zona recomendada para terminar la jornada: ${escapar(e.hasta)}</strong></div>`:""}</div></div>`;});
+  h+=`<div class="aviso-suave">Estas paradas respetan aproximadamente tu límite de conducción. En el siguiente paso las cruzaremos con lugares interesantes y con Campings, Áreas y Parkings para escoger dónde merece realmente la pena parar.</div></div>`;
+  return h;
 }
 
 function recogerDatos(){
@@ -213,7 +266,7 @@ formRuta.addEventListener("submit",async event=>{
     const inputs=[document.getElementById("origen"),document.getElementById("destinoPrincipal"),...document.querySelectorAll(".destinoAdicional")].filter(i=>i.value.trim());
     const lugares=[]; for(const input of inputs){document.getElementById("estadoCalculo").textContent=`Localizando ${input.value.trim()}…`; lugares.push(await resolverLugar(input));}
     document.getElementById("estadoCalculo").textContent="Calculando carretera, kilómetros y tiempo…";
-    const ruta=await calcularRuta(lugares,datos); pintarResultado(ruta,lugares,datos);
+    const ruta=await calcularRuta(lugares,datos); await pintarResultado(ruta,lugares,datos);
   }catch(e){ document.getElementById("estadoCalculo").textContent="No se pudo crear la ruta"; document.getElementById("etapasRuta").innerHTML=`<div class="error-ruta"><strong>⚠️ ${escapar(e.message)}</strong><br>Revisa los lugares introducidos y vuelve a intentarlo.</div>`; }
   finally{ resultado.classList.remove("cargando-ruta"); }
 });
