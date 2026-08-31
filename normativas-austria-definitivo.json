@@ -1,0 +1,175 @@
+[
+  {
+    "id": "normativa-at",
+    "pais": "Austria",
+    "actualizado": "2026-08-31",
+    "estado_general": "En Austria no existe una única regla nacional para acampar o pernoctar fuera de campings con autocaravana. El camping en el bosque sí está regulado de forma uniforme a nivel federal y, como regla general, está prohibido sin consentimiento del propietario. Fuera del bosque, la regulación depende principalmente de los Bundesländer y, en muchos casos, también de los municipios.",
+    "resumen": "Para viajar en autocaravana por Austria hay que distinguir entre estacionar y acampar. El estacionamiento ordinario está sujeto a la normativa vial y a la señalización local, pero utilizar el vehículo como alojamiento puede quedar sometido a las leyes de camping del Bundesland y a ordenanzas municipales. Tirol, Viena, Kärnten y Niederösterreich aplican restricciones especialmente severas al camping fuera de lugares autorizados; Salzburg y Steiermark son menos uniformes y dependen más del lugar y de la normativa municipal. En el bosque, dormir en el vehículo o acampar requiere consentimiento del propietario.",
+    "estacionamiento": {
+      "estado": "permitido_con_condiciones",
+      "detalle": "Una autocaravana puede estacionar donde la normativa vial y la señalización lo permitan. Sin embargo, que el vehículo pueda estacionar no significa automáticamente que esté permitido utilizarlo para dormir o acampar. En varios Bundesländer el simple hecho de pasar la noche en una autocaravana con finalidad turística puede quedar incluido dentro del concepto de camping.",
+      "condiciones_practicas": [
+        "Respetar señalización y ordenanzas municipales.",
+        "Comprobar si el Bundesland considera la pernocta en vehículo como camping.",
+        "No asumir que una plaza de aparcamiento permite automáticamente dormir.",
+        "Utilizar preferentemente Stellplätze o campings autorizados.",
+        "Evitar desplegar equipamiento exterior fuera de zonas expresamente autorizadas."
+      ]
+    },
+    "pernocta": {
+      "estado": "depende_del_bundesland_y_municipio",
+      "detalle": "No existe una autorización nacional única para pernoctar libremente en autocaravana. En Tirol, por ejemplo, la pernocta turística en vehículos y autocaravanas fuera de campings está expresamente incluida dentro del concepto de camping y, como regla general, prohibida. En otros Länder la situación puede ser menos restrictiva, pero las ordenanzas municipales pueden prohibir la pernocta nocturna en determinadas zonas."
+    },
+    "acampada_libre": {
+      "estado": "muy_restringida_y_no_uniforme",
+      "detalle": "El camping fuera de campings no está regulado de forma uniforme en Austria. Las normas se encuentran principalmente en las leyes de cada Bundesland y en ordenanzas municipales. En algunos Länder existe una prohibición general o casi general; en otros puede permitirse bajo determinadas condiciones."
+    },
+    "elementos_exteriores": {
+      "estado": "pueden_hacer_que_la_estancia_se_considera_camping",
+      "detalle": "Desplegar toldos, mesas, sillas, patas estabilizadoras u otros elementos exteriores refuerza claramente el carácter de camping de la estancia y puede hacerla ilegal fuera de lugares autorizados.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "patas estabilizadoras",
+        "equipamiento exterior de camping"
+      ]
+    },
+    "bosques": {
+      "estado": "prohibido_sin_consentimiento",
+      "detalle": "El camping en el bosque está regulado de forma uniforme en Austria. Aunque el bosque puede utilizarse con fines recreativos, permanecer allí de noche, acampar, instalar una tienda o dormir dentro de un vehículo está, como regla general, prohibido sin el consentimiento del propietario del bosque o del responsable de la vía forestal."
+    },
+    "espacios_naturales": {
+      "estado": "restricciones_importantes",
+      "detalle": "Los parques nacionales, reservas naturales, zonas de protección especial, áreas alpinas y otros espacios protegidos pueden imponer prohibiciones adicionales al camping, acceso de vehículos y pernocta. Debe comprobarse la normativa concreta del Bundesland y del espacio protegido."
+    },
+    "costas_y_lagos": {
+      "estado": "restricciones_locales_y_ambientales",
+      "detalle": "Austria no tiene costa marítima, pero las orillas de lagos y ríos suelen estar sometidas a protección paisajística, turística o municipal. En zonas de lagos es frecuente encontrar prohibiciones locales de camping y pernocta fuera de áreas autorizadas."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "muy_restringido_en_bosques",
+      "detalle": "Hacer fuego en el bosque está sometido a fuertes restricciones. El uso no autorizado de fuego o la creación de una hoguera puede dar lugar a sanciones elevadas. Las autoridades pueden imponer además prohibiciones especiales durante periodos de riesgo de incendio.",
+      "multas_referencia": "Según la información oficial federal, determinadas infracciones forestales relacionadas con fuego pueden alcanzar 3.630 euros y, en casos graves, 7.270 euros."
+    },
+    "aguas_y_residuos": {
+      "estado": "usar_solo_instalaciones_autorizadas",
+      "detalle": "Las aguas grises, aguas negras y residuos deben evacuarse únicamente en instalaciones adecuadas. Verter residuos o aguas en el entorno natural puede constituir una infracción ambiental. En el bosque, arrojar residuos está expresamente prohibido."
+    },
+    "limites_de_permanencia": {
+      "estado": "sin_limite_nacional_unico",
+      "detalle": "No existe un límite nacional único de horas o días aplicable a todas las autocaravanas. Los límites dependen de la señalización, el Bundesland, el municipio o las condiciones concretas del Stellplatz o camping."
+    },
+    "multas": {
+      "estado": "dependen_del_bundesland_y_tipo_de_infraccion",
+      "detalle": "Las sanciones varían según la normativa aplicable. En materia forestal, acampar o dormir en un vehículo sin autorización puede ser sancionado; la información oficial federal cita sanciones de hasta 150 euros para determinadas infracciones leves, hasta 730 euros en supuestos más graves y hasta 3.630 euros o más en infracciones forestales severas. Las leyes de camping de los Länder pueden prever además sus propias sanciones."
+    },
+    "normativa_local": {
+      "importancia": "muy_alta",
+      "detalle": "Muchos municipios pueden regular mediante ordenanza dónde está permitido o prohibido acampar fuera de campings. Antes de pernoctar debe revisarse la señalización y, si existen dudas, la normativa municipal."
+    },
+    "bundeslander": {
+      "Burgenland": {
+        "estado": "restrictivo",
+        "detalle": "En la freie Landschaft está prohibido acampar o estacionar caravanas y autocaravanas fuera de campings o Mobilheimplätze autorizados. Se exceptúa el estacionamiento de corta duración en superficies destinadas al tráfico estacionario."
+      },
+      "Kärnten": {
+        "estado": "restrictivo",
+        "detalle": "En la freie Landschaft está prohibido acampar fuera de campings autorizados, con excepciones concretas como el breve estacionamiento de caravanas en superficies destinadas al tráfico estacionario."
+      },
+      "Niederösterreich": {
+        "estado": "muy_restrictivo",
+        "detalle": "Está prohibido instalar o estacionar caravanas, autocaravanas o viviendas móviles en Grünland fuera de campings autorizados."
+      },
+      "Oberösterreich": {
+        "estado": "depende_del_lugar",
+        "detalle": "No existe una prohibición general absoluta, pero fuera de poblaciones el estacionamiento de caravanas y similares en Grünland puede estar sujeto a comunicación a la autoridad de protección de la naturaleza. Los municipios pueden permitir o prohibir el camping mediante ordenanza."
+      },
+      "Salzburg": {
+        "estado": "depende_del_municipio",
+        "detalle": "No existe una prohibición general absoluta de camping fuera de campings, pero el alcalde o el municipio pueden prohibirlo por motivos de seguridad, salud, agricultura, paisaje o imagen urbana. Algunos municipios prohíben expresamente pasar la noche en autocaravanas dentro de determinadas zonas."
+      },
+      "Steiermark": {
+        "estado": "sin_prohibicion_general_especifica",
+        "detalle": "No existe una norma provincial general que prohíba expresamente el camping fuera de campings, aunque pueden aplicarse normas de protección de la naturaleza, propiedad privada, tráfico y otras restricciones."
+      },
+      "Tirol": {
+        "estado": "prohibido_como_regla_general",
+        "detalle": "El camping fuera de campings está prohibido. La definición incluye dormir con finalidad turística en tiendas, caravanas, vehículos, autocaravanas y alojamientos móviles. Solo existen excepciones específicas."
+      },
+      "Vorarlberg": {
+        "estado": "regulado_por_ley_provincial_y_municipios",
+        "detalle": "La ley provincial regula expresamente el camping fuera de campings y permite restricciones adicionales. Debe comprobarse la situación concreta del municipio."
+      },
+      "Wien": {
+        "estado": "muy_restrictivo",
+        "detalle": "El camping fuera de lugares autorizados está fuertemente restringido. Para estancias turísticas debe utilizarse un camping o lugar autorizado."
+      }
+    },
+    "nota_practica": {
+      "titulo": "Austria no tiene una regla única de pernocta",
+      "detalle": "La regla práctica más segura es comprobar siempre el Bundesland y el municipio. Una plaza legal para estacionar no equivale necesariamente a una autorización para dormir dentro de la autocaravana."
+    },
+    "fuentes": [
+      {
+        "organismo": "oesterreich.gv.at",
+        "titulo": "Campen — normativa general y enlaces por Bundesland",
+        "fecha": "2026-03-16",
+        "url": "https://www.oesterreich.gv.at/de/themen/reisen_und_freizeit/freizeit-in-der-natur/campen"
+      },
+      {
+        "organismo": "oesterreich.gv.at",
+        "titulo": "Campen im Wald",
+        "fecha": "2026-03-16",
+        "url": "https://www.oesterreich.gv.at/de/themen/reisen_und_freizeit/freizeit-in-der-natur/freizeit_im_wald/Seite.3750020"
+      },
+      {
+        "organismo": "oesterreich.gv.at",
+        "titulo": "Feuer machen im Wald",
+        "fecha": "2026-03-16",
+        "url": "https://www.oesterreich.gv.at/de/themen/reisen_und_freizeit/freizeit-in-der-natur/freizeit_im_wald/Seite.3750030"
+      },
+      {
+        "organismo": "oesterreich.gv.at",
+        "titulo": "Campen in Tirol",
+        "fecha": "2026-03-16",
+        "url": "https://www.oesterreich.gv.at/de/themen/reisen_und_freizeit/freizeit-in-der-natur/campen/Seite.3390007"
+      },
+      {
+        "organismo": "RIS — Rechtsinformationssystem des Bundes",
+        "titulo": "Tiroler Campinggesetz 2001 — § 3",
+        "url": "https://www.ris.bka.gv.at/GeltendeFassung.wxe?Abfrage=LrT&Gesetzesnummer=20000099"
+      },
+      {
+        "organismo": "oesterreich.gv.at",
+        "titulo": "Campen in Niederösterreich",
+        "fecha": "2026-03-16",
+        "url": "https://www.oesterreich.gv.at/de/themen/reisen_und_freizeit/freizeit-in-der-natur/campen/Seite.3390004"
+      },
+      {
+        "organismo": "oesterreich.gv.at",
+        "titulo": "Campen in Oberösterreich",
+        "fecha": "2026-03-16",
+        "url": "https://www.oesterreich.gv.at/de/themen/reisen_und_freizeit/freizeit-in-der-natur/campen/Seite.3390005"
+      },
+      {
+        "organismo": "oesterreich.gv.at",
+        "titulo": "Campen in Salzburg",
+        "fecha": "2026-03-16",
+        "url": "https://www.oesterreich.gv.at/de/themen/reisen_und_freizeit/freizeit-in-der-natur/campen/Seite.3390006"
+      },
+      {
+        "organismo": "oesterreich.gv.at",
+        "titulo": "Campen in der Steiermark",
+        "fecha": "2026-03-16",
+        "url": "https://www.oesterreich.gv.at/de/themen/reisen_und_freizeit/freizeit-in-der-natur/campen/Seite.3390002"
+      },
+      {
+        "organismo": "ÖAMTC / Österreichischer Camping Club",
+        "titulo": "Wildcampen kann teuer werden — Regeln in Österreich und Europa",
+        "fecha": "2026-07-30",
+        "url": "https://www.oeamtc.at/presse/oecc-wildcampen-kann-teuer-werden-diese-regeln-gelten-in-oesterreich-und-europa-88530073"
+      }
+    ]
+  }
+]
