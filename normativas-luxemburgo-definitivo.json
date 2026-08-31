@@ -1,0 +1,98 @@
+[
+  {
+    "id": "normativa-lu",
+    "pais": "Luxemburgo",
+    "actualizado": "2026-08-31",
+    "estado_general": "En Luxemburgo debe distinguirse entre estacionar una autocaravana conforme al código de circulación y utilizarla para pernoctar o acampar. La información turística oficial indica que está prohibido pasar la noche fuera de campings, en calles y aparcamientos. Además, la legislación de protección de la naturaleza limita el estacionamiento de caravanas y vehículos habitables en zona verde y permite a los municipios establecer reglas todavía más restrictivas.",
+    "resumen": "Para una pernocta turística debe utilizarse un camping o un área de estancia para autocaravanas expresamente habilitada. Una autocaravana puede circular y estacionar en la vía pública conforme al código de circulación, pero ese estacionamiento no constituye por sí mismo autorización para pasar la noche. Los municipios pueden imponer restricciones adicionales.",
+    "estacionamiento": {
+      "estado": "permitido_conforme_al_codigo_y_restricciones_locales",
+      "detalle": "Las autocaravanas admitidas a la circulación pueden estacionar en las vías públicas respetando el código de circulación, la señalización y las normas municipales. En zona verde, la ley de protección de la naturaleza permite también el estacionamiento en vías públicas de vehículos automotores y remolques destinados a habitación, siempre conforme al código de la route.",
+      "condiciones_practicas": [
+        "Respetar señalización, marcas viales y reglamentos comunales.",
+        "No confundir estacionamiento legal con autorización para pernoctar.",
+        "Para dormir, utilizar campings o áreas de estancia para autocaravanas habilitadas.",
+        "Comprobar siempre las restricciones del municipio."
+      ]
+    },
+    "pernocta": {
+      "estado": "prohibida_fuera_de_lugares_autorizados",
+      "detalle": "Visit Luxembourg indica expresamente que está prohibido pasar la noche fuera de los campings, tanto en calles como en aparcamientos. Para una estancia nocturna deben utilizarse campings o instalaciones destinadas a autocaravanas."
+    },
+    "acampada_libre": {
+      "estado": "prohibida",
+      "detalle": "El camping sauvage no está permitido. La Policía Grand-Ducale ha recordado expresamente la prohibición del camping salvaje, incluido junto a carreteras, y recomienda utilizar campings oficiales."
+    },
+    "elementos_exteriores": {
+      "estado": "solo_en_lugares_que_lo_autoricen",
+      "detalle": "Mesas, sillas, toldos, barbacoas y demás elementos propios de camping no deben instalarse en una plaza de estacionamiento ordinaria. Deben respetarse las condiciones del camping o área autorizada.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "patas estabilizadoras",
+        "barbacoa",
+        "equipamiento exterior"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "no_aplicable_costa_maritima",
+      "detalle": "Luxemburgo no tiene costa marítima. Las riberas, cursos de agua, embalses y espacios naturales pueden estar sujetos a restricciones ambientales específicas."
+    },
+    "espacios_naturales": {
+      "estado": "restricciones_importantes",
+      "detalle": "La Ley de 18 de julio de 2018 sobre protección de la naturaleza regula específicamente caravanas, mobilhomes y vehículos habitables en zona verde. El estacionamiento permanente se limita esencialmente a campings autorizados y zonas especialmente acondicionadas, sin perjuicio de reglas comunales más restrictivas. En vías públicas puede estacionarse conforme al código de circulación, pero ello no convierte el lugar en zona de pernocta o camping."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "sujeto_al_lugar_y_normas_ambientales",
+      "detalle": "No debe hacerse fuego o barbacoa en naturaleza salvo donde esté permitido. La Policía ha recordado en campañas concretas la prohibición de barbacoas en la naturaleza, y deben respetarse las restricciones ambientales, forestales y locales."
+    },
+    "aguas_y_residuos": {
+      "estado": "vertido_y_abandono_no_permitidos",
+      "detalle": "En zona verde está prohibido abandonar, depositar o arrojar residuos fuera de lugares expresamente designados por las autoridades estatales o comunales. Las aguas residuales de la autocaravana deben evacuarse mediante instalaciones apropiadas."
+    },
+    "limites_de_permanencia": {
+      "estado": "dependen_del_lugar_autorizado_y_reglamento_comunal",
+      "detalle": "No existe un límite nacional único aplicable a todas las plazas de autocaravanas. Los campings, camper parkings y municipios pueden establecer sus propios límites. La pernocta en calles y aparcamientos ordinarios no está permitida."
+    },
+    "multas": {
+      "estado": "dependen_de_la_infraccion",
+      "detalle": "Las sanciones dependen de la conducta concreta: estacionamiento contrario al código de circulación, incumplimiento de reglamentos comunales, camping no autorizado, daños o infracciones ambientales, abandono de residuos u otras prohibiciones aplicables."
+    },
+    "normativa_local": {
+      "importancia": "muy_alta",
+      "detalle": "Los consejos comunales pueden adoptar disposiciones más restrictivas que las reglas generales. Por ello debe comprobarse la señalización y el reglamento de la comuna, incluso cuando el vehículo esté correctamente estacionado."
+    },
+    "nota_practica": {
+      "titulo": "En Luxemburgo, estacionar no autoriza a pernoctar",
+      "detalle": "La regla práctica es sencilla: para pasar la noche, utilizar un camping o un área para autocaravanas expresamente habilitada. Un aparcamiento ordinario puede permitir estacionar el vehículo, pero no dormir en él."
+    },
+    "fuentes": [
+      {
+        "organismo": "Visit Luxembourg",
+        "titulo": "Règlement de la circulation — Camper / Camping sauvage",
+        "url": "https://www.visitluxembourg.com/fr/planifier-son-voyage/mobilite-sur-place/reglement-de-la-circulation"
+      },
+      {
+        "organismo": "Legilux / Journal officiel du Grand-Duché de Luxembourg",
+        "titulo": "Loi du 18 juillet 2018 concernant la protection de la nature et des ressources naturelles",
+        "url": "https://environnement.public.lu/dam-assets/documents/natur/biodiversite/Loi-du-18-juillet-2018-concernant-la-protection-de-la-nature-et-des-ressources-naturelles.pdf"
+      },
+      {
+        "organismo": "Police Grand-Ducale",
+        "titulo": "Consignes — camping sauvage et barbecue dans la nature",
+        "url": "https://police.public.lu/fr/actualites/2025/05/semaine-22/pelerinage-notredame-fatima-consignes.html"
+      },
+      {
+        "organismo": "Gouvernement luxembourgeois",
+        "titulo": "Destination Camper Park(ing) — réseau d'aires de séjour pour camping-cars",
+        "url": "https://gouvernement.lu/fr/actualites/toutes_actualites/communiques/2023/04-avril/06-destination-camper-parking.html"
+      },
+      {
+        "organismo": "Guichet.lu",
+        "titulo": "Stationnement résidentiel — compétence des communes",
+        "url": "https://guichet.public.lu/fr/citoyens/transport/transports-individuels/stationnement/vignette-stationnement-residentiel.html"
+      }
+    ]
+  }
+]
