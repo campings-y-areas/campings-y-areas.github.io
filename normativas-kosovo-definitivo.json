@@ -1,0 +1,96 @@
+[
+  {
+    "id": "normativa-xk",
+    "pais": "Kosovo",
+    "actualizado": "2026-08-31",
+    "estado_general": "En Kosovo las autocaravanas se someten a la Ley 08/L-186 sobre reglas de tráfico por carretera, vigente desde 2024, y a la señalización y regulación local. No se ha identificado un derecho nacional específico que permita pernoctar o acampar con autocaravana en cualquier aparcamiento. En áreas naturales protegidas, parques y bosques pueden existir reglas de acceso, estacionamiento, camping y fuego mucho más estrictas.",
+    "resumen": "La regla práctica es separar estacionamiento de camping: estacionar legalmente no concede por sí mismo derecho a instalar un campamento. La Ley de Protección de la Naturaleza permite que parques nacionales y otras áreas protegidas tengan reglamentos internos específicos. Un ejemplo oficial, el Parque de Gërmia, permite estacionar y pernoctar solo en lugares previstos y señalizados, prohíbe el camping fuera de zonas acondicionadas y permite fuego únicamente en lugares destinados a ello.",
+    "estacionamiento": {
+      "estado": "segun_ley_de_trafico_senalizacion_y_reglas_locales",
+      "detalle": "La Ley 08/L-186 sobre reglas de tráfico por carretera sustituyó en 2024 la anterior Ley 05/L-088. La autocaravana debe respetar las reglas generales de parada y estacionamiento, señalización y restricciones municipales. En parques y áreas protegidas pueden existir limitaciones adicionales.",
+      "condiciones_practicas": [
+        "Respetar señales y marcas viales.",
+        "Comprobar restricciones municipales y del gestor del terreno.",
+        "En parques y áreas protegidas utilizar aparcamientos designados.",
+        "No considerar un aparcamiento autorizado como autorización automática para acampar."
+      ]
+    },
+    "pernocta": {
+      "estado": "sin_derecho_nacional_general_en_cualquier_aparcamiento",
+      "detalle": "No se ha identificado una norma nacional que otorgue a las autocaravanas un derecho general a pernoctar en cualquier lugar donde puedan estacionar. Los gestores de áreas protegidas pueden determinar lugares concretos de estancia y pernocta. En el Parque de Gërmia, por ejemplo, la estancia nocturna solo está permitida en lugares previstos y señalizados."
+    },
+    "acampada_libre": {
+      "estado": "sujeta_a_reglas_del_espacio_y_restringida_en_areas_protegidas",
+      "detalle": "La Ley de Protección de la Naturaleza permite establecer reglamentos internos para parques nacionales, parques naturales y otras áreas protegidas. En Gërmia el camping está prohibido salvo en lugares acondicionados para ese fin o casos especiales autorizados por la dirección."
+    },
+    "elementos_exteriores": {
+      "estado": "solo_donde_este_permitido_el_camping",
+      "detalle": "Toldos, mesas, sillas, barbacoas y otros elementos exteriores deben utilizarse únicamente donde el camping o la actividad recreativa correspondiente esté autorizada.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "barbacoa",
+        "equipamiento exterior"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "sin_costa_maritima",
+      "detalle": "Kosovo no tiene costa marítima. Junto a lagos, ríos y embalses deben respetarse las reglas del terreno, propiedad, municipio y espacio protegido; no existe un derecho general a estacionar o acampar con autocaravana junto al agua."
+    },
+    "espacios_naturales": {
+      "estado": "regimen_especifico_por_area_protegida",
+      "detalle": "La Ley de Protección de la Naturaleza establece diferentes categorías de áreas protegidas y permite limitar actividades y visitas para conservar sus valores. Los reglamentos internos concretan estacionamiento, pernocta, camping, fuego, residuos y otras actividades."
+    },
+    "bosques": {
+      "estado": "protegidos_por_ley_y_sujetos_a_gestion_especifica",
+      "detalle": "La Ley 08/L-137 de Bosques, publicada en 2023 y consolidada en octubre de 2025, es la norma forestal vigente. Los bosques públicos, terrenos forestales y carreteras forestales son bienes públicos de especial importancia y están sujetos a gestión y protección específicas. No debe asumirse que una pista forestal permite estacionar o acampar."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "solo_donde_este_autorizado_y_extrema_precaucion",
+      "detalle": "Las áreas protegidas pueden limitar estrictamente el fuego. El reglamento oficial del Parque de Gërmia, por ejemplo, prohíbe encender fuego o utilizar medios de fuego fuera de los lugares destinados a ello. Deben respetarse además las medidas temporales contra incendios forestales."
+    },
+    "aguas_y_residuos": {
+      "estado": "no_abandonar_residuos_ni_realizar_vertidos",
+      "detalle": "La Ley de Protección de la Naturaleza contempla reglas específicas para residuos en espacios protegidos y los reglamentos internos pueden prohibir su depósito fuera de lugares previstos. Las aguas negras y grises de autocaravana deben vaciarse en instalaciones apropiadas."
+    },
+    "limites_de_permanencia": {
+      "estado": "dependen_del_lugar",
+      "detalle": "No se ha identificado un límite nacional único específico para todas las autocaravanas estacionadas. La duración puede estar limitada por señalización, municipio, propietario, aparcamiento o gestor del área protegida."
+    },
+    "multas": {
+      "estado": "dependen_de_la_infraccion",
+      "detalle": "Las sanciones dependen de la conducta concreta: infracciones de estacionamiento, incumplimiento del reglamento de un área protegida, camping no autorizado, fuego, residuos u otras infracciones ambientales."
+    },
+    "normativa_local": {
+      "importancia": "muy_alta",
+      "detalle": "En Kosovo es especialmente importante comprobar la normativa municipal y del espacio natural concreto. Los reglamentos internos de parques pueden fijar exactamente dónde se permite aparcar, pasar la noche, acampar o hacer fuego."
+    },
+    "nota_practica": {
+      "titulo": "Kosovo: usar lugares señalizados y comprobar las reglas del parque",
+      "detalle": "Para una autocaravana, la opción más segura es utilizar campings, áreas o aparcamientos donde la estancia esté expresamente permitida. En parques y espacios naturales no hay que asumir que poder acceder con el vehículo permite pernoctar o desplegar elementos de camping."
+    },
+    "fuentes": [
+      {
+        "organismo": "Gazeta Zyrtare e Republikës së Kosovës",
+        "titulo": "Ley 08/L-186 sobre reglas de tráfico por carretera — vigente desde 2024",
+        "url": "https://gzk.rks-gov.net/ActDetail.aspx?ActID=87975"
+      },
+      {
+        "organismo": "Gazeta Zyrtare e Republikës së Kosovës",
+        "titulo": "Ley 03/L-233 de Protección de la Naturaleza",
+        "url": "https://gzk.rks-gov.net/ActDocumentDetail.aspx?ActID=2716"
+      },
+      {
+        "organismo": "Gazeta Zyrtare e Republikës së Kosovës",
+        "titulo": "Ley 08/L-137 de Bosques — versión consolidada 23/10/2025",
+        "url": "https://gzk.rks-gov.net/ActDetail.aspx?ActID=111750"
+      },
+      {
+        "organismo": "Gazeta Zyrtare / Municipio de Prishtina",
+        "titulo": "Reglamento interno del Parque de Gërmia — estacionamiento, pernocta, camping y fuego",
+        "url": "https://gzk.rks-gov.net/ActDocumentDetail.aspx?ActID=11855"
+      }
+    ]
+  }
+]
