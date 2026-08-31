@@ -11,6 +11,44 @@
   <link rel="apple-touch-icon" href="logo.png">
 
   <link rel="stylesheet" href="style.css?v=2">
+
+  <style>
+    .selector-normativas {
+      max-width: 430px;
+      margin: 0 auto 24px;
+    }
+
+    .selector-normativas label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    #paisNormativa {
+      width: 100%;
+      min-height: 50px;
+      padding: 10px 14px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    #paisNormativa option {
+      font-size: 18px;
+    }
+
+    @media (max-width: 600px) {
+      .selector-normativas {
+        max-width: 100%;
+      }
+
+      #paisNormativa {
+        min-height: 52px;
+        font-size: 18px;
+      }
+    }
+  </style>
+
 </head>
 
 <body>
@@ -58,7 +96,7 @@
 
     <section class="categorias">
 
-      <div class="buscador-campings">
+      <div class="buscador-campings selector-normativas">
 
         <label for="paisNormativa">País</label>
 
