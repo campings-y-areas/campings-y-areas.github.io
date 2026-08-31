@@ -1,0 +1,92 @@
+[
+  {
+    "id": "normativa-pt",
+    "pais": "Portugal",
+    "actualizado": "2026-08-31",
+    "estado_general": "Portugal regula de forma expresa la pernocta y el aparcamiento de autocaravanas. La regla general permite la pernocta hasta 48 horas en el mismo municipio cuando no exista regulación municipal específica, pero establece prohibiciones especiales en Red Natura 2000, áreas protegidas y zonas afectadas por Planes de Ordenación de la Orla Costera.",
+    "resumen": "En el territorio no protegido, y si el municipio no ha aprobado una regulación propia, una autocaravana homologada puede pernoctar hasta 48 horas en el mismo municipio. En Red Natura 2000, áreas protegidas y zonas comprendidas por Planes de Ordenación de la Orla Costera, la pernocta y el aparcamiento están prohibidos salvo en lugares expresamente autorizados. Estacionar no permite ocupar espacio fuera del perímetro del vehículo ni realizar actividades propias de acampada en la vía o espacio público.",
+    "estacionamiento": {
+      "estado": "permitido_con_condiciones",
+      "detalle": "Las autocaravanas pueden estacionar en las mismas condiciones que los demás vehículos, respetando el Código da Estrada, señalización y reglamentos municipales. No se permite realizar actividades de acampada en la vía o espacio público, verter residuos o aguas fuera de los sistemas autorizados ni ocupar una superficie superior al perímetro de la autocaravana.",
+      "condiciones_practicas": [
+        "Respetar la señalización y los reglamentos municipales.",
+        "No sacar elementos al exterior que ocupen más espacio que el perímetro del vehículo.",
+        "No realizar actividades propias de acampada en la vía o espacio público.",
+        "No verter aguas grises, negras ni residuos fuera de instalaciones autorizadas.",
+        "Comprobar restricciones específicas en zonas costeras y espacios protegidos."
+      ]
+    },
+    "pernocta": {
+      "estado": "permitida_hasta_48_horas_con_condiciones",
+      "detalle": "En el territorio que no sea Red Natura 2000, área protegida ni zona afectada por Planes de Ordenación de la Orla Costera, y siempre que no exista reglamento municipal específico, se permite la pernocta de autocaravanas homologadas por el Instituto da Mobilidade e dos Transportes durante un máximo de 48 horas en el mismo municipio. En lugares expresamente autorizados no se aplica ese límite estatal de 48 horas, sin perjuicio de las normas concretas del área.",
+      "definicion_legal": "El Código da Estrada considera pernocta la permanencia de una autocaravana o vehículo similar con ocupantes entre las 22:00 y las 07:00."
+    },
+    "acampada_libre": {
+      "estado": "restringida",
+      "detalle": "La pernocta legal de una autocaravana no equivale a autorización para acampar. En la vía y espacio público están prohibidas la práctica de campismo y las actividades asociadas a ella. Además, los espacios protegidos y otros territorios pueden disponer de normas específicas que prohíban el campismo y caravanismo fuera de los lugares destinados al efecto."
+    },
+    "elementos_exteriores": {
+      "estado": "no_permitidos_en_estacionamiento_ordinario",
+      "detalle": "El estacionamiento de una autocaravana no puede ocupar la vía o espacio público más allá del perímetro del vehículo. Desplegar mesas, sillas, toldos, patas estabilizadoras u otros elementos que ocupen espacio exterior puede considerarse aparcamiento/acampada y quedar prohibido fuera de lugares autorizados.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "patas estabilizadoras",
+        "tenderetes",
+        "otros elementos que excedan el perímetro del vehículo"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "restricciones_especiales",
+      "detalle": "En las zonas comprendidas por los Planes de Ordenación de la Orla Costera, la pernocta y el aparcamiento de autocaravanas están prohibidos salvo en lugares expresamente autorizados. Además pueden existir restricciones municipales adicionales en playas, dunas, acantilados y aparcamientos costeros."
+    },
+    "espacios_naturales": {
+      "estado": "prohibicion_general_salvo_lugar_autorizado",
+      "detalle": "En áreas de la Red Natura 2000 y áreas protegidas, la pernocta y el aparcamiento de autocaravanas están prohibidos salvo en lugares expresamente autorizados. Cada área protegida puede además imponer condiciones adicionales mediante su plan de ordenación."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "regulacion_especifica_y_riesgo_incendio",
+      "detalle": "El uso de fuego y barbacoas está sometido a la normativa forestal, municipal y de los espacios protegidos, con restricciones que pueden variar según el nivel de peligro de incendio. No debe asumirse que una zona de estacionamiento o pernocta permite hacer fuego."
+    },
+    "aguas_y_residuos": {
+      "estado": "vertido_prohibido",
+      "detalle": "Está prohibido verter residuos orgánicos o aguas fuera de los sistemas de disposición final autorizados. Las aguas grises y negras deben vaciarse únicamente en instalaciones destinadas a ello."
+    },
+    "limites_de_permanencia": {
+      "estado": "48_horas_en_el_mismo_municipio_como_regla_general",
+      "detalle": "Cuando no exista reglamento municipal específico, la pernocta de autocaravanas homologadas está permitida durante un máximo de 48 horas en el mismo municipio. Los lugares expresamente autorizados pueden establecer sus propias condiciones y límites."
+    },
+    "multas": {
+      "estado": "importes_definidos_en_codigo_da_estrada",
+      "detalle": "El incumplimiento de la regla general de pernocta puede ser sancionado con una multa de 60 a 300 euros. Cuando la pernocta o el aparcamiento se realiza ilegalmente en Red Natura 2000, áreas protegidas o zonas comprendidas por Planes de Ordenación de la Orla Costera, la multa prevista es de 120 a 600 euros. Otras infracciones relacionadas con acampada, vertidos u ocupación del espacio público pueden tener sanciones adicionales según la normativa aplicable."
+    },
+    "normativa_local": {
+      "importancia": "alta",
+      "detalle": "Los municipios pueden aprobar reglamentos propios sobre la actividad y el estacionamiento de autocaravanas. Por ello, incluso fuera de zonas protegidas, debe comprobarse la señalización y la normativa municipal antes de pernoctar."
+    },
+    "fuentes": [
+      {
+        "organismo": "Diário da República",
+        "titulo": "Lei n.º 66/2021, de 24 de agosto — modificación del Código da Estrada y artículo 50.º-A",
+        "fecha": "2021-08-24",
+        "url": "https://files.dre.pt/1s/2021/08/16400/0000900013.pdf"
+      },
+      {
+        "organismo": "Instituto da Conservação da Natureza e das Florestas (ICNF)",
+        "titulo": "Atividades em Áreas Protegidas",
+        "url": "https://www.icnf.pt/turismodenatureza/atividades"
+      },
+      {
+        "organismo": "Instituto da Conservação da Natureza e das Florestas (ICNF)",
+        "titulo": "Planos de Ordenamento de Áreas Protegidas",
+        "url": "https://www.icnf.pt/conservacao/ordenamentoegestao/planosdeordenamentodeareasprotegidas"
+      },
+      {
+        "organismo": "Instituto da Conservação da Natureza e das Florestas (ICNF)",
+        "titulo": "Normas Orientadoras para Áreas de Serviço de Autocaravanas",
+        "url": "https://www.icnf.pt/oquefazemos/normas"
+      }
+    ]
+  }
+]
