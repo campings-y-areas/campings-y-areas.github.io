@@ -1,0 +1,117 @@
+[
+  {
+    "id": "normativa-de",
+    "pais": "Alemania",
+    "actualizado": "2026-08-31",
+    "estado_general": "En Alemania debe distinguirse entre estacionar un vehículo, realizar una pernocta puntual para recuperar la capacidad de conducción y acampar. El estacionamiento se rige principalmente por la Straßenverkehrs-Ordnung (StVO) y la señalización local. El camping libre no está permitido como regla general y las normas de los Länder, municipios, bosques y espacios protegidos pueden imponer restricciones adicionales.",
+    "resumen": "Una autocaravana puede estacionar donde esté permitido para vehículos de sus dimensiones y peso. Dormir una noche puede admitirse cuando sea necesario para recuperar la capacidad de conducción y no exista una prohibición específica, pero no autoriza a permanecer por motivos turísticos ni a desplegar elementos de camping. Para estancias recreativas deben utilizarse Stellplätze, campings u otros lugares expresamente autorizados.",
+    "estacionamiento": {
+      "estado": "permitido_con_condiciones",
+      "detalle": "Las autocaravanas están sujetas a las reglas generales de estacionamiento de la StVO, incluida la señalización, las dimensiones de la plaza y las restricciones aplicables por masa o categoría de vehículo. El artículo 12 StVO regula las condiciones generales de parada y estacionamiento.",
+      "condiciones_practicas": [
+        "Respetar señales y marcas viales.",
+        "No ocupar una plaza si el vehículo no cabe correctamente dentro del espacio permitido.",
+        "Comprobar restricciones por altura, longitud, peso o categoría de vehículo.",
+        "Respetar posibles limitaciones locales o estacionamientos reservados exclusivamente a determinados vehículos.",
+        "No convertir el estacionamiento en una instalación de camping."
+      ]
+    },
+    "pernocta": {
+      "estado": "permitida_de_forma_puntual_para_recuperar_la_capacidad_de_conduccion",
+      "detalle": "La práctica aceptada en Alemania permite una pernocta puntual en un lugar donde el estacionamiento sea legal cuando resulte necesaria para recuperar la capacidad de conducción. No debe utilizarse esta excepción como estancia turística prolongada ni acompañarse de comportamiento propio de camping.",
+      "condiciones_practicas": [
+        "El estacionamiento debe ser legal.",
+        "No debe existir una prohibición expresa de pernocta.",
+        "La finalidad debe ser recuperar la capacidad de conducción.",
+        "No desplegar toldos, mesas, sillas u otros elementos de camping.",
+        "No prolongar la estancia como alojamiento turístico."
+      ]
+    },
+    "acampada_libre": {
+      "estado": "generalmente_no_permitida",
+      "detalle": "El camping libre fuera de lugares autorizados no está permitido como regla general. La regulación concreta depende en gran medida de los Länder, municipios, leyes forestales y normas de protección de la naturaleza. Para una estancia recreativa deben utilizarse campings, Wohnmobilstellplätze u otros lugares autorizados."
+    },
+    "elementos_exteriores": {
+      "estado": "no_permitidos_en_una_simple_pernocta_de_transito",
+      "detalle": "Sacar mesas, sillas, desplegar el toldo, utilizar patas estabilizadoras u ocupar espacio adicional constituye comportamiento de camping y no forma parte de una simple parada para recuperar la capacidad de conducción.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "patas estabilizadoras",
+        "equipamiento exterior de camping"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "depende_del_land_y_normativa_local",
+      "detalle": "No existe una única regla federal específica para todas las costas y playas. Los Länder y municipios costeros pueden restringir el acceso, estacionamiento, pernocta y camping mediante normativa propia, especialmente en dunas, diques, reservas y zonas turísticas. Debe comprobarse siempre la señalización local."
+    },
+    "espacios_naturales": {
+      "estado": "fuertemente_regulados",
+      "detalle": "El Bundesnaturschutzgesetz establece el marco federal de protección de la naturaleza, pero los Länder y las normas concretas de parques, reservas y otras áreas protegidas desarrollan muchas de las restricciones. El acceso con vehículos, la pernocta y el camping pueden estar prohibidos o limitados en estas zonas."
+    },
+    "bosques": {
+      "estado": "regulacion_de_los_lander",
+      "detalle": "El Bundeswaldgesetz permite entrar en el bosque con fines recreativos, pero establece que los Länder regulan los detalles y pueden limitar usos adicionales. El acceso recreativo al bosque no equivale a una autorización para entrar con una autocaravana, estacionar o acampar."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "muy_restringido_en_bosques_y_espacios_naturales",
+      "detalle": "El uso de fuego y barbacoas depende de las leyes forestales de cada Land, de las normas locales y del nivel de riesgo de incendio. En bosques y espacios protegidos puede estar totalmente prohibido fuera de lugares expresamente habilitados."
+    },
+    "aguas_y_residuos": {
+      "estado": "usar_solo_instalaciones_autorizadas",
+      "detalle": "Las aguas grises, aguas negras y residuos deben evacuarse en instalaciones adecuadas. Una plaza de estacionamiento ordinaria no autoriza el vertido de aguas residuales ni residuos."
+    },
+    "limites_de_permanencia": {
+      "estado": "sin_limite_federal_unico_para_autocaravanas_estacionadas",
+      "detalle": "La StVO no fija un único límite nacional de permanencia para todas las autocaravanas correctamente estacionadas. Las restricciones pueden proceder de la señalización o de regulación local. Como regla específica, un remolque de vehículo de motor estacionado sin vehículo tractor no puede permanecer más de dos semanas salvo en plazas especialmente señalizadas."
+    },
+    "vehiculos_pesados_y_remolques": {
+      "detalle": "El artículo 12 StVO establece restricciones nocturnas y en domingos/festivos para el estacionamiento habitual de determinados vehículos de más de 7,5 toneladas y remolques de más de 2 toneladas en determinados tipos de zonas urbanas. Además, los remolques sin vehículo tractor tienen un límite general de dos semanas salvo plazas autorizadas."
+    },
+    "multas": {
+      "estado": "dependen_de_la_infraccion_y_del_land",
+      "detalle": "Las multas dependen de la infracción concreta. El catálogo federal de multas contempla, por ejemplo, sanciones por estacionamiento contrario a la StVO y por dejar un remolque sin vehículo tractor más de dos semanas. Las infracciones relacionadas con camping libre, espacios protegidos o bosques pueden estar sancionadas por legislación de los Länder."
+    },
+    "normativa_local": {
+      "importancia": "muy_alta",
+      "detalle": "Los Länder y municipios tienen un papel importante. Además de la StVO federal, deben comprobarse la señalización, las ordenanzas municipales, las leyes forestales del Land y las normas de los espacios protegidos."
+    },
+    "nota_practica": {
+      "titulo": "Wiederherstellung der Fahrtüchtigkeit",
+      "detalle": "La excepción práctica más importante para viajeros es la pernocta puntual destinada exclusivamente a recuperar la capacidad de conducción. No debe confundirse con el derecho a acampar o permanecer varios días en el mismo lugar."
+    },
+    "fuentes": [
+      {
+        "organismo": "Bundesministerium der Justiz / Bundesamt für Justiz",
+        "titulo": "Straßenverkehrs-Ordnung (StVO) — § 12 Halten und Parken",
+        "url": "https://www.gesetze-im-internet.de/stvo_2013/__12.html"
+      },
+      {
+        "organismo": "Bundesministerium der Justiz / Bundesamt für Justiz",
+        "titulo": "Straßenverkehrs-Ordnung (StVO) — texto completo",
+        "url": "https://www.gesetze-im-internet.de/stvo_2013/"
+      },
+      {
+        "organismo": "Bundesministerium der Justiz / Bundesamt für Justiz",
+        "titulo": "Bundesnaturschutzgesetz (BNatSchG)",
+        "url": "https://www.gesetze-im-internet.de/bnatschg_2009/"
+      },
+      {
+        "organismo": "Bundesministerium der Justiz / Bundesamt für Justiz",
+        "titulo": "Bundeswaldgesetz (BWaldG) — § 14 Betreten des Waldes",
+        "url": "https://www.gesetze-im-internet.de/bwaldg/__14.html"
+      },
+      {
+        "organismo": "Bundesministerium der Justiz / Bundesamt für Justiz",
+        "titulo": "Bußgeldkatalog-Verordnung — Anlage",
+        "url": "https://www.gesetze-im-internet.de/bkatv_2013/anlage.html"
+      },
+      {
+        "organismo": "ADAC",
+        "titulo": "Autofahren in Deutschland — Freies Campen und Übernachten zur Wiederherstellung der Fahrtüchtigkeit",
+        "url": "https://www.adac.de/reise-freizeit/reiseplanung/reiseziele/deutschland/fahrzeug/"
+      }
+    ]
+  }
+]
