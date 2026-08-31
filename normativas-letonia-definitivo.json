@@ -1,0 +1,96 @@
+[
+  {
+    "id": "normativa-lv",
+    "pais": "Letonia",
+    "actualizado": "2026-08-31",
+    "estado_general": "En Letonia las autocaravanas se someten a las normas generales de circulación y estacionamiento, a la señalización y a las restricciones del terreno. En la franja costera de dunas y playas existen restricciones especialmente fuertes para vehículos. En espacios naturales protegidos también se limita la circulación fuera de carreteras y el fuego.",
+    "resumen": "La regla práctica es utilizar carreteras y aparcamientos autorizados y no considerar una pista, playa o terreno natural como estacionamiento libre. La Ley de Zonas de Protección prohíbe en la franja costera de dunas y playas circular, parar o estacionar vehículos a motor fuera de las carreteras, salvo excepciones legales. La autoridad ambiental indica además que en la zona de dunas los vehículos deben estacionarse únicamente en aparcamientos destinados y señalizados para ello.",
+    "estacionamiento": {
+      "estado": "segun_normas_de_trafico_senalizacion_y_restricciones_del_terreno",
+      "detalle": "El estacionamiento ordinario se rige por la normativa de tráfico y la señalización. En áreas naturales, costa y terrenos protegidos se añaden restricciones específicas de acceso y estacionamiento.",
+      "condiciones_practicas": [
+        "Respetar señales y marcas viales.",
+        "En la franja costera de dunas, usar aparcamientos señalizados.",
+        "No entrar ni estacionar fuera de carreteras en playas y dunas salvo excepción legal.",
+        "En áreas protegidas, mantenerse en carreteras y rutas autorizadas."
+      ]
+    },
+    "pernocta": {
+      "estado": "depende_del_lugar_y_no_crea_derecho_de_acampada",
+      "detalle": "Dormir dentro de una autocaravana no concede un derecho especial para estacionar en lugares donde el vehículo no puede estar. Deben respetarse señalización, propiedad, normativa municipal y las restricciones ambientales, especialmente en costa y espacios protegidos."
+    },
+    "acampada_libre": {
+      "estado": "restringida_en_costa_y_areas_protegidas",
+      "detalle": "En la zona costera de dunas, la autoridad ambiental señala que las tiendas solo pueden instalarse en lugares recreativos preparados y campings. En áreas protegidas pueden existir reglas similares o más estrictas según la categoría y normativa específica."
+    },
+    "elementos_exteriores": {
+      "estado": "solo_donde_este_permitido_acampar",
+      "detalle": "Toldos, mesas, sillas, barbacoas y otros elementos exteriores deben utilizarse únicamente donde esté autorizada la actividad de camping o recreo correspondiente.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "barbacoa",
+        "equipamiento exterior"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "restricciones_fuertes_para_vehiculos",
+      "detalle": "La Ley de Zonas de Protección prohíbe en la franja costera de dunas y playas circular, parar y estacionar vehículos a motor fuera de las carreteras, salvo excepciones expresamente previstas. La Dabas aizsardzības pārvalde recuerda que las rodadas o pistas informales del bosque no se consideran carreteras y que los vehículos deben dejarse en aparcamientos señalizados."
+    },
+    "espacios_naturales": {
+      "estado": "circulacion_fuera_de_carreteras_y_fuego_restringidos",
+      "detalle": "Las reglas generales de áreas naturales especialmente protegidas prohíben en numerosas categorías abandonar las carreteras con vehículos a motor por terrenos forestales o agrícolas, salvo rutas específicamente creadas o excepciones de gestión. También restringen el fuego a lugares especialmente preparados."
+    },
+    "bosques": {
+      "estado": "respetar_vias_y_restricciones_de_proteccion",
+      "detalle": "En bosques situados dentro de áreas protegidas no debe circularse fuera de carreteras salvo rutas o excepciones autorizadas. En la costa, las pistas informales y rodadas forestales no habilitan por sí mismas el acceso de vehículos."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "solo_en_lugares_habilitados_en_zonas_restringidas",
+      "detalle": "En áreas protegidas y en la franja costera de dunas, el fuego está prohibido fuera de lugares especialmente preparados, salvo excepciones legales concretas. Deben respetarse además las restricciones temporales por riesgo de incendio."
+    },
+    "aguas_y_residuos": {
+      "estado": "no_realizar_vertidos_ni_abandonar_residuos",
+      "detalle": "Aguas grises, aguas negras y residuos deben eliminarse en instalaciones apropiadas. La autoridad ambiental exige retirar los residuos de las zonas naturales y costeras."
+    },
+    "limites_de_permanencia": {
+      "estado": "dependen_del_aparcamiento_y_normativa_local",
+      "detalle": "No se ha identificado un límite nacional único específico para todas las autocaravanas estacionadas. La duración puede quedar limitada por señalización, municipio, propietario, aparcamiento o gestor del espacio natural."
+    },
+    "multas": {
+      "estado": "dependen_de_la_infraccion",
+      "detalle": "Las sanciones dependen de la conducta concreta: estacionamiento indebido, entrada o estacionamiento de vehículos en zonas prohibidas de costa, incumplimiento de normas de un área protegida, fuego, residuos u otras infracciones ambientales."
+    },
+    "normativa_local": {
+      "importancia": "alta",
+      "detalle": "Municipios y gestores de espacios naturales pueden establecer restricciones adicionales. En costa, parques y reservas debe comprobarse siempre la señalización del lugar."
+    },
+    "nota_practica": {
+      "titulo": "Letonia: especial cuidado con playas y dunas",
+      "detalle": "No entrar con la autocaravana por pistas o rodadas que conduzcan hacia la playa pensando que son carreteras. En la franja de dunas debe utilizarse un aparcamiento señalizado. Para pasar la noche con seguridad jurídica, la opción preferible es un camping, área o aparcamiento donde la estancia esté permitida."
+    },
+    "fuentes": [
+      {
+        "organismo": "Likumi.lv — legislación oficial de Letonia",
+        "titulo": "Aizsargjoslu likums — Ley de Zonas de Protección, restricciones en costa y dunas",
+        "url": "https://likumi.lv/ta/id/42348-aizsargjoslu-likums"
+      },
+      {
+        "organismo": "Dabas aizsardzības pārvalde",
+        "titulo": "Cómo disfrutar responsablemente de la costa — vehículos, fuego y pernocta",
+        "url": "https://www.daba.gov.lv/lv/jaunums/ka-istenot-dabai-draudzigu-atputu-pie-juras-skaidro-valsts-vides-dienests"
+      },
+      {
+        "organismo": "Likumi.lv — legislación oficial de Letonia",
+        "titulo": "Reglas generales de protección y uso de áreas naturales especialmente protegidas",
+        "url": "https://likumi.lv/ta/id/207283"
+      },
+      {
+        "organismo": "Dabas aizsardzības pārvalde",
+        "titulo": "Natura 2000 en Letonia — reglas prácticas de visita",
+        "url": "https://www.daba.gov.lv/lv/natura-2000-teritorijas-latvija"
+      }
+    ]
+  }
+]
