@@ -1,0 +1,17 @@
+[
+  {
+    "id": "taller-ba-001",
+    "nombre": "Auto Centar Italy (A.C.I.)",
+    "tipo": "taller",
+    "pais": "Bosnia y Herzegovina",
+    "comunidad_autonoma": "Sarajevo",
+    "provincia": "Sarajevo",
+    "localidad": "Sarajevo",
+    "lat": null,
+    "lon": null,
+    "telefono": "+387 33 712 001",
+    "web": "https://aci.ba/?p=1",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Auto%20Centar%20Italy%20%28A.C.I.%29%2C%20Safeta%20Zajke%20175%2C%20Sarajevo%2C%20Bosnia%20and%20Herzegovina",
+    "descripcion": "Servicio oficial especializado para vehículos camper IVECO y Fiat Professional. Atiende autocaravanas y camper basadas en IVECO Daily, Eurocargo y Fiat Ducato; A.C.I. es servicio autorizado IVECO y Fiat Professional en Bosnia y Herzegovina."
+  }
+]
