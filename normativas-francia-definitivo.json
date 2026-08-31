@@ -1,0 +1,91 @@
+[
+  {
+    "id": "normativa-fr",
+    "pais": "Francia",
+    "actualizado": "2026-08-31",
+    "estado_general": "En Francia hay que distinguir el estacionamiento de una autocaravana como vehículo y la práctica del camping. El estacionamiento está sujeto al Code de la route y a las restricciones municipales; el camping fuera de terrenos acondicionados puede practicarse con autorización del titular del terreno, pero existen numerosas zonas donde está prohibido o puede ser restringido.",
+    "resumen": "Una autocaravana puede estacionar respetando las normas generales de circulación, señalización y las restricciones locales. No existe una autorización nacional ilimitada para instalarse o acampar donde se quiera. El camping aislado está permitido, en principio, fuera de carreteras y vías públicas con consentimiento de quien tenga el uso del terreno, salvo las prohibiciones legales y locales. Las costas, lugares protegidos, entornos de monumentos y captaciones de agua tienen restricciones específicas.",
+    "estacionamiento": {
+      "estado": "permitido_con_condiciones",
+      "detalle": "El estacionamiento de autocaravanas se rige por las reglas generales aplicables a los vehículos y por las medidas de policía de circulación y estacionamiento adoptadas por los municipios. El alcalde puede regular el estacionamiento de vehículos o de determinadas categorías cuando existan motivos vinculados a la circulación o a la protección del medio ambiente.",
+      "condiciones_practicas": [
+        "Respetar señalización, marcas viales y limitaciones temporales.",
+        "Comprobar posibles restricciones municipales específicas para autocaravanas.",
+        "No confundir un estacionamiento autorizado con una autorización para practicar camping.",
+        "En áreas turísticas, costas y espacios naturales, comprobar siempre la normativa local específica."
+      ]
+    },
+    "pernocta": {
+      "estado": "depende_del_estacionamiento_y_normativa_local",
+      "detalle": "La normativa nacional consultada no fija un límite general único de horas para dormir dentro de una autocaravana correctamente estacionada. Sin embargo, el municipio puede regular el estacionamiento y determinadas zonas están sometidas a restricciones específicas. La permanencia debe respetar la señalización y no convertirse en una instalación de camping prohibida."
+    },
+    "acampada_libre": {
+      "estado": "permitida_con_autorizacion_y_numerosas_excepciones",
+      "detalle": "El Code de l'urbanisme establece que el camping puede practicarse libremente fuera de carreteras y vías públicas con el acuerdo de quien tenga el uso del terreno, salvo oposición del propietario y salvo las prohibiciones establecidas por la normativa. El camping fuera de terrenos acondicionados también puede ser prohibido por el plan urbanístico local o por orden del alcalde por razones de salubridad, seguridad, tranquilidad, paisaje, conservación de espacios naturales o actividades agrícolas y forestales."
+    },
+    "elementos_exteriores": {
+      "estado": "pueden_convertir_el_uso_en_camping",
+      "detalle": "Desplegar toldos, mesas, sillas, patas estabilizadoras u otros elementos exteriores puede hacer que la utilización deje de ser un simple estacionamiento y pase a considerarse instalación o práctica de camping, quedando sometida a las prohibiciones y reglas del lugar. Deben utilizarse áreas o terrenos donde esta actividad esté autorizada.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "patas estabilizadoras",
+        "equipamiento exterior de camping"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "camping_aislado_generalmente_prohibido_en_litoral",
+      "detalle": "El artículo R111-33 del Code de l'urbanisme prohíbe el camping aislado en las riberas del mar salvo que exista una derogación concedida conforme al procedimiento legal. Además pueden existir prohibiciones locales de estacionamiento o acceso de vehículos."
+    },
+    "espacios_naturales": {
+      "estado": "restricciones_especiales",
+      "detalle": "El camping y el caravaning pueden ser regulados para proteger la naturaleza, los paisajes, la fauna y la flora. Los espacios protegidos pueden contar con reglamentos propios y restricciones adicionales. Debe comprobarse la normativa concreta del parque, reserva o espacio natural antes de pernoctar o acampar."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "regulacion_local_y_por_riesgo",
+      "detalle": "No existe una autorización general vinculada al estacionamiento o la pernocta. El fuego y las barbacoas pueden estar prohibidos o condicionados por normativa forestal, municipal o del espacio natural, especialmente durante periodos de riesgo de incendio."
+    },
+    "aguas_y_residuos": {
+      "estado": "usar_instalaciones_autorizadas",
+      "detalle": "Las aguas grises, aguas negras y residuos deben gestionarse en instalaciones adecuadas y conforme a la normativa local. El estacionamiento en vía pública no autoriza el vertido de aguas residuales."
+    },
+    "limites_de_permanencia": {
+      "estado": "sin_limite_nacional_unico_para_todos_los_casos",
+      "detalle": "La normativa nacional consultada no establece un único límite general de permanencia aplicable a todos los estacionamientos de autocaravanas. Los municipios pueden imponer límites horarios o restricciones en determinadas vías, aparcamientos o zonas."
+    },
+    "multas": {
+      "estado": "dependen_de_la_infraccion",
+      "detalle": "No existe una multa única para todos los supuestos. Las sanciones dependen de si se infringen normas de estacionamiento, un arrêté municipal, normas urbanísticas, disposiciones de un espacio protegido u otras regulaciones aplicables."
+    },
+    "normativa_local": {
+      "importancia": "muy_alta",
+      "detalle": "Los alcaldes pueden regular el acceso, circulación y estacionamiento mediante arrêté motivado. Además, los planes locales de urbanismo pueden prohibir el camping fuera de terrenos acondicionados en determinadas zonas. La señalización local debe comprobarse siempre."
+    },
+    "zonas_con_prohibiciones_legales_de_camping": {
+      "detalle": "Según el artículo R111-33 del Code de l'urbanisme, el camping aislado está prohibido, salvo las derogaciones previstas, en las riberas del mar; en sitios inscritos, clasificados o en proceso de clasificación; en determinados entornos patrimoniales y de monumentos históricos; y dentro de un radio de 200 metros de puntos de captación de agua destinada al consumo."
+    },
+    "fuentes": [
+      {
+        "organismo": "Légifrance — Code de l'urbanisme",
+        "titulo": "Articles R111-32 à R111-35 — Camping",
+        "url": "https://www.legifrance.gouv.fr/codes/id/LEGISCTA000031721246/"
+      },
+      {
+        "organismo": "Légifrance — Code de l'environnement",
+        "titulo": "Articles R365-1 à R365-3 — Camping et caravanage",
+        "url": "https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006074220/LEGISCTA000006159394/"
+      },
+      {
+        "organismo": "Légifrance — Code général des collectivités territoriales",
+        "titulo": "Article L2213-2 — Pouvoir du maire sur la circulation et le stationnement",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000043976727"
+      },
+      {
+        "organismo": "Légifrance — Code du tourisme",
+        "titulo": "Article R331-1 — Principes relatifs au camping",
+        "url": "https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006074073/LEGISCTA000006143213/"
+      }
+    ]
+  }
+]
