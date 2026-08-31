@@ -1,0 +1,102 @@
+[
+  {
+    "id": "normativa-es",
+    "pais": "España",
+    "actualizado": "2026-08-31",
+    "estado_general": "La normativa distingue entre estacionar y acampar. El estacionamiento se rige por tráfico y ordenanzas municipales; la acampada depende principalmente de normativa turística/autonómica y local.",
+    "resumen": "Una autocaravana o camper correctamente estacionada puede tener ocupantes en su interior sin que ello convierta por sí solo el estacionamiento en acampada. Para seguir siendo estacionamiento, la actividad no debe trascender al exterior ni ocupar más superficie que el vehículo cerrado, y no deben producirse vertidos. Las ordenanzas municipales pueden establecer límites y restricciones de estacionamiento.",
+    "estacionamiento": {
+      "estado": "permitido_con_condiciones",
+      "detalle": "Se puede estacionar donde esté permitido para el vehículo y respetando señalización, marcas viales, limitaciones temporales y ordenanzas municipales. La DGT considera irrelevante que haya personas dentro del vehículo mientras esté correctamente estacionado y la actividad no trascienda al exterior.",
+      "condiciones_practicas": [
+        "No sobrepasar las marcas o el espacio autorizado.",
+        "Respetar límites horarios y señalización local.",
+        "No desplegar elementos que excedan el perímetro del vehículo.",
+        "No sacar mesas, sillas, toldos u otros elementos que ocupen superficie exterior.",
+        "No realizar vertidos al exterior.",
+        "Consultar siempre la ordenanza municipal, especialmente en zonas urbanas y turísticas."
+      ]
+    },
+    "pernocta": {
+      "estado": "posible_si_estacionado_correctamente",
+      "detalle": "Dormir o permanecer dentro del vehículo no convierte por sí solo el estacionamiento en acampada. Puede pernoctarse dentro de un vehículo correctamente estacionado siempre que se respeten las normas de tráfico, las ordenanzas locales y no se exteriorice la actividad."
+    },
+    "acampada_libre": {
+      "estado": "regulacion_autonomica_y_local",
+      "detalle": "No existe una única regla estatal que autorice la acampada libre en todo el país. La acampada es materia turística y su regulación varía entre comunidades autónomas, espacios naturales y municipios. En muchas zonas está prohibida fuera de campings o lugares expresamente habilitados."
+    },
+    "elementos_exteriores": {
+      "estado": "no_durante_estacionamiento_ordinario",
+      "detalle": "Para mantener la consideración de estacionamiento no deben desplegarse elementos que desborden la proyección en planta del vehículo, como toldos, mesas, sillas, patas estabilizadoras o instalaciones similares. Su uso puede hacer que la actividad pase a estar sometida a normativa de acampada.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "patas estabilizadoras",
+        "tenderetes",
+        "otros elementos desplegables"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "restricciones_especiales",
+      "detalle": "La Ley y el Reglamento General de Costas prohíben en las playas el estacionamiento y circulación no autorizada de vehículos. Los campamentos y acampadas están prohibidos en el dominio público marítimo-terrestre. El Reglamento considera acampada la instalación de tiendas o de vehículos o remolques habitables."
+    },
+    "espacios_naturales": {
+      "estado": "consultar_normativa_especifica",
+      "detalle": "Parques nacionales, parques naturales y otros espacios protegidos pueden imponer prohibiciones o autorizaciones específicas para acampada, vivac, estacionamiento nocturno y circulación. Debe consultarse la regulación concreta del espacio antes de pernoctar o acampar."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "regulacion_autonomica_local_y_estacional",
+      "detalle": "No existe una autorización general para hacer fuego o barbacoas. Las restricciones dependen de la comunidad autónoma, el municipio, el espacio natural y el riesgo de incendios, y pueden endurecerse temporalmente. Debe comprobarse la normativa vigente del lugar."
+    },
+    "aguas_y_residuos": {
+      "estado": "vertido_no_permitido_durante_estacionamiento",
+      "detalle": "Para que el vehículo se considere correctamente estacionado no debe verter fluidos o residuos a la vía. Las aguas grises y negras deben vaciarse únicamente en instalaciones autorizadas."
+    },
+    "limites_de_permanencia": {
+      "estado": "dependen_del_lugar",
+      "detalle": "No existe un límite estatal único de horas o días para todos los estacionamientos. Los ayuntamientos pueden establecer limitaciones horarias y otras condiciones mediante ordenanza y señalización."
+    },
+    "multas": {
+      "estado": "importe_variable",
+      "detalle": "No existe una multa única aplicable a todos estos supuestos. El importe depende de la infracción concreta y de la normativa estatal, autonómica, municipal, de costas o del espacio protegido que resulte aplicable."
+    },
+    "normativa_local": {
+      "importancia": "alta",
+      "detalle": "Los ayuntamientos pueden regular la parada y el estacionamiento en vías urbanas, establecer límites horarios y adoptar restricciones mediante ordenanzas. Antes de pernoctar conviene comprobar señalización y normativa municipal."
+    },
+    "cambio_normativo_proximo": {
+      "fecha_entrada_vigor": "2026-10-01",
+      "norma": "Real Decreto 518/2026, de 24 de junio",
+      "detalle": "Desde el 1 de octubre de 2026 el Reglamento General de Circulación incluirá expresamente que el estacionamiento de autocaravanas y otros vehículos acondicionados como vivienda debe realizarse sin extender elementos que desborden el perímetro del vehículo, descansando sólo sobre neumáticos con posibilidad de calzos o cuñas de seguridad, y sin verter fluidos procedentes del habitáculo."
+    },
+    "fuentes": [
+      {
+        "organismo": "Dirección General de Tráfico",
+        "titulo": "Instrucción PROT 2026/04: Autocaravanas",
+        "fecha": "2026-03-11",
+        "url": "https://www.dgt.es/export/sites/web-DGT/.galleries/downloads/muevete-con-seguridad/normas-de-trafico/NOR-normativa-general/report_Instruccion-PROT-2026_04-Autocaravanas.pdf"
+      },
+      {
+        "organismo": "BOE",
+        "titulo": "Reglamento General de Circulación - Real Decreto 1428/2003",
+        "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2003-23514"
+      },
+      {
+        "organismo": "BOE",
+        "titulo": "Real Decreto 518/2026, de 24 de junio",
+        "url": "https://www.boe.es/buscar/doc.php?id=BOE-A-2026-13889"
+      },
+      {
+        "organismo": "BOE",
+        "titulo": "Ley 22/1988, de 28 de julio, de Costas",
+        "url": "https://www.boe.es/buscar/act.php?id=BOE-A-1988-18762"
+      },
+      {
+        "organismo": "BOE",
+        "titulo": "Real Decreto 876/2014, Reglamento General de Costas",
+        "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2014-10345"
+      }
+    ]
+  }
+]
