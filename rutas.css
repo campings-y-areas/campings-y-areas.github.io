@@ -318,3 +318,15 @@
 .cargando-ruta { opacity:.7; pointer-events:none; }
 @media (max-width:760px){ .metricas-ruta{grid-template-columns:repeat(2,minmax(0,1fr));}.mapa-ruta{height:360px;} }
 @media (max-width:430px){ .metricas-ruta{grid-template-columns:1fr 1fr;}.resultado-real{padding:14px}.mapa-ruta{height:320px;} }
+
+/* ===== FASE 3: etapas reales ===== */
+.plan-etapas { margin-top: 18px; }
+.plan-etapas h3 { margin-bottom: 12px; }
+.etapa-real { display:grid; grid-template-columns:52px 1fr; gap:12px; padding:14px 0; border-bottom:1px solid #e6e9ec; }
+.etapa-real:last-child { border-bottom:0; }
+.etapa-dia { width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:#eef7f1; font-weight:800; }
+.etapa-real p { margin:5px 0 0; }
+.etapa-parada { margin-top:7px; font-size:.95rem; }
+.etapa-parada strong { display:block; }
+.aviso-suave { margin-top:14px; padding:12px 14px; border-radius:10px; background:#f5f7f8; border:1px solid #e2e6e9; }
+@media (max-width:640px){ .etapa-real{grid-template-columns:44px 1fr}.etapa-dia{width:38px;height:38px} }
