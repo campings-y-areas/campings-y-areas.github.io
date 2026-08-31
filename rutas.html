@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Rutas | Campings & Áreas</title>
+
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="apple-touch-icon" href="logo.png">
+
+  <link rel="stylesheet" href="style.css?v=2">
+  <link rel="stylesheet" href="rutas.css?v=1">
+</head>
+
+<body>
+
+  <header>
+    <h1>
+      <img src="logo.png" alt="Campings & Áreas" class="logo">
+      Campings & Áreas
+    </h1>
+  </header>
+
+  <nav class="menu">
+    <a href="index.html">🏠 Inicio</a>
+    <a href="campings.html">🏕️ Campings</a>
+    <a href="areas.html?tipo=area">🚐 Áreas</a>
+    <a href="areas.html?tipo=parking">🅿️ Parkings</a>
+    <a href="acampadas.html">🥾 Acampadas</a>
+    <a href="lugares.html">📍 Lugares</a>
+    <a href="talleres.html">🛠️ Talleres</a>
+    <a href="servicios.html">🔧 Servicios</a>
+    <a href="normativas.html">📘 Normativas</a>
+    <a href="rutas.html" aria-current="page">🗺️ Rutas</a>
+  </nav>
+
+  <main>
+    <section class="bienvenida">
+      <h2>🗺️ Planifica tus vacaciones</h2>
+      <p>
+        No solo calcules cómo llegar. Prepara un viaje adaptado a quién viaja,
+        cuánto tiempo tienes, qué os gusta y cuánto queréis conducir cada día.
+      </p>
+      <p class="estado">
+        Esta primera versión prepara todos los datos necesarios para construir
+        después las etapas, visitas, actividades, comidas, fotos, vídeos y lugares de pernocta.
+      </p>
+    </section>
+
+    <section class="rutas-panel">
+      <div class="pasos-ruta" aria-label="Progreso">
+        <span class="paso activo" data-paso-indicador="1">1</span>
+        <span class="linea-paso"></span>
+        <span class="paso" data-paso-indicador="2">2</span>
+        <span class="linea-paso"></span>
+        <span class="paso" data-paso-indicador="3">3</span>
+        <span class="linea-paso"></span>
+        <span class="paso" data-paso-indicador="4">4</span>
+      </div>
+
+      <form id="formRuta">
+
+        <section class="bloque-ruta paso-contenido activo" data-paso="1">
+          <h3>1. ¿Cómo quieres preparar el viaje?</h3>
+
+          <div class="opciones-grandes">
+            <label class="opcion-grande">
+              <input type="radio" name="modoRuta" value="destino" checked>
+              <span class="opcion-icono">📍</span>
+              <strong>Sé dónde quiero ir</strong>
+              <small>Introduce uno o varios destinos y organizaremos el viaje alrededor de ellos.</small>
+            </label>
+
+            <label class="opcion-grande">
+              <input type="radio" name="modoRuta" value="propuesta">
+              <span class="opcion-icono">✨</span>
+              <strong>Organízame las vacaciones</strong>
+              <small>Dinos desde dónde sales, cuántos días tienes y qué os gusta.</small>
+            </label>
+          </div>
+
+          <div class="campos-ruta">
+            <label>
+              <span>🚐 Punto de salida</span>
+              <input type="text" id="origen" required placeholder="Ej. Saarlouis, Alemania">
+            </label>
+
+            <div id="zonaDestinos">
+              <label>
+                <span>🏁 Destino principal</span>
+                <input type="text" id="destinoPrincipal" placeholder="Ej. Split, Croacia">
+              </label>
+
+              <div id="destinosExtra"></div>
+
+              <button type="button" class="boton-secundario" id="anadirDestino">
+                ➕ Añadir otro destino
+              </button>
+            </div>
+
+            <div class="fila-doble">
+              <label>
+                <span>📅 Fecha de salida</span>
+                <input type="date" id="fechaSalida">
+              </label>
+
+              <label>
+                <span>🗓️ Días disponibles</span>
+                <input type="number" id="diasViaje" min="1" max="90" value="7" required>
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <section class="bloque-ruta paso-contenido" data-paso="2">
+          <h3>2. ¿Quién viaja?</h3>
+
+          <div class="fila-triple">
+            <label>
+              <span>👨‍👩 Adultos</span>
+              <input type="number" id="adultos" min="1" max="12" value="2" required>
+            </label>
+
+            <label>
+              <span>🧒 Niños</span>
+              <input type="number" id="ninos" min="0" max="10" value="0">
+            </label>
+
+            <label class="check-linea">
+              <input type="checkbox" id="mascota">
+              <span>🐕 Viajamos con mascota</span>
+            </label>
+          </div>
+
+          <div id="edadesNinos" class="edades-ninos"></div>
+
+          <div class="subbloque">
+            <h4>¿Quieres recomendaciones especiales para niños?</h4>
+            <label class="check-linea">
+              <input type="checkbox" id="recomendacionesNinos" checked>
+              <span>Sí, incluir lugares y actividades según sus edades</span>
+            </label>
+          </div>
+
+          <div class="subbloque">
+            <h4>Vehículo</h4>
+            <div class="chips">
+              <label><input type="radio" name="vehiculo" value="autocaravana" checked><span>🚐 Autocaravana</span></label>
+              <label><input type="radio" name="vehiculo" value="camper"><span>🚙 Camper</span></label>
+              <label><input type="radio" name="vehiculo" value="caravana"><span>🏕️ Caravana</span></label>
+              <label><input type="radio" name="vehiculo" value="coche"><span>🚗 Coche</span></label>
+              <label><input type="radio" name="vehiculo" value="moto"><span>🏍️ Moto</span></label>
+            </div>
+          </div>
+        </section>
+
+        <section class="bloque-ruta paso-contenido" data-paso="3">
+          <h3>3. ¿Cómo os gusta viajar?</h3>
+
+          <div class="fila-doble">
+            <label>
+              <span>⏱️ Máximo de conducción al día</span>
+              <select id="maxConduccion">
+                <option value="2">2 horas</option>
+                <option value="3" selected>3 horas</option>
+                <option value="4">4 horas</option>
+                <option value="5">5 horas</option>
+                <option value="6">6 horas o más</option>
+              </select>
+            </label>
+
+            <label>
+              <span>🧭 Ritmo del viaje</span>
+              <select id="ritmo">
+                <option value="tranquilo">Tranquilo</option>
+                <option value="normal" selected>Normal</option>
+                <option value="intenso">Queremos ver muchas cosas</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="subbloque">
+            <h4>¿Qué os interesa?</h4>
+            <div class="chips intereses">
+              <label><input type="checkbox" value="naturaleza" checked><span>🌲 Naturaleza</span></label>
+              <label><input type="checkbox" value="playa"><span>🏖️ Playa</span></label>
+              <label><input type="checkbox" value="montana"><span>⛰️ Montaña</span></label>
+              <label><input type="checkbox" value="pueblos"><span>🏘️ Pueblos</span></label>
+              <label><input type="checkbox" value="ciudades"><span>🏙️ Ciudades</span></label>
+              <label><input type="checkbox" value="monumentos"><span>🏰 Monumentos</span></label>
+              <label><input type="checkbox" value="gastronomia"><span>🍽️ Gastronomía</span></label>
+              <label><input type="checkbox" value="senderismo"><span>🥾 Senderismo</span></label>
+              <label><input type="checkbox" value="animales"><span>🦁 Animales</span></label>
+              <label><input type="checkbox" value="acuarios"><span>🐠 Acuarios</span></label>
+              <label><input type="checkbox" value="parques"><span>🎢 Parques temáticos</span></label>
+              <label><input type="checkbox" value="museos-ninos"><span>🔬 Museos interactivos</span></label>
+            </div>
+          </div>
+
+          <div class="subbloque">
+            <h4>¿Dónde preferís dormir?</h4>
+            <div class="chips">
+              <label><input type="checkbox" name="pernocta" value="camping" checked><span>🏕️ Camping</span></label>
+              <label><input type="checkbox" name="pernocta" value="area" checked><span>🚐 Área</span></label>
+              <label><input type="checkbox" name="pernocta" value="parking"><span>🅿️ Parking</span></label>
+            </div>
+          </div>
+        </section>
+
+        <section class="bloque-ruta paso-contenido" data-paso="4">
+          <h3>4. Últimos detalles</h3>
+
+          <div class="subbloque">
+            <h4>Evitar si es posible</h4>
+            <div class="chips">
+              <label><input type="checkbox" name="evitar" value="peajes"><span>💶 Peajes</span></label>
+              <label><input type="checkbox" name="evitar" value="autopistas"><span>🛣️ Autopistas</span></label>
+              <label><input type="checkbox" name="evitar" value="ferris"><span>⛴️ Ferris</span></label>
+              <label><input type="checkbox" name="evitar" value="carreteras-complicadas"><span>⛰️ Carreteras complicadas</span></label>
+              <label><input type="checkbox" name="evitar" value="grandes-ciudades"><span>🏙️ Grandes ciudades</span></label>
+            </div>
+          </div>
+
+          <div class="fila-doble">
+            <label>
+              <span>💰 Presupuesto aproximado</span>
+              <select id="presupuesto">
+                <option value="">No importa / no indicar</option>
+                <option value="economico">Económico</option>
+                <option value="medio">Medio</option>
+                <option value="comodo">Cómodo</option>
+              </select>
+            </label>
+
+            <label>
+              <span>📸 Contenido visual</span>
+              <select id="contenidoVisual">
+                <option value="fotos" selected>Fotos</option>
+                <option value="fotos-videos">Fotos y vídeos</option>
+                <option value="minimo">Solo lo imprescindible</option>
+              </select>
+            </label>
+          </div>
+
+          <label>
+            <span>✍️ Algo más que debamos tener en cuenta</span>
+            <textarea id="notasRuta" rows="4" placeholder="Ej. uno de los niños adora los castillos, queremos dos días de playa, preferimos pueblos pequeños..."></textarea>
+          </label>
+        </section>
+
+        <div class="acciones-ruta">
+          <button type="button" id="anteriorPaso" class="boton-secundario" disabled>← Anterior</button>
+          <button type="button" id="siguientePaso">Siguiente →</button>
+          <button type="submit" id="crearRuta" class="boton-crear oculto">✨ Crear mis vacaciones</button>
+        </div>
+
+      </form>
+    </section>
+
+    <section id="resumenRuta" class="resumen-ruta oculto" aria-live="polite"></section>
+  </main>
+
+  <script src="rutas.js?v=1"></script>
+</body>
+</html>
