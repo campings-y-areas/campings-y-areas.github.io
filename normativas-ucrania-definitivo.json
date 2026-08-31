@@ -1,0 +1,92 @@
+[
+  {
+    "id": "normativa-ua",
+    "pais": "Ucrania",
+    "actualizado": "2026-08-31",
+    "estado_general": "En Ucrania las autocaravanas se someten a las reglas generales de tráfico, parada y estacionamiento. En bosques y espacios naturales protegidos existen restricciones adicionales de acceso, estacionamiento, camping y fuego. Además, por la situación de seguridad vigente, pueden existir restricciones temporales de circulación y acceso que prevalecen sobre las reglas turísticas ordinarias.",
+    "resumen": "Las Reglas de Tráfico vigentes en 2026 regulan el estacionamiento como para otros vehículos. En el fondo natural protegido, la normativa recreativa define el camping como un lugar especialmente delimitado y equipado para la pernocta de autoturistas, incluidos vehículos/casas sobre ruedas. En bosques, durante el periodo de peligro de incendios está prohibido encender fuego y, salvo vías de tránsito, entrar con vehículos que no estén destinados a trabajos forestales.",
+    "estacionamiento": {
+      "estado": "segun_reglas_de_trafico_y_restricciones_del_lugar",
+      "detalle": "Las Reglas de Tráfico de Ucrania, en vigor y revisadas en abril de 2026, regulan parada y estacionamiento. La autocaravana debe respetar señalización, marcas viales y prohibiciones generales. En áreas protegidas, bosques y zonas sometidas a restricciones de seguridad pueden aplicarse reglas adicionales.",
+      "condiciones_practicas": [
+        "Respetar señales y marcas viales.",
+        "No bloquear circulación ni accesos.",
+        "En bosques comprobar las restricciones estacionales de entrada de vehículos.",
+        "En áreas protegidas utilizar aparcamientos y zonas recreativas autorizadas.",
+        "Respetar siempre controles y restricciones temporales de seguridad."
+      ]
+    },
+    "pernocta": {
+      "estado": "sin_derecho_general_en_cualquier_aparcamiento",
+      "detalle": "No se ha identificado una autorización nacional específica que convierta cualquier estacionamiento legal en lugar de camping. En áreas del fondo natural protegido, la normativa contempla campings específicamente delimitados y equipados para la pernocta de autoturistas con casas sobre ruedas."
+    },
+    "acampada_libre": {
+      "estado": "restringida_en_espacios_protegidos",
+      "detalle": "La normativa de recreación del fondo natural protegido organiza la estancia mediante áreas recreativas y campings especialmente designados. Además, los reglamentos concretos de determinados espacios protegidos pueden prohibir campamentos, estacionamientos de vehículos y tiendas fuera de los lugares autorizados."
+    },
+    "elementos_exteriores": {
+      "estado": "usar_en_lugares_de_camping_autorizados",
+      "detalle": "Toldos, mesas, sillas, barbacoas y otros elementos exteriores deben utilizarse en campings o lugares donde la actividad recreativa esté expresamente permitida, especialmente dentro de espacios protegidos.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "barbacoa",
+        "equipamiento exterior"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "sujetas_a_normativa_local_ambiental_y_de_seguridad",
+      "detalle": "En costas del Mar Negro, riberas y playas deben respetarse las restricciones ambientales, locales y de seguridad. No debe asumirse que una playa permite acceder, estacionar o acampar con autocaravana."
+    },
+    "espacios_naturales": {
+      "estado": "camping_y_actividades_en_zonas_designadas",
+      "detalle": "El Reglamento de actividad recreativa en territorios y objetos del fondo natural protegido define el camping como un lugar especialmente delimitado y equipado para la estancia nocturna de autoturistas, motociclistas y cicloturistas, incluidas casas sobre ruedas o trailers. Los espacios concretos pueden imponer prohibiciones adicionales."
+    },
+    "bosques": {
+      "estado": "restricciones_fuertes_en_periodo_de_incendios",
+      "detalle": "Las reglas de seguridad contra incendios forestales prohíben durante el periodo de peligro de incendios la entrada al fondo forestal de vehículos y mecanismos, salvo vías de tránsito y excepciones vinculadas a trabajos forestales. Las carreteras de acceso pueden señalizarse con prohibiciones temporales."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "prohibido_en_bosques_durante_periodo_de_peligro",
+      "detalle": "Durante el periodo de peligro de incendios está prohibido encender hogueras en el bosque, salvo las excepciones técnicas previstas en lugares específicamente preparados. También pueden imponerse restricciones adicionales según el nivel de peligro."
+    },
+    "aguas_y_residuos": {
+      "estado": "usar_instalaciones_adecuadas_y_no_contaminar",
+      "detalle": "Aguas negras, aguas grises y residuos deben gestionarse en instalaciones apropiadas. No deben realizarse vertidos ni abandonarse residuos en bosques, playas, aparcamientos o espacios protegidos."
+    },
+    "limites_de_permanencia": {
+      "estado": "dependen_del_lugar_y_de_restricciones_temporales",
+      "detalle": "No se ha identificado un límite nacional uniforme específico para todas las autocaravanas estacionadas. Pueden existir límites por señalización, municipio, gestor del área protegida y restricciones temporales de seguridad."
+    },
+    "multas": {
+      "estado": "dependen_de_la_infraccion",
+      "detalle": "Las sanciones dependen de la conducta: estacionamiento ilegal, acceso de vehículos a zonas forestales restringidas, incumplimiento del régimen de un área protegida, fuego, contaminación u otras infracciones. En el contexto actual también deben cumplirse las órdenes y restricciones de seguridad vigentes."
+    },
+    "normativa_local": {
+      "importancia": "muy_alta",
+      "detalle": "Además de la normativa ordinaria, en Ucrania pueden existir restricciones temporales de circulación, acceso, horarios o permanencia derivadas de la situación de seguridad. Deben seguirse las instrucciones de las autoridades locales y nacionales."
+    },
+    "nota_practica": {
+      "titulo": "Ucrania: la normativa turística no es el único factor",
+      "detalle": "Para autocaravanas deben respetarse las reglas normales de estacionamiento y utilizar campings o zonas recreativas autorizadas, especialmente en espacios protegidos. En bosques hay fuertes restricciones durante el periodo de incendios. Por la situación de seguridad, antes de cualquier desplazamiento deben comprobarse además las restricciones oficiales vigentes en la región concreta."
+    },
+    "fuentes": [
+      {
+        "organismo": "Verkhovna Rada de Ucrania",
+        "titulo": "Reglas de Tráfico — Resolución nº 1306, versión vigente en 2026",
+        "url": "https://zakon.rada.gov.ua/laws/show/1306-2001-%D0%BF"
+      },
+      {
+        "organismo": "Verkhovna Rada de Ucrania",
+        "titulo": "Reglamento de actividad recreativa en territorios del fondo natural protegido — camping y casas sobre ruedas",
+        "url": "https://zakon.rada.gov.ua/laws/show/z1043-22"
+      },
+      {
+        "organismo": "Verkhovna Rada de Ucrania",
+        "titulo": "Reglas de seguridad contra incendios en los bosques de Ucrania",
+        "url": "https://zakon.rada.gov.ua/laws/show/z0328-05"
+      }
+    ]
+  }
+]
