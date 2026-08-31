@@ -11,7 +11,8 @@ const archivosNormativas = {
   "Suiza": "normativas-suiza-definitivo.json?v=1",
   "Austria": "normativas-austria-definitivo.json?v=1",
   "Bélgica": "normativas-belgica-definitivo.json?v=1",
-  "Países Bajos": "normativas-paises-bajos-definitivo.json?v=1"
+  "Países Bajos": "normativas-paises-bajos-definitivo.json?v=1",
+  "Luxemburgo": "normativas-luxemburgo-definitivo.json?v=1"
 };
 
 
