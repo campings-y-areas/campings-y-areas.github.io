@@ -33,7 +33,8 @@ const archivosNormativas = {
   "Rumanía": "normativas-rumania-definitivo.json?v=1",
   "Bulgaria": "normativas-bulgaria-definitivo.json?v=1",
   "Serbia": "normativas-serbia-definitivo.json?v=1",
-  "Macedonia del Norte": "normativas-macedonia-del-norte-definitivo.json?v=1"
+  "Macedonia del Norte": "normativas-macedonia-del-norte-definitivo.json?v=1",
+  "Albania": "normativas-albania-definitivo.json?v=1"
 };
 
 
