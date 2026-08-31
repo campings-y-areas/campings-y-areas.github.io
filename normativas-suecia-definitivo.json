@@ -1,0 +1,96 @@
+[
+  {
+    "id": "normativa-se",
+    "pais": "Suecia",
+    "actualizado": "2026-08-31",
+    "estado_general": "En Suecia el derecho de acceso público (Allemansrätten) no da derecho a conducir ni estacionar vehículos motorizados en la naturaleza. Para autocaravanas rige la legislación de tráfico y la Terrängkörningslagen: no se puede conducir ni estacionar en terreno natural como bosques, playas, prados, parques o césped. Sí puede estacionarse junto a carreteras o en aparcamientos donde sea legal, respetando señalización y normas locales.",
+    "resumen": "La Allemansrätten permite amplias actividades a pie y con tienda, pero no autoriza a llevar una autocaravana al terreno natural. En áreas de descanso (rastplats), la regla general es un máximo de 24 horas en días laborables; durante fines de semana y festivos se puede permanecer hasta el siguiente día laborable, salvo señalización distinta.",
+    "estacionamiento": {
+      "estado": "permitido_en_vias_y_aparcamientos_donde_sea_legal",
+      "detalle": "La autocaravana puede estacionarse donde lo permitan las normas de tráfico y la señalización. No existe una regla general sobre cuánto tiempo puede estacionarse junto a una carretera cuando el lugar no constituye terreno natural, aunque pueden aplicarse reglas de tráfico, municipales o del propietario.",
+      "condiciones_practicas": [
+        "No conducir ni estacionar fuera de vías o aparcamientos habilitados.",
+        "Respetar señalización y normas municipales.",
+        "No bloquear accesos ni causar peligro o daños.",
+        "En vías privadas el propietario puede restringir el tráfico motorizado y regular el estacionamiento."
+      ]
+    },
+    "pernocta": {
+      "estado": "posible_en_estacionamiento_legal_con_limites_y_reglas_locales",
+      "detalle": "Naturvårdsverket contempla expresamente la pernocta en áreas de descanso. En una rastplats se puede permanecer normalmente un máximo de 24 horas en días laborables y, durante fines de semana y festivos, hasta el siguiente día laborable, salvo señalización diferente. Los municipios pueden establecer reglas especiales."
+    },
+    "acampada_libre": {
+      "estado": "allemansratten_no_autoriza_autocaravanas_en_terreno_natural",
+      "detalle": "La Allemansrätten permite normalmente acampar con tienda una o dos noches bajo determinadas condiciones, pero no incluye la conducción o estacionamiento de vehículos motorizados en la naturaleza."
+    },
+    "elementos_exteriores": {
+      "estado": "depende_del_lugar_y_normas_locales",
+      "detalle": "En un estacionamiento ordinario conviene mantener el uso dentro del vehículo. Toldos, mesas, sillas u otros elementos pueden estar prohibidos por normas locales o del aparcamiento.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "barbacoa",
+        "equipamiento exterior"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "prohibido_estacionar_en_terreno_natural",
+      "detalle": "Las playas se consideran terreno natural. No se puede conducir ni estacionar una autocaravana en ellas salvo en vías o zonas legalmente habilitadas."
+    },
+    "espacios_naturales": {
+      "estado": "pueden_existir_restricciones_adicionales",
+      "detalle": "En parques nacionales, reservas naturales y otras zonas protegidas existen normas específicas que pueden restringir estacionamiento, camping y fuego."
+    },
+    "bosques": {
+      "estado": "vehiculos_fuera_de_via_prohibidos",
+      "detalle": "Los bosques son terreno natural y la Allemansrätten no autoriza a entrar ni estacionar con autocaravana."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "solo_si_es_seguro_y_no_hay_prohibicion",
+      "detalle": "La Allemansrätten no concede un derecho absoluto a encender fuego. Debe respetarse cualquier eldningsförbud y las reglas de reservas y parques."
+    },
+    "aguas_y_residuos": {
+      "estado": "no_contaminar_ni_abandonar_residuos",
+      "detalle": "No deben descargarse aguas negras o grises ni abandonarse residuos en la naturaleza. Deben utilizarse instalaciones adecuadas."
+    },
+    "limites_de_permanencia": {
+      "estado": "24_horas_en_rastplats_como_regla_general",
+      "detalle": "En áreas de descanso: máximo 24 horas en días laborables; en fines de semana y festivos, hasta el siguiente día laborable, salvo señalización diferente."
+    },
+    "multas": {
+      "estado": "dependen_de_la_infraccion",
+      "detalle": "Puede sancionarse la conducción o estacionamiento ilegal en terreno natural, el estacionamiento contrario a señalización o reglas locales y otras infracciones ambientales."
+    },
+    "normativa_local": {
+      "importancia": "alta",
+      "detalle": "Los municipios pueden establecer reglas específicas sobre pernocta y estacionamiento. Los propietarios de vías privadas también pueden limitar el tráfico motorizado y regular el estacionamiento."
+    },
+    "nota_practica": {
+      "titulo": "Allemansrätten no significa libertad para aparcar la autocaravana en la naturaleza",
+      "detalle": "Con autocaravana hay que permanecer en carreteras y estacionamientos legales. Para una noche, las áreas de descanso son una opción clara: normalmente hasta 24 horas en días laborables, salvo señalización diferente."
+    },
+    "fuentes": [
+      {
+        "organismo": "Naturvårdsverket",
+        "titulo": "Husvagn, husbil och taktält i naturen",
+        "url": "https://www.naturvardsverket.se/amnesomraden/allemansratten/sa-gor-vi-allemansratt/husvagn-husbil-och-taktalt-i-naturen/"
+      },
+      {
+        "organismo": "Naturvårdsverket",
+        "titulo": "Tältning",
+        "url": "https://www.naturvardsverket.se/amnesomraden/allemansratten/sa-gor-vi-allemansratt/taltning/"
+      },
+      {
+        "organismo": "Naturvårdsverket",
+        "titulo": "Allemansrätten på enskild väg",
+        "url": "https://www.naturvardsverket.se/amnesomraden/allemansratten/sa-gor-vi-allemansratt/enskild-vag/"
+      },
+      {
+        "organismo": "Sveriges riksdag",
+        "titulo": "Terrängkörningslag (1975:1313)",
+        "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/terrangkorningslag-19751313_sfs-1975-1313/"
+      }
+    ]
+  }
+]
