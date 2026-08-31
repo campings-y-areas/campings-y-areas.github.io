@@ -1,0 +1,101 @@
+[
+  {
+    "id": "normativa-cz",
+    "pais": "República Checa",
+    "actualizado": "2026-08-31",
+    "estado_general": "En la República Checa una autocaravana puede estacionarse donde lo permitan las normas generales de tráfico y la señalización, pero aparcar no significa automáticamente que cualquier lugar pueda utilizarse como camping. En bosques y espacios naturales protegidos existen restricciones específicas de acceso, estacionamiento, acampada y fuego.",
+    "resumen": "La norma práctica es mantener la autocaravana en carreteras y aparcamientos autorizados, respetar señales y no convertir una plaza ordinaria en un campamento. La Ley Forestal prohíbe conducir y estacionar vehículos a motor en el bosque y acampar fuera de lugares designados. En parques nacionales y áreas paisajísticas protegidas también existen restricciones de circulación y estancia de vehículos fuera de carreteras, vías locales y lugares expresamente habilitados.",
+    "estacionamiento": {
+      "estado": "permitido_segun_normas_de_trafico_y_senalizacion",
+      "detalle": "El estacionamiento se rige por la Ley de tráfico por carretera y por la señalización. En zonas residenciales y peatonales, por ejemplo, el estacionamiento solo está permitido en lugares señalizados como aparcamiento. Además pueden existir restricciones municipales o del propio aparcamiento.",
+      "condiciones_practicas": [
+        "Estacionar únicamente donde la señalización y las normas de tráfico lo permitan.",
+        "No entrar ni permanecer con la autocaravana en terreno forestal fuera de lugares autorizados.",
+        "En espacios protegidos, usar carreteras, vías locales y aparcamientos expresamente habilitados.",
+        "No asumir que la ausencia de una señal de 'no camping' significa que la pernocta está permitida sin restricciones."
+      ]
+    },
+    "pernocta": {
+      "estado": "depende_del_lugar_y_de_las_restricciones_aplicables",
+      "detalle": "No existe una regla nacional única que convierta cualquier estacionamiento legal en un lugar de pernocta libre. La AOPK recordó en julio de 2026, a propósito de la CHKO Český kras, que aunque no haya una señal de prohibición de camping, eso no significa que se pueda aparcar y pernoctar sin limitaciones. En áreas protegidas deben utilizarse carreteras, vías locales, aparcamientos o lugares autorizados."
+    },
+    "acampada_libre": {
+      "estado": "restringida_especialmente_en_bosques_y_espacios_protegidos",
+      "detalle": "La Ley Forestal prohíbe acampar en bosques fuera de lugares designados. En parques nacionales también está prohibido acampar fuera de los lugares reservados por la autoridad de protección de la naturaleza."
+    },
+    "elementos_exteriores": {
+      "estado": "solo_donde_este_autorizado",
+      "detalle": "En un aparcamiento ordinario no debe darse por autorizado el uso como camping. Toldos, mesas, sillas, barbacoas u otros elementos de estancia deben utilizarse únicamente donde las reglas del lugar lo permitan.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "barbacoa",
+        "equipamiento exterior"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "sin_regla_especifica_nacional_relevante_para_autocaravanas",
+      "detalle": "La República Checa no tiene costa marítima. En embalses, lagos y zonas recreativas se aplican las reglas del terreno, señalización, propiedad y protección ambiental; no existe un derecho general a estacionar o acampar junto al agua."
+    },
+    "espacios_naturales": {
+      "estado": "restricciones_importantes",
+      "detalle": "En parques nacionales está prohibido conducir o permanecer con vehículos a motor y caravanas fuera de carreteras, vías locales y lugares designados, y también acampar o hacer fuego fuera de los lugares autorizados. En las CHKO existen igualmente limitaciones para la entrada y permanencia de vehículos fuera de carreteras, vías locales y lugares reservados."
+    },
+    "bosques": {
+      "estado": "vehiculos_y_camping_restringidos",
+      "detalle": "La Ley Forestal prohíbe conducir y estacionar vehículos a motor en bosques y también acampar fuera de lugares designados. El propietario forestal puede autorizar determinadas excepciones dentro de los límites legales."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "muy_restringido_en_bosques",
+      "detalle": "La Ley Forestal prohíbe encender o mantener fuego abierto en el bosque fuera de lugares designados y también hasta 50 metros del borde del bosque. En parques nacionales el fuego está igualmente limitado a lugares autorizados."
+    },
+    "aguas_y_residuos": {
+      "estado": "no_abandonar_residuos_ni_realizar_vertidos",
+      "detalle": "La Ley Forestal prohíbe contaminar el bosque con residuos. Las aguas negras, grises y residuos de autocaravanas deben gestionarse mediante instalaciones adecuadas de campings o áreas de servicio."
+    },
+    "limites_de_permanencia": {
+      "estado": "sin_limite_nacional_unico_para_todos_los_aparcamientos",
+      "detalle": "La duración máxima depende de la señalización, regulación municipal, condiciones del aparcamiento y, en espacios naturales, de las reglas específicas del área."
+    },
+    "multas": {
+      "estado": "segun_infraccion",
+      "detalle": "La Ley Forestal prevé para personas físicas multas de hasta 10.000 CZK por determinadas infracciones, entre ellas acampar fuera de lugares designados o infringir la prohibición de acceso/estacionamiento con vehículo. La AOPK indicó en 2026 que infringir las restricciones de estacionamiento en una CHKO puede resolverse in situ con multa de hasta 10.000 CZK."
+    },
+    "normativa_local": {
+      "importancia": "alta",
+      "detalle": "Municipios, gestores de aparcamientos y autoridades de espacios protegidos pueden establecer restricciones adicionales. La señalización local y las reglas del lugar concreto deben comprobarse siempre."
+    },
+    "nota_practica": {
+      "titulo": "En República Checa, que no haya cartel de 'no camping' no basta",
+      "detalle": "La opción segura es utilizar aparcamientos y áreas expresamente habilitadas para autocaravanas o campings. En bosques y áreas protegidas las restricciones son mucho más estrictas, incluso cuando no exista una señal específica de prohibición de pernocta."
+    },
+    "fuentes": [
+      {
+        "organismo": "e-Sbírka / Gobierno de la República Checa",
+        "titulo": "Zákon č. 361/2000 Sb. — tráfico por carretera",
+        "url": "https://e-sbirka.gov.cz/sb/2000/361"
+      },
+      {
+        "organismo": "AOPK ČR",
+        "titulo": "Vstup, vjezd či parkování ve zvláště chráněném území",
+        "url": "https://aopk.gov.cz/vstup-vjezd-ci-parkovani-ve-zvlaste-chranenem-uzemi"
+      },
+      {
+        "organismo": "AOPK ČR — CHKO Český kras",
+        "titulo": "Nocování a parkování v CHKO — 31/07/2026",
+        "url": "https://ceskykras.aopk.gov.cz/-/nocovani-a-parkovani-v-chko"
+      },
+      {
+        "organismo": "Zákony pro lidi",
+        "titulo": "Zákon č. 289/1995 Sb. — Lesní zákon",
+        "url": "https://www.zakonyprolidi.cz/cs/1995-289"
+      },
+      {
+        "organismo": "Zákony pro lidi",
+        "titulo": "Zákon č. 114/1992 Sb. — ochrana přírody a krajiny",
+        "url": "https://www.zakonyprolidi.cz/cs/1992-114"
+      }
+    ]
+  }
+]
