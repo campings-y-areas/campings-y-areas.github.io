@@ -1,0 +1,96 @@
+[
+  {
+    "id": "normativa-fi",
+    "pais": "Finlandia",
+    "actualizado": "2026-08-31",
+    "estado_general": "En Finlandia los derechos de acceso público (jokaisenoikeudet) permiten una estancia temporal y acampada ligera en la naturaleza, pero no otorgan un derecho general a circular, detener o estacionar una autocaravana en terreno natural. La circulación motorizada fuera de carretera requiere, como regla general, permiso del propietario o poseedor del terreno.",
+    "resumen": "Con autocaravana hay que separar el derecho de acampar a pie del acceso motorizado. La Maastoliikennelaki exige permiso del propietario para conducir, detener o estacionar un vehículo motorizado en terreno fuera de carretera, salvo excepciones legales. Por tanto, deben utilizarse carreteras, aparcamientos, campings y áreas legalmente accesibles.",
+    "estacionamiento": {
+      "estado": "en_vias_y_aparcamientos_legales",
+      "detalle": "El estacionamiento en carreteras y aparcamientos se rige por las normas de tráfico y señalización. Fuera de carretera, la ley de circulación en terreno exige como regla general permiso del propietario o poseedor.",
+      "condiciones_practicas": [
+        "No entrar con la autocaravana en bosque, prado, playa u otro terreno fuera de carretera sin permiso.",
+        "Respetar señalización y restricciones municipales.",
+        "No bloquear accesos ni causar daños.",
+        "Utilizar campings o áreas de autocaravanas cuando existan restricciones de pernocta."
+      ]
+    },
+    "pernocta": {
+      "estado": "posible_si_el_vehiculo_esta_legalmente_estacionado_y_no_hay_restriccion",
+      "detalle": "Los derechos de acceso permiten estancia temporal en la naturaleza, pero no crean un derecho independiente a estacionar el vehículo fuera de carretera. La pernocta con autocaravana depende por tanto de que el vehículo esté legalmente estacionado y de las reglas locales o del espacio concreto."
+    },
+    "acampada_libre": {
+      "estado": "permitida_temporalmente_bajo_jokaisenoikeudet_pero_no_como_derecho_de_acceso_motorizado",
+      "detalle": "La acampada temporal es una facultad tradicional de los derechos de acceso público, salvo zonas restringidas y sin causar molestias o daños. Esto no autoriza a llevar la autocaravana al terreno natural."
+    },
+    "elementos_exteriores": {
+      "estado": "segun_lugar_y_sin_causar_molestias",
+      "detalle": "En un aparcamiento ordinario deben respetarse las condiciones del lugar. El despliegue de toldos, mesas, sillas u otros elementos puede estar limitado y no debe invadir terrenos donde no exista autorización.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "barbacoa",
+        "equipamiento exterior"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "sin_derecho_general_de_acceso_motorizado",
+      "detalle": "Aunque el acceso público a pie puede alcanzar numerosas costas y playas, conducir o estacionar la autocaravana fuera de una vía o aparcamiento requiere autorización conforme a la legislación de circulación en terreno."
+    },
+    "espacios_naturales": {
+      "estado": "pueden_tener_reglas_especificas",
+      "detalle": "Parques nacionales, reservas y otros espacios protegidos pueden limitar la acampada a zonas designadas y restringir vehículos, fuego y otras actividades. Deben consultarse las reglas del destino concreto de Metsähallitus/Luontoon."
+    },
+    "bosques": {
+      "estado": "acceso_publico_a_pie_no_equivale_a_acceso_motorizado",
+      "detalle": "Los bosques pueden disfrutarse bajo jokaisenoikeudet, pero no existe derecho general a entrar o estacionar allí con un vehículo motorizado sin permiso."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "fuego_abierto_requiere_permiso_y_esta_prohibido_con_alerta_de_incendio",
+      "detalle": "La Ley de rescate prohíbe encender fuego abierto durante una maastopalovaroitus o cuando exista peligro evidente de incendio. Tampoco puede hacerse fuego abierto en terreno ajeno sin permiso del propietario."
+    },
+    "aguas_y_residuos": {
+      "estado": "no_contaminar_y_usar_instalaciones_adecuadas",
+      "detalle": "Las aguas negras, grises y residuos de la autocaravana deben gestionarse en instalaciones adecuadas. Los derechos de acceso no autorizan vertidos ni abandono de residuos."
+    },
+    "limites_de_permanencia": {
+      "estado": "sin_limite_nacional_unico_para_autocaravanas",
+      "detalle": "No existe un límite nacional único equivalente para todos los estacionamientos de autocaravanas. La estancia debe ser temporal cuando se ampara en derechos de acceso y pueden existir límites de aparcamiento, municipales o propios de cada área."
+    },
+    "multas": {
+      "estado": "segun_infraccion",
+      "detalle": "La circulación motorizada no autorizada en terreno ajeno puede ser sancionada. También pueden sancionarse infracciones de estacionamiento, fuego, restricciones de espacios protegidos y normas ambientales."
+    },
+    "normativa_local": {
+      "importancia": "alta",
+      "detalle": "Municipios, propietarios y gestores de espacios protegidos pueden imponer restricciones adicionales de estacionamiento, pernocta, acceso y camping."
+    },
+    "nota_practica": {
+      "titulo": "Jokaisenoikeudet no convierte el bosque en aparcamiento de autocaravanas",
+      "detalle": "Finlandia permite mucha libertad para caminar y acampar temporalmente, pero el vehículo es otra cuestión. Con autocaravana hay que permanecer en carreteras y aparcamientos legales o contar con permiso del propietario para entrar o estacionar en terreno fuera de carretera."
+    },
+    "fuentes": [
+      {
+        "organismo": "Finlex",
+        "titulo": "Maastoliikennelaki 1710/1995 — circulación y estacionamiento motorizado fuera de carretera",
+        "url": "https://finlex.fi/fi/lainsaadanto/saadoskokoelma/1995/1710"
+      },
+      {
+        "organismo": "Finlex",
+        "titulo": "Pelastuslaki 379/2011 — artículo 6, fuego abierto",
+        "url": "https://finlex.fi/fi/lainsaadanto/2011/379"
+      },
+      {
+        "organismo": "Metsähallitus / Luontoon",
+        "titulo": "Servicios y pernocta en espacios naturales",
+        "url": "https://www.luontoon.fi/en"
+      },
+      {
+        "organismo": "Ministerio de Medio Ambiente de Finlandia",
+        "titulo": "Everyman's rights / Jokaisenoikeudet",
+        "url": "https://ym.fi/en/nature-conservation-legislation"
+      }
+    ]
+  }
+]
