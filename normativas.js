@@ -4,9 +4,7 @@
 // ==========================================
 
 const archivosNormativas = {
-  "España": "normativas-espana-definitivo.json?v=1",
-  "Portugal": "normativas-portugal-definitivo.json?v=1",
-  "Francia": "normativas-francia-definitivo.json?v=1"
+  "España": "normativas-espana-definitivo.json?v=1"
 };
 
 
@@ -190,7 +188,7 @@ function mostrarNormativa(normativa) {
     document.createElement("h2");
 
   titulo.textContent =
-    normativa.pais;
+    `🇪🇸 ${normativa.pais}`;
 
   cabecera.appendChild(titulo);
 
