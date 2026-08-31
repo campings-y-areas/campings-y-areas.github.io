@@ -1,0 +1,32 @@
+[
+  {
+    "id": "taller-mk-001",
+    "nombre": "MCamper Shop",
+    "tipo": "taller",
+    "pais": "Macedonia del Norte",
+    "comunidad_autonoma": "Skopje",
+    "provincia": "Skopje",
+    "localidad": "Skopje",
+    "lat": null,
+    "lon": null,
+    "telefono": "+389 70 389 123",
+    "web": null,
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=MCamper%20Shop%2C%20Skopje%2C%20North%20Macedonia",
+    "descripcion": "Especialista en fabricación y conversión de vehículos camper, servicio técnico, accesorios y repuestos para autocaravanas y motorhomes."
+  },
+  {
+    "id": "taller-mk-002",
+    "nombre": "GoGoVan",
+    "tipo": "taller",
+    "pais": "Macedonia del Norte",
+    "comunidad_autonoma": "Kriva Palanka",
+    "provincia": "Kriva Palanka",
+    "localidad": "Kriva Palanka",
+    "lat": null,
+    "lon": null,
+    "telefono": "+389 71 207 003",
+    "web": "https://www.gogovan.mk/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=GoGoVan%2C%20Kriva%20Palanka%2C%20North%20Macedonia",
+    "descripcion": "Empresa especializada en campers. Ofrece conversión de furgones, venta de campers, piezas para autoconstrucción y servicio y mantenimiento de los vehículos."
+  }
+]
