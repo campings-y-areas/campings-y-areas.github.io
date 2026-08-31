@@ -1,0 +1,106 @@
+[
+  {
+    "id": "normativa-dk",
+    "pais": "Dinamarca",
+    "actualizado": "2026-08-31",
+    "estado_general": "En Dinamarca una autocaravana se rige, al estacionar, por las mismas reglas que los demás vehículos salvo señalización específica. Es importante distinguir entre 'raste' (parar/descansar) y 'campere' (acampar). En aparcamientos y áreas de descanso puede ser posible descansar e incluso dormir dentro del vehículo cuando esté permitido, pero no convertir el lugar en un campamento. Para acampar deben utilizarse campings o instalaciones habilitadas.",
+    "resumen": "Dinamarca permite estacionar la autocaravana donde sea legal y, en determinados aparcamientos y áreas de descanso, dormir dentro del vehículo siempre que no se realice actividad de camping y no exista señal que lo prohíba. Naturstyrelsen aclara que en sus espacios naturales las autocaravanas se someten a las mismas reglas que otros vehículos y que, en general, no pueden circular ni estacionar en playas, bosques, parques y áreas naturales salvo autorización expresa.",
+    "estacionamiento": {
+      "estado": "permitido_donde_sea_legal_y_no_haya_prohibicion",
+      "detalle": "Las autocaravanas están sujetas a las mismas reglas de circulación y estacionamiento que otros vehículos, salvo señalización o reglas específicas. En aparcamientos públicos y áreas de descanso debe respetarse la señalización y cualquier limitación local.",
+      "condiciones_practicas": [
+        "Estacionar únicamente donde esté permitido.",
+        "Respetar las dimensiones de la plaza y señalización específica.",
+        "Dormir dentro puede formar parte de una parada de descanso si el lugar lo permite y no se convierte en camping.",
+        "No desplegar equipamiento exterior en un aparcamiento ordinario."
+      ]
+    },
+    "pernocta": {
+      "estado": "posible_como_descanso_donde_no_este_prohibido_sin_acampar",
+      "detalle": "VisitDenmark indica que existen áreas de descanso y aparcamientos públicos donde se puede parar, descansar y dormir durante la noche, siempre que no se monte un campamento; cuando no está permitido, debe indicarlo la señalización. Naturstyrelsen distingue igualmente entre descansar y acampar."
+    },
+    "acampada_libre": {
+      "estado": "no_para_autocaravanas_fuera_de_lugares_habilitados",
+      "detalle": "Las zonas danesas de 'fri teltning' permiten determinadas formas de acampada libre a pie con tienda, pero no están destinadas a caravanas ni vehículos motorizados. Para camping con autocaravana deben utilizarse campings o áreas legalmente habilitadas."
+    },
+    "elementos_exteriores": {
+      "estado": "no_en_aparcamiento_ordinario",
+      "detalle": "Naturstyrelsen indica que en determinadas carreteras privadas y rurales no se permite colocar mesas y bancos, barbacoa, avance u otros elementos que posibiliten la pernocta, salvo autorización del propietario. En general, sacar equipamiento exterior diferencia el camping de una simple parada.",
+      "elementos": [
+        "toldo o avance",
+        "mesas",
+        "sillas/bancos",
+        "barbacoa",
+        "equipamiento exterior de camping"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "vehiculos_generalmente_no_autorizados_salvo_excepciones",
+      "detalle": "En los terrenos gestionados por Naturstyrelsen, los vehículos —incluidas autocaravanas— en general no pueden circular ni estacionar en playas salvo que esté expresamente permitido. Existen excepciones históricas en algunas playas que funcionan como vías públicas, como Vejers, Løkken y zonas de Fanø."
+    },
+    "espacios_naturales": {
+      "estado": "restricciones_importantes_para_vehiculos",
+      "detalle": "Naturstyrelsen señala que las autocaravanas, como otros vehículos, en principio no pueden circular ni estacionar en bosques, parques, centros naturales y áreas naturales salvo autorización expresa. Las zonas de acampada libre en bosques son para tienda/acampada no motorizada, no para autocaravanas."
+    },
+    "bosques": {
+      "estado": "acceso_motorizado_restringido",
+      "detalle": "En bosques y terrenos naturales gestionados por Naturstyrelsen no existe un derecho general a entrar o estacionar con autocaravana. Las más de 275 zonas de 'fri teltning' permiten una noche bajo reglas específicas para tiendas, pero no autorizan vehículos motorizados como medio de camping."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "solo_donde_este_permitido",
+      "detalle": "En la naturaleza deben utilizarse las zonas de fuego/barbacoa habilitadas y respetarse las prohibiciones temporales por riesgo de incendio. Una parada o estacionamiento no autoriza por sí misma a utilizar una barbacoa."
+    },
+    "aguas_y_residuos": {
+      "estado": "usar_servicios_autorizados",
+      "detalle": "Las aguas grises, negras y residuos deben gestionarse en instalaciones apropiadas de campings, camper stops o áreas de servicio. No deben realizarse vertidos en aparcamientos ni en la naturaleza."
+    },
+    "limites_de_permanencia": {
+      "estado": "dependen_de_senalizacion_area_y_municipio",
+      "detalle": "No existe un límite nacional único de pernocta aplicable a todos los aparcamientos. Los aparcamientos, puertos, camper stops y municipios pueden fijar límites propios; por ejemplo, algunas áreas autorizadas establecen un número máximo de noches."
+    },
+    "multas": {
+      "estado": "dependen_de_la_infraccion",
+      "detalle": "Las sanciones dependen del incumplimiento concreto: estacionamiento prohibido, incumplimiento de señalización, camping donde no está autorizado, acceso motorizado indebido a espacios naturales o infracciones ambientales."
+    },
+    "normativa_local": {
+      "importancia": "alta",
+      "detalle": "Los municipios y propietarios/gestores pueden establecer señalización, límites horarios y condiciones de uso. Debe comprobarse siempre la señalización del aparcamiento o área concreta."
+    },
+    "nota_practica": {
+      "titulo": "En Dinamarca, descansar no es lo mismo que acampar",
+      "detalle": "Puede ser legal dormir dentro de una autocaravana correctamente estacionada en determinados aparcamientos o áreas de descanso si no está prohibido, pero no se deben sacar toldo, mesas, sillas, barbacoa ni convertir la plaza en campamento. Para una estancia de camping, usar camping o camper stop autorizado."
+    },
+    "fuentes": [
+      {
+        "organismo": "Naturstyrelsen — Agencia Danesa de la Naturaleza",
+        "titulo": "Hvad er reglerne for autocampere? — reglas para autocaravanas",
+        "url": "https://naturstyrelsen.dk/regler-og-tilladelser/hvad-er-reglerne-for-autocampere"
+      },
+      {
+        "organismo": "Naturstyrelsen",
+        "titulo": "FAQ — camping con autocaravana en aparcamientos, playas y bosques",
+        "url": "https://naturstyrelsen.dk/om-naturstyrelsen/kontakt/faq/hvor-maa-jeg-faerdes-paa-naturstyrelsens-arealer"
+      },
+      {
+        "organismo": "Retsinformation",
+        "titulo": "Campingreglementet — BEK nr 319 af 28/03/2019",
+        "url": "https://www.retsinformation.dk/eli/lta/2019/319"
+      },
+      {
+        "organismo": "Retsinformation",
+        "titulo": "Campingvejledningen — guía oficial del reglamento de camping",
+        "url": "https://www.retsinformation.dk/eli/accn/C20200942660"
+      },
+      {
+        "organismo": "VisitDenmark",
+        "titulo": "Where to park your campervan in Denmark",
+        "url": "https://www.visitdenmark.com/faq/where-to-park-your-campervan-in-denmark"
+      },
+      {
+        "organismo": "Naturstyrelsen",
+        "titulo": "Fri teltning — zonas de acampada libre en tienda",
+        "url": "https://naturstyrelsen.dk/aktiviteter-i-naturen/overnat-og-spis-i-naturen/fri-teltning"
+      }
+    ]
+  }
+]
