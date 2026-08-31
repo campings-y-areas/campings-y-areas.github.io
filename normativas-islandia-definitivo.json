@@ -1,0 +1,96 @@
+[
+  {
+    "id": "normativa-is",
+    "pais": "Islandia",
+    "actualizado": "2026-08-31",
+    "estado_general": "En Islandia está prohibido pasar la noche en autocaravanas, caravanas, camper vans, tent campers o vehículos similares fuera de campings organizados o zonas urbanas, salvo que se disponga del permiso del propietario o titular del derecho sobre el terreno. La regla procede de la Ley de Conservación de la Naturaleza n.º 60/2013.",
+    "resumen": "Para una autocaravana, la regla práctica es utilizar campings organizados. Fuera de ellos o de zonas urbanas solo puede pernoctarse con permiso del propietario o titular del terreno. Además, conducir fuera de carreteras o pistas está estrictamente prohibido por la legislación de conservación de la naturaleza.",
+    "estacionamiento": {
+      "estado": "permitido_donde_la_normativa_de_trafico_y_senalizacion_lo_autoricen",
+      "detalle": "Estacionar como vehículo debe hacerse conforme a la normativa de tráfico y señalización. La autoridad ambiental indica que puede estacionarse un vehículo aproximadamente a una anchura de coche de la carretera cuando no se cause daño a la naturaleza ni riesgo de accidente, sujeto a la Ley de Tráfico y a las instrucciones de la administración de carreteras.",
+      "condiciones_practicas": [
+        "No conducir fuera de carreteras o pistas reconocidas.",
+        "Respetar señalización y restricciones de aparcamiento.",
+        "No confundir un aparcamiento permitido con autorización para pernoctar.",
+        "Para dormir fuera de camping organizado o zona urbana se necesita permiso del propietario o titular del terreno."
+      ]
+    },
+    "pernocta": {
+      "estado": "camping_organizado_o_zona_urbana_salvo_permiso_del_propietario",
+      "detalle": "La autoridad ambiental islandesa establece expresamente que es ilegal pasar la noche en autocaravana, caravana, camper van o vehículo similar fuera de campings organizados o zonas urbanas salvo permiso del propietario o titular del derecho sobre el terreno."
+    },
+    "acampada_libre": {
+      "estado": "no_para_autocaravanas_sin_permiso",
+      "detalle": "Las reglas más flexibles de acampada tradicional con tienda no se trasladan a las autocaravanas. Para vehículos de camping fuera de campings organizados o zonas urbanas se requiere permiso del propietario o titular."
+    },
+    "elementos_exteriores": {
+      "estado": "usar_en_lugares_autorizados",
+      "detalle": "Toldos, mesas, sillas y demás equipamiento de camping deben utilizarse en campings o lugares donde esté autorizado y sin dañar el terreno.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "barbacoa",
+        "equipamiento exterior"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "sin_acceso_motorizado_fuera_de_vias",
+      "detalle": "La conducción fuera de carretera está prohibida también en terrenos costeros y playas salvo excepciones legales muy concretas. Deben utilizarse carreteras, pistas reconocidas y aparcamientos autorizados."
+    },
+    "espacios_naturales": {
+      "estado": "restricciones_adicionales_frecuentes",
+      "detalle": "Numerosos espacios protegidos prohíben expresamente camping y pernocta fuera de zonas marcadas. Entre los ejemplos oficiales figuran Þingvellir, Mývatn, Hornstrandir, Dyrhólaey y otras áreas. En Vatnajökull los vehículos de camping deben utilizar campings organizados."
+    },
+    "bosques": {
+      "estado": "proteccion_del_terreno_y_prohibicion_de_off_road",
+      "detalle": "No existe derecho a entrar con una autocaravana fuera de vías reconocidas. La fragilidad del suelo y vegetación islandeses es una de las razones de la prohibición estricta de conducción off-road."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "segun_area_y_restricciones",
+      "detalle": "Espacios protegidos pueden prohibir el fuego; por ejemplo, Fjallabak incluye la prohibición de encender fuego entre sus reglas de conducta. Deben respetarse siempre las normas del lugar y las condiciones de riesgo."
+    },
+    "aguas_y_residuos": {
+      "estado": "usar_instalaciones_adecuadas",
+      "detalle": "Los residuos y aguas de la autocaravana deben gestionarse en instalaciones adecuadas. En espacios naturales debe retirarse toda la basura y evitar cualquier contaminación o daño."
+    },
+    "limites_de_permanencia": {
+      "estado": "segun_camping_zona_urbana_permiso_y_reglas_locales",
+      "detalle": "No existe un derecho general a permanecer con autocaravana fuera de instalaciones autorizadas. La duración dependerá del camping, estacionamiento urbano, permiso del propietario y restricciones del lugar."
+    },
+    "multas": {
+      "estado": "infracciones_sancionables",
+      "detalle": "La conducción fuera de carretera está prohibida y puede ser castigada con multa o incluso prisión. También pueden sancionarse infracciones de camping/pernocta, restricciones de áreas protegidas y daños ambientales."
+    },
+    "normativa_local": {
+      "importancia": "alta",
+      "detalle": "Municipios, propietarios y gestores de espacios protegidos pueden imponer restricciones adicionales. La señalización y las reglas específicas del lugar deben comprobarse siempre."
+    },
+    "nota_practica": {
+      "titulo": "En Islandia, autocaravana = camping organizado salvo permiso",
+      "detalle": "La regla más sencilla y segura es dormir en un camping organizado. Si se pretende pasar la noche fuera de camping o zona urbana, hace falta permiso del propietario o titular del terreno. Y nunca se debe salir de carreteras o pistas reconocidas con el vehículo."
+    },
+    "fuentes": [
+      {
+        "organismo": "Umhverfisstofnun / Environment Agency of Iceland",
+        "titulo": "Where Can You Camp?",
+        "url": "https://www.ust.is/english/visiting-iceland/travel-information/where-can-you-camp/"
+      },
+      {
+        "organismo": "Alþingi",
+        "titulo": "Lög um náttúruvernd nr. 60/2013 — Ley de Conservación de la Naturaleza",
+        "url": "https://www.althingi.is/lagas/157b/2013060.html"
+      },
+      {
+        "organismo": "Umhverfisstofnun",
+        "titulo": "FAQ — Driving off-road",
+        "url": "https://www.ust.is/english/visiting-iceland/faq/"
+      },
+      {
+        "organismo": "Umhverfisstofnun",
+        "titulo": "Driving in Uninhabited Areas",
+        "url": "https://www.ust.is/english/visiting-iceland/travel-information/driving-in-uninhabited-areas/"
+      }
+    ]
+  }
+]
