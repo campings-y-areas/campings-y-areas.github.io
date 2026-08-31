@@ -1,0 +1,96 @@
+[
+  {
+    "id": "normativa-me",
+    "pais": "Montenegro",
+    "actualizado": "2026-08-31",
+    "estado_general": "En Montenegro la Ley de turismo y hostelería prohíbe acampar fuera de terrenos destinados legalmente a camping. El artículo 105 define el camping como estancia temporal de turistas en campings situados en terrenos previstos para esa finalidad por la planificación territorial o por programas de instalaciones temporales. La infracción por una persona física puede ser sancionada con multa de 200 a 2.000 euros.",
+    "resumen": "Para una estancia de camping o pernocta turística con equipamiento de camping debe utilizarse un camping autorizado. Montenegro reconoce campings regulados, incluidos establecimientos denominados 'kamp u divljini' (camping en la naturaleza), pero esa denominación no significa que exista un derecho a acampar libremente: también necesitan autorización y cumplir los requisitos legales.",
+    "estacionamiento": {
+      "estado": "sujeto_a_normas_de_trafico_y_restricciones_locales",
+      "detalle": "El estacionamiento de una autocaravana como vehículo debe respetar la normativa de tráfico, la señalización y las restricciones locales. No debe confundirse un aparcamiento ordinario con un terreno legalmente destinado a camping.",
+      "condiciones_practicas": [
+        "Respetar señalización y restricciones locales.",
+        "Para acampar o realizar una estancia turística utilizar un camping autorizado.",
+        "No interpretar la expresión 'kamp u divljini' como autorización de camping libre.",
+        "Comprobar restricciones temporales de circulación para campers antes de viajar."
+      ]
+    },
+    "pernocta": {
+      "estado": "usar_lugares_autorizados",
+      "detalle": "La ley prohíbe el camping fuera de terrenos destinados a esa finalidad. Para evitar que una pernocta sea considerada camping ilegal, la opción segura es utilizar un camping autorizado o instalación específicamente habilitada."
+    },
+    "acampada_libre": {
+      "estado": "prohibida",
+      "detalle": "El artículo 105.2 de la Ley de turismo y hostelería prohíbe expresamente la prestación de servicios de camping y el camping fuera de los terrenos previstos legalmente para camping."
+    },
+    "elementos_exteriores": {
+      "estado": "solo_en_lugares_autorizados",
+      "detalle": "Mesas, sillas, toldos y demás equipamiento de camping deben utilizarse en campings o lugares donde esté permitido. Desplegarlos en un aparcamiento ordinario evidencia una utilización de camping.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "patas estabilizadoras",
+        "equipamiento de camping"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "restricciones_especiales",
+      "detalle": "En la zona costera y el dominio marítimo los terrenos destinados a camping pueden depender también de programas de instalaciones temporales y de las autoridades competentes. No debe acamparse libremente en playas, calas o terrenos costeros."
+    },
+    "espacios_naturales": {
+      "estado": "autorizacion_y_reglas_especificas",
+      "detalle": "Los espacios protegidos pueden tener reglas adicionales. La propia legislación contempla que determinados campings temporales requieran consentimiento del gestor del área natural protegida."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "sujeto_a_restricciones",
+      "detalle": "En bosques, parques y zonas de alto riesgo de incendio deben respetarse las prohibiciones temporales y las instrucciones de las autoridades y gestores del espacio. El hecho de estar estacionado no autoriza a encender fuego."
+    },
+    "aguas_y_residuos": {
+      "estado": "usar_instalaciones_adecuadas",
+      "detalle": "Las aguas negras, grises y residuos deben gestionarse mediante instalaciones autorizadas. No deben efectuarse vertidos en carreteras, aparcamientos, playas o espacios naturales."
+    },
+    "limites_de_permanencia": {
+      "estado": "segun_camping_y_normativa_local",
+      "detalle": "No se ha identificado un único límite nacional aplicable a todos los campings o estacionamientos de autocaravanas. Deben respetarse las condiciones del establecimiento, la señalización y las reglas locales."
+    },
+    "multas": {
+      "estado": "camping_ilegal_sancionable",
+      "detalle": "El artículo 130 de la Ley de turismo y hostelería prevé para una persona física una multa de 200 a 2.000 euros si acampa fuera del terreno para camping contemplado en el artículo 105.1."
+    },
+    "normativa_local": {
+      "importancia": "alta",
+      "detalle": "Los órganos locales intervienen en autorizaciones de campings pequeños y en programas de instalaciones temporales, además de poder existir reglas locales de tráfico y estacionamiento."
+    },
+    "restricciones_de_circulacion": {
+      "estado": "pueden_existir_temporalmente",
+      "detalle": "La Policía de Montenegro puede imponer restricciones temporales de circulación a determinados campers en carreteras concretas por razones de intensidad de tráfico. Estas medidas son temporales y deben comprobarse antes del viaje; no constituyen una prohibición permanente nacional."
+    },
+    "nota_practica": {
+      "titulo": "Camping en la naturaleza no significa camping libre",
+      "detalle": "Montenegro utiliza oficialmente la categoría 'kamp u divljini', pero se trata de un establecimiento regulado que necesita autorización. Para dormir/acampada turística, la opción segura es un camping autorizado."
+    },
+    "fuentes": [
+      {
+        "organismo": "Gobierno de Montenegro / Ministerio de Turismo",
+        "titulo": "Condiciones para autorización de kamp, kamp naselje y kamp u divljini",
+        "url": "https://www.gov.me/clanak/uslovi-za-izdavanje-odobrenja-za-obavljanje-ugostiteljske-djelatnosti-vrste-kamp-kamp-naselje-i-kamp-u-divljini"
+      },
+      {
+        "organismo": "Zakon o turizmu i ugostiteljstvu",
+        "titulo": "Artículo 105 — Pružanje usluga kampovanja",
+        "url": "https://www.paragraf.me/propisi-crnegore/zakon-o-turizmu-i-ugostiteljstvu.html"
+      },
+      {
+        "organismo": "Zakon o turizmu i ugostiteljstvu",
+        "titulo": "Artículo 130 — sanción a persona física por camping fuera de terrenos autorizados",
+        "url": "https://www.paragraf.me/propisi-crnegore/zakon-o-turizmu-i-ugostiteljstvu.html"
+      },
+      {
+        "organismo": "Uprava policije Crne Gore",
+        "titulo": "Restricciones temporales de circulación para campers",
+        "url": "https://www.gov.me/clanak/obavjestenje-naredba-o-privremenoj-zabrani-saobracaja-teretnih-motornih-vozila-autobusa-i-specijalnih-putnickih-vozila-za-kampovanje"
+      }
+    ]
+  }
+]
