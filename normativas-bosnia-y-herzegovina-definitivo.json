@@ -1,0 +1,110 @@
+[
+  {
+    "id": "normativa-ba",
+    "pais": "Bosnia y Herzegovina",
+    "actualizado": "2026-08-31",
+    "estado_general": "Bosnia y Herzegovina tiene una estructura jurídica descentralizada, por lo que las reglas pueden variar entre la Federación de Bosnia y Herzegovina, la Republika Srpska, el Distrito de Brčko, los cantones y los municipios. En la Federación de Bosnia y Herzegovina, la Ley de hostelería establece expresamente que el camping está permitido exclusivamente en campings y prohíbe instalar tiendas, caravanas, casas de camping u otro equipamiento de camping fuera de ellos.",
+    "resumen": "No debe asumirse que existe una regla única para todo el país. En la Federación de Bosnia y Herzegovina el camping fuera de un camping autorizado está expresamente prohibido y puede sancionarse. Para viajar en autocaravana, la opción segura es utilizar campings o instalaciones de estancia legalmente habilitadas y comprobar las reglas de la entidad, cantón y municipio en el que se encuentre.",
+    "estacionamiento": {
+      "estado": "sujeto_a_trafico_y_normas_locales",
+      "detalle": "Estacionar el vehículo debe hacerse conforme a la normativa de tráfico y señalización. El hecho de poder estacionar no autoriza automáticamente a desplegar equipamiento o utilizar el lugar como camping.",
+      "condiciones_practicas": [
+        "Respetar señalización y restricciones locales.",
+        "No confundir estacionamiento con camping.",
+        "Para acampar utilizar un camping autorizado.",
+        "Comprobar entidad, cantón y municipio debido a la estructura administrativa del país."
+      ]
+    },
+    "pernocta": {
+      "estado": "usar_lugares_autorizados",
+      "detalle": "La legislación consultada regula expresamente el camping, pero no establece una regla nacional uniforme que convierta cualquier estacionamiento en lugar autorizado para dormir. Para evitar una infracción, la opción segura es pernoctar en un camping o lugar específicamente habilitado."
+    },
+    "acampada_libre": {
+      "estado": "prohibida_en_federacion_bih_y_sujeta_a_normas_territoriales",
+      "detalle": "En la Federación de Bosnia y Herzegovina, el artículo 40 de la Ley de hostelería establece que el camping está permitido exclusivamente en campings y prohíbe colocar equipamiento de camping fuera de ellos."
+    },
+    "elementos_exteriores": {
+      "estado": "solo_en_lugares_autorizados",
+      "detalle": "Toldos, mesas, sillas y otros elementos propios de camping deben utilizarse únicamente donde esté autorizado.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "patas estabilizadoras",
+        "equipamiento de camping"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "aplicacion_muy_local",
+      "detalle": "Bosnia y Herzegovina dispone de una pequeña franja costera alrededor de Neum. Allí deben respetarse las reglas del municipio, del cantón Herzegovina-Neretva y las normas de estacionamiento y camping aplicables."
+    },
+    "espacios_naturales": {
+      "estado": "regulacion_especifica",
+      "detalle": "Parques nacionales, parques naturales y otras áreas protegidas pueden establecer prohibiciones adicionales de acceso, estacionamiento, camping y fuego. Deben seguirse las reglas del gestor de cada espacio."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "sujeto_a_normas_forestales_y_locales",
+      "detalle": "El fuego puede estar restringido por normativa forestal, de espacios protegidos y por prohibiciones temporales durante periodos de riesgo de incendio."
+    },
+    "aguas_y_residuos": {
+      "estado": "usar_instalaciones_adecuadas",
+      "detalle": "Las aguas negras, grises y residuos deben gestionarse mediante instalaciones adecuadas. No deben realizarse vertidos en carreteras, aparcamientos, ríos o espacios naturales."
+    },
+    "limites_de_permanencia": {
+      "estado": "dependen_del_lugar_y_administracion",
+      "detalle": "No se ha identificado un límite nacional único para todas las áreas o estacionamientos de autocaravanas. Deben comprobarse las condiciones del camping, aparcamiento y normativa local."
+    },
+    "multas": {
+      "estado": "camping_ilegal_sancionable",
+      "detalle": "En la Federación de Bosnia y Herzegovina, el artículo 69 prevé para quien acampe fuera de un camping o instale equipamiento con finalidad de camping fuera de él una multa de 50 a 500 KM; también puede imponerse la medida de confiscación de los objetos utilizados para cometer la infracción."
+    },
+    "normativa_local": {
+      "importancia": "muy_alta",
+      "detalle": "La estructura del país hace especialmente importante comprobar la normativa territorial. Además de las entidades, en la Federación existen cantones con normativa propia; por ejemplo, Herzegovina-Neretva también prohíbe el camping fuera de campings y prevé sanciones específicas."
+    },
+    "regiones": {
+      "Federación de Bosnia y Herzegovina": {
+        "estado": "prohibicion_explicita_de_camping_fuera_de_camping",
+        "detalle": "Art. 40: camping permitido exclusivamente en camping. Art. 69: multa de 50 a 500 KM por camping fuera de camping, con posible confiscación de objetos."
+      },
+      "Cantón Herzegovina-Neretva": {
+        "estado": "regulacion_cantonal_especifica",
+        "detalle": "Su Ley de hostelería también prohíbe instalar tiendas, casas de camping, caravanas y otro equipamiento fuera de campings; prevé para esta infracción multa de 100 a 1.000 KM."
+      },
+      "Republika Srpska": {
+        "estado": "comprobar_normativa_especifica_y_local",
+        "detalle": "Dispone de su propio marco legal de turismo y hostelería. Deben comprobarse las reglas vigentes del lugar concreto y utilizar instalaciones autorizadas."
+      },
+      "Distrito de Brčko": {
+        "estado": "comprobar_normativa_especifica_y_local",
+        "detalle": "Dispone de régimen jurídico propio en diversas materias; deben comprobarse las reglas locales antes de acampar o pernoctar fuera de instalaciones autorizadas."
+      }
+    },
+    "nota_practica": {
+      "titulo": "No aplicar una sola regla a todo Bosnia y Herzegovina",
+      "detalle": "La regla más segura es usar campings autorizados. En la Federación el camping libre está expresamente prohibido y sancionado; además, cantones y otras administraciones pueden tener sus propias reglas."
+    },
+    "fuentes": [
+      {
+        "organismo": "Federalno ministarstvo okoliša i turizma",
+        "titulo": "Zakoni iz oblasti ugostiteljstva",
+        "url": "https://fmoit.gov.ba/dokumenti/zakoni-iz-oblasti-ugostiteljstva/"
+      },
+      {
+        "organismo": "Federación de Bosnia y Herzegovina",
+        "titulo": "Zakon o ugostiteljskoj djelatnosti — arts. 40 y 69",
+        "url": "https://www.paragraf.ba/propisi/fbih/zakon-o-ugostiteljskoj-djelatnosti.html"
+      },
+      {
+        "organismo": "Federalno ministarstvo okoliša i turizma",
+        "titulo": "Reglamento de clasificación y requisitos de campings",
+        "url": "https://fmoit.gov.ba/dokument/pravilnik-o-razvrstavanju-minimalnim-uvjetima-i-kateg-kampova-iz-skupine-kampovi-i-dr-vrste-uo-za-smjestaj/"
+      },
+      {
+        "organismo": "Hercegovačko-neretvanski kanton",
+        "titulo": "Zakon o ugostiteljskoj djelatnosti — camping y sanciones",
+        "url": "https://www.paragraf.ba/propisi/hercegovacko-neretvanskog-kantona/zakon-o-ugostiteljskoj-djelatnosti.html"
+      }
+    ]
+  }
+]
