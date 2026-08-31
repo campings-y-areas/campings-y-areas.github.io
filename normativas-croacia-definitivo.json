@@ -1,0 +1,96 @@
+[
+  {
+    "id": "normativa-hr",
+    "pais": "Croacia",
+    "actualizado": "2026-08-31",
+    "estado_general": "En Croacia el camping fuera de campings y de los espacios expresamente autorizados está prohibido. La Ley de hostelería croata incluye expresamente la estancia en autocaravana (autodom/kamper) dentro del concepto de camping. Por ello, para pasar la noche con finalidad de alojamiento debe utilizarse un camping, un kamp-odmorište/camper stop autorizado u otro espacio legalmente habilitado.",
+    "resumen": "La regla nacional es estricta: el artículo 29 de la Zakon o ugostiteljskoj djelatnosti define como camping la estancia en tienda, caravana, mobile home, autocaravana y otros equipos de alojamiento al aire libre, y prohíbe hacerlo fuera de campings o espacios específicamente autorizados. Existen excepciones limitadas para eventos y determinados viajes organizados, en espacios designados por la autoridad competente.",
+    "estacionamiento": {
+      "estado": "permitido_segun_normas_de_trafico_y_senalizacion",
+      "detalle": "Una autocaravana puede estacionar como vehículo donde lo permitan las normas de circulación y la señalización. Sin embargo, utilizarla como alojamiento fuera de un camping o espacio autorizado entra en la regulación de camping y puede ser sancionado.",
+      "condiciones_practicas": [
+        "Respetar señales, marcas y restricciones locales.",
+        "No considerar un aparcamiento ordinario como lugar autorizado para dormir.",
+        "Para pernoctar utilizar camping o camper stop/kamp-odmorište autorizado.",
+        "En costa, islas y espacios naturales comprobar también las restricciones específicas."
+      ]
+    },
+    "pernocta": {
+      "estado": "solo_en_lugares_autorizados",
+      "detalle": "La ley croata incluye la estancia en autocaravana dentro del concepto de camping. La pernocta con finalidad de alojamiento debe realizarse en campings, campings familiares/agroturísticos autorizados, camper stops u otros espacios habilitados conforme a la normativa."
+    },
+    "acampada_libre": {
+      "estado": "prohibida",
+      "detalle": "El artículo 29.4 de la Ley de hostelería prohíbe el camping fuera de los establecimientos del grupo Campings y de los espacios excepcionalmente designados conforme a la propia ley."
+    },
+    "elementos_exteriores": {
+      "estado": "solo_en_instalaciones_que_lo_permitan",
+      "detalle": "Mesas, sillas, toldos, patas estabilizadoras y demás equipamiento exterior son propios de una utilización de camping y deben emplearse únicamente en instalaciones o espacios donde esté permitido.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "patas estabilizadoras",
+        "equipamiento exterior"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "restricciones_importantes",
+      "detalle": "La prohibición general de camping fuera de lugares autorizados se aplica también en la costa. Playas, islas, terrenos marítimos y aparcamientos costeros pueden tener además restricciones locales, portuarias o de protección ambiental."
+    },
+    "espacios_naturales": {
+      "estado": "normativa_especifica_adicional",
+      "detalle": "Parques nacionales, parques naturales y otras áreas protegidas pueden imponer restricciones adicionales de circulación, estacionamiento, pernocta, camping y fuego. Deben seguirse las reglas del gestor de cada espacio."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "sujeto_a_restricciones_y_riesgo_de_incendio",
+      "detalle": "En zonas forestales, islas y espacios protegidos pueden existir prohibiciones de fuego y barbacoas, especialmente durante periodos de alto riesgo. Deben respetarse las instrucciones de protección civil, bomberos y gestores del espacio."
+    },
+    "aguas_y_residuos": {
+      "estado": "usar_instalaciones_autorizadas",
+      "detalle": "Las aguas negras y grises y los residuos deben evacuarse en instalaciones adecuadas de campings o camper stops. No deben realizarse vertidos en aparcamientos, carreteras, playas o espacios naturales."
+    },
+    "limites_de_permanencia": {
+      "estado": "dependen_del_camping_o_area",
+      "detalle": "No existe un único límite nacional de estancia para todos los campings y camper stops. Cada establecimiento o espacio autorizado puede fijar sus condiciones y duración de estancia."
+    },
+    "multas": {
+      "estado": "camping_ilegal_sancionable",
+      "detalle": "La Ley de hostelería establece sanciones para quien acampe fuera de campings o espacios autorizados. La cuantía concreta debe comprobarse en el texto consolidado vigente y según la infracción aplicable. La inspección turística puede además ordenar el cese del camping ilegal."
+    },
+    "normativa_local": {
+      "importancia": "alta",
+      "detalle": "Las autoridades locales y los gestores de determinadas áreas pueden designar espacios excepcionales para camping organizado en los supuestos previstos por la ley y establecer sus condiciones y duración. También pueden existir restricciones locales de estacionamiento."
+    },
+    "excepciones": {
+      "estado": "muy_limitadas",
+      "detalle": "La ley permite excepcionalmente camping organizado fuera de campings durante eventos deportivos, scouts, culturales y similares, y determinados viajes organizados en canoa, embarcaciones similares, bicicleta, etc., únicamente en espacios expresamente designados y bajo las condiciones fijadas por la autoridad o entidad gestora competente."
+    },
+    "nota_practica": {
+      "titulo": "En Croacia, para dormir hay que buscar un lugar autorizado",
+      "detalle": "No conviene utilizar aparcamientos normales, playas o terrenos privados como lugar de pernocta. Incluso en terreno privado, el camping turístico fuera de una instalación autorizada puede infringir la ley. La opción segura es camping o kamp-odmorište/camper stop legal."
+    },
+    "fuentes": [
+      {
+        "organismo": "Narodne novine — Diario Oficial de Croacia",
+        "titulo": "Zakon o ugostiteljskoj djelatnosti — artículo 29, Kampiranje",
+        "url": "https://narodne-novine.nn.hr/clanci/sluzbeni/2015_08_85_1648.html"
+      },
+      {
+        "organismo": "Narodne novine — Diario Oficial de Croacia",
+        "titulo": "Zakon o ugostiteljskoj djelatnosti — texto oficial",
+        "url": "https://narodne-novine.nn.hr/clanci/sluzbeni/full/2015_08_85_1648.html"
+      },
+      {
+        "organismo": "Ministerio de Turismo y Deporte de Croacia",
+        "titulo": "Propisi iz turizma i ugostiteljstva",
+        "url": "https://mint.gov.hr/"
+      },
+      {
+        "organismo": "Zakon.hr",
+        "titulo": "Zakon o ugostiteljskoj djelatnosti — texto consolidado de consulta",
+        "url": "https://www.zakon.hr/z/151/zakon-o-ugostiteljskoj-djelatnosti"
+      }
+    ]
+  }
+]
