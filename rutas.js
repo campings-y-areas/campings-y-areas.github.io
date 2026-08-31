@@ -1,6 +1,6 @@
 // ==========================================
-// CAMPINGS & ÁREAS - RUTAS FASE 4
-// Geoapify: autocomplete + routing + mapa + paradas interesantes
+// CAMPINGS & ÁREAS - RUTAS FASE 5
+// Geoapify: autocomplete + routing + mapa + paradas inteligentes + recálculo real
 // ==========================================
 
 let pasoActual = 1;
@@ -156,7 +156,12 @@ function pintarRuta(data,lugares){
   iniciarMapa();
   if(capaRuta)mapa.removeLayer(capaRuta); marcadores.forEach(m=>mapa.removeLayer(m)); marcadores=[];
   capaRuta=L.geoJSON(data,{style:{weight:5,opacity:.8}}).addTo(mapa);
-  lugares.forEach((l,i)=>{ const m=L.marker([l.lat,l.lon]).addTo(mapa).bindPopup(`<strong>${i===0?"Salida":"Parada "+i}</strong><br>${escapar(l.formatted||l.name||"")}`); marcadores.push(m); });
+  lugares.forEach((l,i)=>{
+    const esFinal=i===lugares.length-1;
+    const titulo=i===0?"Salida":(esFinal?"Destino":(l.recomendada?"Parada recomendada":"Parada "+i));
+    const m=L.marker([l.lat,l.lon]).addTo(mapa).bindPopup(`<strong>${escapar(titulo)}</strong><br>${escapar(l.formatted||l.name||"")}`);
+    marcadores.push(m);
+  });
   mapa.fitBounds(capaRuta.getBounds(),{padding:[24,24]}); setTimeout(()=>mapa.invalidateSize(),100);
 }
 
@@ -166,33 +171,78 @@ async function pintarResultado(data,lugares,datos){
   const maxHoras=Math.max(1,Number(datos.maxConduccion)||4);
   const jornadas=Math.max(1,Math.ceil(tiempo/(maxHoras*3600)));
   document.getElementById("estadoCalculo").textContent=`${lugares[0].formatted||datos.origen} → ${lugares[lugares.length-1].formatted||datos.destinoPrincipal}`;
-  document.getElementById("metricasRuta").innerHTML=`
-    <div class="metrica-ruta">📏 Distancia<strong>${formatoKm(distancia)}</strong></div>
-    <div class="metrica-ruta">⏱️ Conducción<strong>${formatoTiempo(tiempo)}</strong></div>
-    <div class="metrica-ruta">🛏️ Jornadas estimadas<strong>${jornadas}</strong></div>
-    <div class="metrica-ruta">📍 Puntos de ruta<strong>${lugares.length}</strong></div>`;
-  const legs=p.legs||[];
-  let html="<h3>🚐 Recorrido</h3>";
-  if(legs.length){
-    legs.forEach((leg,i)=>{html+=`<div class="etapa-card"><div class="etapa-numero">${i+1}</div><div><strong>${escapar(lugares[i]?.formatted||"Salida")} → ${escapar(lugares[i+1]?.formatted||"Destino")}</strong><p>${formatoKm(leg.distance||0)} · ${formatoTiempo(leg.time||0)}</p></div></div>`;});
-  } else html+=`<p>${formatoKm(distancia)} · ${formatoTiempo(tiempo)}</p>`;
+  pintarMetricas(distancia,tiempo,jornadas,lugares.length);
+
+  let html=htmlRecorrido(feature,lugares);
   if(jornadas>1)html+=`<div class="aviso-ruta"><strong>Plan de conducción:</strong> con un máximo de ${escapar(maxHoras)} h al día, el trayecto necesita aproximadamente ${jornadas} jornadas.</div>`;
 
-  // Mostrar el resultado básico y el mapa inmediatamente. La búsqueda de lugares
-  // interesantes se hace después para que la página no parezca bloqueada.
-  document.getElementById("etapasRuta").innerHTML=html + (jornadas>1 ? '<div id="cargandoParadas" class="aviso-suave">🔎 Buscando las mejores zonas de parada según tus preferencias…</div>' : '');
+  // Primero mostramos la ruta directa para mantener la página ágil.
+  document.getElementById("etapasRuta").innerHTML=html + (jornadas>1 ? '<div id="cargandoParadas" class="aviso-suave">🔎 Buscando paradas interesantes y comprobando el desvío real…</div>' : '');
   pintarRuta(data,lugares);
 
   if(jornadas>1){
     const plan=await crearPlanJornadas(feature,lugares,datos);
     document.getElementById("cargandoParadas")?.remove();
-    document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlPlanJornadas(plan,datos));
+
+    const conParadas=plan.filter(e=>e.intermedia && e.poiPrincipal && Array.isArray(e.coordRecomendada));
+    if(conParadas.length){
+      try{
+        document.getElementById("estadoCalculo").textContent="Recalculando la carretera por las mejores paradas…";
+        const lugaresOpt=[lugares[0],...conParadas.map(e=>({
+          lat:e.coordRecomendada[1], lon:e.coordRecomendada[0], formatted:e.hasta,
+          name:e.poiPrincipal, recomendada:true
+        })),lugares.at(-1)];
+        const rutaOpt=await calcularRuta(lugaresOpt,datos);
+        const fOpt=rutaOpt.features[0], pOpt=fOpt.properties||{};
+        const tiempoExtra=Math.max(0,(pOpt.time||0)-tiempo);
+        const distanciaExtra=Math.max(0,(pOpt.distance||0)-distancia);
+        const jornadasOpt=Math.max(1,Math.ceil((pOpt.time||0)/(maxHoras*3600)));
+
+        pintarRuta(rutaOpt,lugaresOpt);
+        pintarMetricas(pOpt.distance||0,pOpt.time||0,jornadasOpt,lugaresOpt.length);
+        document.getElementById("estadoCalculo").textContent=`Ruta optimizada: ${lugaresOpt[0].formatted||datos.origen} → ${lugaresOpt.at(-1).formatted||datos.destinoPrincipal}`;
+        document.getElementById("etapasRuta").innerHTML=htmlRecorrido(fOpt,lugaresOpt,"🚐 Recorrido optimizado");
+        document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlResumenDesvio(distanciaExtra,tiempoExtra,conParadas.length));
+        document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlPlanJornadas(plan,datos,fOpt,lugaresOpt));
+      }catch(err){
+        console.warn("No se pudo recalcular por las paradas recomendadas",err);
+        document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlPlanJornadas(plan,datos));
+        document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",'<div class="aviso-suave">Las recomendaciones son válidas, pero no hemos podido recalcular el desvío completo en esta ocasión. Se mantiene la ruta directa.</div>');
+      }
+    }else{
+      document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlPlanJornadas(plan,datos));
+    }
   }
 }
 
+function pintarMetricas(distancia,tiempo,jornadas,puntos){
+  document.getElementById("metricasRuta").innerHTML=`
+    <div class="metrica-ruta">📏 Distancia<strong>${formatoKm(distancia)}</strong></div>
+    <div class="metrica-ruta">⏱️ Conducción<strong>${formatoTiempo(tiempo)}</strong></div>
+    <div class="metrica-ruta">🛏️ Jornadas estimadas<strong>${jornadas}</strong></div>
+    <div class="metrica-ruta">📍 Puntos de ruta<strong>${puntos}</strong></div>`;
+}
+
+function htmlRecorrido(feature,lugares,titulo="🚐 Recorrido"){
+  const p=feature.properties||{}, legs=p.legs||[];
+  let html=`<h3>${titulo}</h3>`;
+  if(legs.length){
+    legs.forEach((leg,i)=>{
+      const etiqueta=(lugares[i+1]?.recomendada?'<span class="badge-recomendada">✨ parada elegida</span>':'');
+      html+=`<div class="etapa-card"><div class="etapa-numero">${i+1}</div><div><strong>${escapar(lugares[i]?.formatted||"Salida")} → ${escapar(lugares[i+1]?.formatted||"Destino")}</strong>${etiqueta}<p>${formatoKm(leg.distance||0)} · ${formatoTiempo(leg.time||0)}</p></div></div>`;
+    });
+  } else html+=`<p>${formatoKm(p.distance||0)} · ${formatoTiempo(p.time||0)}</p>`;
+  return html;
+}
+
+function htmlResumenDesvio(distanciaExtra,tiempoExtra,cantidad){
+  const hay=distanciaExtra>500 || tiempoExtra>60;
+  if(!hay)return `<div class="aviso-optimizacion"><strong>✨ Ruta adaptada:</strong> hemos incorporado ${cantidad} ${cantidad===1?"parada interesante":"paradas interesantes"} prácticamente sin aumentar el recorrido.</div>`;
+  return `<div class="aviso-optimizacion"><strong>✨ Ruta adaptada a tus paradas:</strong> hemos incorporado ${cantidad} ${cantidad===1?"parada interesante":"paradas interesantes"}. El desvío real añade aproximadamente <strong>${formatoKm(distanciaExtra)}</strong> y <strong>${formatoTiempo(tiempoExtra)}</strong> frente a ir directamente.</div>`;
+}
 
 
-// ---------- Fase 4: jornadas + paradas interesantes ----------
+// ---------- Fase 5: jornadas + paradas interesantes + recálculo real ----------
 function puntosLinea(geometry){
   if(!geometry)return [];
   if(geometry.type==="LineString")return geometry.coordinates||[];
@@ -308,23 +358,29 @@ async function crearPlanJornadas(feature,lugares,datos){
   // paralelo reduce mucho el tiempo total en viajes largos.
   const cortesEnriquecidos=await Promise.all(cortes.map(c=>enriquecerCorte(c,datos)));
   const puntos=[{nombre:lugares[0]?.formatted||datos.origen,distRuta:0,tiempoRuta:0},...cortesEnriquecidos,{nombre:lugares.at(-1)?.formatted||datos.destinoPrincipal,distRuta:totalDist,tiempoRuta:totalTiempo}];
-  return puntos.slice(0,-1).map((a,i)=>{const b=puntos[i+1];return {dia:i+1,desde:a.nombre,hasta:b.nombre,distancia:b.distRuta-a.distRuta,tiempo:b.tiempoRuta-a.tiempoRuta,intermedia:i<puntos.length-2,pois:b.pois||[],poiPrincipal:b.poiPrincipal||null};});
+  return puntos.slice(0,-1).map((a,i)=>{const b=puntos[i+1];return {dia:i+1,desde:a.nombre,hasta:b.nombre,distancia:b.distRuta-a.distRuta,tiempo:b.tiempoRuta-a.tiempoRuta,intermedia:i<puntos.length-2,pois:b.pois||[],poiPrincipal:b.poiPrincipal||null,coordRecomendada:b.coordRecomendada||null,coordIdeal:b.coord||null};});
 }
-function htmlPlanJornadas(plan,datos){
+function htmlPlanJornadas(plan,datos,rutaOptimizada=null,lugaresOpt=[]){
   if(!plan.length)return "";
   let h='<div class="plan-etapas"><h3>🗓️ Etapas y paradas recomendadas</h3>';
-  plan.forEach(e=>{
-    h+=`<div class="etapa-real"><div class="etapa-dia">${e.dia}</div><div><strong>${escapar(e.desde)} → ${escapar(e.hasta)}</strong><p>${formatoKm(e.distancia)} · ${formatoTiempo(e.tiempo)}</p>`;
+  const legsOpt=rutaOptimizada?.properties?.legs||[];
+  plan.forEach((e,idx)=>{
+    const leg=legsOpt[idx]||null;
+    const desde=lugaresOpt[idx]?.formatted||e.desde;
+    const hasta=lugaresOpt[idx+1]?.formatted||e.hasta;
+    const distancia=leg?.distance??e.distancia;
+    const tiempo=leg?.time??e.tiempo;
+    h+=`<div class="etapa-real"><div class="etapa-dia">${e.dia}</div><div><strong>${escapar(desde)} → ${escapar(hasta)}</strong><p>${formatoKm(distancia)} · ${formatoTiempo(tiempo)}</p>`;
     if(e.intermedia){
       h+=`<div class="parada-inteligente"><h4>✨ Merece la pena parar en ${escapar(e.hasta)}</h4>`;
       if(e.poiPrincipal)h+=`<p>La zona destaca por <strong>${escapar(e.poiPrincipal)}</strong> y encaja mejor con tus preferencias que un simple corte matemático de la ruta.</p>`;
       if(e.pois.length){ h+='<div class="poi-lista">'; e.pois.forEach(x=>{h+=`<div class="poi-card"><strong>${escapar(x.nombre)}</strong><small>${escapar(x.localidad)}${x.distancia?` · a ${Math.round(x.distancia/1000)} km del punto ideal de etapa`:""}</small><span class="poi-etiqueta">${escapar(x.etiqueta)}</span></div>`;}); h+='</div>'; }
-      else h+='<p>No hemos encontrado suficientes visitas destacadas en 30 km; mantendremos esta zona como punto práctico de etapa.</p>';
+      else h+='<p>No hemos encontrado suficientes visitas destacadas en 25 km; mantendremos esta zona como punto práctico de etapa.</p>';
       h+='</div>';
     }
     h+='</div></div>';
   });
-  h+=`<div class="aviso-suave"><strong>Fase 4:</strong> las paradas intermedias ya se valoran según tus intereses${Number(datos.ninos)>0?", la presencia y edades de los niños":""}. Todavía no modificamos la carretera para desviarnos hasta el lugar: primero comprobamos que las propuestas son buenas; después calcularemos el desvío real y las cruzaremos con Campings, Áreas y Parkings.</div></div>`;
+  h+=`<div class="aviso-suave"><strong>Fase 5:</strong> las mejores paradas ya se incorporan al recorrido y el mapa se recalcula por ellas. Los tiempos y kilómetros superiores son los reales de la ruta ajustada. El siguiente paso será buscar dónde dormir cerca de cada parada usando nuestros Campings, Áreas y Parkings.</div></div>`;
   return h;
 }
 
