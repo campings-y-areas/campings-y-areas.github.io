@@ -1,0 +1,96 @@
+[
+  {
+    "id": "normativa-ee",
+    "pais": "Estonia",
+    "actualizado": "2026-08-31",
+    "estado_general": "En Estonia las autocaravanas se rigen por las normas generales de circulación y estacionamiento. La naturaleza es muy accesible, pero el derecho de acceso no significa que un vehículo pueda circular, estacionar o acampar libremente en cualquier terreno. En espacios protegidos son frecuentes las reglas que limitan el vehículo a las carreteras y permiten acampar o hacer fuego solo en lugares preparados y señalizados.",
+    "resumen": "Fuera de poblado, de noche, la Ley de Tráfico exige estacionar únicamente en un aparcamiento o área de descanso. Durante el día, fuera de poblado y fuera de aparcamientos/áreas de descanso, el vehículo se estaciona normalmente en el arcén derecho conforme a la ley. En reservas y parques deben comprobarse las reglas concretas: numerosos reglamentos oficiales permiten circular únicamente por carreteras y limitan camping y fuego a lugares habilitados por el gestor.",
+    "estacionamiento": {
+      "estado": "segun_ley_de_trafico_y_senalizacion",
+      "detalle": "La Ley de Tráfico de Estonia regula parada y estacionamiento. Fuera de poblado, durante la noche, un vehículo solo puede estacionarse en un aparcamiento o área de descanso. Durante el día, fuera de poblado y fuera de estos lugares, se aplican las reglas del arcén derecho previstas por la ley.",
+      "condiciones_practicas": [
+        "Respetar señales y marcas viales.",
+        "Fuera de poblado y de noche: estacionar solo en aparcamiento o área de descanso.",
+        "No bloquear tráfico, peatones ni accesos.",
+        "En espacios protegidos utilizar carreteras y aparcamientos permitidos."
+      ]
+    },
+    "pernocta": {
+      "estado": "posible_solo_si_el_estacionamiento_y_el_lugar_lo_permiten",
+      "detalle": "Dormir dentro de una autocaravana no crea por sí mismo un derecho especial de estacionamiento. Fuera de poblado, la exigencia nocturna de utilizar aparcamientos o áreas de descanso es especialmente importante. Además deben respetarse las restricciones del propietario, municipio o espacio protegido."
+    },
+    "acampada_libre": {
+      "estado": "depende_del_terreno_y_mas_restringida_en_areas_protegidas",
+      "detalle": "En muchas áreas protegidas la normativa oficial permite acampar únicamente en lugares preparados y señalizados por el gestor; en terrenos privados pueden ser necesarios el consentimiento del propietario y el respeto de las reglas de acceso. No debe confundirse el acceso a la naturaleza con un derecho de camping motorizado."
+    },
+    "elementos_exteriores": {
+      "estado": "solo_donde_este_permitido_acampar",
+      "detalle": "Toldos, mesas, sillas, barbacoas y equipamiento exterior son propios de una actividad de camping y deben utilizarse en lugares donde dicha actividad esté permitida.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "barbacoa",
+        "equipamiento exterior"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "sujetas_a_accesos_proteccion_y_reglas_locales",
+      "detalle": "En la extensa costa estonia deben respetarse accesos, estacionamiento, propiedad y restricciones de protección. Numerosas zonas costeras forman parte de reservas o parques con reglamentos específicos; no debe asumirse que una playa o camino costero permite entrar o acampar con autocaravana."
+    },
+    "espacios_naturales": {
+      "estado": "reglas_especificas_por_area",
+      "detalle": "Los reglamentos oficiales de numerosas reservas establecen que los vehículos pueden circular por carreteras, mientras que circular fuera de ellas requiere autorización o queda reservado a actividades concretas. Camping y fuego suelen limitarse a lugares preparados y señalizados por el gestor."
+    },
+    "bosques": {
+      "estado": "acceso_motorizado_no_equivale_a_derecho_de_acampada",
+      "detalle": "En bosques y terrenos naturales deben respetarse carreteras, restricciones del propietario o gestor y normas de protección. En espacios protegidos el vehículo suele quedar limitado a las carreteras y aparcamientos autorizados."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "solo_en_lugares_y_condiciones_permitidos",
+      "detalle": "En muchas áreas protegidas el fuego solo está permitido en lugares preparados y señalizados. También deben respetarse prohibiciones temporales por riesgo de incendio y las instrucciones del gestor forestal o ambiental."
+    },
+    "aguas_y_residuos": {
+      "estado": "usar_instalaciones_adecuadas",
+      "detalle": "Aguas negras, aguas grises y residuos de autocaravana deben gestionarse en instalaciones apropiadas. No deben realizarse vertidos ni abandonarse residuos en bosques, aparcamientos, costas o espacios protegidos."
+    },
+    "limites_de_permanencia": {
+      "estado": "dependen_del_aparcamiento_y_del_lugar",
+      "detalle": "No existe un límite nacional único específico para todas las autocaravanas estacionadas. Pueden existir límites mediante señalización, condiciones del aparcamiento, municipio, propietario o gestor del espacio natural."
+    },
+    "multas": {
+      "estado": "dependen_de_la_infraccion",
+      "detalle": "Las sanciones dependen de la infracción concreta: estacionamiento prohibido, incumplimiento de las reglas de un área protegida, circulación fuera de vías permitidas, fuego, vertidos u otras infracciones."
+    },
+    "normativa_local": {
+      "importancia": "alta",
+      "detalle": "Debe comprobarse la señalización y las reglas del municipio, propietario, RMK o gestor del espacio protegido. Estonia dispone de numerosos lugares recreativos preparados, que son la opción adecuada para evitar problemas."
+    },
+    "nota_practica": {
+      "titulo": "Estonia es favorable al turismo de naturaleza, pero el vehículo tiene límites claros",
+      "detalle": "Para una autocaravana, lo más importante es recordar que fuera de poblado por la noche solo se puede estacionar en aparcamientos o áreas de descanso. En áreas protegidas, circular fuera de carreteras y acampar fuera de lugares preparados suele estar restringido."
+    },
+    "fuentes": [
+      {
+        "organismo": "Riigi Teataja — Diario Oficial de Estonia",
+        "titulo": "Liiklusseadus — Ley de Tráfico, parada y estacionamiento",
+        "url": "https://www.riigiteataja.ee/akt/109012025010"
+      },
+      {
+        "organismo": "Riigi Teataja — Diario Oficial de Estonia",
+        "titulo": "Soontaga looduskaitseala — reglamento de reserva natural",
+        "url": "https://www.riigiteataja.ee/akt/105072023176"
+      },
+      {
+        "organismo": "Riigi Teataja — Diario Oficial de Estonia",
+        "titulo": "Tolkuse looduskaitseala — reglamento de reserva natural",
+        "url": "https://www.riigiteataja.ee/akt/105072023191"
+      },
+      {
+        "organismo": "Riigi Teataja — Diario Oficial de Estonia",
+        "titulo": "Aegna maastikukaitseala — reglamento de área paisajística protegida",
+        "url": "https://www.riigiteataja.ee/akt/105072023012"
+      }
+    ]
+  }
+]
