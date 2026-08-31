@@ -27,7 +27,8 @@ const archivosNormativas = {
   "Irlanda": "normativas-irlanda-definitivo.json?v=1",
   "Reino Unido": "normativas-reino-unido-definitivo.json?v=1",
   "Polonia": "normativas-polonia-definitivo.json?v=1",
-  "República Checa": "normativas-republica-checa-definitivo.json?v=1"
+  "República Checa": "normativas-republica-checa-definitivo.json?v=1",
+  "Eslovaquia": "normativas-eslovaquia-definitivo.json?v=1"
 };
 
 
