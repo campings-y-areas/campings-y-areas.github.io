@@ -1,0 +1,292 @@
+/* =========================================
+   CAMPINGS & ÁREAS - RUTAS
+   ========================================= */
+
+.rutas-panel,
+.resumen-ruta {
+  max-width: 980px;
+  margin: 24px auto;
+  padding: 24px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 18px rgba(0,0,0,.08);
+}
+
+.pasos-ruta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+
+.paso {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  background: #e7e7e7;
+  color: #555;
+}
+
+.paso.activo,
+.paso.completado {
+  background: #2f6f52;
+  color: #fff;
+}
+
+.linea-paso {
+  width: 72px;
+  height: 3px;
+  background: #ddd;
+}
+
+.bloque-ruta {
+  display: none;
+}
+
+.bloque-ruta.activo {
+  display: block;
+}
+
+.bloque-ruta h3 {
+  margin-top: 0;
+  font-size: 1.45rem;
+}
+
+.opciones-grandes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 18px 0 24px;
+}
+
+.opcion-grande {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px;
+  border: 2px solid #ddd;
+  border-radius: 14px;
+  cursor: pointer;
+  background: #fafafa;
+}
+
+.opcion-grande:has(input:checked) {
+  border-color: #2f6f52;
+  background: #f1f8f4;
+}
+
+.opcion-grande input {
+  position: absolute;
+  opacity: 0;
+}
+
+.opcion-icono {
+  font-size: 2rem;
+}
+
+.opcion-grande strong {
+  font-size: 1.08rem;
+}
+
+.opcion-grande small {
+  line-height: 1.4;
+}
+
+.campos-ruta,
+.subbloque {
+  display: grid;
+  gap: 14px;
+}
+
+.subbloque {
+  margin-top: 24px;
+}
+
+.subbloque h4 {
+  margin: 0;
+}
+
+.fila-doble,
+.fila-triple {
+  display: grid;
+  gap: 14px;
+}
+
+.fila-doble {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.fila-triple {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.bloque-ruta label > span:first-child {
+  display: block;
+  margin-bottom: 7px;
+  font-weight: 700;
+}
+
+.bloque-ruta input[type="text"],
+.bloque-ruta input[type="number"],
+.bloque-ruta input[type="date"],
+.bloque-ruta select,
+.bloque-ruta textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 13px;
+  border: 1px solid #cfcfcf;
+  border-radius: 9px;
+  font: inherit;
+  background: #fff;
+}
+
+.check-linea {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding-top: 26px;
+}
+
+.check-linea span {
+  margin: 0 !important;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chips label {
+  cursor: pointer;
+}
+
+.chips input {
+  position: absolute;
+  opacity: 0;
+}
+
+.chips span {
+  display: inline-block;
+  padding: 9px 12px;
+  border: 1px solid #d2d2d2;
+  border-radius: 999px;
+  background: #fafafa;
+  font-weight: 600;
+}
+
+.chips input:checked + span {
+  border-color: #2f6f52;
+  background: #eaf5ef;
+}
+
+.edades-ninos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.edades-ninos label {
+  min-width: 120px;
+}
+
+.destino-extra {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.destino-extra button {
+  align-self: end;
+}
+
+.acciones-ruta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.acciones-ruta button,
+.boton-secundario {
+  padding: 11px 16px;
+  border: 0;
+  border-radius: 9px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.acciones-ruta button:not(.boton-secundario),
+#crearRuta {
+  background: #2f6f52;
+  color: #fff;
+}
+
+.boton-secundario {
+  background: #ececec;
+  color: #222;
+}
+
+.oculto {
+  display: none !important;
+}
+
+.resumen-ruta h3 {
+  margin-top: 0;
+}
+
+.resumen-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 12px;
+}
+
+.resumen-item {
+  padding: 12px;
+  border-radius: 10px;
+  background: #f6f7f6;
+}
+
+.resumen-aviso {
+  margin-top: 18px;
+  padding: 14px;
+  border-radius: 10px;
+  background: #fff7df;
+}
+
+@media (max-width: 700px) {
+  .rutas-panel,
+  .resumen-ruta {
+    padding: 16px;
+  }
+
+  .opciones-grandes,
+  .fila-doble,
+  .fila-triple,
+  .resumen-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .linea-paso {
+    width: 34px;
+  }
+
+  .check-linea {
+    padding-top: 6px;
+  }
+
+  .acciones-ruta {
+    flex-wrap: wrap;
+  }
+
+  .acciones-ruta button {
+    flex: 1 1 140px;
+  }
+}
