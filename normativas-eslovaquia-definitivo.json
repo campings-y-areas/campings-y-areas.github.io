@@ -1,0 +1,91 @@
+[
+  {
+    "id": "normativa-sk",
+    "pais": "Eslovaquia",
+    "actualizado": "2026-08-31",
+    "estado_general": "En Eslovaquia una autocaravana puede estacionarse donde lo permitan la Ley de tráfico y la señalización. No existe un derecho general a utilizar cualquier terreno natural como lugar de pernocta o camping. En espacios con niveles superiores de protección ambiental, y especialmente desde el tercer grado de protección, las restricciones sobre vehículos, camping, vivac y fuego son muy estrictas.",
+    "resumen": "La Ley 8/2009 regula el estacionamiento como para otros vehículos: deben utilizarse preferentemente los aparcamientos y respetarse las plazas marcadas. La Ley 543/2002 de protección de la naturaleza establece cinco grados de protección. Desde el segundo grado se restringe circular o estacionar vehículos fuera de carreteras y aparcamientos autorizados; en el tercer grado se prohíben además camping, tienda, vivac y fuego fuera de las condiciones o lugares autorizados.",
+    "estacionamiento": {
+      "estado": "permitido_segun_ley_de_trafico_y_senalizacion",
+      "detalle": "Según la Ley 8/2009, al detenerse o estacionar debe utilizarse preferentemente un aparcamiento sin obstaculizar a otros usuarios; si existen plazas marcadas, el vehículo debe estacionarse dentro de ellas. Fuera de poblado existen además restricciones específicas en carreteras de primera clase y otras vías bajo determinadas condiciones.",
+      "condiciones_practicas": [
+        "Usar preferentemente aparcamientos habilitados.",
+        "Si hay plazas marcadas, estacionar dentro de ellas.",
+        "Respetar señalización y prohibiciones locales.",
+        "En espacios naturales protegidos, no salir con la autocaravana de carreteras y aparcamientos autorizados."
+      ]
+    },
+    "pernocta": {
+      "estado": "depende_del_lugar_y_nivel_de_proteccion",
+      "detalle": "La legislación de tráfico regula el estacionamiento, pero la estancia nocturna puede quedar limitada por normas municipales, del aparcamiento, forestales o de protección de la naturaleza. En áreas con tercer grado de protección están prohibidos camping, tienda y vivac fuera de las condiciones autorizadas."
+    },
+    "acampada_libre": {
+      "estado": "fuertemente_restringida_en_areas_protegidas",
+      "detalle": "En territorios con tercer grado de protección, la Ley 543/2002 prohíbe acampar, instalar tienda y hacer vivac fuera de las condiciones o lugares autorizados. Los grados cuarto y quinto incorporan restricciones todavía mayores."
+    },
+    "elementos_exteriores": {
+      "estado": "solo_donde_este_autorizado",
+      "detalle": "En un aparcamiento ordinario no debe asumirse que están permitidos toldos, mesas, sillas, barbacoas u otros elementos de camping. En áreas protegidas estas actividades pueden estar expresamente prohibidas.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "barbacoa",
+        "equipamiento exterior"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "sin_costa_maritima",
+      "detalle": "Eslovaquia no tiene costa marítima. En lagos, embalses y zonas recreativas se aplican la señalización, las normas locales y, cuando corresponda, los grados de protección ambiental."
+    },
+    "espacios_naturales": {
+      "estado": "restricciones_por_cinco_grados_de_proteccion",
+      "detalle": "La Ley 543/2002 establece cinco grados de protección. En segundo grado se prohíbe circular o estacionar vehículos fuera de carreteras, vías permitidas y aparcamientos especificados. En tercer grado se mantienen esas restricciones y se prohíben además camping, tienda, vivac y fuego fuera de las condiciones autorizadas."
+    },
+    "bosques": {
+      "estado": "acceso_motorizado_y_actividades_sujetos_a_restricciones",
+      "detalle": "Los bosques están regulados por la Ley 326/2005 y, cuando forman parte de áreas protegidas, también por la Ley 543/2002. No debe entrarse ni estacionarse con autocaravana fuera de vías o lugares autorizados."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "prohibido_en_areas_de_tercer_grado_fuera_de_condiciones_autorizadas",
+      "detalle": "Desde el tercer grado de protección la Ley de protección de la naturaleza prohíbe encender fuego fuera de edificios cerrados, salvo las excepciones o autorizaciones previstas. Además se aplican las reglas forestales y de prevención de incendios."
+    },
+    "aguas_y_residuos": {
+      "estado": "usar_instalaciones_adecuadas",
+      "detalle": "Aguas negras, grises y residuos deben gestionarse mediante instalaciones autorizadas. No deben realizarse vertidos ni abandonarse residuos en bosques, aparcamientos o espacios naturales."
+    },
+    "limites_de_permanencia": {
+      "estado": "sin_limite_nacional_unico_para_todos_los_aparcamientos",
+      "detalle": "La duración depende de la señalización, las reglas del aparcamiento, municipio y nivel de protección del espacio. No debe interpretarse un estacionamiento legal como autorización automática para una estancia de camping prolongada."
+    },
+    "multas": {
+      "estado": "dependen_de_la_infraccion",
+      "detalle": "Las sanciones dependen de la conducta concreta: estacionamiento contrario a la Ley 8/2009 o señalización, acceso motorizado indebido a áreas protegidas, camping o fuego prohibidos y otras infracciones ambientales."
+    },
+    "normativa_local": {
+      "importancia": "alta",
+      "detalle": "Municipios, gestores de aparcamientos, parques nacionales y autoridades ambientales pueden imponer reglas adicionales. En zonas turísticas y parques debe comprobarse siempre la señalización y el grado de protección aplicable."
+    },
+    "nota_practica": {
+      "titulo": "En Eslovaquia hay que mirar el grado de protección del lugar",
+      "detalle": "Para una autocaravana, lo más seguro es permanecer en carreteras y aparcamientos autorizados. En áreas de segundo grado ya existen restricciones para vehículos fuera de vías; desde el tercer grado también están prohibidos camping, vivac y fuego salvo autorización o lugar habilitado."
+    },
+    "fuentes": [
+      {
+        "organismo": "Slov-Lex",
+        "titulo": "Zákon č. 8/2009 Z. z. — Ley de tráfico, §§ 23-25 y 36",
+        "url": "https://www.slov-lex.sk/ezbierky/pravne-predpisy/SK/ZZ/2009/8/"
+      },
+      {
+        "organismo": "Slov-Lex",
+        "titulo": "Zákon č. 543/2002 Z. z. — Protección de la naturaleza y paisaje",
+        "url": "https://www.slov-lex.sk/ezbierky/pravne-predpisy/SK/ZZ/2002/543/"
+      },
+      {
+        "organismo": "Slov-Lex",
+        "titulo": "Zákon č. 326/2005 Z. z. — Ley de bosques",
+        "url": "https://www.slov-lex.sk/ezbierky/pravne-predpisy/SK/ZZ/2005/326/"
+      }
+    ]
+  }
+]
