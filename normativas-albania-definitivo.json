@@ -1,0 +1,96 @@
+[
+  {
+    "id": "normativa-al",
+    "pais": "Albania",
+    "actualizado": "2026-08-31",
+    "estado_general": "En Albania no debe interpretarse un estacionamiento permitido como un derecho general a acampar o pernoctar con autocaravana. La regulación depende de la señalización, el propietario o gestor del terreno y, especialmente, de la normativa de áreas protegidas. La Agencia Nacional de Áreas Protegidas (AKZM) aplica la Ley 81/2017, modificada, y los planes de gestión de cada espacio.",
+    "resumen": "Fuera de campings y áreas expresamente habilitadas conviene comprobar siempre el permiso del terreno y las restricciones locales. En áreas protegidas las reglas cambian según categoría y zonificación. La propia AKZM ha confirmado que no existe necesariamente una zona oficial para autocaravanas en determinados espacios y que una estancia discreta solo puede ser tolerada en casos concretos, sin instalaciones exteriores, fuego ni residuos; esa tolerancia no constituye un derecho general. En el Parque Nacional del Río Vjosa, por ejemplo, el plan de gestión restringe el camping fuera de zonas designadas.",
+    "estacionamiento": {
+      "estado": "segun_senalizacion_propiedad_y_reglas_del_lugar",
+      "detalle": "Las autocaravanas deben estacionarse respetando la normativa vial, señalización, restricciones municipales y condiciones del propietario o gestor. En áreas protegidas el acceso motorizado puede estar limitado por la zonificación y el plan de gestión.",
+      "condiciones_practicas": [
+        "Respetar señales y restricciones de aparcamiento.",
+        "Pedir permiso cuando se trate de terreno privado.",
+        "No interpretar la tolerancia ocasional como autorización general.",
+        "En áreas protegidas, comprobar las reglas específicas antes de entrar o pernoctar."
+      ]
+    },
+    "pernocta": {
+      "estado": "sin_derecho_general_y_dependiente_del_lugar",
+      "detalle": "No existe un derecho general a pernoctar con autocaravana en cualquier aparcamiento o terreno. AKZM ha indicado en respuestas oficiales que en ciertos lugares una estancia discreta puede ser tolerada si se respeta el medio ambiente, no se despliegan instalaciones exteriores, no se hace fuego y no se dejan residuos; debe entenderse como una situación local, no como una autorización nacional."
+    },
+    "acampada_libre": {
+      "estado": "restringida_especialmente_en_areas_protegidas",
+      "detalle": "En parques nacionales y otras áreas protegidas la acampada está condicionada por la Ley 81/2017, la zonificación y los planes de gestión. En el Parque Nacional del Río Vjosa, el plan de gestión recoge que el camping fuera de zonas designadas no está permitido en determinadas subzonas."
+    },
+    "elementos_exteriores": {
+      "estado": "solo_donde_este_autorizado",
+      "detalle": "Mesas, sillas, toldos, barbacoas y otros elementos exteriores convierten claramente la estancia en camping. AKZM ha señalado expresamente, en consultas sobre pernocta de motorhomes, que una eventual estancia tolerada debe realizarse sin instalaciones exteriores.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "barbacoa",
+        "equipamiento exterior"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "depende_de_propiedad_proteccion_y_reglas_locales",
+      "detalle": "La costa albanesa incluye playas, dunas y espacios protegidos con regímenes diferentes. No debe asumirse un derecho general a entrar, estacionar o acampar con autocaravana en una playa. AKZM confirmó en 2025, por ejemplo, que la zona donde se desarrolla camping en Gjipe queda fuera de la superficie protegida administrada por la agencia, lo que demuestra la importancia de comprobar exactamente los límites y la titularidad del lugar."
+    },
+    "espacios_naturales": {
+      "estado": "regimen_por_categoria_y_zonificacion",
+      "detalle": "AKZM administra la red de áreas protegidas conforme a la Ley 81/2017 modificada. Los parques nacionales están sujetos a objetivos de conservación y a zonificación; las actividades permitidas dependen de la subzona. En 2026 AKZM recordó que en las zonas núcleo solo se permiten actividades de muy bajo impacto y que los itinerarios señalizados no están destinados a vehículos motorizados off-road."
+    },
+    "bosques": {
+      "estado": "sujetos_a_reglas_de_acceso_y_proteccion",
+      "detalle": "En bosques y terrenos naturales deben respetarse accesos autorizados, señalización, propiedad y medidas de prevención de incendios. No debe darse por permitido circular o estacionar fuera de caminos aptos o autorizados."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "restringido_en_areas_protegidas",
+      "detalle": "En espacios protegidos el fuego puede estar prohibido por la zonificación y los planes de gestión. AKZM ha señalado expresamente que las estancias toleradas de motorhomes deben realizarse sin encender fuego; en el Parque Nacional del Río Vjosa el fuego está prohibido en la subzona núcleo."
+    },
+    "aguas_y_residuos": {
+      "estado": "no_dejar_residuos_ni_realizar_vertidos",
+      "detalle": "Aguas negras, aguas grises y residuos deben gestionarse en instalaciones adecuadas. AKZM exige comportamiento de mínimo impacto y que no se dejen residuos en las áreas protegidas."
+    },
+    "limites_de_permanencia": {
+      "estado": "sin_limite_nacional_unico_identificado",
+      "detalle": "No existe un único límite nacional específico aplicable a todos los aparcamientos de autocaravanas. La permanencia depende de señalización, propiedad, reglas locales y, en áreas protegidas, del plan de gestión y la zonificación."
+    },
+    "multas": {
+      "estado": "dependen_de_la_infraccion_y_del_espacio",
+      "detalle": "Las sanciones dependen de la conducta concreta y de la normativa aplicable: estacionamiento ilegal, acceso motorizado no autorizado, incumplimiento de reglas de un área protegida, fuego, residuos o daños ambientales. Debe consultarse el régimen específico del lugar."
+    },
+    "normativa_local": {
+      "importancia": "muy_alta",
+      "detalle": "En Albania es especialmente importante comprobar las condiciones concretas del municipio, propietario y gestor del espacio. Las reglas pueden variar mucho entre una playa, un terreno privado y las distintas subzonas de un parque nacional."
+    },
+    "nota_practica": {
+      "titulo": "Albania puede parecer permisiva, pero la tolerancia no es un derecho",
+      "detalle": "Para evitar problemas, usar campings o lugares que admitan expresamente autocaravanas. Si se pretende pasar la noche fuera de ellos, comprobar propiedad, señalización y restricciones. En áreas protegidas consultar las reglas del parque; no desplegar elementos exteriores, no hacer fuego y no dejar residuos."
+    },
+    "fuentes": [
+      {
+        "organismo": "Agencia Nacional de Áreas Protegidas de Albania (AKZM)",
+        "titulo": "Registro oficial de solicitudes y respuestas 2025 — consultas sobre motorhomes, camping y Gjipe",
+        "url": "https://akzm.gov.al/regjistri-i-kerkesave-dhe-pergjigjeve-2025/"
+      },
+      {
+        "organismo": "Agencia Nacional de Áreas Protegidas de Albania (AKZM)",
+        "titulo": "Registro oficial de solicitudes y respuestas 2026 — Ley 81/2017 y gestión de parques",
+        "url": "https://akzm.gov.al/regjistri-i-kerkesave-dhe-pergjigjeve-2026/"
+      },
+      {
+        "organismo": "Agencia Nacional de Áreas Protegidas de Albania (AKZM)",
+        "titulo": "Información oficial sobre áreas protegidas y parques nacionales",
+        "url": "https://akzm.gov.al/en/home-en/"
+      },
+      {
+        "organismo": "AKZM",
+        "titulo": "Plan de gestión del Parque Nacional del Río Vjosa 2023–2032 — camping y fuego",
+        "url": "https://akzm.gov.al/wp-content/uploads/2020/07/Chapter-A.-Management-Plan.pdf"
+      }
+    ]
+  }
+]
