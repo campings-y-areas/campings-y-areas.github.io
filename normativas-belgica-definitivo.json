@@ -1,0 +1,135 @@
+[
+  {
+    "id": "normativa-be",
+    "pais": "Bélgica",
+    "actualizado": "2026-08-31",
+    "estado_general": "En Bélgica el estacionamiento de autocaravanas se rige por el código de circulación y por la señalización, pero la pernocta, el camping-caravaning y el uso de terrenos se ven además afectados por normativa regional y municipal. Por ello es esencial distinguir entre estacionar correctamente el vehículo y realizar una actividad de camping.",
+    "resumen": "Una autocaravana puede estacionar donde la normativa y la señalización lo permitan. Bélgica dispone de la señal E9h para plazas reservadas exclusivamente a autocaravanas. Dormir dentro de un vehículo correctamente estacionado no está prohibido de forma general por el código de circulación, pero la actividad no debe transformarse en camping y pueden existir prohibiciones regionales o municipales. En Valonia, el camping-caravaning en vías públicas está expresamente prohibido cuando supera 24 horas. En espacios naturales flamencos gestionados por Natuur en Bos, la pernocta solo puede realizarse en zonas oficiales de vivac.",
+    "estacionamiento": {
+      "estado": "permitido_con_condiciones",
+      "detalle": "El estacionamiento está sometido al reglamento general de circulación, a la señalización y a las normas locales. La señal E9h identifica plazas reservadas exclusivamente a autocaravanas. Una plaza legal de estacionamiento no equivale necesariamente a autorización para instalar elementos de camping.",
+      "condiciones_practicas": [
+        "Respetar señales, marcas viales y limitaciones temporales.",
+        "La señal E9h reserva el estacionamiento exclusivamente a autocaravanas.",
+        "Comprobar ordenanzas municipales, especialmente en zonas turísticas y costeras.",
+        "No ocupar espacio exterior ni realizar actividades propias de camping fuera de lugares autorizados."
+      ]
+    },
+    "pernocta": {
+      "estado": "posible_con_condiciones_y_sujeta_a_normativa_regional_local",
+      "detalle": "La documentación oficial de movilidad de Valonia señala que el código de circulación no prohíbe por sí mismo pasar la noche dentro de un vehículo correctamente estacionado cuando no sobresalen elementos, no se vierten aguas o residuos y no se producen molestias. Sin embargo, las regiones y municipios pueden imponer reglas adicionales y la actividad puede quedar considerada camping-caravaning según las circunstancias."
+    },
+    "acampada_libre": {
+      "estado": "restringida",
+      "detalle": "No existe un derecho general a practicar camping libre en cualquier terreno. La regulación depende de la región, del uso urbanístico del suelo, del propietario y de las normas locales o de protección de la naturaleza."
+    },
+    "elementos_exteriores": {
+      "estado": "no_recomendados_fuera_de_areas_autorizadas",
+      "detalle": "Mesas, sillas, toldos, patas estabilizadoras u otros elementos que ocupen espacio fuera del vehículo pueden hacer que la estancia se considere camping en lugar de simple estacionamiento.",
+      "elementos": [
+        "toldo",
+        "mesas",
+        "sillas",
+        "patas estabilizadoras",
+        "equipamiento exterior de camping"
+      ]
+    },
+    "costas_y_playas": {
+      "estado": "muy_dependiente_del_municipio",
+      "detalle": "En la costa belga son habituales las restricciones locales de acceso, estacionamiento y pernocta de autocaravanas. Debe comprobarse siempre la señalización y la ordenanza municipal correspondiente."
+    },
+    "espacios_naturales": {
+      "estado": "restricciones_importantes",
+      "detalle": "En Flandes, dentro de reservas naturales reconocidas, está prohibido utilizar o dejar vehículos motorizados salvo excepciones de gestión o emergencia, y también instalar tiendas u otras construcciones temporales. En terrenos de Natuur en Bos, la pernocta en la naturaleza solo se admite en zonas oficiales de vivac y con reserva cuando así se exige."
+    },
+    "fuego_y_barbacoa": {
+      "estado": "restringido_en_espacios_naturales",
+      "detalle": "El uso de fuego puede estar prohibido por las normas de reservas, bosques, áreas naturales o autoridades locales. No debe asumirse que un lugar donde se permite estacionar una autocaravana permite también hacer fuego o utilizar una barbacoa."
+    },
+    "aguas_y_residuos": {
+      "estado": "vertido_no_permitido",
+      "detalle": "La pernocta o estacionamiento no autorizan el vertido de aguas residuales ni el abandono de residuos. La documentación oficial de movilidad de Valonia considera necesario que no salgan efluentes del vehículo ni se depositen residuos en la vía pública."
+    },
+    "limites_de_permanencia": {
+      "estado": "sin_limite_nacional_unico_pero_con_reglas_regionales_y_locales",
+      "detalle": "No existe un único límite nacional de permanencia para todas las autocaravanas. En Valonia, la normativa de camping-caravaning prohíbe esa práctica en vías públicas durante más de 24 horas. Además, municipios y áreas específicas pueden fijar límites propios."
+    },
+    "multas": {
+      "estado": "dependen_de_la_infraccion_y_region",
+      "detalle": "Las sanciones dependen de la infracción: estacionamiento contrario al código de circulación, incumplimiento de una ordenanza municipal, camping-caravaning prohibido, acceso indebido a espacios naturales, vertidos o uso ilegal del fuego."
+    },
+    "normativa_local": {
+      "importancia": "muy_alta",
+      "detalle": "Los municipios desempeñan un papel esencial y pueden reservar plazas, limitar tiempos, prohibir pernoctas o regular determinadas zonas. La señalización del lugar debe prevalecer siempre."
+    },
+    "regiones": {
+      "Valonia": {
+        "estado": "regulacion_explicita",
+        "detalle": "La normativa valona de camping-caravaning prohíbe esta práctica en vías públicas durante más de 24 horas, dentro de un radio de 100 metros de captaciones de agua potable y en sitios clasificados. Paralelamente, la documentación oficial de movilidad de Valonia distingue el simple estacionamiento: dormir en el interior de un vehículo estacionado no plantea por sí mismo un problema según el código vial si no hay elementos exteriores, vertidos, residuos o molestias."
+      },
+      "Flandes": {
+        "estado": "regulacion_por_movilidad_urbanismo_naturaleza_y_municipios",
+        "detalle": "El estacionamiento está sujeto al código vial y la señalización. En reservas naturales reconocidas existen fuertes limitaciones a vehículos motorizados y construcciones temporales. En naturaleza gestionada por Natuur en Bos, la pernocta solo puede hacerse en zonas oficiales de vivac. La utilización habitual de un terreno para aparcar vehículos o colocar estructuras habitables puede además estar sometida a autorización urbanística."
+      },
+      "Bruselas-Capital": {
+        "estado": "principalmente_estacionamiento_y_normativa_local",
+        "detalle": "La autocaravana está sometida a las reglas de circulación, señalización y estacionamiento aplicables en la Región y en cada municipio. Para pernoctas o estancias prolongadas deben comprobarse expresamente las restricciones locales."
+      }
+    },
+    "cambio_normativo_proximo": {
+      "fecha_entrada_vigor": "2027-06-01",
+      "norma": "Nuevo Code de la voie publique / Vlaamse wegcode",
+      "detalle": "La entrada en vigor del nuevo marco de circulación, inicialmente prevista antes, ha sido aplazada hasta el 1 de junio de 2027. Por tanto, a fecha de revisión de este JSON no debe tratarse todavía como normativa vigente."
+    },
+    "nota_practica": {
+      "titulo": "Estacionar no equivale a acampar",
+      "detalle": "La opción más segura cuando se pretende dormir es utilizar un área señalizada para autocaravanas o un camping. Si se pernocta en una plaza ordinaria donde sea legal, deben evitarse totalmente mesas, sillas, toldos, vertidos y cualquier ocupación exterior."
+    },
+    "fuentes": [
+      {
+        "organismo": "Codex Vlaanderen / legislación belga",
+        "titulo": "Reglamento general de circulación — señal E9h reservada a autocaravanas",
+        "url": "https://codex.vlaanderen.be/PrintDocument.ashx?id=1023782"
+      },
+      {
+        "organismo": "SPW Mobilité — Wallonie",
+        "titulo": "Stationnement des motor-homes — CeMaphore",
+        "fecha": "2021-03",
+        "url": "https://talents.wallonie.be/files/live/sites/mobilite/files/eDocsMobilite/Conseiller%20en%20mobilit%C3%A9/question%20de%20cem/QC24_stationnement-motor-home.pdf"
+      },
+      {
+        "organismo": "WALLEX — Wallonie",
+        "titulo": "Camping-caravaning en dehors des terrains — article 43",
+        "url": "https://wallex.wallonie.be/contents/acts/9/9646/5.html"
+      },
+      {
+        "organismo": "Wallonie",
+        "titulo": "Un meilleur encadrement pour les aires de motor-homes",
+        "fecha": "2026-06-22",
+        "url": "https://wallonie.be/fr/actualites/un-meilleur-encadrement-pour-les-aires-de-motor-homes"
+      },
+      {
+        "organismo": "WALLEX — Wallonie",
+        "titulo": "Arrêté 2026 relatif aux aires publiques d'accueil de motor-homes",
+        "fecha": "2026-05-15",
+        "url": "https://wallex.wallonie.be/eli/arrete/2026/04/22/2026003716"
+      },
+      {
+        "organismo": "Vlaanderen.be",
+        "titulo": "Wat mag u als bezoeker doen in de Vlaamse natuur?",
+        "url": "https://www.vlaanderen.be/natuur-milieu-en-klimaat/wat-mag-u-als-bezoeker-doen-in-de-vlaamse-natuur"
+      },
+      {
+        "organismo": "Vlaanderen.be",
+        "titulo": "Omgevingsvergunning — tent, stacaravan of mobilhome plaatsen",
+        "url": "https://www.vlaanderen.be/omgevingsvergunning/stedenbouwkundige-handelingen/opslag"
+      },
+      {
+        "organismo": "Vlaanderen.be",
+        "titulo": "Vlaamse wegcode — wijziging datum inwerkingtreding",
+        "fecha": "2026-06-26",
+        "url": "https://www.vlaanderen.be/vlaamse-regering/beslissingen-van-de-vlaamse-regering/vlaamse-wegcode-wijziging-datum-inwerkingtreding-0"
+      }
+    ]
+  }
+]
