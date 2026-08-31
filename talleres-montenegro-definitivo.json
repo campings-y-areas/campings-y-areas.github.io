@@ -1,0 +1,17 @@
+[
+  {
+    "id": "taller-me-001",
+    "nombre": "Auto Servis Sekulić - Kamper Servis",
+    "tipo": "taller",
+    "pais": "Montenegro",
+    "comunidad_autonoma": "Danilovgrad",
+    "provincia": "Danilovgrad",
+    "localidad": "Danilovgrad",
+    "lat": null,
+    "lon": null,
+    "telefono": "+382 69 555 446",
+    "web": "https://www.autosekulic.com/",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Auto%20Servis%20Sekuli%C4%87%20-%20Kamper%20Servis%2C%20%C4%86urilac%20bb%2C%20Danilovgrad%2C%20Montenegro",
+    "descripcion": "Taller identificado específicamente como Kamper Servis. Atiende vehículos camper y realiza mantenimiento y reparaciones mecánicas; recomendado localmente para viajeros en camper y autocaravana."
+  }
+]
