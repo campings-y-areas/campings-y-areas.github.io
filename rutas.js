@@ -425,34 +425,71 @@ function tiempoVisitaPOI(x){
 function limpiarExtracto(t){
   return String(t||"").replace(/\s+/g," ").trim().slice(0,650);
 }
+function wikipediaUrlDesdeReferencia(ref){
+  if(!ref)return "";
+  if(/^https?:\/\//i.test(ref))return ref;
+  const m=String(ref).match(/^([a-z-]+):(.+)$/i);
+  if(!m)return "";
+  return `https://${m[1]}.wikipedia.org/wiki/${encodeURIComponent(m[2].replace(/ /g,"_"))}`;
+}
 async function detallesGeoapifyPOI(x){
   if(!x?.placeId)return x;
   try{
     const params=new URLSearchParams({id:x.placeId,features:"details",lang:"es",apiKey:config.GEOAPIFY_API_KEY});
     const r=await fetch(`https://api.geoapify.com/v2/place-details?${params}`); if(!r.ok)return x;
-    const d=await r.json(); const p=d.features?.[0]?.properties||{};
-    x.descripcion=x.descripcion||p.description||p.datasource?.raw?.description||"";
+    const d=await r.json(); const p=d.features?.find(f=>f.properties?.feature_type==="details")?.properties||d.features?.[0]?.properties||{};
+    x.descripcion=x.descripcion||p.description||p.description_international?.es||p.datasource?.raw?.description||"";
     x.horarios=x.horarios||p.opening_hours||p.datasource?.raw?.opening_hours||"";
     x.web=x.web||p.website||p.contact?.website||p.datasource?.raw?.website||"";
+    const media=p.wiki_and_media||{};
+    x.imagen=x.imagen||media.image||"";
+    x.wikiUrl=x.wikiUrl||wikipediaUrlDesdeReferencia(media.wikipedia)||"";
+    x.wikidata=x.wikidata||media.wikidata||"";
+    x.commons=x.commons||media.wikimedia_commons||"";
+  }catch{}
+  return x;
+}
+async function wikipediaBuscar(x,idioma="es"){
+  const consulta=[x.nombre,x.localidad].filter(Boolean).join(" ");
+  const params=new URLSearchParams({action:"query",generator:"search",gsrsearch:consulta,gsrnamespace:"0",gsrlimit:"1",prop:"pageimages|extracts|info",inprop:"url",piprop:"thumbnail",pithumbsize:"1200",exintro:"1",explaintext:"1",exsentences:"4",redirects:"1",format:"json",origin:"*"});
+  const r=await fetch(`https://${idioma}.wikipedia.org/w/api.php?${params}`); if(!r.ok)return null;
+  const d=await r.json(); return Object.values(d.query?.pages||{})[0]||null;
+}
+async function commonsFotoPOI(x){
+  if(x.imagen||!x?.nombre)return x;
+  try{
+    const consultas=[[x.nombre,x.localidad].filter(Boolean).join(" "),x.nombre].filter(Boolean);
+    for(const consulta of consultas){
+      const params=new URLSearchParams({action:"query",generator:"search",gsrsearch:consulta,gsrnamespace:"6",gsrlimit:"5",prop:"imageinfo",iiprop:"url",iiurlwidth:"1200",format:"json",origin:"*"});
+      const r=await fetch(`https://commons.wikimedia.org/w/api.php?${params}`); if(!r.ok)continue;
+      const d=await r.json(); const paginas=Object.values(d.query?.pages||{});
+      const pagina=paginas.find(p=>p.imageinfo?.[0]?.thumburl)||paginas.find(p=>p.imageinfo?.[0]?.url);
+      if(pagina){x.imagen=pagina.imageinfo?.[0]?.thumburl||pagina.imageinfo?.[0]?.url||"";x.commonsUrl=pagina.imageinfo?.[0]?.descriptionurl||"";break;}
+    }
   }catch{}
   return x;
 }
 async function wikipediaPOI(x){
   if(!x?.nombre)return x;
   try{
-    const consulta=[x.nombre,x.localidad].filter(Boolean).join(" ");
-    const params=new URLSearchParams({action:"query",generator:"search",gsrsearch:consulta,gsrnamespace:"0",gsrlimit:"1",prop:"pageimages|extracts|info",inprop:"url",piprop:"thumbnail",pithumbsize:"1000",exintro:"1",explaintext:"1",exsentences:"3",redirects:"1",format:"json",origin:"*"});
-    const r=await fetch(`https://es.wikipedia.org/w/api.php?${params}`); if(!r.ok)return x;
-    const d=await r.json(); const page=Object.values(d.query?.pages||{})[0]; if(!page)return x;
-    x.imagen=page.thumbnail?.source||""; x.wikiUrl=page.fullurl||""; x.wikiTitulo=page.title||"";
-    if(!x.descripcion)x.descripcion=limpiarExtracto(page.extract||"");
+    let page=null;
+    for(const idioma of ["es","en"]){
+      page=await wikipediaBuscar(x,idioma); if(page?.thumbnail?.source||page?.extract)break;
+    }
+    if(page){
+      x.imagen=x.imagen||page.thumbnail?.source||"";
+      x.wikiUrl=x.wikiUrl||page.fullurl||""; x.wikiTitulo=page.title||"";
+      if(!x.descripcion)x.descripcion=limpiarExtracto(page.extract||"");
+    }
+    if(!x.imagen)await commonsFotoPOI(x);
   }catch{}
   return x;
 }
 async function enriquecerFichaPrincipal(etapa){
   const principal=etapa?.pois?.[0]; if(!principal)return etapa;
   principal.tiempoVisita=tiempoVisitaPOI(principal);
-  await Promise.all([detallesGeoapifyPOI(principal),wikipediaPOI(principal)]);
+  await detallesGeoapifyPOI(principal);
+  await wikipediaPOI(principal);
   return etapa;
 }
 async function completarFichasEnriquecidas(plan){
@@ -619,9 +656,10 @@ function urlMapaPOI(x){
 function htmlPOIInteractivo(x,principal=false){
   const mapa=urlMapaPOI(x);
   const resumen=x.descripcion?`<p class="poi-descripcion">${escapar(x.descripcion)}</p>`:`<p class="poi-descripcion poi-descripcion-suave">Información ampliada disponible mediante los enlaces del lugar.</p>`;
-  const foto=principal&&x.imagen?`<a class="poi-foto-principal" href="${escapar(x.wikiUrl||mapa)}" target="_blank" rel="noopener"><img src="${escapar(x.imagen)}" alt="${escapar(x.nombre)}" loading="lazy"></a>`:"";
+  const foto=principal&&x.imagen?`<figure class="poi-foto-wrap"><a class="poi-foto-principal" href="${escapar(x.wikiUrl||x.commonsUrl||mapa)}" target="_blank" rel="noopener"><img src="${escapar(x.imagen)}" alt="${escapar(x.nombre)}" loading="lazy" referrerpolicy="no-referrer"></a><figcaption>📷 Pulsa la foto para ampliar la información del lugar</figcaption></figure>`:"";
   const datosPracticos=principal?`<div class="poi-datos-practicos"><span>⏱️ Visita recomendada: <strong>${escapar(x.tiempoVisita||tiempoVisitaPOI(x))}</strong></span>${x.horarios?`<span>🕒 Horario indicado: <strong>${escapar(x.horarios)}</strong></span>`:""}</div>`:"";
-  const fuente=x.wikiUrl?`<a href="${escapar(x.wikiUrl)}" target="_blank" rel="noopener">ℹ️ Más información</a>`:"";
+  const infoUrl=x.wikiUrl||x.commonsUrl||"";
+  const fuente=infoUrl?`<a href="${escapar(infoUrl)}" target="_blank" rel="noopener">ℹ️ Más información</a>`:"";
   return `<details class="poi-card poi-interactivo ${principal?'poi-destacado':''}" ${principal?'open':''}><summary><span><strong>${escapar(x.nombre)}</strong><small>${escapar(x.localidad)}${x.distancia?` · a ${Math.round(x.distancia/1000)} km`:""}</small></span><span class="poi-etiqueta">${escapar(x.etiqueta||"📍 Visita")}</span></summary><div class="poi-detalle">${foto}<div class="poi-contenido">${resumen}${datosPracticos}${x.direccion?`<p>📌 ${escapar(x.direccion)}</p>`:""}<div class="pernocta-enlaces"><a href="${escapar(mapa)}" target="_blank" rel="noopener">📍 Abrir en Google Maps</a>${x.web?`<a href="${escapar(x.web)}" target="_blank" rel="noopener">🌐 Web oficial</a>`:""}${fuente}</div></div></div></details>`;
 }
 
@@ -649,7 +687,7 @@ function htmlPlanJornadas(plan,datos,rutaOptimizada=null,lugaresOpt=[]){
     h+=htmlPernoctas(e).replace('cerca de esta parada',esUltima?'en el destino':'cerca de esta parada');
     h+='</section>';
   });
-  h+='<div class="aviso-suave">💡 Esta guía ya conserva la filosofía de las rutas personalizadas: desplazamiento, visitas, gastronomía y pernocta dentro de cada jornada. La visita principal de cada jornada incorpora ahora información ampliada, tiempo orientativo y fotografía cuando existe una coincidencia fiable. Las alternativas permanecen compactas para no sobrecargar la guía.</div></div>';
+  h+='<div class="aviso-suave">💡 Esta guía ya conserva la filosofía de las rutas personalizadas: desplazamiento, visitas, gastronomía y pernocta dentro de cada jornada. La visita principal de cada jornada se presenta como una pequeña guía visual: fotografía grande, explicación, tiempo orientativo y enlaces útiles. Las alternativas permanecen compactas para no sobrecargar la guía.</div></div>';
   return h;
 }
 
