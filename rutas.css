@@ -376,3 +376,14 @@
 .poi-interactivo{padding:0;overflow:hidden}.poi-interactivo summary{list-style:none;cursor:pointer;padding:10px;display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.poi-interactivo summary::-webkit-details-marker{display:none}.poi-interactivo summary:after{content:'＋';font-weight:800;color:#39745c;margin-left:auto}.poi-interactivo[open] summary:after{content:'−'}.poi-interactivo summary .poi-etiqueta{margin-top:0;white-space:nowrap}.poi-detalle{padding:0 10px 10px;border-top:1px solid #edf0ee}.poi-detalle p{font-size:.84rem;margin:9px 0 5px;color:#56645e}
 .gastronomia-ruta,.pernocta-inteligente{margin-top:12px}
 @media(max-width:640px){.dia-guia{padding:12px}.dia-guia-cabecera{grid-template-columns:42px 1fr}.poi-interactivo summary{flex-wrap:wrap}.poi-interactivo summary .poi-etiqueta{margin-left:0}}
+
+
+/* ===== FASE 8: ficha principal enriquecida ===== */
+.poi-destacado{grid-column:1/-1;border-color:#b9d7c8;background:#fcfefd}
+.poi-destacado .poi-detalle{display:grid;grid-template-columns:minmax(220px,34%) 1fr;gap:16px;padding:12px}
+.poi-foto-principal{display:block;min-height:190px;border-radius:10px;overflow:hidden;background:#eef2f0}
+.poi-foto-principal img{display:block;width:100%;height:100%;min-height:190px;max-height:280px;object-fit:cover}
+.poi-contenido{min-width:0}.poi-descripcion{margin:0 0 10px!important;font-size:.92rem!important;line-height:1.5;color:#303b36!important}.poi-descripcion-suave{color:#68756f!important;font-style:italic}
+.poi-datos-practicos{display:flex;flex-wrap:wrap;gap:7px 14px;margin:8px 0 10px;padding:9px 10px;border-radius:9px;background:#f2f7f4;font-size:.82rem;color:#43534b}
+.poi-datos-practicos span{display:inline-block}.poi-destacado summary strong{font-size:1.03rem}
+@media(max-width:720px){.poi-destacado .poi-detalle{grid-template-columns:1fr}.poi-foto-principal{min-height:170px}.poi-foto-principal img{min-height:170px;max-height:240px}}
