@@ -387,3 +387,17 @@
 .poi-datos-practicos{display:flex;flex-wrap:wrap;gap:7px 14px;margin:8px 0 10px;padding:9px 10px;border-radius:9px;background:#f2f7f4;font-size:.82rem;color:#43534b}
 .poi-datos-practicos span{display:inline-block}.poi-destacado summary strong{font-size:1.03rem}
 @media(max-width:720px){.poi-destacado .poi-detalle{grid-template-columns:1fr}.poi-foto-principal{min-height:170px}.poi-foto-principal img{min-height:170px;max-height:240px}}
+
+
+/* ===== FASE 8.1: presentación visual tipo guía/PDF ===== */
+.poi-destacado .poi-detalle{display:block;padding:0 14px 14px}
+.poi-foto-wrap{margin:0 0 14px}
+.poi-foto-principal{display:block;width:100%;min-height:260px;max-height:520px;border-radius:10px;overflow:hidden;background:#eef2f0}
+.poi-foto-principal img{display:block;width:100%;height:auto;max-height:520px;min-height:260px;object-fit:cover}
+.poi-foto-wrap figcaption{padding:7px 3px 0;font-size:.78rem;text-align:center;color:#69756f}
+.poi-destacado summary{padding:13px 14px}
+.poi-destacado summary strong{font-size:1.18rem}
+.poi-destacado .poi-contenido{max-width:900px;margin:0 auto}
+.poi-destacado .poi-descripcion{font-size:1rem!important;line-height:1.65;color:#202924!important}
+.poi-datos-practicos{margin:12px 0}
+@media(max-width:720px){.poi-foto-principal{min-height:190px}.poi-foto-principal img{min-height:190px;max-height:360px}.poi-destacado summary strong{font-size:1.06rem}}
