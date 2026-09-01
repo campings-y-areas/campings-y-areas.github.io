@@ -362,8 +362,28 @@ async function crearPlanJornadas(feature,lugares,datos){
   // Las búsquedas de las distintas jornadas son independientes: ejecutarlas en
   // paralelo reduce mucho el tiempo total en viajes largos.
   const cortesEnriquecidos=await Promise.all(cortes.map(c=>enriquecerCorte(c,datos)));
-  const puntos=[{nombre:lugares[0]?.formatted||datos.origen,distRuta:0,tiempoRuta:0},...cortesEnriquecidos,{nombre:lugares.at(-1)?.formatted||datos.destinoPrincipal,distRuta:totalDist,tiempoRuta:totalTiempo}];
-  return puntos.slice(0,-1).map((a,i)=>{const b=puntos[i+1];return {dia:i+1,desde:a.nombre,hasta:b.nombre,distancia:b.distRuta-a.distRuta,tiempo:b.tiempoRuta-a.tiempoRuta,intermedia:i<puntos.length-2,pois:b.pois||[],poiPrincipal:b.poiPrincipal||null,coordRecomendada:b.coordRecomendada||null,coordIdeal:b.coord||null,codigoPais:b.codigoPais||null,alojamientos:[]};});
+  const destinoFinal=lugares.at(-1);
+  const puntos=[
+    {nombre:lugares[0]?.formatted||datos.origen,distRuta:0,tiempoRuta:0},
+    ...cortesEnriquecidos,
+    {
+      nombre:destinoFinal?.formatted||datos.destinoPrincipal,
+      distRuta:totalDist,
+      tiempoRuta:totalTiempo,
+      coordRecomendada:(destinoFinal?.lon!=null&&destinoFinal?.lat!=null)?[Number(destinoFinal.lon),Number(destinoFinal.lat)]:null,
+      codigoPais:String(destinoFinal?.country_code||"").toLowerCase(),
+      esDestino:true
+    }
+  ];
+  return puntos.slice(0,-1).map((a,i)=>{
+    const b=puntos[i+1];
+    const esDestino=i===puntos.length-2;
+    return {
+      dia:i+1,desde:a.nombre,hasta:b.nombre,distancia:b.distRuta-a.distRuta,tiempo:b.tiempoRuta-a.tiempoRuta,
+      intermedia:!esDestino,esDestino,pois:b.pois||[],poiPrincipal:b.poiPrincipal||null,
+      coordRecomendada:b.coordRecomendada||null,coordIdeal:b.coord||null,codigoPais:b.codigoPais||null,alojamientos:[]
+    };
+  });
 }
 // ---------- Fase 6: pernoctas con nuestra propia base de datos ----------
 const cacheAlojamientos=new Map();
@@ -446,7 +466,7 @@ function puntosAlojamiento(x,datos,distancia){
   return s;
 }
 async function buscarPernoctasEtapa(etapa,datos){
-  if(!etapa.intermedia||!Array.isArray(etapa.coordRecomendada)||!(datos.pernocta||[]).length)return [];
+  if((!etapa.intermedia&&!etapa.esDestino)||!Array.isArray(etapa.coordRecomendada)||!(datos.pernocta||[]).length)return [];
   let codigo=etapa.codigoPais;
   if(!codigo){const rev=await reverseLugar(etapa.coordRecomendada); codigo=(rev?.country_code||"").toLowerCase(); etapa.codigoPais=codigo;}
   const todos=await cargarAlojamientosPais(codigo); const centro=etapa.coordRecomendada;
@@ -456,7 +476,7 @@ async function buscarPernoctasEtapa(etapa,datos){
   return candidatos.slice(0,3);
 }
 async function completarPernoctas(plan,datos){
-  await Promise.all(plan.filter(e=>e.intermedia).map(async e=>{e.alojamientos=await buscarPernoctasEtapa(e,datos);}));
+  await Promise.all(plan.filter(e=>e.intermedia||e.esDestino).map(async e=>{e.alojamientos=await buscarPernoctasEtapa(e,datos);}));
   return plan;
 }
 function etiquetaTipoPernocta(tipo){return tipo==="camping"?"🏕️ Camping":tipo==="parking"?"🅿️ Parking":"🚐 Área";}
@@ -490,10 +510,12 @@ function htmlPlanJornadas(plan,datos,rutaOptimizada=null,lugaresOpt=[]){
       else h+='<p>No hemos encontrado suficientes visitas destacadas en 25 km; mantendremos esta zona como punto práctico de etapa.</p>';
       h+='</div>';
       h+=htmlPernoctas(e);
+    } else if(e.esDestino){
+      h+=htmlPernoctas(e).replace('cerca de esta parada','en el destino');
     }
     h+='</div></div>';
   });
-  h+=`<div class="aviso-suave"><strong>Fase 6:</strong> además de adaptar la carretera a las paradas interesantes, buscamos Campings, Áreas y Parkings de nuestra propia base cerca de cada final de jornada y respetamos el tipo de pernocta, vehículo y mascota indicados.</div></div>`;
+  h+=`<div class="aviso-suave"><strong>Fase 6:</strong> además de adaptar la carretera a las paradas interesantes, buscamos Campings, Áreas y Parkings de nuestra propia base en cada final de jornada y también en el destino final, respetando el tipo de pernocta, vehículo y mascota indicados.</div></div>`;
   return h;
 }
 
