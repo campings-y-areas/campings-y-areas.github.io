@@ -184,6 +184,7 @@ async function pintarResultado(data,lugares,datos){
     const plan=await crearPlanJornadas(feature,lugares,datos);
     const promesaPernoctas=completarPernoctas(plan,datos);
     const promesaGastronomia=completarGastronomia(plan,datos);
+    const promesaVisitasDestino=completarVisitasDestino(plan,datos);
     document.getElementById("cargandoParadas")?.remove();
 
     const conParadas=plan.filter(e=>e.intermedia && e.poiPrincipal && Array.isArray(e.coordRecomendada));
@@ -205,16 +206,16 @@ async function pintarResultado(data,lugares,datos){
         document.getElementById("estadoCalculo").textContent=`Ruta optimizada: ${lugaresOpt[0].formatted||datos.origen} → ${lugaresOpt.at(-1).formatted||datos.destinoPrincipal}`;
         document.getElementById("etapasRuta").innerHTML=htmlRecorrido(fOpt,lugaresOpt,"🚐 Recorrido optimizado");
         document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlResumenDesvio(distanciaExtra,tiempoExtra,conParadas.length));
-        await Promise.all([promesaPernoctas,promesaGastronomia]);
+        await Promise.all([promesaPernoctas,promesaGastronomia,promesaVisitasDestino]);
         document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlPlanJornadas(plan,datos,fOpt,lugaresOpt));
       }catch(err){
         console.warn("No se pudo recalcular por las paradas recomendadas",err);
-        await Promise.all([promesaPernoctas,promesaGastronomia]);
+        await Promise.all([promesaPernoctas,promesaGastronomia,promesaVisitasDestino]);
       document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlPlanJornadas(plan,datos));
         document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",'<div class="aviso-suave">Las recomendaciones son válidas, pero no hemos podido recalcular el desvío completo en esta ocasión. Se mantiene la ruta directa.</div>');
       }
     }else{
-      await Promise.all([promesaPernoctas,promesaGastronomia]);
+      await Promise.all([promesaPernoctas,promesaGastronomia,promesaVisitasDestino]);
       document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlPlanJornadas(plan,datos));
     }
   }
@@ -340,11 +341,16 @@ async function enriquecerCorte(corte,datos){
   } else {
     const rev=await reverseLugar(corte.coord); corte.nombre=nombreLocalidad(rev); corte.codigoPais=(rev?.country_code||"").toLowerCase();
   }
-  corte.pois=mejores.map(f=>({
-    nombre:f.properties?.name||"Lugar de interés", localidad:nombreLocalidad(f.properties),
-    distancia:Number(f.properties?.distance)||0, categorias:f.properties?.categories||[],
-    etiqueta:etiquetaCategoria(f.properties?.categories||[])
-  }));
+  corte.pois=mejores.map(f=>{
+    const p=f.properties||{}, c=f.geometry?.coordinates||[];
+    return {
+      nombre:p.name||"Lugar de interés", localidad:nombreLocalidad(p),
+      direccion:p.formatted||p.address_line2||"", distancia:Number(p.distance)||0,
+      categorias:p.categories||[], etiqueta:etiquetaCategoria(p.categories||[]),
+      lat:Number(c[1]), lon:Number(c[0]),
+      web:p.website||p.contact?.website||p.datasource?.raw?.website||""
+    };
+  });
   return corte;
 }
 async function crearPlanJornadas(feature,lugares,datos){
@@ -386,6 +392,22 @@ async function crearPlanJornadas(feature,lugares,datos){
     };
   });
 }
+// ---------- Fase 7: el destino también forma parte de la guía ----------
+async function completarVisitasDestino(plan,datos){
+  if(!plan.length)return plan;
+  const ultima=plan.at(-1);
+  if(!Array.isArray(ultima.coordRecomendada))return plan;
+  try{
+    const pois=(await buscarPOIs(ultima.coordRecomendada,datos)).slice(0,5);
+    ultima.pois=pois.map(f=>{
+      const p=f.properties||{}, c=f.geometry?.coordinates||[];
+      return {nombre:p.name||"Lugar de interés",localidad:nombreLocalidad(p),direccion:p.formatted||p.address_line2||"",distancia:Number(p.distance)||0,categorias:p.categories||[],etiqueta:etiquetaCategoria(p.categories||[]),lat:Number(c[1]),lon:Number(c[0]),web:p.website||p.contact?.website||p.datasource?.raw?.website||""};
+    });
+    ultima.poiPrincipal=ultima.pois[0]?.nombre||null;
+  }catch{}
+  return plan;
+}
+
 // ---------- Fase 6: pernoctas con nuestra propia base de datos ----------
 const cacheAlojamientos=new Map();
 const archivosPernocta={
@@ -538,9 +560,18 @@ function htmlGastronomia(etapa,esDestino=false){
   return h+'</div></div>';
 }
 
+function urlMapaPOI(x){
+  if(Number.isFinite(x.lat)&&Number.isFinite(x.lon))return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${x.lat},${x.lon}`)}`;
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${x.nombre||""} ${x.localidad||""}`)}`;
+}
+function htmlPOIInteractivo(x,principal=false){
+  const mapa=urlMapaPOI(x);
+  return `<details class="poi-card poi-interactivo" ${principal?'open':''}><summary><span><strong>${escapar(x.nombre)}</strong><small>${escapar(x.localidad)}${x.distancia?` · a ${Math.round(x.distancia/1000)} km`:""}</small></span><span class="poi-etiqueta">${escapar(x.etiqueta||"📍 Visita")}</span></summary><div class="poi-detalle">${x.direccion?`<p>📌 ${escapar(x.direccion)}</p>`:""}<div class="pernocta-enlaces"><a href="${escapar(mapa)}" target="_blank" rel="noopener">📍 Abrir en Google Maps</a>${x.web?`<a href="${escapar(x.web)}" target="_blank" rel="noopener">🌐 Web oficial</a>`:""}</div></div></details>`;
+}
+
 function htmlPlanJornadas(plan,datos,rutaOptimizada=null,lugaresOpt=[]){
   if(!plan.length)return "";
-  let h='<div class="plan-etapas"><h3>🗓️ Etapas y paradas recomendadas</h3>';
+  let h='<div class="plan-etapas guia-viaje"><div class="guia-cabecera"><h3>📖 Tu guía de viaje</h3><p>Itinerario organizado por jornadas. Pulsa en cada lugar para ver dirección, mapa y enlaces disponibles.</p></div>';
   const legsOpt=rutaOptimizada?.properties?.legs||[];
   plan.forEach((e,idx)=>{
     const leg=legsOpt[idx]||null;
@@ -548,23 +579,21 @@ function htmlPlanJornadas(plan,datos,rutaOptimizada=null,lugaresOpt=[]){
     const hasta=lugaresOpt[idx+1]?.formatted||e.hasta;
     const distancia=leg?.distance??e.distancia;
     const tiempo=leg?.time??e.tiempo;
-    h+=`<div class="etapa-real"><div class="etapa-dia">${e.dia}</div><div><strong>${escapar(desde)} → ${escapar(hasta)}</strong><p>${formatoKm(distancia)} · ${formatoTiempo(tiempo)}</p>`;
     const esUltima=idx===plan.length-1;
-    if(!esUltima){
-      h+=`<div class="parada-inteligente"><h4>✨ Merece la pena parar en ${escapar(e.hasta)}</h4>`;
-      if(e.poiPrincipal)h+=`<p>La zona destaca por <strong>${escapar(e.poiPrincipal)}</strong> y encaja mejor con tus preferencias que un simple corte matemático de la ruta.</p>`;
-      if(e.pois.length){ h+='<div class="poi-lista">'; e.pois.forEach(x=>{h+=`<div class="poi-card"><strong>${escapar(x.nombre)}</strong><small>${escapar(x.localidad)}${x.distancia?` · a ${Math.round(x.distancia/1000)} km del punto ideal de etapa`:""}</small><span class="poi-etiqueta">${escapar(x.etiqueta)}</span></div>`;}); h+='</div>'; }
-      else h+='<p>No hemos encontrado suficientes visitas destacadas en 25 km; mantendremos esta zona como punto práctico de etapa.</p>';
-      h+='</div>';
-      if((datos.intereses||[]).includes("gastronomia"))h+=htmlGastronomia(e,false);
-      h+=htmlPernoctas(e);
-    } else {
-      if((datos.intereses||[]).includes("gastronomia"))h+=htmlGastronomia(e,true);
-      h+=htmlPernoctas(e).replace('cerca de esta parada','en el destino');
-    }
-    h+='</div></div>';
+    h+=`<section class="dia-guia"><header class="dia-guia-cabecera"><div class="etapa-dia">${e.dia}</div><div><span class="dia-kicker">Día ${e.dia}</span><h4>${escapar(desde)} → ${escapar(hasta)}</h4><p>🚐 ${formatoKm(distancia)} · ${formatoTiempo(tiempo)}</p></div></header>`;
+
+    h+=`<div class="bloque-guia"><h5>📍 ${esUltima?'Qué ver en el destino':'Qué merece la pena ver en esta parada'}</h5>`;
+    if(e.pois?.length){
+      if(e.poiPrincipal)h+=`<p class="recomendacion-guia">Nuestra propuesta principal es <strong>${escapar(e.poiPrincipal)}</strong>. Las alternativas se mantienen para que puedas adaptar el día.</p>`;
+      h+='<div class="poi-lista">'; e.pois.forEach((x,i)=>h+=htmlPOIInteractivo(x,i===0)); h+='</div>';
+    } else h+='<p>Estamos usando esta zona como parada práctica; no hemos encontrado suficientes visitas destacadas con los filtros seleccionados.</p>';
+    h+='</div>';
+
+    if((datos.intereses||[]).includes("gastronomia"))h+=htmlGastronomia(e,esUltima);
+    h+=htmlPernoctas(e).replace('cerca de esta parada',esUltima?'en el destino':'cerca de esta parada');
+    h+='</section>';
   });
-  h+=`<div class="aviso-suave"><strong>Fase 6:</strong> además de adaptar la carretera a las paradas interesantes, buscamos Campings, Áreas y Parkings de nuestra propia base en cada final de jornada y en el destino final. Si has marcado Gastronomía, también mostramos restaurantes reales cerca de cada parada y del destino.</div></div>`;
+  h+='<div class="aviso-suave">💡 Esta guía ya conserva la filosofía de las rutas personalizadas: desplazamiento, visitas, gastronomía y pernocta dentro de cada jornada. En las siguientes mejoras añadiremos información práctica más extensa, fotografías, actividades y tiempos recomendados de visita.</div></div>';
   return h;
 }
 
