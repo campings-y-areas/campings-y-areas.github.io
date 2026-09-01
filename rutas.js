@@ -183,6 +183,7 @@ async function pintarResultado(data,lugares,datos){
   if(jornadas>1){
     const plan=await crearPlanJornadas(feature,lugares,datos);
     const promesaPernoctas=completarPernoctas(plan,datos);
+    const promesaGastronomia=completarGastronomia(plan,datos);
     document.getElementById("cargandoParadas")?.remove();
 
     const conParadas=plan.filter(e=>e.intermedia && e.poiPrincipal && Array.isArray(e.coordRecomendada));
@@ -204,16 +205,16 @@ async function pintarResultado(data,lugares,datos){
         document.getElementById("estadoCalculo").textContent=`Ruta optimizada: ${lugaresOpt[0].formatted||datos.origen} → ${lugaresOpt.at(-1).formatted||datos.destinoPrincipal}`;
         document.getElementById("etapasRuta").innerHTML=htmlRecorrido(fOpt,lugaresOpt,"🚐 Recorrido optimizado");
         document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlResumenDesvio(distanciaExtra,tiempoExtra,conParadas.length));
-        await promesaPernoctas;
+        await Promise.all([promesaPernoctas,promesaGastronomia]);
         document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlPlanJornadas(plan,datos,fOpt,lugaresOpt));
       }catch(err){
         console.warn("No se pudo recalcular por las paradas recomendadas",err);
-        await promesaPernoctas;
-        await promesaPernoctas;
+        await Promise.all([promesaPernoctas,promesaGastronomia]);
       document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlPlanJornadas(plan,datos));
         document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",'<div class="aviso-suave">Las recomendaciones son válidas, pero no hemos podido recalcular el desvío completo en esta ocasión. Se mantiene la ruta directa.</div>');
       }
     }else{
+      await Promise.all([promesaPernoctas,promesaGastronomia]);
       document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlPlanJornadas(plan,datos));
     }
   }
@@ -466,7 +467,7 @@ function puntosAlojamiento(x,datos,distancia){
   return s;
 }
 async function buscarPernoctasEtapa(etapa,datos){
-  if((!etapa.intermedia&&!etapa.esDestino)||!Array.isArray(etapa.coordRecomendada)||!(datos.pernocta||[]).length)return [];
+  if(!Array.isArray(etapa.coordRecomendada)||!(datos.pernocta||[]).length)return [];
   let codigo=etapa.codigoPais;
   if(!codigo){const rev=await reverseLugar(etapa.coordRecomendada); codigo=(rev?.country_code||"").toLowerCase(); etapa.codigoPais=codigo;}
   const todos=await cargarAlojamientosPais(codigo); const centro=etapa.coordRecomendada;
@@ -476,7 +477,7 @@ async function buscarPernoctasEtapa(etapa,datos){
   return candidatos.slice(0,3);
 }
 async function completarPernoctas(plan,datos){
-  await Promise.all(plan.filter(e=>e.intermedia||e.esDestino).map(async e=>{e.alojamientos=await buscarPernoctasEtapa(e,datos);}));
+  await Promise.all(plan.map(async e=>{e.alojamientos=await buscarPernoctasEtapa(e,datos);}));
   return plan;
 }
 function etiquetaTipoPernocta(tipo){return tipo==="camping"?"🏕️ Camping":tipo==="parking"?"🅿️ Parking":"🚐 Área";}
@@ -492,6 +493,51 @@ function htmlPernoctas(etapa){
   return h+'</div><p class="nota-distancia">La distancia indicada es aproximada en línea recta. Más adelante calcularemos también el desvío real por carretera hasta la pernocta elegida.</p></div>';
 }
 
+// ---------- Gastronomía: restaurantes reales cuando el usuario la marca ----------
+async function buscarRestaurantesEtapa(etapa,datos){
+  if(!(datos.intereses||[]).includes("gastronomia")||!Array.isArray(etapa.coordRecomendada))return [];
+  const coord=etapa.coordRecomendada;
+  try{
+    const params=new URLSearchParams({
+      categories:"catering.restaurant",
+      filter:`circle:${coord[0]},${coord[1]},10000`,
+      bias:`proximity:${coord[0]},${coord[1]}`,
+      limit:"8",lang:"es",apiKey:config.GEOAPIFY_API_KEY
+    });
+    const r=await fetch(`https://api.geoapify.com/v2/places?${params}`);
+    if(!r.ok)return [];
+    const d=await r.json();
+    return (d.features||[]).filter(f=>f.properties?.name).slice(0,3).map(f=>{
+      const p=f.properties||{}, c=f.geometry?.coordinates||[];
+      const cuisine=p.datasource?.raw?.cuisine||p.cuisine||"";
+      const web=p.website||p.contact?.website||p.datasource?.raw?.website||"";
+      return {
+        nombre:p.name,
+        localidad:nombreLocalidad(p),
+        distancia:Number(p.distance)||0,
+        cuisine:String(cuisine||"").replace(/;/g,", "),
+        lat:Number(c[1]),lon:Number(c[0]),web
+      };
+    });
+  }catch{return [];}
+}
+async function completarGastronomia(plan,datos){
+  if(!(datos.intereses||[]).includes("gastronomia"))return plan;
+  await Promise.all(plan.map(async e=>{e.restaurantes=await buscarRestaurantesEtapa(e,datos);}));
+  return plan;
+}
+function htmlGastronomia(etapa,esDestino=false){
+  const lista=etapa.restaurantes||[];
+  let h=`<div class="parada-inteligente gastronomia-ruta"><h4>🍽️ ${esDestino?"Dónde comer en el destino":"Dónde comer cerca de esta parada"}</h4>`;
+  if(!lista.length)return h+'<p>No hemos encontrado restaurantes con nombre en un radio de 10 km.</p></div>';
+  h+='<div class="poi-lista">';
+  lista.forEach((x,i)=>{
+    const mapa=Number.isFinite(x.lat)&&Number.isFinite(x.lon)?`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${x.lat},${x.lon}`)}`:"";
+    h+=`<div class="poi-card"><strong>${escapar(x.nombre)}</strong><small>${escapar(x.localidad)}${x.distancia?` · a ${(x.distancia/1000).toFixed(1).replace('.',',')} km`:""}</small>${x.cuisine?`<span class="poi-etiqueta">🍴 ${escapar(x.cuisine)}</span>`:'<span class="poi-etiqueta">🍽️ Restaurante</span>'}<div class="pernocta-enlaces">${mapa?`<a href="${escapar(mapa)}" target="_blank" rel="noopener">📍 Ver en mapa</a>`:""}${x.web?`<a href="${escapar(x.web)}" target="_blank" rel="noopener">🌐 Web</a>`:""}</div></div>`;
+  });
+  return h+'</div></div>';
+}
+
 function htmlPlanJornadas(plan,datos,rutaOptimizada=null,lugaresOpt=[]){
   if(!plan.length)return "";
   let h='<div class="plan-etapas"><h3>🗓️ Etapas y paradas recomendadas</h3>';
@@ -503,19 +549,22 @@ function htmlPlanJornadas(plan,datos,rutaOptimizada=null,lugaresOpt=[]){
     const distancia=leg?.distance??e.distancia;
     const tiempo=leg?.time??e.tiempo;
     h+=`<div class="etapa-real"><div class="etapa-dia">${e.dia}</div><div><strong>${escapar(desde)} → ${escapar(hasta)}</strong><p>${formatoKm(distancia)} · ${formatoTiempo(tiempo)}</p>`;
-    if(e.intermedia){
+    const esUltima=idx===plan.length-1;
+    if(!esUltima){
       h+=`<div class="parada-inteligente"><h4>✨ Merece la pena parar en ${escapar(e.hasta)}</h4>`;
       if(e.poiPrincipal)h+=`<p>La zona destaca por <strong>${escapar(e.poiPrincipal)}</strong> y encaja mejor con tus preferencias que un simple corte matemático de la ruta.</p>`;
       if(e.pois.length){ h+='<div class="poi-lista">'; e.pois.forEach(x=>{h+=`<div class="poi-card"><strong>${escapar(x.nombre)}</strong><small>${escapar(x.localidad)}${x.distancia?` · a ${Math.round(x.distancia/1000)} km del punto ideal de etapa`:""}</small><span class="poi-etiqueta">${escapar(x.etiqueta)}</span></div>`;}); h+='</div>'; }
       else h+='<p>No hemos encontrado suficientes visitas destacadas en 25 km; mantendremos esta zona como punto práctico de etapa.</p>';
       h+='</div>';
+      if((datos.intereses||[]).includes("gastronomia"))h+=htmlGastronomia(e,false);
       h+=htmlPernoctas(e);
-    } else if(e.esDestino){
+    } else {
+      if((datos.intereses||[]).includes("gastronomia"))h+=htmlGastronomia(e,true);
       h+=htmlPernoctas(e).replace('cerca de esta parada','en el destino');
     }
     h+='</div></div>';
   });
-  h+=`<div class="aviso-suave"><strong>Fase 6:</strong> además de adaptar la carretera a las paradas interesantes, buscamos Campings, Áreas y Parkings de nuestra propia base en cada final de jornada y también en el destino final, respetando el tipo de pernocta, vehículo y mascota indicados.</div></div>`;
+  h+=`<div class="aviso-suave"><strong>Fase 6:</strong> además de adaptar la carretera a las paradas interesantes, buscamos Campings, Áreas y Parkings de nuestra propia base en cada final de jornada y en el destino final. Si has marcado Gastronomía, también mostramos restaurantes reales cerca de cada parada y del destino.</div></div>`;
   return h;
 }
 
