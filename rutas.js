@@ -1,5 +1,5 @@
 // ==========================================
-// CAMPINGS & ÁREAS - RUTAS FASE 5
+// CAMPINGS & ÁREAS - RUTAS FASE 8
 // Geoapify: autocomplete + routing + mapa + paradas inteligentes + recálculo real + pernoctas propias
 // ==========================================
 
@@ -185,6 +185,8 @@ async function pintarResultado(data,lugares,datos){
     const promesaPernoctas=completarPernoctas(plan,datos);
     const promesaGastronomia=completarGastronomia(plan,datos);
     const promesaVisitasDestino=completarVisitasDestino(plan,datos);
+    // Se lanza después de completar las visitas del destino para enriquecer solo una ficha principal por jornada.
+    const promesaFichas=promesaVisitasDestino.then(()=>completarFichasEnriquecidas(plan));
     document.getElementById("cargandoParadas")?.remove();
 
     const conParadas=plan.filter(e=>e.intermedia && e.poiPrincipal && Array.isArray(e.coordRecomendada));
@@ -206,16 +208,16 @@ async function pintarResultado(data,lugares,datos){
         document.getElementById("estadoCalculo").textContent=`Ruta optimizada: ${lugaresOpt[0].formatted||datos.origen} → ${lugaresOpt.at(-1).formatted||datos.destinoPrincipal}`;
         document.getElementById("etapasRuta").innerHTML=htmlRecorrido(fOpt,lugaresOpt,"🚐 Recorrido optimizado");
         document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlResumenDesvio(distanciaExtra,tiempoExtra,conParadas.length));
-        await Promise.all([promesaPernoctas,promesaGastronomia,promesaVisitasDestino]);
+        await Promise.all([promesaPernoctas,promesaGastronomia,promesaVisitasDestino,promesaFichas]);
         document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlPlanJornadas(plan,datos,fOpt,lugaresOpt));
       }catch(err){
         console.warn("No se pudo recalcular por las paradas recomendadas",err);
-        await Promise.all([promesaPernoctas,promesaGastronomia,promesaVisitasDestino]);
+        await Promise.all([promesaPernoctas,promesaGastronomia,promesaVisitasDestino,promesaFichas]);
       document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlPlanJornadas(plan,datos));
         document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",'<div class="aviso-suave">Las recomendaciones son válidas, pero no hemos podido recalcular el desvío completo en esta ocasión. Se mantiene la ruta directa.</div>');
       }
     }else{
-      await Promise.all([promesaPernoctas,promesaGastronomia,promesaVisitasDestino]);
+      await Promise.all([promesaPernoctas,promesaGastronomia,promesaVisitasDestino,promesaFichas]);
       document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlPlanJornadas(plan,datos));
     }
   }
@@ -348,7 +350,9 @@ async function enriquecerCorte(corte,datos){
       direccion:p.formatted||p.address_line2||"", distancia:Number(p.distance)||0,
       categorias:p.categories||[], etiqueta:etiquetaCategoria(p.categories||[]),
       lat:Number(c[1]), lon:Number(c[0]),
-      web:p.website||p.contact?.website||p.datasource?.raw?.website||""
+      web:p.website||p.contact?.website||p.datasource?.raw?.website||"",
+      placeId:p.place_id||"", descripcion:p.description||p.datasource?.raw?.description||"",
+      horarios:p.opening_hours||p.datasource?.raw?.opening_hours||"", imagen:"", wikiUrl:"", wikiTitulo:""
     };
   });
   return corte;
@@ -401,10 +405,58 @@ async function completarVisitasDestino(plan,datos){
     const pois=(await buscarPOIs(ultima.coordRecomendada,datos)).slice(0,5);
     ultima.pois=pois.map(f=>{
       const p=f.properties||{}, c=f.geometry?.coordinates||[];
-      return {nombre:p.name||"Lugar de interés",localidad:nombreLocalidad(p),direccion:p.formatted||p.address_line2||"",distancia:Number(p.distance)||0,categorias:p.categories||[],etiqueta:etiquetaCategoria(p.categories||[]),lat:Number(c[1]),lon:Number(c[0]),web:p.website||p.contact?.website||p.datasource?.raw?.website||""};
+      return {nombre:p.name||"Lugar de interés",localidad:nombreLocalidad(p),direccion:p.formatted||p.address_line2||"",distancia:Number(p.distance)||0,categorias:p.categories||[],etiqueta:etiquetaCategoria(p.categories||[]),lat:Number(c[1]),lon:Number(c[0]),web:p.website||p.contact?.website||p.datasource?.raw?.website||"",placeId:p.place_id||"",descripcion:p.description||p.datasource?.raw?.description||"",horarios:p.opening_hours||p.datasource?.raw?.opening_hours||"",imagen:"",wikiUrl:"",wikiTitulo:""};
     });
     ultima.poiPrincipal=ultima.pois[0]?.nombre||null;
   }catch{}
+  return plan;
+}
+
+// ---------- Fase 8: fichas enriquecidas + fotografía del lugar principal ----------
+function tiempoVisitaPOI(x){
+  const c=(x.categorias||[]).join(" ");
+  if(/theme_park|water_park|zoo|aquarium/.test(c))return "3–5 h";
+  if(/museum/.test(c))return "1 h 30 min–2 h";
+  if(/natural|nature_reserve|national_park/.test(c))return "1–3 h";
+  if(/castle|heritage|sights/.test(c))return "1–2 h";
+  if(/viewpoint|artwork|fountain/.test(c))return "30–60 min";
+  return "1–2 h";
+}
+function limpiarExtracto(t){
+  return String(t||"").replace(/\s+/g," ").trim().slice(0,650);
+}
+async function detallesGeoapifyPOI(x){
+  if(!x?.placeId)return x;
+  try{
+    const params=new URLSearchParams({id:x.placeId,features:"details",lang:"es",apiKey:config.GEOAPIFY_API_KEY});
+    const r=await fetch(`https://api.geoapify.com/v2/place-details?${params}`); if(!r.ok)return x;
+    const d=await r.json(); const p=d.features?.[0]?.properties||{};
+    x.descripcion=x.descripcion||p.description||p.datasource?.raw?.description||"";
+    x.horarios=x.horarios||p.opening_hours||p.datasource?.raw?.opening_hours||"";
+    x.web=x.web||p.website||p.contact?.website||p.datasource?.raw?.website||"";
+  }catch{}
+  return x;
+}
+async function wikipediaPOI(x){
+  if(!x?.nombre)return x;
+  try{
+    const consulta=[x.nombre,x.localidad].filter(Boolean).join(" ");
+    const params=new URLSearchParams({action:"query",generator:"search",gsrsearch:consulta,gsrnamespace:"0",gsrlimit:"1",prop:"pageimages|extracts|info",inprop:"url",piprop:"thumbnail",pithumbsize:"1000",exintro:"1",explaintext:"1",exsentences:"3",redirects:"1",format:"json",origin:"*"});
+    const r=await fetch(`https://es.wikipedia.org/w/api.php?${params}`); if(!r.ok)return x;
+    const d=await r.json(); const page=Object.values(d.query?.pages||{})[0]; if(!page)return x;
+    x.imagen=page.thumbnail?.source||""; x.wikiUrl=page.fullurl||""; x.wikiTitulo=page.title||"";
+    if(!x.descripcion)x.descripcion=limpiarExtracto(page.extract||"");
+  }catch{}
+  return x;
+}
+async function enriquecerFichaPrincipal(etapa){
+  const principal=etapa?.pois?.[0]; if(!principal)return etapa;
+  principal.tiempoVisita=tiempoVisitaPOI(principal);
+  await Promise.all([detallesGeoapifyPOI(principal),wikipediaPOI(principal)]);
+  return etapa;
+}
+async function completarFichasEnriquecidas(plan){
+  await Promise.all(plan.map(enriquecerFichaPrincipal));
   return plan;
 }
 
@@ -566,7 +618,11 @@ function urlMapaPOI(x){
 }
 function htmlPOIInteractivo(x,principal=false){
   const mapa=urlMapaPOI(x);
-  return `<details class="poi-card poi-interactivo" ${principal?'open':''}><summary><span><strong>${escapar(x.nombre)}</strong><small>${escapar(x.localidad)}${x.distancia?` · a ${Math.round(x.distancia/1000)} km`:""}</small></span><span class="poi-etiqueta">${escapar(x.etiqueta||"📍 Visita")}</span></summary><div class="poi-detalle">${x.direccion?`<p>📌 ${escapar(x.direccion)}</p>`:""}<div class="pernocta-enlaces"><a href="${escapar(mapa)}" target="_blank" rel="noopener">📍 Abrir en Google Maps</a>${x.web?`<a href="${escapar(x.web)}" target="_blank" rel="noopener">🌐 Web oficial</a>`:""}</div></div></details>`;
+  const resumen=x.descripcion?`<p class="poi-descripcion">${escapar(x.descripcion)}</p>`:`<p class="poi-descripcion poi-descripcion-suave">Información ampliada disponible mediante los enlaces del lugar.</p>`;
+  const foto=principal&&x.imagen?`<a class="poi-foto-principal" href="${escapar(x.wikiUrl||mapa)}" target="_blank" rel="noopener"><img src="${escapar(x.imagen)}" alt="${escapar(x.nombre)}" loading="lazy"></a>`:"";
+  const datosPracticos=principal?`<div class="poi-datos-practicos"><span>⏱️ Visita recomendada: <strong>${escapar(x.tiempoVisita||tiempoVisitaPOI(x))}</strong></span>${x.horarios?`<span>🕒 Horario indicado: <strong>${escapar(x.horarios)}</strong></span>`:""}</div>`:"";
+  const fuente=x.wikiUrl?`<a href="${escapar(x.wikiUrl)}" target="_blank" rel="noopener">ℹ️ Más información</a>`:"";
+  return `<details class="poi-card poi-interactivo ${principal?'poi-destacado':''}" ${principal?'open':''}><summary><span><strong>${escapar(x.nombre)}</strong><small>${escapar(x.localidad)}${x.distancia?` · a ${Math.round(x.distancia/1000)} km`:""}</small></span><span class="poi-etiqueta">${escapar(x.etiqueta||"📍 Visita")}</span></summary><div class="poi-detalle">${foto}<div class="poi-contenido">${resumen}${datosPracticos}${x.direccion?`<p>📌 ${escapar(x.direccion)}</p>`:""}<div class="pernocta-enlaces"><a href="${escapar(mapa)}" target="_blank" rel="noopener">📍 Abrir en Google Maps</a>${x.web?`<a href="${escapar(x.web)}" target="_blank" rel="noopener">🌐 Web oficial</a>`:""}${fuente}</div></div></div></details>`;
 }
 
 function htmlPlanJornadas(plan,datos,rutaOptimizada=null,lugaresOpt=[]){
@@ -593,7 +649,7 @@ function htmlPlanJornadas(plan,datos,rutaOptimizada=null,lugaresOpt=[]){
     h+=htmlPernoctas(e).replace('cerca de esta parada',esUltima?'en el destino':'cerca de esta parada');
     h+='</section>';
   });
-  h+='<div class="aviso-suave">💡 Esta guía ya conserva la filosofía de las rutas personalizadas: desplazamiento, visitas, gastronomía y pernocta dentro de cada jornada. En las siguientes mejoras añadiremos información práctica más extensa, fotografías, actividades y tiempos recomendados de visita.</div></div>';
+  h+='<div class="aviso-suave">💡 Esta guía ya conserva la filosofía de las rutas personalizadas: desplazamiento, visitas, gastronomía y pernocta dentro de cada jornada. La visita principal de cada jornada incorpora ahora información ampliada, tiempo orientativo y fotografía cuando existe una coincidencia fiable. Las alternativas permanecen compactas para no sobrecargar la guía.</div></div>';
   return h;
 }
 
