@@ -315,6 +315,13 @@ function puntuacionPOI(f,datos){
   if(intereses.has("museos-ninos") && /museum/.test(texto))puntos+=10;
   if(Number(datos.ninos)>0 && datos.recomendacionesNinos && /(playground|zoo|aquarium|theme_park|water_park|activity_park|museum)/.test(texto))puntos+=7;
   if(p.name)puntos+=2;
+  const nombre=String(p.name||"").toLowerCase();
+  // Evitar micro-POI internos (fotopoints, números de atracción, pequeños objetos)
+  // cuando existe una atracción turística completa en la misma zona.
+  if(/^\s*\d+\s*:/.test(nombre))puntos-=18;
+  if(/fotopoint|photo ?point|fotopunkt|spielplatz|playground/.test(nombre))puntos-=14;
+  if(/theme_park|zoo|aquarium|castle|museum/.test(texto))puntos+=5;
+  if(p.wiki_and_media?.wikipedia||p.wiki_and_media?.wikidata)puntos+=8;
   const dist=Number(p.distance)||0; puntos+=Math.max(0,6-dist/5000);
   return puntos;
 }
@@ -653,42 +660,49 @@ function urlMapaPOI(x){
   if(Number.isFinite(x.lat)&&Number.isFinite(x.lon))return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${x.lat},${x.lon}`)}`;
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${x.nombre||""} ${x.localidad||""}`)}`;
 }
-function htmlPOIInteractivo(x,principal=false){
-  const mapa=urlMapaPOI(x);
-  const resumen=x.descripcion?`<p class="poi-descripcion">${escapar(x.descripcion)}</p>`:`<p class="poi-descripcion poi-descripcion-suave">Información ampliada disponible mediante los enlaces del lugar.</p>`;
-  const foto=principal&&x.imagen?`<figure class="poi-foto-wrap"><a class="poi-foto-principal" href="${escapar(x.wikiUrl||x.commonsUrl||mapa)}" target="_blank" rel="noopener"><img src="${escapar(x.imagen)}" alt="${escapar(x.nombre)}" loading="lazy" referrerpolicy="no-referrer"></a><figcaption>📷 Pulsa la foto para ampliar la información del lugar</figcaption></figure>`:"";
-  const datosPracticos=principal?`<div class="poi-datos-practicos"><span>⏱️ Visita recomendada: <strong>${escapar(x.tiempoVisita||tiempoVisitaPOI(x))}</strong></span>${x.horarios?`<span>🕒 Horario indicado: <strong>${escapar(x.horarios)}</strong></span>`:""}</div>`:"";
-  const infoUrl=x.wikiUrl||x.commonsUrl||"";
-  const fuente=infoUrl?`<a href="${escapar(infoUrl)}" target="_blank" rel="noopener">ℹ️ Más información</a>`:"";
-  return `<details class="poi-card poi-interactivo ${principal?'poi-destacado':''}" ${principal?'open':''}><summary><span><strong>${escapar(x.nombre)}</strong><small>${escapar(x.localidad)}${x.distancia?` · a ${Math.round(x.distancia/1000)} km`:""}</small></span><span class="poi-etiqueta">${escapar(x.etiqueta||"📍 Visita")}</span></summary><div class="poi-detalle">${foto}<div class="poi-contenido">${resumen}${datosPracticos}${x.direccion?`<p>📌 ${escapar(x.direccion)}</p>`:""}<div class="pernocta-enlaces"><a href="${escapar(mapa)}" target="_blank" rel="noopener">📍 Abrir en Google Maps</a>${x.web?`<a href="${escapar(x.web)}" target="_blank" rel="noopener">🌐 Web oficial</a>`:""}${fuente}</div></div></div></details>`;
+function textoEditorialVisita(x){
+  if(x.descripcion)return escapar(x.descripcion);
+  const tipo=(x.etiqueta||"visita").replace(/^[^ ]+\s*/,"").toLowerCase();
+  return `Esta es una de las visitas seleccionadas para esta jornada por su interés como ${escapar(tipo)} y por encajar con las preferencias indicadas para el viaje. Consulta los enlaces de la ficha para ampliar la información práctica antes de la visita.`;
 }
-
+function htmlEnlacesEditorial(mapa,web,info){
+  return `<div class="guia-enlaces"><a href="${escapar(mapa)}" target="_blank" rel="noopener">📍 Cómo llegar</a>${web?`<a href="${escapar(web)}" target="_blank" rel="noopener">🌐 Web oficial</a>`:""}${info?`<a href="${escapar(info)}" target="_blank" rel="noopener">ℹ️ Más información</a>`:""}</div>`;
+}
+function htmlVisitaEditorial(x){
+  const mapa=urlMapaPOI(x), info=x.wikiUrl||x.commonsUrl||"";
+  const foto=x.imagen?`<figure class="guia-foto"><img src="${escapar(x.imagen)}" alt="${escapar(x.nombre)}" loading="lazy" referrerpolicy="no-referrer"><figcaption>${escapar(x.nombre)}${x.localidad?` · ${escapar(x.localidad)}`:""}</figcaption></figure>`:"";
+  return `<article class="guia-visita-editorial"><h3>${escapar(x.nombre)}</h3>${foto}<div class="guia-texto"><p>${textoEditorialVisita(x)}</p><p><strong>Tiempo recomendado:</strong> ${escapar(x.tiempoVisita||tiempoVisitaPOI(x))}${x.horarios?` · <strong>Horario:</strong> ${escapar(x.horarios)}`:""}</p>${x.direccion?`<p><strong>Dirección:</strong> ${escapar(x.direccion)}</p>`:""}${htmlEnlacesEditorial(mapa,x.web,info)}</div></article>`;
+}
+function htmlAlternativasEditorial(pois=[]){
+  if(pois.length<2)return "";
+  return `<div class="guia-alternativas"><h4>Otras visitas que pueden encajar</h4>${pois.slice(1,4).map(x=>`<p><strong>${escapar(x.nombre)}</strong>${x.localidad?` — ${escapar(x.localidad)}`:""} · <a href="${escapar(urlMapaPOI(x))}" target="_blank" rel="noopener">ver ubicación</a></p>`).join("")}</div>`;
+}
+function htmlComerEditorial(etapa,esDestino=false){
+  const lista=etapa.restaurantes||[];
+  if(!lista.length)return "";
+  return `<section class="guia-seccion-editorial"><h3>🍽️ Dónde comer${esDestino?' en el destino':''}</h3><p class="guia-intro">Estas son algunas opciones próximas a la jornada. La primera queda como propuesta principal y las demás como alternativas.</p>${lista.map((x,i)=>{const mapa=Number.isFinite(x.lat)&&Number.isFinite(x.lon)?`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${x.lat},${x.lon}`)}`:"";return `<div class="guia-recomendacion"><h4>${i===0?'Nuestra recomendación: ':''}${escapar(x.nombre)}</h4><p>${x.cuisine?`Cocina: <strong>${escapar(x.cuisine)}</strong>. `:""}${escapar(x.localidad||"")}${x.distancia?` · aproximadamente ${(x.distancia/1000).toFixed(1).replace('.',',')} km`:""}.</p>${htmlEnlacesEditorial(mapa,x.web,"")}</div>`}).join("")}</section>`;
+}
+function htmlDormirEditorial(etapa,esDestino=false){
+  const lista=etapa.alojamientos||[];
+  if(!lista.length)return `<section class="guia-seccion-editorial"><h3>🌙 Dónde dormir${esDestino?' en el destino':''}</h3><p>No hemos encontrado una opción compatible en nuestra base a menos de 35 km.</p></section>`;
+  return `<section class="guia-seccion-editorial"><h3>🌙 Dónde dormir${esDestino?' en el destino':''}</h3>${lista.map((x,i)=>{const mapa=urlMapaAlojamiento(x),det=detallesPernocta(x);return `<div class="guia-recomendacion ${i===0?'principal':''}"><h4>${i===0?'⭐ Recomendado · ':''}${escapar(nombreAlojamiento(x))}</h4><p>${escapar(localidadAlojamiento(x))}${x._distancia?` · ${(x._distancia/1000).toFixed(1).replace('.',',')} km en línea recta`:''}.</p>${det?`<p><strong>Servicios:</strong> ${escapar(det)}</p>`:""}${htmlEnlacesEditorial(mapa,x.web,"")}</div>`}).join("")}</section>`;
+}
 function htmlPlanJornadas(plan,datos,rutaOptimizada=null,lugaresOpt=[]){
   if(!plan.length)return "";
-  let h='<div class="plan-etapas guia-viaje"><div class="guia-cabecera"><h3>📖 Tu guía de viaje</h3><p>Itinerario organizado por jornadas. Pulsa en cada lugar para ver dirección, mapa y enlaces disponibles.</p></div>';
   const legsOpt=rutaOptimizada?.properties?.legs||[];
+  let h='<div class="guia-pdf"><header class="guia-portada"><span>GUÍA PERSONALIZADA DE VIAJE</span><h2>Tu ruta, día a día</h2><p>Una propuesta organizada con desplazamientos, visitas, gastronomía y pernocta.</p></header>';
   plan.forEach((e,idx)=>{
-    const leg=legsOpt[idx]||null;
-    const desde=lugaresOpt[idx]?.formatted||e.desde;
-    const hasta=lugaresOpt[idx+1]?.formatted||e.hasta;
-    const distancia=leg?.distance??e.distancia;
-    const tiempo=leg?.time??e.tiempo;
-    const esUltima=idx===plan.length-1;
-    h+=`<section class="dia-guia"><header class="dia-guia-cabecera"><div class="etapa-dia">${e.dia}</div><div><span class="dia-kicker">Día ${e.dia}</span><h4>${escapar(desde)} → ${escapar(hasta)}</h4><p>🚐 ${formatoKm(distancia)} · ${formatoTiempo(tiempo)}</p></div></header>`;
-
-    h+=`<div class="bloque-guia"><h5>📍 ${esUltima?'Qué ver en el destino':'Qué merece la pena ver en esta parada'}</h5>`;
-    if(e.pois?.length){
-      if(e.poiPrincipal)h+=`<p class="recomendacion-guia">Nuestra propuesta principal es <strong>${escapar(e.poiPrincipal)}</strong>. Las alternativas se mantienen para que puedas adaptar el día.</p>`;
-      h+='<div class="poi-lista">'; e.pois.forEach((x,i)=>h+=htmlPOIInteractivo(x,i===0)); h+='</div>';
-    } else h+='<p>Estamos usando esta zona como parada práctica; no hemos encontrado suficientes visitas destacadas con los filtros seleccionados.</p>';
-    h+='</div>';
-
-    if((datos.intereses||[]).includes("gastronomia"))h+=htmlGastronomia(e,esUltima);
-    h+=htmlPernoctas(e).replace('cerca de esta parada',esUltima?'en el destino':'cerca de esta parada');
+    const leg=legsOpt[idx]||null, desde=lugaresOpt[idx]?.formatted||e.desde, hasta=lugaresOpt[idx+1]?.formatted||e.hasta;
+    const distancia=leg?.distance??e.distancia, tiempo=leg?.time??e.tiempo, esUltima=idx===plan.length-1;
+    h+=`<section class="guia-dia-editorial"><div class="guia-dia-titulo"><span>DÍA ${e.dia}</span><h2>${escapar(desde)} → ${escapar(hasta)}</h2><p>🚐 ${formatoKm(distancia)} · ${formatoTiempo(tiempo)}</p></div>`;
+    h+=`<div class="guia-narrativa"><p><strong>Plan del día.</strong> Tras el desplazamiento previsto, dedicamos el resto de la jornada a conocer ${escapar(e.pois?.[0]?.localidad||hasta)}. La selección se adapta a los intereses indicados y deja alternativas por si prefieres cambiar el ritmo.</p></div>`;
+    if(e.pois?.[0])h+=htmlVisitaEditorial(e.pois[0])+htmlAlternativasEditorial(e.pois);
+    else h+='<section class="guia-seccion-editorial"><h3>📍 Qué visitar</h3><p>Esta etapa se utiliza principalmente como parada de viaje. No hemos encontrado una visita suficientemente sólida para recomendarla como principal.</p></section>';
+    if((datos.intereses||[]).includes("gastronomia"))h+=htmlComerEditorial(e,esUltima);
+    h+=htmlDormirEditorial(e,esUltima);
     h+='</section>';
   });
-  h+='<div class="aviso-suave">💡 Esta guía ya conserva la filosofía de las rutas personalizadas: desplazamiento, visitas, gastronomía y pernocta dentro de cada jornada. La visita principal de cada jornada se presenta como una pequeña guía visual: fotografía grande, explicación, tiempo orientativo y enlaces útiles. Las alternativas permanecen compactas para no sobrecargar la guía.</div></div>';
-  return h;
+  return h+'</div>';
 }
 
 function recogerDatos(){
