@@ -1,6 +1,6 @@
 // ==========================================
 // CAMPINGS & ÁREAS - RUTAS FASE 5
-// Geoapify: autocomplete + routing + mapa + paradas inteligentes + recálculo real
+// Geoapify: autocomplete + routing + mapa + paradas inteligentes + recálculo real + pernoctas propias
 // ==========================================
 
 let pasoActual = 1;
@@ -182,6 +182,7 @@ async function pintarResultado(data,lugares,datos){
 
   if(jornadas>1){
     const plan=await crearPlanJornadas(feature,lugares,datos);
+    const promesaPernoctas=completarPernoctas(plan,datos);
     document.getElementById("cargandoParadas")?.remove();
 
     const conParadas=plan.filter(e=>e.intermedia && e.poiPrincipal && Array.isArray(e.coordRecomendada));
@@ -203,10 +204,13 @@ async function pintarResultado(data,lugares,datos){
         document.getElementById("estadoCalculo").textContent=`Ruta optimizada: ${lugaresOpt[0].formatted||datos.origen} → ${lugaresOpt.at(-1).formatted||datos.destinoPrincipal}`;
         document.getElementById("etapasRuta").innerHTML=htmlRecorrido(fOpt,lugaresOpt,"🚐 Recorrido optimizado");
         document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlResumenDesvio(distanciaExtra,tiempoExtra,conParadas.length));
+        await promesaPernoctas;
         document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlPlanJornadas(plan,datos,fOpt,lugaresOpt));
       }catch(err){
         console.warn("No se pudo recalcular por las paradas recomendadas",err);
-        document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlPlanJornadas(plan,datos));
+        await promesaPernoctas;
+        await promesaPernoctas;
+      document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlPlanJornadas(plan,datos));
         document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",'<div class="aviso-suave">Las recomendaciones son válidas, pero no hemos podido recalcular el desvío completo en esta ocasión. Se mantiene la ruta directa.</div>');
       }
     }else{
@@ -331,8 +335,9 @@ async function enriquecerCorte(corte,datos){
     corte.nombre=nombreLocalidad(p);
     corte.poiPrincipal=p.name||null;
     corte.coordRecomendada=Array.isArray(c)?c:corte.coord;
+    corte.codigoPais=(p.country_code||"").toLowerCase();
   } else {
-    const rev=await reverseLugar(corte.coord); corte.nombre=nombreLocalidad(rev);
+    const rev=await reverseLugar(corte.coord); corte.nombre=nombreLocalidad(rev); corte.codigoPais=(rev?.country_code||"").toLowerCase();
   }
   corte.pois=mejores.map(f=>({
     nombre:f.properties?.name||"Lugar de interés", localidad:nombreLocalidad(f.properties),
@@ -358,8 +363,115 @@ async function crearPlanJornadas(feature,lugares,datos){
   // paralelo reduce mucho el tiempo total en viajes largos.
   const cortesEnriquecidos=await Promise.all(cortes.map(c=>enriquecerCorte(c,datos)));
   const puntos=[{nombre:lugares[0]?.formatted||datos.origen,distRuta:0,tiempoRuta:0},...cortesEnriquecidos,{nombre:lugares.at(-1)?.formatted||datos.destinoPrincipal,distRuta:totalDist,tiempoRuta:totalTiempo}];
-  return puntos.slice(0,-1).map((a,i)=>{const b=puntos[i+1];return {dia:i+1,desde:a.nombre,hasta:b.nombre,distancia:b.distRuta-a.distRuta,tiempo:b.tiempoRuta-a.tiempoRuta,intermedia:i<puntos.length-2,pois:b.pois||[],poiPrincipal:b.poiPrincipal||null,coordRecomendada:b.coordRecomendada||null,coordIdeal:b.coord||null};});
+  return puntos.slice(0,-1).map((a,i)=>{const b=puntos[i+1];return {dia:i+1,desde:a.nombre,hasta:b.nombre,distancia:b.distRuta-a.distRuta,tiempo:b.tiempoRuta-a.tiempoRuta,intermedia:i<puntos.length-2,pois:b.pois||[],poiPrincipal:b.poiPrincipal||null,coordRecomendada:b.coordRecomendada||null,coordIdeal:b.coord||null,codigoPais:b.codigoPais||null,alojamientos:[]};});
 }
+// ---------- Fase 6: pernoctas con nuestra propia base de datos ----------
+const cacheAlojamientos=new Map();
+const archivosPernocta={
+  es:["campings-espana-definitivo.json?v=1","areas-parkings-espana-v3.json?v=1"],
+  it:["campings-italia-definitivo.json?v=1","areas-italia-definitivo-v3.json?v=3"],
+  pt:["campings-portugal-definitivo.json?v=1","areas-portugal-definitivo.json?v=2"],
+  fr:["campings-francia-definitivo.json?v=1","areas-francia-definitivo.json?v=1"],
+  de:["campings-alemania-definitivo.json?v=1","areas-alemania-definitivo.json?v=2"],
+  ch:["campings-suiza-definitivo.json?v=2","areas-suiza-definitivo.json?v=1"],
+  at:["campings-austria-definitivo.json?v=1","areas-austria-definitivo.json?v=1"],
+  be:["campings-belgica-definitivo.json?v=4","areas-belgica-definitivo.json?v=1"],
+  nl:["campings-paises-bajos-definitivo.json?v=1","areas-paises-bajos-definitivo.json?v=1"],
+  lu:["campings-luxemburgo-definitivo.json?v=1","areas-luxemburgo-definitivo.json?v=1"],
+  ad:["campings-andorra-definitivo.json?v=1","areas-andorra-definitivo.json?v=1"],
+  si:["campings-eslovenia-definitivo.json?v=1","areas-eslovenia-definitivo.json?v=1"],
+  hr:["campings-croacia-definitivo.json?v=1","areas-croacia-definitivo.json?v=1"],
+  me:["campings-montenegro-definitivo.json?v=1","areas-montenegro-definitivo.json?v=1"],
+  ba:["campings-bosnia-herzegovina-definitivo.json?v=1","areas-bosnia-herzegovina-definitivo.json?v=1"],
+  dk:["campings-dinamarca-definitivo.json?v=1","areas-dinamarca-definitivo.json?v=1"],
+  se:["campings-suecia-definitivo.json?v=1","areas-suecia-definitivo.json?v=1"],
+  no:["campings-noruega-definitivo.json?v=1","areas-noruega-definitivo.json?v=1"],
+  fi:["campings-finlandia-definitivo.json?v=1","areas-finlandia-definitivo.json?v=1"],
+  is:["campings-islandia-definitivo.json?v=1","areas-islandia-definitivo.json?v=1"],
+  ie:["campings-irlanda-definitivo.json?v=1","areas-irlanda-definitivo.json?v=1"],
+  gb:["campings-reino-unido-definitivo.json?v=1","areas-reino-unido-definitivo.json?v=1"],
+  pl:["campings-polonia-definitivo.json?v=1","areas-polonia-definitivo.json?v=1"],
+  cz:["campings-republica-checa-definitivo.json?v=1","areas-chequia-definitivo.json?v=1"],
+  sk:["campings-eslovaquia-definitivo.json?v=1","areas-eslovaquia-definitivo.json?v=1"],
+  hu:["campings-hungria-definitivo.json?v=1","areas-hungria-definitivo.json?v=1"],
+  ro:["campings-rumania-definitivo.json?v=1","areas-rumania-definitivo.json?v=1"],
+  bg:["campings-bulgaria-definitivo.json?v=1","areas-bulgaria-definitivo.json?v=1"],
+  rs:["campings-serbia-definitivo.json?v=1","areas-serbia-definitivo.json?v=1"],
+  mk:["campings-macedonia-del-norte-definitivo.json?v=1","areas-macedonia-del-norte-definitivo.json?v=1"],
+  al:["campings-albania-definitivo.json?v=1","areas-albania-definitivo.json?v=1"],
+  gr:["campings-grecia-definitivo.json?v=1","areas-grecia-definitivo.json?v=1"],
+  ee:["campings-estonia-definitivo.json?v=1","areas-estonia-definitivo.json?v=1"],
+  lv:["campings-letonia-definitivo.json?v=1","areas-letonia-definitivo.json?v=1"],
+  lt:["campings-lituania-definitivo.json?v=1","areas-lituania-definitivo.json?v=1"],
+  md:["campings-moldavia-definitivo.json?v=1","areas-moldavia-definitivo.json?v=1"],
+  ua:["campings-ucrania-definitivo.json?v=1","areas-ucrania-definitivo.json?v=1"],
+  cy:["campings-chipre-definitivo.json?v=1","areas-chipre-definitivo.json?v=1"],
+  xk:["campings-kosovo-definitivo.json?v=1","areas-kosovo-definitivo.json?v=1"]
+};
+async function cargarListaPernocta(archivo){
+  try{const r=await fetch(archivo); if(!r.ok)return []; const d=await r.json(); return Array.isArray(d)?d:[];}catch{return [];}
+}
+async function cargarAlojamientosPais(codigo){
+  codigo=String(codigo||"").toLowerCase();
+  if(cacheAlojamientos.has(codigo))return cacheAlojamientos.get(codigo);
+  const archivos=archivosPernocta[codigo]; if(!archivos)return [];
+  const prom=Promise.all(archivos.map(cargarListaPernocta)).then(([campings,puntos])=>[
+    ...campings.map(x=>({...x,tipo:"camping"})),
+    ...puntos.map(x=>({...x,tipo:x.tipo||"area"}))
+  ]);
+  cacheAlojamientos.set(codigo,prom); return prom;
+}
+function valorBool(v){return v===true||v===1||v==="true"||v==="yes"||v==="sí"||v==="si";}
+function nombreAlojamiento(x){return x.nombre||x.name||"Lugar de pernocta";}
+function localidadAlojamiento(x){return x.localidad||x.ciudad||x.municipio||x.provincia||x.region||x.pais||"";}
+function urlMapaAlojamiento(x){
+  if(x.google_maps)return x.google_maps;
+  if(Number.isFinite(Number(x.lat))&&Number.isFinite(Number(x.lon)))return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${x.lat},${x.lon}`)}`;
+  return "";
+}
+function alojamientoCompatible(x,datos){
+  const tipos=new Set(datos.pernocta||[]); if(!tipos.has(x.tipo))return false;
+  if(!Number.isFinite(Number(x.lat))||!Number.isFinite(Number(x.lon)))return false;
+  if(datos.vehiculo==="caravana" && (x.tipo==="area"||x.tipo==="parking") && !valorBool(x.admite_caravanas))return false;
+  if(datos.mascota && x.mascotas===false)return false;
+  return true;
+}
+function puntosAlojamiento(x,datos,distancia){
+  let s=Math.max(0,30-distancia/1000);
+  if((datos.vehiculo==="autocaravana"||datos.vehiculo==="camper")&&x.tipo==="area")s+=5;
+  if(datos.vehiculo==="caravana"&&x.tipo==="camping")s+=6;
+  if((datos.vehiculo==="coche"||datos.vehiculo==="moto")&&x.tipo==="camping")s+=4;
+  if(datos.mascota&&valorBool(x.mascotas))s+=3;
+  if(valorBool(x.electricidad))s+=1; if(valorBool(x.agua))s+=1;
+  return s;
+}
+async function buscarPernoctasEtapa(etapa,datos){
+  if(!etapa.intermedia||!Array.isArray(etapa.coordRecomendada)||!(datos.pernocta||[]).length)return [];
+  let codigo=etapa.codigoPais;
+  if(!codigo){const rev=await reverseLugar(etapa.coordRecomendada); codigo=(rev?.country_code||"").toLowerCase(); etapa.codigoPais=codigo;}
+  const todos=await cargarAlojamientosPais(codigo); const centro=etapa.coordRecomendada;
+  const candidatos=todos.filter(x=>alojamientoCompatible(x,datos)).map(x=>{
+    const d=distanciaHaversine(centro,[Number(x.lon),Number(x.lat)]); return {...x,_distancia:d,_score:puntosAlojamiento(x,datos,d)};
+  }).filter(x=>x._distancia<=35000).sort((a,b)=>b._score-a._score||a._distancia-b._distancia);
+  return candidatos.slice(0,3);
+}
+async function completarPernoctas(plan,datos){
+  await Promise.all(plan.filter(e=>e.intermedia).map(async e=>{e.alojamientos=await buscarPernoctasEtapa(e,datos);}));
+  return plan;
+}
+function etiquetaTipoPernocta(tipo){return tipo==="camping"?"🏕️ Camping":tipo==="parking"?"🅿️ Parking":"🚐 Área";}
+function detallesPernocta(x){
+  const d=[]; if(valorBool(x.mascotas))d.push("🐕 mascotas"); if(valorBool(x.electricidad))d.push("⚡ electricidad"); if(valorBool(x.agua))d.push("💧 agua"); if(valorBool(x.vaciado_aguas))d.push("🚿 vaciado"); return d.join(" · ");
+}
+function htmlPernoctas(etapa){
+  const lista=etapa.alojamientos||[];
+  let h='<div class="pernocta-inteligente"><h4>🌙 Dónde dormir cerca de esta parada</h4>';
+  if(!lista.length)return h+'<p>No hemos encontrado en nuestra base un Camping, Área o Parking compatible a menos de 35 km de esta parada.</p></div>';
+  h+='<div class="pernocta-lista">';
+  lista.forEach((x,i)=>{const mapa=urlMapaAlojamiento(x),det=detallesPernocta(x); h+=`<div class="pernocta-card ${i===0?'pernocta-principal':''}"><div><span class="pernocta-tipo">${etiquetaTipoPernocta(x.tipo)}</span>${i===0?'<span class="badge-recomendada">⭐ recomendada</span>':''}</div><strong>${escapar(nombreAlojamiento(x))}</strong><small>${escapar(localidadAlojamiento(x))}${x._distancia?` · a ${(x._distancia/1000).toFixed(1).replace('.',',')} km en línea recta`:' '}</small>${det?`<span class="pernocta-servicios">${escapar(det)}</span>`:''}<div class="pernocta-enlaces">${mapa?`<a href="${escapar(mapa)}" target="_blank" rel="noopener">📍 Ver en mapa</a>`:''}${x.web?`<a href="${escapar(x.web)}" target="_blank" rel="noopener">🌐 Web</a>`:''}</div></div>`;});
+  return h+'</div><p class="nota-distancia">La distancia indicada es aproximada en línea recta. Más adelante calcularemos también el desvío real por carretera hasta la pernocta elegida.</p></div>';
+}
+
 function htmlPlanJornadas(plan,datos,rutaOptimizada=null,lugaresOpt=[]){
   if(!plan.length)return "";
   let h='<div class="plan-etapas"><h3>🗓️ Etapas y paradas recomendadas</h3>';
@@ -377,10 +489,11 @@ function htmlPlanJornadas(plan,datos,rutaOptimizada=null,lugaresOpt=[]){
       if(e.pois.length){ h+='<div class="poi-lista">'; e.pois.forEach(x=>{h+=`<div class="poi-card"><strong>${escapar(x.nombre)}</strong><small>${escapar(x.localidad)}${x.distancia?` · a ${Math.round(x.distancia/1000)} km del punto ideal de etapa`:""}</small><span class="poi-etiqueta">${escapar(x.etiqueta)}</span></div>`;}); h+='</div>'; }
       else h+='<p>No hemos encontrado suficientes visitas destacadas en 25 km; mantendremos esta zona como punto práctico de etapa.</p>';
       h+='</div>';
+      h+=htmlPernoctas(e);
     }
     h+='</div></div>';
   });
-  h+=`<div class="aviso-suave"><strong>Fase 5:</strong> las mejores paradas ya se incorporan al recorrido y el mapa se recalcula por ellas. Los tiempos y kilómetros superiores son los reales de la ruta ajustada. El siguiente paso será buscar dónde dormir cerca de cada parada usando nuestros Campings, Áreas y Parkings.</div></div>`;
+  h+=`<div class="aviso-suave"><strong>Fase 6:</strong> además de adaptar la carretera a las paradas interesantes, buscamos Campings, Áreas y Parkings de nuestra propia base cerca de cada final de jornada y respetamos el tipo de pernocta, vehículo y mascota indicados.</div></div>`;
   return h;
 }
 
