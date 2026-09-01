@@ -401,3 +401,18 @@
 .poi-destacado .poi-descripcion{font-size:1rem!important;line-height:1.65;color:#202924!important}
 .poi-datos-practicos{margin:12px 0}
 @media(max-width:720px){.poi-foto-principal{min-height:190px}.poi-foto-principal img{min-height:190px;max-height:360px}.poi-destacado summary strong{font-size:1.06rem}}
+
+/* Fase 9 — salida editorial inspirada en las guías PDF */
+.guia-pdf{max-width:980px;margin:24px auto;background:#fff;font-family:Arial,Helvetica,sans-serif;color:#222;line-height:1.65}
+.guia-portada{padding:42px 48px;border-top:7px solid #1d8db8;border-bottom:1px solid #d9d9d9;margin-bottom:36px}
+.guia-portada span,.guia-dia-titulo span{font-size:.78rem;letter-spacing:.16em;font-weight:700;color:#1686ae}
+.guia-portada h2{font-size:2.15rem;margin:.2rem 0 .4rem;color:#17324a}.guia-portada p{margin:0;font-size:1.05rem;color:#56616b}
+.guia-dia-editorial{padding:0 48px 54px;margin-bottom:46px;border-bottom:2px solid #e6e6e6}
+.guia-dia-titulo{margin-bottom:24px}.guia-dia-titulo h2{font-size:1.65rem;line-height:1.25;margin:.25rem 0;color:#17324a}.guia-dia-titulo p{margin:0;color:#56616b;font-weight:600}
+.guia-narrativa{font-size:1.05rem;margin:0 0 28px}.guia-narrativa p{margin:0}
+.guia-visita-editorial{margin:0 0 34px}.guia-visita-editorial>h3,.guia-seccion-editorial>h3{font-size:1.55rem;margin:0 0 16px;color:#1b5268;border-bottom:1px solid #cfdde3;padding-bottom:8px}
+.guia-foto{margin:0 0 20px}.guia-foto img{display:block;width:100%;max-height:520px;object-fit:cover;border-radius:2px}.guia-foto figcaption{font-size:.8rem;color:#6b747b;margin-top:5px}
+.guia-texto{font-size:1rem}.guia-texto p{margin:.7rem 0}.guia-enlaces{display:flex;gap:18px;flex-wrap:wrap;margin-top:15px}.guia-enlaces a,.guia-alternativas a{color:#0074a6;font-weight:700;text-decoration:none}.guia-enlaces a:hover,.guia-alternativas a:hover{text-decoration:underline}
+.guia-alternativas{margin:24px 0 36px;padding:18px 22px;background:#f5f8f9;border-left:4px solid #6fa7ba}.guia-alternativas h4{margin:0 0 10px;color:#294f5e}.guia-alternativas p{margin:7px 0}
+.guia-seccion-editorial{margin:34px 0}.guia-intro{margin-top:-5px;color:#5c6469}.guia-recomendacion{padding:16px 0;border-bottom:1px solid #e3e3e3}.guia-recomendacion:last-child{border-bottom:0}.guia-recomendacion h4{font-size:1.08rem;margin:0 0 5px;color:#222}.guia-recomendacion p{margin:4px 0}.guia-recomendacion.principal{border-left:4px solid #d6a62a;padding-left:16px}
+@media(max-width:700px){.guia-portada,.guia-dia-editorial{padding-left:20px;padding-right:20px}.guia-portada h2{font-size:1.7rem}.guia-dia-titulo h2{font-size:1.3rem}.guia-foto img{max-height:360px}.guia-enlaces{gap:10px}}
