@@ -1,5 +1,5 @@
 // ==========================================
-// CAMPINGS & ÁREAS - RUTAS FASE 8
+// CAMPINGS & ÁREAS - RUTAS FASE 12
 // Geoapify: autocomplete + routing + mapa + paradas inteligentes + recálculo real + pernoctas propias
 // ==========================================
 
@@ -14,6 +14,66 @@ let mapa = null;
 let capaRuta = null;
 let marcadores = [];
 const lugaresSeleccionados = new WeakMap();
+
+// ---------- Multimedia verificado ----------
+const MEDIA_VERIFICADO_URL = "rutas-media-verificado-v1.json?v=1";
+let mediaVerificadoCache = null;
+
+function normalizarClaveMedia(texto){
+  return String(texto||"")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g," ")
+    .trim();
+}
+
+async function cargarMediaVerificado(){
+  if(mediaVerificadoCache)return mediaVerificadoCache;
+  try{
+    const r=await fetch(MEDIA_VERIFICADO_URL,{cache:"no-store"});
+    if(!r.ok)throw new Error("No se pudo cargar el catálogo multimedia verificado.");
+    const d=await r.json();
+    mediaVerificadoCache=Array.isArray(d?.items)?d.items:[];
+  }catch(e){
+    console.warn(e);
+    mediaVerificadoCache=[];
+  }
+  return mediaVerificadoCache;
+}
+
+function buscarMediaVerificado(nombre,ciudad="",tipo=""){
+  const nombreN=normalizarClaveMedia(nombre);
+  const ciudadN=normalizarClaveMedia(ciudad);
+  const lista=mediaVerificadoCache||[];
+  let candidatos=lista.filter(x=>x?.verified_exact===true);
+
+  if(tipo)candidatos=candidatos.filter(x=>String(x.type||"")===tipo);
+
+  const exactos=candidatos.filter(x=>normalizarClaveMedia(x.name)===nombreN);
+  if(exactos.length){
+    if(!ciudadN)return exactos[0];
+    const porCiudad=exactos.find(x=>normalizarClaveMedia(x.city)===ciudadN);
+    return porCiudad||exactos[0];
+  }
+
+  // Sin coincidencia exacta no mostramos foto: evita errores por nombres parecidos.
+  return null;
+}
+
+function htmlFotoVerificada(nombre,ciudad,tipo){
+  const m=buscarMediaVerificado(nombre,ciudad,tipo);
+  if(!m?.image_url)return "";
+  const pie=[m.name,m.city].filter(Boolean).join(" · ");
+  const fuente=m.source_page
+    ? `<a href="${escapar(m.source_page)}" target="_blank" rel="noopener">Fuente de la imagen</a>`
+    : "";
+  return `<figure class="guia-foto">
+    <img src="${escapar(m.image_url)}" alt="${escapar(pie||nombre)}" loading="lazy" referrerpolicy="no-referrer">
+    <figcaption>${escapar(pie||nombre)}${fuente?` · ${fuente}`:""}</figcaption>
+  </figure>`;
+}
+
 
 function mostrarPaso(numero) {
   pasoActual = numero;
@@ -87,52 +147,200 @@ async function llamarWorker(ruta, cuerpo){
   return data;
 }
 
-function paisLugar(lugar){
-  return lugar?.country||lugar?.country_name||lugar?.state||"";
+function paisCanonico(codigo,nombre=""){
+  const mapa={
+    de:"Germany",at:"Austria",hr:"Croatia",fr:"France",es:"Spain",it:"Italy",
+    pt:"Portugal",ch:"Switzerland",be:"Belgium",nl:"Netherlands",lu:"Luxembourg",
+    si:"Slovenia",cz:"Czechia",sk:"Slovakia",hu:"Hungary",pl:"Poland",
+    ba:"Bosnia and Herzegovina",me:"Montenegro",rs:"Serbia",al:"Albania",
+    gr:"Greece",ro:"Romania",bg:"Bulgaria",gb:"United Kingdom",ie:"Ireland"
+  };
+  return mapa[String(codigo||"").toLowerCase()]||String(nombre||"").trim();
 }
 
 function nombreLugarWorker(lugar,fallback=""){
   return lugar?.city||lugar?.town||lugar?.village||lugar?.municipality||lugar?.name||fallback||lugar?.formatted||"";
 }
 
-function perfilWorker(datos,lugares,plan=[]){
-  const origen=nombreLugarWorker(lugares[0],datos.origen);
-  const destino=nombreLugarWorker(lugares.at(-1),datos.destinoPrincipal);
+function ritmoWorker(valor){
+  if(valor==="tranquilo")return "tranquilo";
+  if(valor==="intenso")return "intenso";
+  return "equilibrado";
+}
 
-  const stopsPlan=Array.isArray(plan)&&plan.length
-    ? plan.map((etapa,i)=>({
-        day:Number(etapa.dia)||i+1,
-        place:String(etapa.hasta||"").trim(),
-        country:String(etapa.codigoPais||"").trim(),
-        driving_km:Math.round((Number(etapa.distancia)||0)/1000),
-        driving_minutes:Math.round((Number(etapa.tiempo)||0)/60),
-        is_final:Boolean(etapa.esDestino)||i===plan.length-1
-      })).filter(s=>s.place)
-    : lugares.slice(1).map((l,i)=>({
-        day:i+1,
-        place:nombreLugarWorker(l,l.formatted||""),
-        country:paisLugar(l),
-        is_final:i===lugares.length-2
-      }));
+function interesesWorker(intereses=[]){
+  const s=new Set(intereses||[]);
+  const out=[];
+  if(["ciudades","monumentos","pueblos","museos-ninos","naturaleza","montana","playa","senderismo","animales","acuarios","parques"].some(x=>s.has(x)))out.push("turismo");
+  if(s.has("gastronomia"))out.push("gastronomía");
+  return out.length?out:["turismo"];
+}
 
+function preferenciaPernoctaWorker(datos){
+  if(datos.vehiculo==="autocaravana"||datos.vehiculo==="camper"){
+    return "campings, áreas o parkings adecuados para autocaravana";
+  }
+  return (datos.pernocta||[]).join(", ");
+}
+
+function perfilWorker(datos,lugares,stops=[]){
   return {
-    origin:origen,
-    destination:destino,
-    country:paisLugar(lugares.at(-1)),
+    origin:nombreLugarWorker(lugares[0],datos.origen),
+    destination:nombreLugarWorker(lugares.at(-1),datos.destinoPrincipal),
+    country:paisCanonico(lugares.at(-1)?.country_code,lugares.at(-1)?.country),
     vehicle:datos.vehiculo,
     adults:Number(datos.adultos)||0,
     children:(datos.edades||[]).map(Number).filter(Number.isFinite),
     pet:Boolean(datos.mascota),
     max_driving_hours:Number(datos.maxConduccion)||4,
-    pace:datos.ritmo||"equilibrado",
-    interests:datos.intereses||[],
-    overnight_preference:(datos.pernocta||[]).join(", "),
-    stops:stopsPlan
+    pace:ritmoWorker(datos.ritmo),
+    interests:interesesWorker(datos.intereses),
+    overnight_preference:preferenciaPernoctaWorker(datos),
+    stops
   };
 }
 
-async function consultarPlanificadorIA(datos,lugares,plan=[]){
-  return llamarWorker("/plan-route",perfilWorker(datos,lugares,plan));
+async function consultarPlanificadorIA(datos,lugares,stops){
+  return llamarWorker("/plan-route",perfilWorker(datos,lugares,stops));
+}
+
+async function consultarRedactorIA(datos,lugares,stops,plan){
+  const perfil=perfilWorker(datos,lugares,stops);
+  delete perfil.country;
+  delete perfil.max_driving_hours;
+  return llamarWorker("/write-route",{...perfil,plan});
+}
+
+function htmlLista(items=[]){
+  if(!Array.isArray(items)||!items.length)return "";
+  return `<ul>${items.map(x=>`<li>${escapar(x)}</li>`).join("")}</ul>`;
+}
+
+function htmlEnlaceGuia(label,url){
+  if(!url)return "";
+  return `<a href="${escapar(url)}" target="_blank" rel="noopener">${escapar(label)}</a>`;
+}
+
+function htmlGuiaIA(guide){
+  if(!guide||typeof guide!=="object")return '<div class="error-ruta"><strong>⚠️ La guía almacenada no tiene un formato válido.</strong></div>';
+  let h=`<div class="guia-pdf guia-ia-real">
+    <header class="guia-portada">
+      <span>GUÍA PERSONALIZADA DE VIAJE</span>
+      <h2>${escapar(guide.title||"Tu ruta")}</h2>
+      ${guide.subtitle?`<p>${escapar(guide.subtitle)}</p>`:""}
+    </header>`;
+
+  if(guide.introduction)h+=`<section class="guia-seccion-editorial"><p>${escapar(guide.introduction)}</p></section>`;
+
+  const resumen=guide.trip_summary||{};
+  if(Object.keys(resumen).length){
+    h+=`<section class="guia-seccion-editorial"><h3>🧭 Resumen del viaje</h3>
+      ${resumen.route?`<p><strong>Ruta:</strong> ${escapar(resumen.route)}</p>`:""}
+      ${resumen.travel_style?`<p><strong>Estilo:</strong> ${escapar(resumen.travel_style)}</p>`:""}
+      ${resumen.key_advice?`<p><strong>Consejo principal:</strong> ${escapar(resumen.key_advice)}</p>`:""}
+    </section>`;
+  }
+
+  if(Array.isArray(guide.before_you_go)&&guide.before_you_go.length){
+    h+=`<section class="guia-seccion-editorial"><h3>✅ Antes de salir</h3>${htmlLista(guide.before_you_go)}</section>`;
+  }
+
+  (guide.days||[]).forEach(d=>{
+    h+=`<section class="guia-dia-editorial">
+      <div class="guia-dia-titulo">
+        <span>DÍA ${escapar(d.day||"")}</span>
+        <h2>${escapar(d.heading||"Etapa")}</h2>
+        ${d.driving?`<p>🚐 ${escapar(d.driving)}</p>`:""}
+      </div>`;
+
+    if(d.opening_narrative)h+=`<div class="guia-narrativa"><p>${escapar(d.opening_narrative)}</p></div>`;
+    if(d.arrival_strategy)h+=`<div class="guia-narrativa"><p><strong>Al llegar:</strong> ${escapar(d.arrival_strategy)}</p></div>`;
+    if(d.recommended_visit_time)h+=`<div class="guia-narrativa"><p><strong>Tiempo recomendado:</strong> ${escapar(d.recommended_visit_time)}</p></div>`;
+    if(d.pace_advice)h+=`<div class="guia-narrativa"><p><strong>Ritmo:</strong> ${escapar(d.pace_advice)}</p></div>`;
+    if(d.visit_story)h+=`<section class="guia-seccion-editorial"><h3>📍 Qué visitar y cómo organizarlo</h3><p>${escapar(d.visit_story)}</p></section>`;
+
+    if(Array.isArray(d.highlights)&&d.highlights.length){
+      h+=`<section class="guia-seccion-editorial"><h3>🏛️ Visitas recomendadas</h3>`;
+      d.highlights.forEach(x=>{
+        h+=`<div class="guia-recomendacion">
+          <h4>${escapar(x.name||"Visita")}</h4>
+          ${htmlFotoVerificada(x.name,d.city||d.destination||"", "visit")}
+          ${x.description?`<p>${escapar(x.description)}</p>`:""}
+          ${x.practical_note?`<p><strong>Información práctica:</strong> ${escapar(x.practical_note)}</p>`:""}
+          ${x.url?`<div class="guia-enlaces">${htmlEnlaceGuia("🌐 Información oficial",x.url)}</div>`:""}
+        </div>`;
+      });
+      h+=`</section>`;
+    }
+
+    if(d.gastronomy_intro)h+=`<section class="guia-seccion-editorial"><h3>🍽️ Gastronomía</h3><p>${escapar(d.gastronomy_intro)}</p></section>`;
+    if(Array.isArray(d.restaurants)&&d.restaurants.length){
+      h+=`<section class="guia-seccion-editorial"><h3>🍴 Dónde comer</h3>`;
+      d.restaurants.forEach((x,i)=>{
+        h+=`<div class="guia-recomendacion ${i===0?"principal":""}">
+          <h4>${i===0?"⭐ Recomendado · ":""}${escapar(x.name||"Restaurante")}</h4>
+          ${htmlFotoVerificada(x.name,d.city||d.destination||"", "restaurant")}
+          ${x.why?`<p>${escapar(x.why)}</p>`:""}
+          ${x.specialty?`<p><strong>Qué probar:</strong> ${escapar(x.specialty)}</p>`:""}
+          ${x.practical_note?`<p><strong>Consejo:</strong> ${escapar(x.practical_note)}</p>`:""}
+          ${x.website?`<div class="guia-enlaces">${htmlEnlaceGuia("🌐 Web oficial",x.website)}</div>`:""}
+        </div>`;
+      });
+      h+=`</section>`;
+    }
+
+    if(d.overnight_intro)h+=`<section class="guia-seccion-editorial"><h3>🌙 Pernocta</h3><p>${escapar(d.overnight_intro)}</p></section>`;
+    if(Array.isArray(d.overnight)&&d.overnight.length){
+      h+=`<section class="guia-seccion-editorial"><h3>🚐 Dónde dormir</h3>`;
+      d.overnight.forEach((x,i)=>{
+        h+=`<div class="guia-recomendacion ${i===0?"principal":""}">
+          <h4>${i===0?"⭐ Recomendado · ":""}${escapar(x.name||"Pernocta")}</h4>
+          ${htmlFotoVerificada(x.name,d.city||d.destination||"", "overnight")}
+          ${x.type?`<p><strong>Tipo:</strong> ${escapar(x.type)}</p>`:""}
+          ${x.why?`<p>${escapar(x.why)}</p>`:""}
+          ${x.services?`<p><strong>Servicios:</strong> ${escapar(x.services)}</p>`:""}
+          ${x.practical_info?`<p><strong>Información práctica:</strong> ${escapar(x.practical_info)}</p>`:""}
+          ${x.website?`<div class="guia-enlaces">${htmlEnlaceGuia("🌐 Web oficial",x.website)}</div>`:""}
+        </div>`;
+      });
+      h+=`</section>`;
+    }
+
+    if(d.practical_advice)h+=`<section class="guia-seccion-editorial"><h3>💡 Consejo del día</h3><p>${escapar(d.practical_advice)}</p></section>`;
+
+    if(Array.isArray(d.useful_links)&&d.useful_links.length){
+      h+=`<section class="guia-seccion-editorial"><h3>🔗 Enlaces útiles</h3>`;
+      d.useful_links.forEach(x=>{
+        h+=`<p>${htmlEnlaceGuia(x.label||"Abrir información",x.url)}${x.purpose?` — ${escapar(x.purpose)}`:""}</p>`;
+      });
+      h+=`</section>`;
+    }
+
+    h+=`</section>`;
+  });
+
+  if(Array.isArray(guide.final_notes)&&guide.final_notes.length){
+    h+=`<section class="guia-seccion-editorial"><h3>📌 Notas finales</h3>${htmlLista(guide.final_notes)}</section>`;
+  }else if(typeof guide.final_notes==="string"&&guide.final_notes){
+    h+=`<section class="guia-seccion-editorial"><h3>📌 Notas finales</h3><p>${escapar(guide.final_notes)}</p></section>`;
+  }
+
+  return h+"</div>";
+}
+
+function htmlEstadoIA(respuesta){
+  if(respuesta?.status==="research_required"){
+    const faltan=(respuesta.missing_research||[]).map(x=>x.place).filter(Boolean);
+    return `<div class="aviso-ruta"><strong>🔎 Ruta todavía no preparada.</strong><br>
+      Falta investigación almacenada en D1${faltan.length?`: ${escapar(faltan.join(", "))}`:""}.
+      No se ha llamado a OpenAI y no se ha generado contenido automático de sustitución.</div>`;
+  }
+  if(respuesta?.status==="cost_guard_active"){
+    return `<div class="aviso-ruta"><strong>🔒 Protección de coste activa.</strong><br>
+      La ruta no está todavía en la caché de IA. OpenAI permanece bloqueado y no se mostrará una guía inventada.</div>`;
+  }
+  return `<div class="error-ruta"><strong>⚠️ No hay una guía preparada para esta ruta.</strong><br>
+    La carretera sí se ha calculado, pero la guía editorial no está disponible en D1.</div>`;
 }
 
 // ---------- Geoapify autocomplete ----------
@@ -317,6 +525,69 @@ function htmlResumenDesvio(distanciaExtra,tiempoExtra,cantidad){
   return `<div class="aviso-optimizacion"><strong>✨ Ruta adaptada a tus paradas:</strong> hemos incorporado ${cantidad} ${cantidad===1?"parada interesante":"paradas interesantes"}. El desvío real añade aproximadamente <strong>${formatoKm(distanciaExtra)}</strong> y <strong>${formatoTiempo(tiempoExtra)}</strong> frente a ir directamente.</div>`;
 }
 
+
+// ---------- Etapas limpias para el Worker ----------
+async function crearEtapasWorker(feature,lugares,datos){
+  const p=feature.properties||{};
+  const totalTiempo=Number(p.time)||0;
+  const maxSeg=Math.max(1,Number(datos.maxConduccion)||4)*3600;
+  const jornadas=Math.max(1,Math.ceil(totalTiempo/maxSeg));
+  const destino=lugares.at(-1);
+
+  if(jornadas<=1){
+    return [{
+      day:1,
+      place:nombreLugarWorker(destino,datos.destinoPrincipal),
+      country:paisCanonico(destino?.country_code,destino?.country),
+      driving_km:null,
+      driving_minutes:null,
+      is_final:true
+    }];
+  }
+
+  const coords=puntosLinea(feature.geometry);
+  if(coords.length<2)throw new Error("No se pudieron calcular las etapas de la carretera.");
+  const acum=distanciaAcumulada(coords), total=acum.at(-1)||1;
+  const stops=[];
+
+  for(let dia=1;dia<jornadas;dia++){
+    const idx=indiceCercano(acum,total*(dia/jornadas),0);
+    const rev=await reverseLugar(coords[idx]);
+    const place=nombreLugarWorker(rev,nombreLocalidad(rev));
+    if(place){
+      stops.push({
+        day:dia,
+        place,
+        country:paisCanonico(rev?.country_code,rev?.country),
+        driving_km:null,
+        driving_minutes:null,
+        is_final:false
+      });
+    }
+  }
+
+  stops.push({
+    day:jornadas,
+    place:nombreLugarWorker(destino,datos.destinoPrincipal),
+    country:paisCanonico(destino?.country_code,destino?.country),
+    driving_km:null,
+    driving_minutes:null,
+    is_final:true
+  });
+
+  return stops;
+}
+
+function pintarResultadoBase(data,lugares,datos){
+  const feature=data.features[0],p=feature.properties||{};
+  const distancia=p.distance||0,tiempo=p.time||0;
+  const maxHoras=Math.max(1,Number(datos.maxConduccion)||4);
+  const jornadas=Math.max(1,Math.ceil(tiempo/(maxHoras*3600)));
+  document.getElementById("estadoCalculo").textContent=`${lugares[0].formatted||datos.origen} → ${lugares.at(-1).formatted||datos.destinoPrincipal}`;
+  pintarMetricas(distancia,tiempo,jornadas,lugares.length);
+  document.getElementById("etapasRuta").innerHTML=htmlRecorrido(feature,lugares);
+  pintarRuta(data,lugares);
+}
 
 // ---------- Fase 5: jornadas + paradas interesantes + recálculo real ----------
 function puntosLinea(geometry){
@@ -796,33 +1067,56 @@ formRuta.addEventListener("submit",async event=>{
   try{
     if(!config.GEOAPIFY_API_KEY)throw new Error("Falta configurar la API Key de Geoapify.");
     if(datos.modo==="propuesta"){
-      document.getElementById("estadoCalculo").textContent="Datos guardados correctamente";
-      document.getElementById("etapasRuta").innerHTML='<div class="aviso-ruta"><strong>Modo “Organízame las vacaciones”:</strong> ya tenemos tus preferencias. La selección automática de destinos se incorpora en la siguiente fase, cuando añadamos lugares, actividades y pernoctas.</div>';
+      document.getElementById("estadoCalculo").textContent="Modo todavía no disponible";
+      document.getElementById("etapasRuta").innerHTML='<div class="aviso-ruta"><strong>✨ Organízame las vacaciones:</strong> este modo se activará cuando el flujo de investigación y planificación esté preparado para proponer destinos sin inventarlos.</div>';
       return;
     }
+
     const inputs=[document.getElementById("origen"),document.getElementById("destinoPrincipal"),...document.querySelectorAll(".destinoAdicional")].filter(i=>i.value.trim());
-    const lugares=[]; for(const input of inputs){document.getElementById("estadoCalculo").textContent=`Localizando ${input.value.trim()}…`; lugares.push(await resolverLugar(input));}
+    const lugares=[];
+    for(const input of inputs){
+      document.getElementById("estadoCalculo").textContent=`Localizando ${input.value.trim()}…`;
+      lugares.push(await resolverLugar(input));
+    }
+
     document.getElementById("estadoCalculo").textContent="Calculando carretera, kilómetros y tiempo…";
     const ruta=await calcularRuta(lugares,datos);
-    const resultadoRuta=await pintarResultado(ruta,lugares,datos);
+    pintarResultadoBase(ruta,lugares,datos);
 
-    // Conexión inicial con el Planificador del Worker.
-    // OPENAI permanece bloqueado en el Worker: una ruta sin caché no genera gasto.
-    try{
-      const respuestaIA=await consultarPlanificadorIA(datos,lugares,resultadoRuta?.plan||[]);
-      console.info("Rutas IA · Planificador",respuestaIA);
-      if(respuestaIA?.status==="cost_guard_active"){
-        console.info("Rutas IA protegida: esta ruta todavía no está en caché y OpenAI sigue bloqueado.");
-      }else if(respuestaIA?.status==="research_required"){
-        console.info("Rutas IA: falta investigación almacenada en D1 para alguna parada.");
-      }else if(respuestaIA?.ok){
-        console.info("Rutas IA: respuesta del Worker recibida correctamente.");
-      }
-    }catch(errorIA){
-      console.warn("Rutas IA · No se pudo contactar con el Worker",errorIA);
+    document.getElementById("estadoCalculo").textContent="Cargando fotografías verificadas…";
+    await cargarMediaVerificado();
+
+    document.getElementById("estadoCalculo").textContent="Preparando las etapas para la guía…";
+    const stops=await crearEtapasWorker(ruta.features[0],lugares,datos);
+
+    document.getElementById("estadoCalculo").textContent="Consultando la planificación guardada en D1…";
+    const respuestaPlan=await consultarPlanificadorIA(datos,lugares,stops);
+    console.info("Rutas IA · Planificador",respuestaPlan);
+
+    if(!(respuestaPlan?.ok&&respuestaPlan?.status==="planned"&&respuestaPlan?.plan)){
+      document.getElementById("estadoCalculo").textContent="Carretera calculada · guía no disponible";
+      document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlEstadoIA(respuestaPlan));
+      return;
     }
-  }catch(e){ document.getElementById("estadoCalculo").textContent="No se pudo crear la ruta"; document.getElementById("etapasRuta").innerHTML=`<div class="error-ruta"><strong>⚠️ ${escapar(e.message)}</strong><br>Revisa los lugares introducidos y vuelve a intentarlo.</div>`; }
-  finally{ resultado.classList.remove("cargando-ruta"); }
+
+    document.getElementById("estadoCalculo").textContent="Cargando la guía editorial guardada en D1…";
+    const respuestaGuia=await consultarRedactorIA(datos,lugares,stops,respuestaPlan.plan);
+    console.info("Rutas IA · Redactor",respuestaGuia);
+
+    if(respuestaGuia?.ok&&respuestaGuia?.status==="written"&&respuestaGuia?.guide){
+      document.getElementById("estadoCalculo").textContent="Guía preparada";
+      document.getElementById("etapasRuta").innerHTML=htmlGuiaIA(respuestaGuia.guide);
+      return;
+    }
+
+    document.getElementById("estadoCalculo").textContent="Carretera calculada · guía no disponible";
+    document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlEstadoIA(respuestaGuia));
+  }catch(e){
+    document.getElementById("estadoCalculo").textContent="No se pudo crear la ruta";
+    document.getElementById("etapasRuta").innerHTML=`<div class="error-ruta"><strong>⚠️ ${escapar(e.message)}</strong><br>No se ha generado una guía automática de sustitución.</div>`;
+  }finally{
+    resultado.classList.remove("cargando-ruta");
+  }
 });
 
 document.getElementById("volverEditar").addEventListener("click",()=>{ document.querySelector(".rutas-panel").scrollIntoView({behavior:"smooth"}); mostrarPaso(1); });
