@@ -71,6 +71,58 @@ function escapar(t){ return String(t??"").replaceAll("&","&amp;").replaceAll("<"
 function formatoTiempo(seg){ const m=Math.round(seg/60), h=Math.floor(m/60), r=m%60; return h ? `${h} h ${r ? r+" min" : ""}`.trim() : `${r} min`; }
 function formatoKm(m){ return new Intl.NumberFormat("es-ES",{maximumFractionDigits:0}).format(m/1000)+" km"; }
 
+
+// ---------- Backend IA: Cloudflare Worker ----------
+async function llamarWorker(ruta, cuerpo){
+  const base=String(config.WORKER_BASE_URL||"").replace(/\/+$/,"");
+  if(!base)throw new Error("Falta configurar la dirección del Worker de Rutas.");
+  const r=await fetch(`${base}${ruta}`,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(cuerpo)
+  });
+  let data=null;
+  try{data=await r.json();}catch{}
+  if(!r.ok)throw new Error(data?.message||data?.error||`El Worker respondió con error ${r.status}.`);
+  return data;
+}
+
+function paisLugar(lugar){
+  return lugar?.country||lugar?.country_name||lugar?.state||"";
+}
+
+function nombreLugarWorker(lugar,fallback=""){
+  return lugar?.city||lugar?.town||lugar?.village||lugar?.municipality||lugar?.name||fallback||lugar?.formatted||"";
+}
+
+function perfilWorker(datos,lugares){
+  const origen=nombreLugarWorker(lugares[0],datos.origen);
+  const destino=nombreLugarWorker(lugares.at(-1),datos.destinoPrincipal);
+  return {
+    origin:origen,
+    destination:destino,
+    country:paisLugar(lugares.at(-1)),
+    vehicle:datos.vehiculo,
+    adults:Number(datos.adultos)||0,
+    children:(datos.edades||[]).map(Number).filter(Number.isFinite),
+    pet:Boolean(datos.mascota),
+    max_driving_hours:Number(datos.maxConduccion)||4,
+    pace:datos.ritmo||"equilibrado",
+    interests:datos.intereses||[],
+    overnight_preference:(datos.pernocta||[]).join(", "),
+    stops:lugares.slice(1).map((l,i)=>({
+      day:i+1,
+      place:nombreLugarWorker(l,l.formatted||""),
+      country:paisLugar(l),
+      is_final:i===lugares.length-2
+    }))
+  };
+}
+
+async function consultarPlanificadorIA(datos,lugares){
+  return llamarWorker("/plan-route",perfilWorker(datos,lugares));
+}
+
 // ---------- Geoapify autocomplete ----------
 function prepararAutocomplete(input) {
   if (!input || input.dataset.autocompleteListo) return;
@@ -736,6 +788,22 @@ formRuta.addEventListener("submit",async event=>{
     const lugares=[]; for(const input of inputs){document.getElementById("estadoCalculo").textContent=`Localizando ${input.value.trim()}…`; lugares.push(await resolverLugar(input));}
     document.getElementById("estadoCalculo").textContent="Calculando carretera, kilómetros y tiempo…";
     const ruta=await calcularRuta(lugares,datos); await pintarResultado(ruta,lugares,datos);
+
+    // Conexión inicial con el Planificador del Worker.
+    // OPENAI permanece bloqueado en el Worker: una ruta sin caché no genera gasto.
+    try{
+      const respuestaIA=await consultarPlanificadorIA(datos,lugares);
+      console.info("Rutas IA · Planificador",respuestaIA);
+      if(respuestaIA?.status==="cost_guard_active"){
+        console.info("Rutas IA protegida: esta ruta todavía no está en caché y OpenAI sigue bloqueado.");
+      }else if(respuestaIA?.status==="research_required"){
+        console.info("Rutas IA: falta investigación almacenada en D1 para alguna parada.");
+      }else if(respuestaIA?.ok){
+        console.info("Rutas IA: respuesta del Worker recibida correctamente.");
+      }
+    }catch(errorIA){
+      console.warn("Rutas IA · No se pudo contactar con el Worker",errorIA);
+    }
   }catch(e){ document.getElementById("estadoCalculo").textContent="No se pudo crear la ruta"; document.getElementById("etapasRuta").innerHTML=`<div class="error-ruta"><strong>⚠️ ${escapar(e.message)}</strong><br>Revisa los lugares introducidos y vuelve a intentarlo.</div>`; }
   finally{ resultado.classList.remove("cargando-ruta"); }
 });
