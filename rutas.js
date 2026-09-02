@@ -95,9 +95,26 @@ function nombreLugarWorker(lugar,fallback=""){
   return lugar?.city||lugar?.town||lugar?.village||lugar?.municipality||lugar?.name||fallback||lugar?.formatted||"";
 }
 
-function perfilWorker(datos,lugares){
+function perfilWorker(datos,lugares,plan=[]){
   const origen=nombreLugarWorker(lugares[0],datos.origen);
   const destino=nombreLugarWorker(lugares.at(-1),datos.destinoPrincipal);
+
+  const stopsPlan=Array.isArray(plan)&&plan.length
+    ? plan.map((etapa,i)=>({
+        day:Number(etapa.dia)||i+1,
+        place:String(etapa.hasta||"").trim(),
+        country:String(etapa.codigoPais||"").trim(),
+        driving_km:Math.round((Number(etapa.distancia)||0)/1000),
+        driving_minutes:Math.round((Number(etapa.tiempo)||0)/60),
+        is_final:Boolean(etapa.esDestino)||i===plan.length-1
+      })).filter(s=>s.place)
+    : lugares.slice(1).map((l,i)=>({
+        day:i+1,
+        place:nombreLugarWorker(l,l.formatted||""),
+        country:paisLugar(l),
+        is_final:i===lugares.length-2
+      }));
+
   return {
     origin:origen,
     destination:destino,
@@ -110,17 +127,12 @@ function perfilWorker(datos,lugares){
     pace:datos.ritmo||"equilibrado",
     interests:datos.intereses||[],
     overnight_preference:(datos.pernocta||[]).join(", "),
-    stops:lugares.slice(1).map((l,i)=>({
-      day:i+1,
-      place:nombreLugarWorker(l,l.formatted||""),
-      country:paisLugar(l),
-      is_final:i===lugares.length-2
-    }))
+    stops:stopsPlan
   };
 }
 
-async function consultarPlanificadorIA(datos,lugares){
-  return llamarWorker("/plan-route",perfilWorker(datos,lugares));
+async function consultarPlanificadorIA(datos,lugares,plan=[]){
+  return llamarWorker("/plan-route",perfilWorker(datos,lugares,plan));
 }
 
 // ---------- Geoapify autocomplete ----------
@@ -219,6 +231,7 @@ function pintarRuta(data,lugares){
 
 async function pintarResultado(data,lugares,datos){
   const feature=data.features[0], p=feature.properties||{};
+  let planWorker=[];
   const distancia=p.distance||0, tiempo=p.time||0;
   const maxHoras=Math.max(1,Number(datos.maxConduccion)||4);
   const jornadas=Math.max(1,Math.ceil(tiempo/(maxHoras*3600)));
@@ -234,6 +247,7 @@ async function pintarResultado(data,lugares,datos){
 
   if(jornadas>1){
     const plan=await crearPlanJornadas(feature,lugares,datos);
+    planWorker=plan;
     const promesaPernoctas=completarPernoctas(plan,datos);
     const promesaGastronomia=completarGastronomia(plan,datos);
     const promesaVisitasDestino=completarVisitasDestino(plan,datos);
@@ -273,6 +287,8 @@ async function pintarResultado(data,lugares,datos){
       document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlPlanJornadas(plan,datos));
     }
   }
+
+  return {plan:planWorker};
 }
 
 function pintarMetricas(distancia,tiempo,jornadas,puntos){
@@ -787,12 +803,13 @@ formRuta.addEventListener("submit",async event=>{
     const inputs=[document.getElementById("origen"),document.getElementById("destinoPrincipal"),...document.querySelectorAll(".destinoAdicional")].filter(i=>i.value.trim());
     const lugares=[]; for(const input of inputs){document.getElementById("estadoCalculo").textContent=`Localizando ${input.value.trim()}…`; lugares.push(await resolverLugar(input));}
     document.getElementById("estadoCalculo").textContent="Calculando carretera, kilómetros y tiempo…";
-    const ruta=await calcularRuta(lugares,datos); await pintarResultado(ruta,lugares,datos);
+    const ruta=await calcularRuta(lugares,datos);
+    const resultadoRuta=await pintarResultado(ruta,lugares,datos);
 
     // Conexión inicial con el Planificador del Worker.
     // OPENAI permanece bloqueado en el Worker: una ruta sin caché no genera gasto.
     try{
-      const respuestaIA=await consultarPlanificadorIA(datos,lugares);
+      const respuestaIA=await consultarPlanificadorIA(datos,lugares,resultadoRuta?.plan||[]);
       console.info("Rutas IA · Planificador",respuestaIA);
       if(respuestaIA?.status==="cost_guard_active"){
         console.info("Rutas IA protegida: esta ruta todavía no está en caché y OpenAI sigue bloqueado.");
