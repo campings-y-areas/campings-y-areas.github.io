@@ -466,3 +466,13 @@ body::before {
     color: #1f2933;
     background: #f5f7f8;
 }
+
+
+/* Acceso temporal privado para probar Rutas */
+html.acceso-pruebas body > * {
+    visibility: visible !important;
+}
+
+html.acceso-pruebas body::before {
+    display: none !important;
+}
