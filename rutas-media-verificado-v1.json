@@ -1,0 +1,152 @@
+{
+  "version": "media-verificado-v1",
+  "route": "Saarlouis → Günzburg → Salzburg → Zagreb",
+  "policy": {
+    "automatic_name_search": false,
+    "show_only_verified_exact_matches": true,
+    "fallback_if_missing": "no mostrar foto",
+    "note": "Cada imagen se vincula a una entidad concreta y conserva la página fuente."
+  },
+  "items": [
+    {
+      "key": "guenzburg-stadtturm-marktplatz",
+      "type": "visit",
+      "name": "Marktplatz y Stadtturm de Günzburg",
+      "city": "Günzburg",
+      "image_url": "https://www.ulm-augsburg.de/_Resources/Persistent/1/3/b/e/13be90f97b23c2f30570552c0c8f024dd48a2853/IMG_1153-Bearbeitet.jpg",
+      "source_page": "https://www.ulm-augsburg.de/mediathek/fotogalerie",
+      "credit_label": "Bahnprojekt Augsburg–Ulm",
+      "verified_exact": true
+    },
+    {
+      "key": "guenzburg-zum-rad",
+      "type": "restaurant",
+      "name": "Restaurant Zum Rad",
+      "city": "Günzburg",
+      "image_url": "https://www.guenzburg-geniessen.de/wp-content/uploads/2020/04/zum-rad-guenzburg-brauereigaststaette-768x664.jpg",
+      "source_page": "https://www.guenzburg-geniessen.de/restaurants/zum-rad-restaurant-guenzburg/",
+      "credit_label": "Günzburg genießen",
+      "verified_exact": true
+    },
+    {
+      "key": "guenzburg-zur-muenz",
+      "type": "restaurant",
+      "name": "Brauereigasthof Zur Münz",
+      "city": "Günzburg",
+      "image_url": "https://media-cdn.holidaycheck.com/w_1280%2Ch_720%2Cc_fill%2Cq_80/ugc/images/93be2130-b4e2-4208-850f-e063e7587961",
+      "source_page": "https://www.guenzburg-geniessen.de/restaurants/brauereigasthof-zur-muenz-guenzburg/",
+      "credit_label": "Imagen de referencia del establecimiento",
+      "verified_exact": true
+    },
+    {
+      "key": "guenzburg-waldbad-stellplatz",
+      "type": "overnight",
+      "name": "Wohnmobilstellplatz Günzburg am Waldbad",
+      "city": "Günzburg",
+      "image_url": "https://www.wohnmobilforum.de/bilderdienst/wohnmobile/Waldbad_32617_d479.JPG",
+      "source_page": "https://wohnmobilstellplatz-guenzburg.de/informationen/",
+      "credit_label": "Imagen de referencia del área",
+      "verified_exact": true
+    },
+    {
+      "key": "guenzburg-gutshof-donauried",
+      "type": "overnight",
+      "name": "Camping Gutshof Donauried",
+      "city": "Günzburg",
+      "image_url": "https://stellplatz.info/img/22514/wohnmobilstellplatz-gutshof-donauried-1669893.jpg?autorotate=true&format=webp&h=426&mode=crop&quality=90&scale=canvas&w=565",
+      "source_page": "https://campingplatz-guenzburg.de/",
+      "credit_label": "Imagen de referencia de Gutshof Donauried",
+      "verified_exact": true
+    },
+    {
+      "key": "salzburg-mirabell",
+      "type": "visit",
+      "name": "Jardines de Mirabell",
+      "city": "Salzburg",
+      "image_url": "https://p16-lemon8-va-sign.tiktokcdn-us.com/tos-maliva-p-0000/6e5b616bf4d74caabf107ba7c1db12c2~tplv-tej9nj120t-text-logo%3AQGtvbm55%3Aq75.jpeg?lk3s=c7f08e79&source=lemon8_seo&x-expires=1777312800&x-signature=HUy95zGyff72G7cCzu2EqDRGHtg%3D",
+      "source_page": "https://www.salzburg.info/en/sights/top10/mirabell-palace-gardens",
+      "credit_label": "Mirabell Gardens · imagen de referencia",
+      "verified_exact": true
+    },
+    {
+      "key": "salzburg-stieglkeller",
+      "type": "restaurant",
+      "name": "StieglKeller",
+      "city": "Salzburg",
+      "image_url": "https://freewalkingtoursalzburg.com/wp-content/uploads/2023/11/Stieglkeller-beer-garden-and-restaurant-in-Salzburg.jpg",
+      "source_page": "https://www.salzburg.info/de/reiseinfos/stiegl-keller_az_13059",
+      "credit_label": "Stiegl-Keller · imagen de referencia",
+      "verified_exact": true
+    },
+    {
+      "key": "salzburg-herzl",
+      "type": "restaurant",
+      "name": "Herzl Restaurant",
+      "city": "Salzburg",
+      "image_url": "https://www.restaurantherzl.at/resourcefiles/gallery-images/herzl-terrasse.jpg",
+      "source_page": "https://www.restaurantherzl.at/photos",
+      "credit_label": "Restaurant Herzl",
+      "verified_exact": true
+    },
+    {
+      "key": "salzburg-camping-aigen",
+      "type": "overnight",
+      "name": "Camping Aigen",
+      "city": "Salzburg",
+      "image_url": "https://www.wij-camperen.nl/static/fotoalbum/2025/camping-schloss-aigen-in-salzburg/groot/camping-schloss-aigen.jpg",
+      "source_page": "https://www.campingaigen.com/de/camping",
+      "credit_label": "Camping Aigen · imagen de referencia",
+      "verified_exact": true
+    },
+    {
+      "key": "salzburg-reisemobil-stellplatz",
+      "type": "overnight",
+      "name": "Reisemobil Stellplatz Salzburg",
+      "city": "Salzburg",
+      "image_url": "https://media.canvayo.com/uploads/sites/d65605821e4185d4c097eea28eecceab/2021/04/RMSS-2.jpg",
+      "source_page": "https://www.reisemobilstellplatz-salzburg.at/deutsch/stellplatz/stellplatz.htm",
+      "credit_label": "Reisemobil-Stellplatz Salzburg",
+      "verified_exact": true
+    },
+    {
+      "key": "zagreb-stone-gate",
+      "type": "visit",
+      "name": "Kamenita vrata / Stone Gate",
+      "city": "Zagreb",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Puerta_de_Piedra%2C_Zagreb%2C_Croacia%2C_2014-04-20%2C_DD_01.JPG/3840px-Puerta_de_Piedra%2C_Zagreb%2C_Croacia%2C_2014-04-20%2C_DD_01.JPG",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Puerta_de_Piedra,_Zagreb,_Croacia,_2014-04-20,_DD_01.JPG",
+      "credit_label": "Wikimedia Commons · Stone Gate, Zagreb",
+      "verified_exact": true
+    },
+    {
+      "key": "zagreb-ficlek",
+      "type": "restaurant",
+      "name": "Gostionica Ficlek",
+      "city": "Zagreb",
+      "image_url": "https://www.menu.hr/wp-content/uploads/2020/03/ficlek7.jpg",
+      "source_page": "https://ficlek.hr/en/",
+      "credit_label": "Gostionica Ficlek · imagen de referencia",
+      "verified_exact": true
+    },
+    {
+      "key": "zagreb-didov-san",
+      "type": "restaurant",
+      "name": "Didov san",
+      "city": "Zagreb",
+      "image_url": "https://cdn.prod.website-files.com/636d303c12c130bac7f50e92/6928d055699278e6a91fd3c7_DidovSan%20%2842%29.jpg",
+      "source_page": "https://konoba-didovsan.com/",
+      "credit_label": "Konoba Didov San · imagen de referencia",
+      "verified_exact": true
+    },
+    {
+      "key": "zagreb-camp-zagreb",
+      "type": "overnight",
+      "name": "Camp Zagreb",
+      "city": "Zagreb",
+      "image_url": "https://www.freedomtravel.se/wp-content/webp-express/webp-images/uploads/CampZagreb.jpg.webp",
+      "source_page": "https://www.campzagreb.com/?lang=en",
+      "credit_label": "Camp Zagreb · imagen de referencia",
+      "verified_exact": true
+    }
+  ]
+}
