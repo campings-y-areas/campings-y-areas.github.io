@@ -1,5 +1,5 @@
 // ==========================================
-// CAMPINGS & ÁREAS - RUTAS FASE 17 · SELECTOR FOTOGRÁFICO · VISITAS COMBINADAS
+// CAMPINGS & ÁREAS - RUTAS FASE 18 · FOTOS EDITORIALES VERIFICADAS
 // Geoapify: autocomplete + routing + mapa + paradas inteligentes + recálculo real + pernoctas propias
 // ==========================================
 
@@ -157,6 +157,19 @@ async function prepararFotosGuia(guide){
   await Promise.allSettled(trabajos);
 }
 
+const IMAGENES_EDITORIALES_PRIORITARIAS = Object.freeze({
+  "dolac market y gornji grad": {
+    image_url: "https://commons.wikimedia.org/wiki/Special:Redirect/file/Dolac%20Zagreb.jpg",
+    source_page: "https://commons.wikimedia.org/wiki/File:Dolac_Zagreb.jpg",
+    credit: "Wikimedia Commons · Dolac Market"
+  },
+  "iglesia de san marcos y kamenita vrata": {
+    image_url: "https://commons.wikimedia.org/wiki/Special:Redirect/file/Zagreb%20Church%20of%20St.%20Mark%20%2834411766366%29.jpg",
+    source_page: "https://commons.wikimedia.org/wiki/File:Zagreb_Church_of_St._Mark_(34411766366).jpg",
+    credit: "Wikimedia Commons · St. Mark's Church, Zagreb"
+  }
+});
+
 const IMAGENES_VERIFICADAS_SUPLEMENTARIAS = Object.freeze({
   "buergerpark y paseo hacia schloss reisensburg": {
     image_url: "https://commons.wikimedia.org/wiki/Special:Redirect/file/Aerial%20image%20of%20the%20Schloss%20Reisensburg.jpg",
@@ -303,14 +316,16 @@ function buscarMediaVerificado(nombre,ciudad="",tipo=""){
 function htmlFotoVerificada(nombre,ciudad,tipo){
   const lugar=buscarLugarVerificado(nombre,tipo);
   const media=buscarMediaVerificado(nombre,ciudad,tipo);
-  const extra=IMAGENES_VERIFICADAS_SUPLEMENTARIAS[normalizarClaveMedia(nombre)]||null;
+  const claveNombre=normalizarClaveMedia(nombre);
+  const editorial=tipo==="visit"?IMAGENES_EDITORIALES_PRIORITARIAS[claveNombre]||null:null;
+  const extra=IMAGENES_VERIFICADAS_SUPLEMENTARIAS[claveNombre]||null;
   const auto=tipo==="visit"?fotoAutoCache.get(claveFotoAuto(nombre,ciudad,tipo)):null;
-  // En visitas, el selector editorial automático tiene prioridad. Restaurantes y pernoctas conservan fotos verificadas.
-  const imageUrl=auto?.image_url||lugar?.image_url||media?.image_url||extra?.image_url||"";
+  // Las excepciones editoriales verificadas corrigen solo lugares donde una coincidencia automática era semánticamente correcta pero visualmente inadecuada.
+  const imageUrl=editorial?.image_url||auto?.image_url||lugar?.image_url||media?.image_url||extra?.image_url||"";
   if(!imageUrl)return "";
   const pie=lugar?.name||media?.name||nombre;
-  const sourcePage=auto?.source_page||lugar?.image_source_page||media?.source_page||extra?.source_page||"";
-  const credit=auto?.credit||lugar?.image_credit||media?.credit||extra?.credit||"";
+  const sourcePage=editorial?.source_page||auto?.source_page||lugar?.image_source_page||media?.source_page||extra?.source_page||"";
+  const credit=editorial?.credit||auto?.credit||lugar?.image_credit||media?.credit||extra?.credit||"";
   const fuente=sourcePage
     ? `<a href="${escapar(sourcePage)}" target="_blank" rel="noopener">Fuente de la imagen</a>`
     : "";
