@@ -1,5 +1,5 @@
 // ==========================================
-// CAMPINGS & ÁREAS - RUTAS FASE 13
+// CAMPINGS & ÁREAS - RUTAS FASE 16 · SELECTOR FOTOGRÁFICO AUTOMÁTICO
 // Geoapify: autocomplete + routing + mapa + paradas inteligentes + recálculo real + pernoctas propias
 // ==========================================
 
@@ -20,6 +20,115 @@ const MEDIA_VERIFICADO_URL = "rutas-media-verificado-v1.json?v=1";
 const LUGARES_VERIFICADOS_URL = "rutas-lugares-verificados-v2.json?v=2";
 let mediaVerificadoCache = null;
 let lugaresVerificadosCache = null;
+
+// ---------- Selector fotográfico automático (sin OpenAI) ----------
+const FOTO_AUTO_STORAGE_KEY = "campingsAreasFotoAutoV1";
+const fotoAutoCache = new Map();
+
+function cargarFotoAutoLocal(){
+  try{
+    const d=JSON.parse(localStorage.getItem(FOTO_AUTO_STORAGE_KEY)||"{}");
+    Object.entries(d||{}).forEach(([k,v])=>{if(v?.image_url)fotoAutoCache.set(k,v);});
+  }catch{}
+}
+function guardarFotoAutoLocal(){
+  try{
+    const d={}; fotoAutoCache.forEach((v,k)=>{d[k]=v;});
+    localStorage.setItem(FOTO_AUTO_STORAGE_KEY,JSON.stringify(d));
+  }catch{}
+}
+function claveFotoAuto(nombre,ciudad,tipo){
+  return [tipo,normalizarClaveMedia(nombre),normalizarClaveMedia(ciudad)].join("|");
+}
+function textoPlanoHtml(v){
+  const el=document.createElement("div"); el.innerHTML=String(v||"");
+  return (el.textContent||el.innerText||"").replace(/\s+/g," ").trim();
+}
+function tokensFoto(v){
+  const stop=new Set(["de","del","la","las","el","los","y","en","of","the","and","in","und","der","die","das","von","zu","im","am","para","con","casco","historico","ciudad"]);
+  return normalizarClaveMedia(v).split(" ").filter(x=>x.length>2&&!stop.has(x));
+}
+function puntuacionFotoBase(p,nombre,ciudad){
+  const ii=p.imageinfo?.[0]||{};
+  const titulo=normalizarClaveMedia(p.title||"");
+  const nt=tokensFoto(nombre), ct=tokensFoto(ciudad);
+  let score=0;
+  nt.forEach(t=>{if(titulo.includes(t))score+=9;});
+  ct.forEach(t=>{if(titulo.includes(t))score+=5;});
+  const w=Number(ii.width)||0,h=Number(ii.height)||0;
+  if(w>=1600)score+=10; else if(w>=1000)score+=6; else if(w&&w<800)score-=12;
+  if(w>h*1.15)score+=10; else if(h>w*1.35)score-=6;
+  if(w>=2400&&h>=1400)score+=5;
+  const malo=/sign|logo|plaque|poster|advert|advertisement|information board|ticket|entrance sign|door detail|detail of|memorial plaque|schild|tafel|plakat|logo|cartel|letrero|placa/;
+  const bueno=/panoram|aerial|interior|garden|square|plaza|skyline|overview|view|castle|church|cathedral|palace|market|park|fortress|street|historic|roof|garten|kirche|schloss|markt|platz/;
+  if(malo.test(titulo))score-=30;
+  if(bueno.test(titulo))score+=12;
+  return score;
+}
+function licenciaFotoPermitida(meta){
+  const l=textoPlanoHtml(meta?.LicenseShortName?.value||meta?.UsageTerms?.value||"").toLowerCase();
+  if(!l)return false;
+  return /cc0|public domain|cc by|cc-by|cc by-sa|cc-by-sa/.test(l);
+}
+function puntuacionFotoFinal(p,nombre,ciudad){
+  const ii=p.imageinfo?.[0]||{}, m=ii.extmetadata||{};
+  let score=puntuacionFotoBase(p,nombre,ciudad);
+  const texto=normalizarClaveMedia([p.title,textoPlanoHtml(m.ImageDescription?.value),textoPlanoHtml(m.Categories?.value),textoPlanoHtml(m.Assessments?.value)].join(" "));
+  const nt=tokensFoto(nombre), ct=tokensFoto(ciudad);
+  nt.forEach(t=>{if(texto.includes(t))score+=5;});
+  ct.forEach(t=>{if(texto.includes(t))score+=3;});
+  if(/featured|quality image|valued image|picture of the day|potd/.test(texto))score+=20;
+  if(/panoram|aerial|interior|garden|square|plaza|skyline|overview|historic|roof|market|fortress|castle|cathedral|church|palace/.test(texto))score+=8;
+  if(/sign|logo|plaque|poster|advert|information board|ticket|schild|tafel|plakat|cartel|letrero|placa/.test(texto))score-=28;
+  return score;
+}
+async function buscarFotoAutomatica(nombre,ciudad,tipo="visit"){
+  if(tipo!=="visit"||!nombre)return null;
+  const key=claveFotoAuto(nombre,ciudad,tipo);
+  if(fotoAutoCache.has(key))return fotoAutoCache.get(key);
+  try{
+    const consultas=[`${nombre} ${ciudad||""}`.trim(),nombre].filter(Boolean);
+    let candidatos=[];
+    for(const consulta of consultas){
+      const params=new URLSearchParams({action:"query",generator:"search",gsrsearch:consulta,gsrnamespace:"6",gsrlimit:"12",prop:"imageinfo",iiprop:"url|dimensions",iiurlwidth:"1600",format:"json",origin:"*"});
+      const r=await fetch(`https://commons.wikimedia.org/w/api.php?${params}`);
+      if(!r.ok)continue;
+      const d=await r.json(); candidatos=Object.values(d.query?.pages||{}).filter(p=>p.imageinfo?.[0]);
+      if(candidatos.length)break;
+    }
+    if(!candidatos.length)return null;
+    candidatos.sort((a,b)=>puntuacionFotoBase(b,nombre,ciudad)-puntuacionFotoBase(a,nombre,ciudad));
+    const finalistas=candidatos.slice(0,5);
+    const titles=finalistas.map(p=>p.title).join("|");
+    const params2=new URLSearchParams({action:"query",titles,prop:"imageinfo",iiprop:"url|dimensions|extmetadata",iiurlwidth:"1600",iiextmetadatalanguage:"en",iiextmetadatafilter:"ImageDescription|Artist|Credit|LicenseShortName|LicenseUrl|UsageTerms|Categories|Assessments",format:"json",origin:"*"});
+    const r2=await fetch(`https://commons.wikimedia.org/w/api.php?${params2}`);
+    if(!r2.ok)return null;
+    const d2=await r2.json();
+    const completas=Object.values(d2.query?.pages||{}).filter(p=>p.imageinfo?.[0]&&licenciaFotoPermitida(p.imageinfo[0].extmetadata||{}));
+    completas.sort((a,b)=>puntuacionFotoFinal(b,nombre,ciudad)-puntuacionFotoFinal(a,nombre,ciudad));
+    const ganadora=completas[0]; if(!ganadora)return null;
+    const score=puntuacionFotoFinal(ganadora,nombre,ciudad);
+    if(score<28)return null;
+    const ii=ganadora.imageinfo[0],m=ii.extmetadata||{};
+    const foto={
+      image_url:ii.thumburl||ii.url||"",
+      source_page:ii.descriptionurl||"",
+      credit:[textoPlanoHtml(m.Artist?.value),textoPlanoHtml(m.LicenseShortName?.value)].filter(Boolean).join(" · ")||"Wikimedia Commons",
+      score, selected_automatically:true
+    };
+    if(foto.image_url){fotoAutoCache.set(key,foto);guardarFotoAutoLocal();return foto;}
+  }catch(e){console.warn("Selector fotográfico",e);}
+  return null;
+}
+async function prepararFotosGuia(guide){
+  cargarFotoAutoLocal();
+  const trabajos=[];
+  (guide?.days||[]).forEach(d=>{
+    const ciudad=d.city||d.destination||"";
+    (d.highlights||[]).forEach(x=>trabajos.push(buscarFotoAutomatica(x.name,ciudad,"visit")));
+  });
+  await Promise.allSettled(trabajos);
+}
 
 const IMAGENES_VERIFICADAS_SUPLEMENTARIAS = Object.freeze({
   "buergerpark y paseo hacia schloss reisensburg": {
@@ -168,11 +277,13 @@ function htmlFotoVerificada(nombre,ciudad,tipo){
   const lugar=buscarLugarVerificado(nombre,tipo);
   const media=buscarMediaVerificado(nombre,ciudad,tipo);
   const extra=IMAGENES_VERIFICADAS_SUPLEMENTARIAS[normalizarClaveMedia(nombre)]||null;
-  const imageUrl=lugar?.image_url||media?.image_url||extra?.image_url||"";
+  const auto=tipo==="visit"?fotoAutoCache.get(claveFotoAuto(nombre,ciudad,tipo)):null;
+  // En visitas, el selector editorial automático tiene prioridad. Restaurantes y pernoctas conservan fotos verificadas.
+  const imageUrl=auto?.image_url||lugar?.image_url||media?.image_url||extra?.image_url||"";
   if(!imageUrl)return "";
   const pie=lugar?.name||media?.name||nombre;
-  const sourcePage=lugar?.image_source_page||media?.source_page||extra?.source_page||"";
-  const credit=lugar?.image_credit||media?.credit||extra?.credit||"";
+  const sourcePage=auto?.source_page||lugar?.image_source_page||media?.source_page||extra?.source_page||"";
+  const credit=auto?.credit||lugar?.image_credit||media?.credit||extra?.credit||"";
   const fuente=sourcePage
     ? `<a href="${escapar(sourcePage)}" target="_blank" rel="noopener">Fuente de la imagen</a>`
     : "";
@@ -1228,6 +1339,8 @@ formRuta.addEventListener("submit",async event=>{
     console.info("Rutas IA · Redactor",respuestaGuia);
 
     if(respuestaGuia?.ok&&respuestaGuia?.status==="written"&&respuestaGuia?.guide){
+      document.getElementById("estadoCalculo").textContent="Seleccionando las mejores fotografías…";
+      await prepararFotosGuia(respuestaGuia.guide);
       document.getElementById("estadoCalculo").textContent="Guía preparada";
       document.getElementById("etapasRuta").innerHTML=htmlGuiaIA(respuestaGuia.guide);
       return;
