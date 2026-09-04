@@ -1,5 +1,5 @@
 // ==========================================
-// CAMPINGS & ÁREAS - RUTAS FASE 19 · PORTADA FIJA + FOTOS EDITORIALES VERIFICADAS
+// CAMPINGS & ÁREAS - RUTAS FASE 21 · RUTA DE EJEMPLO + PORTADA + GUÍA COMPLETA
 // Geoapify: autocomplete + routing + mapa + paradas inteligentes + recálculo real + pernoctas propias
 // ==========================================
 
@@ -1389,6 +1389,126 @@ function recogerDatos(){
   };
 }
 
+
+
+
+
+// ---------- Fase 22: resumen bajo mapa + navegación Google Maps + PDF ----------
+function nombreMapsLugar(x,alternativa=""){
+  return String(x?.formatted||x?.name||x?.place||alternativa||"").trim();
+}
+
+function urlGoogleMapsRuta(lugares=[],stops=[],datos={}){
+  const origen=nombreMapsLugar(lugares[0],datos.origen);
+  const destino=nombreMapsLugar(lugares.at(-1),datos.destinoPrincipal);
+  if(!origen||!destino)return "";
+  const intermedios=(Array.isArray(stops)?stops:[])
+    .filter(x=>!x?.is_final)
+    .map(x=>String(x?.place||"").trim())
+    .filter(Boolean);
+  const q=new URLSearchParams({api:"1",origin:origen,destination:destino,travelmode:"driving"});
+  if(intermedios.length)q.set("waypoints",intermedios.join("|"));
+  return `https://www.google.com/maps/dir/?${q.toString()}`;
+}
+
+function colocarResumenDebajoMapa(){
+  const mapaEl=document.getElementById("mapaRuta");
+  const metricas=document.getElementById("metricasRuta");
+  if(!mapaEl||!metricas)return;
+  // Se conserva el mismo bloque de métricas; solo se fija su posición justo después del mapa.
+  mapaEl.insertAdjacentElement("afterend",metricas);
+  metricas.classList.remove("oculto");
+}
+
+function instalarAccionesRuta(lugares=[],stops=[],datos={}){
+  document.getElementById("accionesRutaF22")?.remove();
+  const metricas=document.getElementById("metricasRuta");
+  if(!metricas)return;
+  const maps=urlGoogleMapsRuta(lugares,stops,datos);
+  const bloque=document.createElement("div");
+  bloque.id="accionesRutaF22";
+  bloque.style.cssText="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:18px 0 28px";
+  bloque.innerHTML=`${maps?`<a href="${escapar(maps)}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 20px;border-radius:999px;background:#087d91;color:#fff;text-decoration:none;font-weight:900;box-shadow:0 7px 18px rgba(8,125,145,.18)">🧭 Navegar esta ruta con Google Maps</a>`:""}`;
+  metricas.insertAdjacentElement("afterend",bloque);
+}
+
+function instalarBotonPDF(){
+  document.getElementById("descargarGuiaPdfF22")?.remove();
+  const etapas=document.getElementById("etapasRuta");
+  if(!etapas)return;
+  const cont=document.createElement("div");
+  cont.id="descargarGuiaPdfF22";
+  cont.style.cssText="text-align:center;margin:34px 0 10px";
+  cont.innerHTML='<button type="button" style="border:0;border-radius:999px;padding:14px 24px;background:#063b59;color:#fff;font-weight:900;font-size:16px;cursor:pointer;box-shadow:0 7px 18px rgba(6,59,89,.18)">📄 Descargar guía en PDF</button><div style="font-size:12px;color:#667b88;margin-top:8px">Se abrirá la opción de impresión del navegador para guardarla como PDF.</div>';
+  etapas.insertAdjacentElement("afterend",cont);
+  cont.querySelector("button").addEventListener("click",()=>window.print());
+}
+
+// ---------- Fase 21: ruta de ejemplo permanente ----------
+function seleccionarValor(selector,valor){
+  const el=[...document.querySelectorAll(selector)].find(x=>x.value===valor);
+  if(el){el.checked=true;el.dispatchEvent(new Event("change",{bubbles:true}));}
+}
+
+function prepararRutaEjemplo(){
+  document.querySelectorAll(".destino-extra").forEach(x=>x.remove());
+  const origen=document.getElementById("origen");
+  const destino=document.getElementById("destinoPrincipal");
+  origen.value="Saarlouis";
+  destino.value="Zagreb";
+  lugaresSeleccionados.delete(origen);
+  lugaresSeleccionados.delete(destino);
+
+  seleccionarValor('input[name="modoRuta"]',"destino");
+  seleccionarValor('input[name="vehiculo"]',"autocaravana");
+
+  const setValor=(id,v)=>{const e=document.getElementById(id);if(e)e.value=String(v);};
+  setValor("diasViaje",3);
+  setValor("adultos",2);
+  setValor("ninos",0);
+  ninos.dispatchEvent(new Event("input",{bubbles:true}));
+  setValor("maxConduccion",4);
+  setValor("ritmo","equilibrado");
+
+  const mascota=document.getElementById("mascota"); if(mascota)mascota.checked=false;
+  const recNinos=document.getElementById("recomendacionesNinos"); if(recNinos)recNinos.checked=false;
+
+  document.querySelectorAll('.intereses input[type="checkbox"]').forEach(x=>x.checked=false);
+  ["ciudades","gastronomia"].forEach(v=>{
+    const x=[...document.querySelectorAll('.intereses input[type="checkbox"]')].find(e=>e.value===v);
+    if(x)x.checked=true;
+  });
+
+  // La preferencia de pernocta de autocaravana se normaliza en el Worker como
+  // campings, áreas o parkings adecuados para autocaravana.
+  document.querySelectorAll('input[name="pernocta"]').forEach(x=>x.checked=true);
+  document.querySelectorAll('input[name="evitar"]').forEach(x=>x.checked=false);
+
+  mostrarPaso(4);
+}
+
+function instalarRutaEjemplo(){
+  if(document.getElementById("rutaDemoCampingsAreas"))return;
+  const panel=document.querySelector(".rutas-panel");
+  if(!panel||!formRuta)return;
+  const demo=document.createElement("section");
+  demo.id="rutaDemoCampingsAreas";
+  demo.style.cssText="margin:0 0 22px;padding:22px;border:1px solid #c9deeb;border-radius:20px;background:linear-gradient(135deg,#f7fcff,#edf8f5);box-shadow:0 8px 24px rgba(4,53,78,.08);text-align:center";
+  demo.innerHTML=`
+    <div style="font-size:12px;font-weight:900;letter-spacing:.14em;color:#087d91;margin-bottom:7px">RUTA DE EJEMPLO</div>
+    <h2 style="margin:0 0 8px;color:#063b59;font-size:clamp(24px,4vw,36px)">Saarlouis → Zagreb</h2>
+    <p style="margin:0 auto 16px;max-width:720px;color:#4a6170;line-height:1.55">Descubre cómo será una guía de Rutas IA completa: recorrido, mapa, etapas, visitas, gastronomía, lugares para pernoctar y fotografías.</p>
+    <button type="button" id="verRutaDemo" style="border:0;border-radius:999px;padding:13px 24px;background:#087d91;color:white;font-weight:900;font-size:16px;cursor:pointer;box-shadow:0 7px 18px rgba(8,125,145,.22)">▶ Ver ruta de ejemplo</button>`;
+  formRuta.parentNode.insertBefore(demo,formRuta);
+  document.getElementById("verRutaDemo").addEventListener("click",()=>{
+    const b=document.getElementById("verRutaDemo");
+    b.disabled=true;b.textContent="Preparando ruta de ejemplo…";
+    prepararRutaEjemplo();
+    formRuta.requestSubmit();
+    setTimeout(()=>{b.disabled=false;b.textContent="▶ Ver ruta de ejemplo";},1200);
+  });
+}
+
 formRuta.addEventListener("submit",async event=>{
   event.preventDefault(); if(!validarPasoActual())return;
   const datos=recogerDatos(); localStorage.setItem("campingsAreasRutaBorrador",JSON.stringify(datos));
@@ -1396,6 +1516,8 @@ formRuta.addEventListener("submit",async event=>{
   resumen.classList.add("oculto"); resultado.classList.remove("oculto"); resultado.classList.add("cargando-ruta");
   document.getElementById("estadoCalculo").textContent="Localizando origen y destinos…";
   document.getElementById("metricasRuta").innerHTML=""; document.getElementById("etapasRuta").innerHTML="";
+  document.getElementById("accionesRutaF22")?.remove();
+  document.getElementById("descargarGuiaPdfF22")?.remove();
   document.querySelectorAll(".portada-ruta-fija").forEach(x=>x.remove());
   resultado.scrollIntoView({behavior:"smooth",block:"start"});
   try{
@@ -1416,6 +1538,7 @@ formRuta.addEventListener("submit",async event=>{
     document.getElementById("estadoCalculo").textContent="Calculando carretera, kilómetros y tiempo…";
     const ruta=await calcularRuta(lugares,datos);
     pintarResultadoBase(ruta,lugares,datos);
+    colocarResumenDebajoMapa();
 
     document.getElementById("estadoCalculo").textContent="Cargando fotografías verificadas…";
     await Promise.all([cargarMediaVerificado(),cargarLugaresVerificados()]);
@@ -1442,7 +1565,10 @@ formRuta.addEventListener("submit",async event=>{
       await prepararFotosGuia(respuestaGuia.guide);
       document.getElementById("estadoCalculo").textContent="Guía preparada";
       montarPortadaAntesMapa(datos);
+      colocarResumenDebajoMapa();
+      instalarAccionesRuta(lugares,stops,datos);
       document.getElementById("etapasRuta").innerHTML=htmlGuiaIA(respuestaGuia.guide,datos);
+      instalarBotonPDF();
       return;
     }
 
@@ -1457,4 +1583,5 @@ formRuta.addEventListener("submit",async event=>{
 });
 
 document.getElementById("volverEditar").addEventListener("click",()=>{ document.querySelector(".rutas-panel").scrollIntoView({behavior:"smooth"}); mostrarPaso(1); });
+instalarRutaEjemplo();
 mostrarPaso(1);
