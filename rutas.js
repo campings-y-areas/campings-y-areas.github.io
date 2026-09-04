@@ -804,15 +804,18 @@ async function pintarResultado(data,lugares,datos){
         document.getElementById("etapasRuta").innerHTML=htmlRecorrido(fOpt,lugaresOpt,"🚐 Recorrido optimizado");
         document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlResumenDesvio(distanciaExtra,tiempoExtra,conParadas.length));
         await Promise.all([promesaPernoctas,promesaGastronomia,promesaVisitasDestino,promesaFichas]);
+        await prepararFotosPlanGenerico(plan);
         document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlPlanJornadas(plan,datos,fOpt,lugaresOpt));
       }catch(err){
         console.warn("No se pudo recalcular por las paradas recomendadas",err);
         await Promise.all([promesaPernoctas,promesaGastronomia,promesaVisitasDestino,promesaFichas]);
+        await prepararFotosPlanGenerico(plan);
       document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlPlanJornadas(plan,datos));
         document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",'<div class="aviso-suave">Las recomendaciones son válidas, pero no hemos podido recalcular el desvío completo en esta ocasión. Se mantiene la ruta directa.</div>');
       }
     }else{
       await Promise.all([promesaPernoctas,promesaGastronomia,promesaVisitasDestino,promesaFichas]);
+      await prepararFotosPlanGenerico(plan);
       document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlPlanJornadas(plan,datos));
     }
   }
@@ -851,9 +854,7 @@ function htmlResumenDesvio(distanciaExtra,tiempoExtra,cantidad){
 let ejecutarRutaComoDemo=false;
 
 async function crearEtapasWorker(feature,lugares,datos,esDemo=false){
-  // Ruta de prueba ya investigada y guardada en D1.
-  // Reutilizamos EXACTAMENTE las paradas y métricas con las que se creó su caché,
-  // evitando que un nuevo reverse-geocoding cambie Salzburg por otra localidad (p. ej. Flachau).
+  // La demo conserva exactamente las etapas con las que se creó su caché en D1.
   const origenClave=normalizarClaveMedia(nombreLugarWorker(lugares[0],datos.origen));
   const destinoClave=normalizarClaveMedia(nombreLugarWorker(lugares.at(-1),datos.destinoPrincipal));
   if(esDemo && origenClave.includes("saarlouis") && destinoClave.includes("zagreb")){
@@ -863,8 +864,12 @@ async function crearEtapasWorker(feature,lugares,datos,esDemo=false){
       {day:3,place:"Zagreb",country:"Croatia",driving_km:410,driving_minutes:245,is_final:true}
     ];
   }
+
+  // Para cualquier otra ruta, las jornadas se calculan de forma genérica a partir
+  // del tiempo REAL devuelto por Geoapify y del máximo de conducción elegido.
   const p=feature.properties||{};
-  const totalTiempo=Number(p.time)||0;
+  const totalTiempo=Math.max(0,Number(p.time)||0);
+  const totalDist=Math.max(0,Number(p.distance)||0);
   const maxSeg=Math.max(1,Number(datos.maxConduccion)||4)*3600;
   const jornadas=Math.max(1,Math.ceil(totalTiempo/maxSeg));
   const destino=lugares.at(-1);
@@ -874,43 +879,79 @@ async function crearEtapasWorker(feature,lugares,datos,esDemo=false){
       day:1,
       place:nombreLugarWorker(destino,datos.destinoPrincipal),
       country:paisCanonico(destino?.country_code,destino?.country),
-      driving_km:null,
-      driving_minutes:null,
+      driving_km:Math.round(totalDist/1000),
+      driving_minutes:Math.round(totalTiempo/60),
       is_final:true
     }];
   }
 
   const coords=puntosLinea(feature.geometry);
   if(coords.length<2)throw new Error("No se pudieron calcular las etapas de la carretera.");
-  const acum=distanciaAcumulada(coords), total=acum.at(-1)||1;
+  const acum=distanciaAcumulada(coords), geomTotal=acum.at(-1)||1;
   const stops=[];
+  let ultimoLugar="";
 
+  // Al repartir por jornadas, ninguna etapa supera el máximo elegido salvo pequeñas
+  // diferencias derivadas de que la geometría solo permite aproximar el punto de corte.
   for(let dia=1;dia<jornadas;dia++){
-    const idx=indiceCercano(acum,total*(dia/jornadas),0);
-    const rev=await reverseLugar(coords[idx]);
-    const place=nombreLugarWorker(rev,nombreLocalidad(rev));
-    if(place){
-      stops.push({
-        day:dia,
-        place,
-        country:paisCanonico(rev?.country_code,rev?.country),
-        driving_km:null,
-        driving_minutes:null,
-        is_final:false
-      });
+    const fraccion=dia/jornadas;
+    const objetivo=geomTotal*fraccion;
+    let idx=indiceCercano(acum,objetivo,0);
+    let rev=await reverseLugar(coords[idx]);
+    let place=nombreLugarWorker(rev,nombreLocalidad(rev));
+
+    // Si el reverse-geocoding devuelve la misma localidad que la etapa anterior,
+    // probamos ligeramente más adelante para evitar duplicados absurdos.
+    if(place && normalizarClaveMedia(place)===normalizarClaveMedia(ultimoLugar)){
+      const objetivo2=Math.min(geomTotal,objetivo+geomTotal*0.025);
+      idx=indiceCercano(acum,objetivo2,idx);
+      const rev2=await reverseLugar(coords[idx]);
+      const place2=nombreLugarWorker(rev2,nombreLocalidad(rev2));
+      if(place2){ rev=rev2; place=place2; }
     }
+
+    const kmHasta=Math.round((totalDist*fraccion)/1000);
+    const minHasta=Math.round((totalTiempo*fraccion)/60);
+    const kmPrev=stops.reduce((a,x)=>a+(Number(x.driving_km)||0),0);
+    const minPrev=stops.reduce((a,x)=>a+(Number(x.driving_minutes)||0),0);
+
+    stops.push({
+      day:dia,
+      place:place||`Parada día ${dia}`,
+      country:paisCanonico(rev?.country_code,rev?.country),
+      driving_km:Math.max(0,kmHasta-kmPrev),
+      driving_minutes:Math.max(0,minHasta-minPrev),
+      is_final:false
+    });
+    ultimoLugar=place||ultimoLugar;
   }
 
+  const kmUsados=stops.reduce((a,x)=>a+(Number(x.driving_km)||0),0);
+  const minUsados=stops.reduce((a,x)=>a+(Number(x.driving_minutes)||0),0);
   stops.push({
     day:jornadas,
     place:nombreLugarWorker(destino,datos.destinoPrincipal),
     country:paisCanonico(destino?.country_code,destino?.country),
-    driving_km:null,
-    driving_minutes:null,
+    driving_km:Math.max(0,Math.round(totalDist/1000)-kmUsados),
+    driving_minutes:Math.max(0,Math.round(totalTiempo/60)-minUsados),
     is_final:true
   });
 
   return stops;
+}
+
+function htmlEtapasGenericas(stops){
+  if(!Array.isArray(stops)||!stops.length)return "";
+  let html='<div id="etapasGenericasF25" style="margin-top:18px"><h3>🛣️ Etapas calculadas</h3>';
+  for(const x of stops){
+    const pais=x.country?` · ${escapar(x.country)}`:"";
+    const km=Number.isFinite(Number(x.driving_km))?`${new Intl.NumberFormat("es-ES").format(Number(x.driving_km))} km`:"";
+    const mins=Number(x.driving_minutes)||0;
+    const tiempo=mins?formatoTiempo(mins*60):"";
+    const detalle=[km,tiempo].filter(Boolean).join(" · ");
+    html+=`<div class="etapa-card"><div class="etapa-numero">${Number(x.day)||""}</div><div><strong>${escapar(x.place||"Etapa")}${pais}</strong>${detalle?`<p>${detalle}</p>`:""}</div></div>`;
+  }
+  return html+'</div>';
 }
 
 function pintarResultadoBase(data,lugares,datos){
@@ -1379,6 +1420,79 @@ function htmlPlanJornadas(plan,datos,rutaOptimizada=null,lugaresOpt=[]){
   return h+'</div>';
 }
 
+
+// ---------- Rutas genéricas: fotografías verificadas sin coste OpenAI ----------
+async function prepararFotosPlanGenerico(plan=[]){
+  if(!Array.isArray(plan)||!plan.length)return plan;
+  const tareas=[];
+  for(const etapa of plan){
+    const principal=etapa?.pois?.[0];
+    if(!principal?.nombre)continue;
+    tareas.push((async()=>{
+      try{
+        // Primero respetamos una ficha verificada del catálogo propio si existe.
+        const verificado=buscarLugarVerificado(principal.nombre,"visit");
+        if(verificado?.image_url){
+          principal.imagen=verificado.image_url;
+          principal.commonsUrl=verificado.image_source_url||principal.commonsUrl||"";
+          return;
+        }
+        // Después usamos el mismo selector editorial/licenciado de la demo.
+        const auto=await buscarFotoAutomatica(principal.nombre,principal.localidad||etapa.hasta||"","visit");
+        if(auto?.image_url){
+          principal.imagen=auto.image_url;
+          principal.commonsUrl=auto.source_url||auto.description_url||principal.commonsUrl||"";
+        }else{
+          // Si no hay una candidata que pase el umbral, no conservamos una foto dudosa.
+          principal.imagen="";
+        }
+      }catch(err){
+        console.warn("No se pudo seleccionar foto genérica",principal.nombre,err);
+      }
+    })());
+  }
+  await Promise.all(tareas);
+  return plan;
+}
+
+function stopsDesdePlanGenerico(plan=[]){
+  return (Array.isArray(plan)?plan:[]).map((e,i,arr)=>({
+    day:Number(e?.dia)||i+1,
+    place:String(e?.hasta||"").trim(),
+    country:"",
+    driving_km:Math.round((Number(e?.distancia)||0)/1000),
+    driving_minutes:Math.round((Number(e?.tiempo)||0)/60),
+    is_final:i===arr.length-1
+  })).filter(x=>x.place);
+}
+
+
+async function crearGuiaUnaJornada(feature,lugares,datos){
+  const p=feature?.properties||{};
+  const destino=lugares.at(-1);
+  const etapa={
+    dia:1,
+    desde:lugares[0]?.formatted||datos.origen,
+    hasta:destino?.formatted||datos.destinoPrincipal,
+    distancia:Number(p.distance)||0,
+    tiempo:Number(p.time)||0,
+    intermedia:false,
+    esDestino:true,
+    pois:[],
+    poiPrincipal:null,
+    coordRecomendada:(destino?.lon!=null&&destino?.lat!=null)?[Number(destino.lon),Number(destino.lat)]:null,
+    codigoPais:String(destino?.country_code||"").toLowerCase(),
+    alojamientos:[],
+    restaurantes:[]
+  };
+  const plan=[etapa];
+  await completarVisitasDestino(plan,datos);
+  await Promise.all([completarPernoctas(plan,datos),completarGastronomia(plan,datos)]);
+  await completarFichasEnriquecidas(plan);
+  await prepararFotosPlanGenerico(plan);
+  return plan;
+}
+
 function recogerDatos(){
   const destinoPrincipal=document.getElementById("destinoPrincipal").value.trim();
   const destinosExtra=[...document.querySelectorAll(".destinoAdicional")].map(i=>i.value.trim()).filter(Boolean);
@@ -1542,30 +1656,19 @@ formRuta.addEventListener("submit",async event=>{
 
     document.getElementById("estadoCalculo").textContent="Calculando carretera, kilómetros y tiempo…";
     const ruta=await calcularRuta(lugares,datos);
-    pintarResultadoBase(ruta,lugares,datos);
-    colocarResumenDebajoMapa();
 
-    document.getElementById("estadoCalculo").textContent="Cargando fotografías verificadas…";
-    await Promise.all([cargarMediaVerificado(),cargarLugaresVerificados()]);
-
-    document.getElementById("estadoCalculo").textContent="Preparando las etapas para la guía…";
-    const stops=await crearEtapasWorker(ruta.features[0],lugares,datos,esDemo);
-
-    document.getElementById("estadoCalculo").textContent="Consultando la planificación guardada en D1…";
-    const respuestaPlan=await consultarPlanificadorIA(datos,lugares,stops);
-    console.info("Rutas IA · Planificador",respuestaPlan);
-
-    if(!(respuestaPlan?.ok&&respuestaPlan?.status==="planned"&&respuestaPlan?.plan)){
-      document.getElementById("estadoCalculo").textContent="Carretera calculada · guía no disponible";
-      document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlEstadoIA(respuestaPlan));
-      return;
-    }
-
-    document.getElementById("estadoCalculo").textContent="Cargando la guía editorial guardada en D1…";
-    const respuestaGuia=await consultarRedactorIA(datos,lugares,stops,respuestaPlan.plan);
-    console.info("Rutas IA · Redactor",respuestaGuia);
-
-    if(respuestaGuia?.ok&&respuestaGuia?.status==="written"&&respuestaGuia?.guide){
+    // La demo es inmutable y siempre usa el plan + guía ya guardados en D1.
+    if(esDemo){
+      pintarResultadoBase(ruta,lugares,datos);
+      colocarResumenDebajoMapa();
+      document.getElementById("estadoCalculo").textContent="Cargando fotografías verificadas…";
+      await Promise.all([cargarMediaVerificado(),cargarLugaresVerificados()]);
+      const stops=await crearEtapasWorker(ruta.features[0],lugares,datos,true);
+      document.getElementById("estadoCalculo").textContent="Cargando la ruta de ejemplo guardada…";
+      const respuestaPlan=await consultarPlanificadorIA(datos,lugares,stops);
+      if(!(respuestaPlan?.ok&&respuestaPlan?.status==="planned"&&respuestaPlan?.plan))throw new Error("La ruta de ejemplo guardada no está disponible.");
+      const respuestaGuia=await consultarRedactorIA(datos,lugares,stops,respuestaPlan.plan);
+      if(!(respuestaGuia?.ok&&respuestaGuia?.status==="written"&&respuestaGuia?.guide))throw new Error("La guía de ejemplo guardada no está disponible.");
       document.getElementById("estadoCalculo").textContent="Seleccionando las mejores fotografías…";
       await prepararFotosGuia(respuestaGuia.guide);
       document.getElementById("estadoCalculo").textContent="Guía preparada";
@@ -1577,9 +1680,63 @@ formRuta.addEventListener("submit",async event=>{
       return;
     }
 
-    document.getElementById("estadoCalculo").textContent="Carretera calculada · guía no disponible";
-    document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlEstadoIA(respuestaGuia));
+    // RUTAS NUEVAS: primero consultamos D1. Si esa ruta ya existe, reutilizamos
+    // su plan y su guía sin investigar de nuevo y sin generar ningún coste.
+    let stopsCache=[];
+    try{
+      document.getElementById("estadoCalculo").textContent="Comprobando si esta ruta ya está guardada…";
+      stopsCache=await crearEtapasWorker(ruta.features[0],lugares,datos,false);
+      const planCache=await consultarPlanificadorIA(datos,lugares,stopsCache);
+      if(planCache?.ok&&planCache?.status==="planned"&&planCache?.plan){
+        const guiaCache=await consultarRedactorIA(datos,lugares,stopsCache,planCache.plan);
+        if(guiaCache?.ok&&guiaCache?.status==="written"&&guiaCache?.guide){
+          await Promise.all([cargarMediaVerificado(),cargarLugaresVerificados()]);
+          document.getElementById("estadoCalculo").textContent="Seleccionando las mejores fotografías…";
+          await prepararFotosGuia(guiaCache.guide);
+          pintarResultadoBase(ruta,lugares,datos);
+          montarPortadaAntesMapa(datos);
+          colocarResumenDebajoMapa();
+          instalarAccionesRuta(lugares,stopsCache,datos);
+          document.getElementById("etapasRuta").innerHTML=htmlGuiaIA(guiaCache.guide,datos);
+          instalarBotonPDF();
+          document.getElementById("estadoCalculo").textContent="Guía preparada";
+          return;
+        }
+      }
+    }catch(errCache){
+      console.info("Ruta no disponible en D1; se prepara sin coste OpenAI.",errCache);
+    }
+
+    // Si D1 no tiene la ruta, durante el desarrollo usamos el flujo genérico de coste cero.
+    // Geoapify calcula carretera, POIs y restaurantes; nuestra base aporta pernoctas;
+    // Wikimedia Commons aporta fotografías con licencia comprobada.
+    document.getElementById("estadoCalculo").textContent="Preparando jornadas, visitas, gastronomía y pernocta…";
+    await Promise.all([cargarMediaVerificado(),cargarLugaresVerificados()]);
+    const generica=await pintarResultado(ruta,lugares,datos);
+    const planGenerico=generica?.plan||[];
+    const stopsGenericos=stopsDesdePlanGenerico(planGenerico);
+
+    // Una ruta corta de una sola jornada también recibe guía completa del destino.
+    if(!planGenerico.length){
+      document.getElementById("estadoCalculo").textContent="Preparando la guía del destino…";
+      const planUnaJornada=await crearGuiaUnaJornada(ruta.features[0],lugares,datos);
+      document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlPlanJornadas(planUnaJornada,datos));
+      const stopsUnaJornada=stopsDesdePlanGenerico(planUnaJornada);
+      document.getElementById("estadoCalculo").textContent="Guía preparada";
+      montarPortadaAntesMapa(datos);
+      colocarResumenDebajoMapa();
+      instalarAccionesRuta(lugares,stopsUnaJornada.length?stopsUnaJornada:stopsCache,datos);
+      instalarBotonPDF();
+      return;
+    }
+
+    document.getElementById("estadoCalculo").textContent="Guía preparada";
+    montarPortadaAntesMapa(datos);
+    colocarResumenDebajoMapa();
+    instalarAccionesRuta(lugares,stopsGenericos,datos);
+    instalarBotonPDF();
   }catch(e){
+    console.error("Rutas Campings & Áreas",e);
     document.getElementById("estadoCalculo").textContent="No se pudo crear la ruta";
     document.getElementById("etapasRuta").innerHTML=`<div class="error-ruta"><strong>⚠️ ${escapar(e.message)}</strong><br>No se ha generado una guía automática de sustitución.</div>`;
   }finally{
