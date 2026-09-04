@@ -1497,7 +1497,7 @@ function instalarRutaEjemplo(){
   demo.innerHTML=`
     <div style="font-size:12px;font-weight:900;letter-spacing:.14em;color:#087d91;margin-bottom:7px">RUTA DE EJEMPLO</div>
     <h2 style="margin:0 0 8px;color:#063b59;font-size:clamp(24px,4vw,36px)">Saarlouis → Zagreb</h2>
-    <p style="margin:0 auto 16px;max-width:720px;color:#4a6170;line-height:1.55">Descubre cómo será una guía de Rutas IA completa: recorrido, mapa, etapas, visitas, gastronomía, lugares para pernoctar y fotografías.</p>
+    <p style="margin:0 auto 16px;max-width:720px;color:#4a6170;line-height:1.55">Descubre cómo será una guía de Rutas con Campings & Áreas IA completa: recorrido, mapa, etapas, visitas, gastronomía, lugares para pernoctar y fotografías.</p>
     <button type="button" id="verRutaDemo" style="border:0;border-radius:999px;padding:13px 24px;background:#087d91;color:white;font-weight:900;font-size:16px;cursor:pointer;box-shadow:0 7px 18px rgba(8,125,145,.22)">▶ Ver ruta de ejemplo</button>`;
   formRuta.parentNode.insertBefore(demo,formRuta);
   document.getElementById("verRutaDemo").addEventListener("click",()=>{
