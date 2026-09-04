@@ -15,9 +15,59 @@ let capaRuta = null;
 let marcadores = [];
 const lugaresSeleccionados = new WeakMap();
 
-// ---------- Multimedia verificado ----------
+// ---------- Multimedia + lugares verificados ----------
 const MEDIA_VERIFICADO_URL = "rutas-media-verificado-v1.json?v=1";
+const LUGARES_VERIFICADOS_URL = "rutas-lugares-verificados-v2.json?v=2";
 let mediaVerificadoCache = null;
+let lugaresVerificadosCache = null;
+
+const IMAGENES_VERIFICADAS_SUPLEMENTARIAS = Object.freeze({
+  "buergerpark y paseo hacia schloss reisensburg": {
+    image_url: "https://commons.wikimedia.org/wiki/Special:Redirect/file/Aerial%20image%20of%20the%20Schloss%20Reisensburg.jpg",
+    source_page: "https://commons.wikimedia.org/wiki/Category:Schloss_Reisensburg",
+    credit: "Wikimedia Commons · Schloss Reisensburg"
+  },
+  "heimatmuseum gunzburg": {
+    image_url: "https://commons.wikimedia.org/wiki/Special:Redirect/file/G%C3%BCnzburg%20BW%202017-03-13%2014-08-26.jpg",
+    source_page: "https://commons.wikimedia.org/wiki/File:G%C3%BCnzburg_BW_2017-03-13_14-08-26.jpg",
+    credit: "Wikimedia Commons · Heimatmuseum Günzburg"
+  },
+  "jardines de mirabell": {
+    image_url: "https://commons.wikimedia.org/wiki/Special:Redirect/file/Salzburg%20Mirabellgarten%20Festung.jpg",
+    source_page: "https://commons.wikimedia.org/wiki/File:Salzburg_Mirabellgarten_Festung.jpg",
+    credit: "Wikimedia Commons · Mirabellgarten"
+  },
+  "getreidegasse casco historico y catedral de salzburg": {
+    image_url: "https://commons.wikimedia.org/wiki/Special:Redirect/file/Getreidegasse%20Salzburg.jpg",
+    source_page: "https://commons.wikimedia.org/wiki/File:Getreidegasse_Salzburg.jpg",
+    credit: "Wikimedia Commons · Getreidegasse"
+  },
+  "fortaleza de hohensalzburg": {
+    image_url: "https://commons.wikimedia.org/wiki/Special:Redirect/file/Salzburg%20-%20Festung%20Hohensalzburg.JPG",
+    source_page: "https://commons.wikimedia.org/wiki/File:Salzburg_-_Festung_Hohensalzburg.JPG",
+    credit: "Wikimedia Commons · Festung Hohensalzburg"
+  },
+  "herzl restaurant": {
+    image_url: "https://commons.wikimedia.org/wiki/Special:Redirect/file/Getreidegasse%2037%2C%20Salzburg.jpg",
+    source_page: "https://commons.wikimedia.org/wiki/File:Getreidegasse_37%2C_Salzburg.jpg",
+    credit: "Wikimedia Commons · Getreidegasse 37"
+  },
+  "dolac market y gornji grad": {
+    image_url: "https://commons.wikimedia.org/wiki/Special:Redirect/file/Dolac%20Zagreb.jpg",
+    source_page: "https://commons.wikimedia.org/wiki/File:Dolac_Zagreb.jpg",
+    credit: "Wikimedia Commons · Dolac Market"
+  },
+  "museum of broken relationships": {
+    image_url: "https://commons.wikimedia.org/wiki/Special:Redirect/file/Museum%20of%20Broken%20Relationships%20in%20Zagreb.jpg",
+    source_page: "https://commons.wikimedia.org/wiki/File:Museum_of_Broken_Relationships_in_Zagreb.jpg",
+    credit: "Wikimedia Commons · Museum of Broken Relationships"
+  },
+  "parque maksimir y zoo de zagreb": {
+    image_url: "https://commons.wikimedia.org/wiki/Special:Redirect/file/Maksimir%20Park%20in%20Zagreb.jpg",
+    source_page: "https://commons.wikimedia.org/wiki/File:Maksimir_Park_in_Zagreb.jpg",
+    credit: "Wikimedia Commons · Maksimir Park"
+  }
+});
 
 function normalizarClaveMedia(texto){
   return String(texto||"")
@@ -42,6 +92,59 @@ async function cargarMediaVerificado(){
   return mediaVerificadoCache;
 }
 
+async function cargarLugaresVerificados(){
+  if(lugaresVerificadosCache)return lugaresVerificadosCache;
+  try{
+    const r=await fetch(LUGARES_VERIFICADOS_URL,{cache:"no-store"});
+    if(!r.ok)throw new Error("No se pudo cargar el catálogo de lugares verificados.");
+    const d=await r.json();
+    lugaresVerificadosCache=Array.isArray(d?.items)?d.items:[];
+  }catch(e){
+    console.warn(e);
+    lugaresVerificadosCache=[];
+  }
+  return lugaresVerificadosCache;
+}
+
+function normalizarNombreLugar(nombre){
+  const n=normalizarClaveMedia(nombre);
+  if(n==="casco historico marktplatz stadtturm y frauenkirche")return "marktplatz y stadtturm de gunzburg";
+  return n;
+}
+
+function buscarLugarVerificado(nombre,tipo=""){
+  const clave=normalizarNombreLugar(nombre);
+  const lista=lugaresVerificadosCache||[];
+  let candidatos=lista.filter(x=>x?.verified_entity===true);
+  if(tipo)candidatos=candidatos.filter(x=>String(x.type||"")===tipo);
+  return candidatos.find(x=>normalizarNombreLugar(x.name)===clave)||null;
+}
+
+function limpiarTextoGuia(texto){
+  return String(texto??"")
+    .replace(/\s+([,.;:!?])/g,"$1")
+    .replace(/([.!?])\s*,\s*/g,"$1 ")
+    .replace(/,\s*([.!?])/g,"$1")
+    .replace(/\.{2,}/g,".")
+    .replace(/\s{2,}/g," ")
+    .trim();
+}
+
+function htmlDatosLugar(nombre,tipo="",webGuia=""){
+  const l=buscarLugarVerificado(nombre,tipo);
+  if(!l)return webGuia?`<div class="guia-enlaces">${htmlEnlaceGuia("🌐 Web oficial",webGuia)}</div>`:"";
+  let h="";
+  if(tipo==="visit"&&l.visit_time)h+=`<p><strong>⏱️ Tiempo orientativo:</strong> ${escapar(l.visit_time)}</p>`;
+  if(tipo==="visit"&&l.what_to_see)h+=`<p><strong>👀 Qué merece la pena ver:</strong> ${escapar(l.what_to_see)}</p>`;
+  if(l.address)h+=`<p><strong>📍 Dirección:</strong> ${escapar(l.address)}</p>`;
+  const enlaces=[];
+  if(l.maps_url)enlaces.push(htmlEnlaceGuia("📍 Abrir en Google Maps",l.maps_url));
+  const web=webGuia||l.website||"";
+  if(web)enlaces.push(htmlEnlaceGuia(tipo==="visit"?"🌐 Información oficial":"🌐 Web oficial",web));
+  if(enlaces.length)h+=`<div class="guia-enlaces">${enlaces.join("")}</div>`;
+  return h;
+}
+
 function buscarMediaVerificado(nombre,ciudad="",tipo=""){
   const nombreN=normalizarClaveMedia(nombre);
   const ciudadN=normalizarClaveMedia(ciudad);
@@ -62,15 +165,20 @@ function buscarMediaVerificado(nombre,ciudad="",tipo=""){
 }
 
 function htmlFotoVerificada(nombre,ciudad,tipo){
-  const m=buscarMediaVerificado(nombre,ciudad,tipo);
-  if(!m?.image_url)return "";
-  const pie=[m.name,m.city].filter(Boolean).join(" · ");
-  const fuente=m.source_page
-    ? `<a href="${escapar(m.source_page)}" target="_blank" rel="noopener">Fuente de la imagen</a>`
+  const lugar=buscarLugarVerificado(nombre,tipo);
+  const media=buscarMediaVerificado(nombre,ciudad,tipo);
+  const extra=IMAGENES_VERIFICADAS_SUPLEMENTARIAS[normalizarClaveMedia(nombre)]||null;
+  const imageUrl=lugar?.image_url||media?.image_url||extra?.image_url||"";
+  if(!imageUrl)return "";
+  const pie=lugar?.name||media?.name||nombre;
+  const sourcePage=lugar?.image_source_page||media?.source_page||extra?.source_page||"";
+  const credit=lugar?.image_credit||media?.credit||extra?.credit||"";
+  const fuente=sourcePage
+    ? `<a href="${escapar(sourcePage)}" target="_blank" rel="noopener">Fuente de la imagen</a>`
     : "";
   return `<figure class="guia-foto">
-    <img src="${escapar(m.image_url)}" alt="${escapar(pie||nombre)}" loading="lazy" referrerpolicy="no-referrer">
-    <figcaption>${escapar(pie||nombre)}${fuente?` · ${fuente}`:""}</figcaption>
+    <img src="${escapar(imageUrl)}" alt="${escapar(pie)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('figure').remove()">
+    <figcaption>${escapar(pie)}${credit?` · ${escapar(credit)}`:""}${fuente?` · ${fuente}`:""}</figcaption>
   </figure>`;
 }
 
@@ -200,12 +308,6 @@ function perfilWorker(datos,lugares,stops=[]){
   };
 }
 
-async function consultarRutaPreparada(datos,lugares){
-  const perfil=perfilWorker(datos,lugares,[]);
-  delete perfil.country;
-  return llamarWorker("/prepared-route",perfil);
-}
-
 async function consultarPlanificadorIA(datos,lugares,stops){
   return llamarWorker("/plan-route",perfilWorker(datos,lugares,stops));
 }
@@ -236,7 +338,7 @@ function htmlGuiaIA(guide){
       ${guide.subtitle?`<p>${escapar(guide.subtitle)}</p>`:""}
     </header>`;
 
-  if(guide.introduction)h+=`<section class="guia-seccion-editorial"><p>${escapar(guide.introduction)}</p></section>`;
+  if(guide.introduction)h+=`<section class="guia-seccion-editorial"><p>${escapar(limpiarTextoGuia(guide.introduction))}</p></section>`;
 
   const resumen=guide.trip_summary||{};
   if(Object.keys(resumen).length){
@@ -259,11 +361,11 @@ function htmlGuiaIA(guide){
         ${d.driving?`<p>🚐 ${escapar(d.driving)}</p>`:""}
       </div>`;
 
-    if(d.opening_narrative)h+=`<div class="guia-narrativa"><p>${escapar(d.opening_narrative)}</p></div>`;
-    if(d.arrival_strategy)h+=`<div class="guia-narrativa"><p><strong>Al llegar:</strong> ${escapar(d.arrival_strategy)}</p></div>`;
-    if(d.recommended_visit_time)h+=`<div class="guia-narrativa"><p><strong>Tiempo recomendado:</strong> ${escapar(d.recommended_visit_time)}</p></div>`;
-    if(d.pace_advice)h+=`<div class="guia-narrativa"><p><strong>Ritmo:</strong> ${escapar(d.pace_advice)}</p></div>`;
-    if(d.visit_story)h+=`<section class="guia-seccion-editorial"><h3>📍 Qué visitar y cómo organizarlo</h3><p>${escapar(d.visit_story)}</p></section>`;
+    if(d.opening_narrative)h+=`<div class="guia-narrativa"><p>${escapar(limpiarTextoGuia(d.opening_narrative))}</p></div>`;
+    if(d.arrival_strategy)h+=`<div class="guia-narrativa"><p><strong>Al llegar:</strong> ${escapar(limpiarTextoGuia(d.arrival_strategy))}</p></div>`;
+    if(d.recommended_visit_time)h+=`<div class="guia-narrativa"><p><strong>Tiempo recomendado:</strong> ${escapar(limpiarTextoGuia(d.recommended_visit_time))}</p></div>`;
+    if(d.pace_advice)h+=`<div class="guia-narrativa"><p><strong>Ritmo:</strong> ${escapar(limpiarTextoGuia(d.pace_advice))}</p></div>`;
+    if(d.visit_story)h+=`<section class="guia-seccion-editorial"><h3>📍 Qué visitar y cómo organizarlo</h3><p>${escapar(limpiarTextoGuia(d.visit_story))}</p></section>`;
 
     if(Array.isArray(d.highlights)&&d.highlights.length){
       h+=`<section class="guia-seccion-editorial"><h3>🏛️ Visitas recomendadas</h3>`;
@@ -271,48 +373,52 @@ function htmlGuiaIA(guide){
         h+=`<div class="guia-recomendacion">
           <h4>${escapar(x.name||"Visita")}</h4>
           ${htmlFotoVerificada(x.name,d.city||d.destination||"", "visit")}
-          ${x.description?`<p>${escapar(x.description)}</p>`:""}
-          ${x.practical_note?`<p><strong>Información práctica:</strong> ${escapar(x.practical_note)}</p>`:""}
-          ${x.url?`<div class="guia-enlaces">${htmlEnlaceGuia("🌐 Información oficial",x.url)}</div>`:""}
+          ${x.description?`<p>${escapar(limpiarTextoGuia(x.description))}</p>`:""}
+          ${x.practical_note?`<p><strong>Información práctica:</strong> ${escapar(limpiarTextoGuia(x.practical_note))}</p>`:""}
+          ${htmlDatosLugar(x.name,"visit",x.url||"")}
         </div>`;
       });
       h+=`</section>`;
     }
 
-    if(d.gastronomy_intro)h+=`<section class="guia-seccion-editorial"><h3>🍽️ Gastronomía</h3><p>${escapar(d.gastronomy_intro)}</p></section>`;
+    if(d.gastronomy_intro)h+=`<section class="guia-seccion-editorial"><h3>🍽️ Gastronomía</h3><p>${escapar(limpiarTextoGuia(d.gastronomy_intro))}</p></section>`;
     if(Array.isArray(d.restaurants)&&d.restaurants.length){
       h+=`<section class="guia-seccion-editorial"><h3>🍴 Dónde comer</h3>`;
       d.restaurants.forEach((x,i)=>{
         h+=`<div class="guia-recomendacion ${i===0?"principal":""}">
           <h4>${i===0?"⭐ Recomendado · ":""}${escapar(x.name||"Restaurante")}</h4>
           ${htmlFotoVerificada(x.name,d.city||d.destination||"", "restaurant")}
-          ${x.why?`<p>${escapar(x.why)}</p>`:""}
-          ${x.specialty?`<p><strong>Qué probar:</strong> ${escapar(x.specialty)}</p>`:""}
-          ${x.practical_note?`<p><strong>Consejo:</strong> ${escapar(x.practical_note)}</p>`:""}
-          ${x.website?`<div class="guia-enlaces">${htmlEnlaceGuia("🌐 Web oficial",x.website)}</div>`:""}
+          ${x.why?`<p>${escapar(limpiarTextoGuia(x.why))}</p>`:""}
+          ${x.specialty?`<p><strong>Qué probar:</strong> ${escapar(limpiarTextoGuia(x.specialty))}</p>`:""}
+          ${x.practical_note?`<p><strong>Consejo:</strong> ${escapar(limpiarTextoGuia(x.practical_note))}</p>`:""}
+          ${htmlDatosLugar(x.name,"restaurant",x.website||"")}
         </div>`;
       });
       h+=`</section>`;
     }
 
-    if(d.overnight_intro)h+=`<section class="guia-seccion-editorial"><h3>🌙 Pernocta</h3><p>${escapar(d.overnight_intro)}</p></section>`;
+    if(d.overnight_intro)h+=`<section class="guia-seccion-editorial"><h3>🌙 Pernocta</h3><p>${escapar(limpiarTextoGuia(d.overnight_intro))}</p></section>`;
     if(Array.isArray(d.overnight)&&d.overnight.length){
       h+=`<section class="guia-seccion-editorial"><h3>🚐 Dónde dormir</h3>`;
       d.overnight.forEach((x,i)=>{
         h+=`<div class="guia-recomendacion ${i===0?"principal":""}">
           <h4>${i===0?"⭐ Recomendado · ":""}${escapar(x.name||"Pernocta")}</h4>
           ${htmlFotoVerificada(x.name,d.city||d.destination||"", "overnight")}
-          ${x.type?`<p><strong>Tipo:</strong> ${escapar(x.type)}</p>`:""}
-          ${x.why?`<p>${escapar(x.why)}</p>`:""}
-          ${x.services?`<p><strong>Servicios:</strong> ${escapar(x.services)}</p>`:""}
-          ${x.practical_info?`<p><strong>Información práctica:</strong> ${escapar(x.practical_info)}</p>`:""}
-          ${x.website?`<div class="guia-enlaces">${htmlEnlaceGuia("🌐 Web oficial",x.website)}</div>`:""}
+          ${x.type?`<p><strong>Tipo:</strong> ${escapar(limpiarTextoGuia(x.type))}</p>`:""}
+          ${x.why?`<p>${escapar(limpiarTextoGuia(x.why))}</p>`:""}
+          ${x.services?`<p><strong>Servicios:</strong> ${escapar(limpiarTextoGuia(x.services))}</p>`:""}
+          ${x.practical_info?`<p><strong>Información práctica:</strong> ${escapar(limpiarTextoGuia(x.practical_info))}</p>`:""}
+          ${htmlDatosLugar(x.name,"overnight",x.website||"")}
         </div>`;
       });
       h+=`</section>`;
     }
 
-    if(d.practical_advice)h+=`<section class="guia-seccion-editorial"><h3>💡 Consejo del día</h3><p>${escapar(d.practical_advice)}</p></section>`;
+    if(Array.isArray(d.practical_advice)&&d.practical_advice.length){
+      h+=`<section class="guia-seccion-editorial"><h3>💡 Consejo del día</h3>${htmlLista(d.practical_advice.map(limpiarTextoGuia))}</section>`;
+    }else if(d.practical_advice){
+      h+=`<section class="guia-seccion-editorial"><h3>💡 Consejo del día</h3><p>${escapar(limpiarTextoGuia(d.practical_advice))}</p></section>`;
+    }
 
     if(Array.isArray(d.useful_links)&&d.useful_links.length){
       h+=`<section class="guia-seccion-editorial"><h3>🔗 Enlaces útiles</h3>`;
@@ -1090,30 +1196,20 @@ formRuta.addEventListener("submit",async event=>{
     pintarResultadoBase(ruta,lugares,datos);
 
     document.getElementById("estadoCalculo").textContent="Cargando fotografías verificadas…";
-    await cargarMediaVerificado();
+    await Promise.all([cargarMediaVerificado(),cargarLugaresVerificados()]);
 
-    document.getElementById("estadoCalculo").textContent="Buscando la ruta preparada en D1…";
-    const rutaPreparada=await consultarRutaPreparada(datos,lugares);
-    console.info("Rutas IA · Ruta preparada",rutaPreparada);
+    document.getElementById("estadoCalculo").textContent="Preparando las etapas para la guía…";
+    const stops=await crearEtapasWorker(ruta.features[0],lugares,datos);
 
-    if(!(rutaPreparada?.ok&&rutaPreparada?.status==="prepared"&&rutaPreparada?.plan&&Array.isArray(rutaPreparada?.stops)&&rutaPreparada.stops.length)){
-      document.getElementById("estadoCalculo").textContent="Carretera calculada · ruta preparada no disponible";
-      document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",
-        `<div class="aviso-ruta"><strong>🔎 Ruta todavía no preparada.</strong><br>
-        No existe una planificación compatible almacenada en D1 para este perfil.
-        No se ha llamado a OpenAI y no se ha generado contenido automático de sustitución.</div>`);
+    document.getElementById("estadoCalculo").textContent="Consultando la planificación guardada en D1…";
+    const respuestaPlan=await consultarPlanificadorIA(datos,lugares,stops);
+    console.info("Rutas IA · Planificador",respuestaPlan);
+
+    if(!(respuestaPlan?.ok&&respuestaPlan?.status==="planned"&&respuestaPlan?.plan)){
+      document.getElementById("estadoCalculo").textContent="Carretera calculada · guía no disponible";
+      document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlEstadoIA(respuestaPlan));
       return;
     }
-
-    const stops=rutaPreparada.stops;
-    const respuestaPlan={
-      ok:true,
-      status:"planned",
-      plan:rutaPreparada.plan,
-      planner:rutaPreparada.planner,
-      openai_called:false,
-      cache:rutaPreparada.cache
-    };
 
     document.getElementById("estadoCalculo").textContent="Cargando la guía editorial guardada en D1…";
     const respuestaGuia=await consultarRedactorIA(datos,lugares,stops,respuestaPlan.plan);
