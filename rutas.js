@@ -1,5 +1,5 @@
 // ==========================================
-// CAMPINGS & ÁREAS - RUTAS FASE 16 · SELECTOR FOTOGRÁFICO AUTOMÁTICO
+// CAMPINGS & ÁREAS - RUTAS FASE 17 · SELECTOR FOTOGRÁFICO · VISITAS COMBINADAS
 // Geoapify: autocomplete + routing + mapa + paradas inteligentes + recálculo real + pernoctas propias
 // ==========================================
 
@@ -22,7 +22,7 @@ let mediaVerificadoCache = null;
 let lugaresVerificadosCache = null;
 
 // ---------- Selector fotográfico automático (sin OpenAI) ----------
-const FOTO_AUTO_STORAGE_KEY = "campingsAreasFotoAutoV1";
+const FOTO_AUTO_STORAGE_KEY = "campingsAreasFotoAutoV2";
 const fotoAutoCache = new Map();
 
 function cargarFotoAutoLocal(){
@@ -48,6 +48,28 @@ function tokensFoto(v){
   const stop=new Set(["de","del","la","las","el","los","y","en","of","the","and","in","und","der","die","das","von","zu","im","am","para","con","casco","historico","ciudad"]);
   return normalizarClaveMedia(v).split(" ").filter(x=>x.length>2&&!stop.has(x));
 }
+function consultasFotoVisita(nombre,ciudad){
+  const original=String(nombre||"").trim();
+  const ciudadTxt=String(ciudad||"").trim();
+  const partes=original
+    .replace(/\s*\+\s*/g," y ")
+    .split(/\s+y\s+|\s*,\s*|\s*\/\s*/i)
+    .map(x=>x.replace(/^(casco historico|casco histórico|centro historico|centro histórico)\s*/i,"").trim())
+    .filter(x=>x.length>=4 && !/^(casco historico|casco histórico|centro historico|centro histórico)$/i.test(x));
+  const q=[];
+  const add=v=>{v=String(v||"").replace(/\s+/g," ").trim();if(v&&!q.includes(v))q.push(v);};
+  partes.forEach(x=>add(`${x} ${ciudadTxt}`));
+  add(`${original} ${ciudadTxt}`);
+  add(original);
+  return q.slice(0,6);
+}
+function bonusIconicoFoto(texto){
+  let b=0;
+  if(/cathedral|catedral|church|iglesia|kirche|basilica|fortress|fortaleza|castle|castillo|schloss|palace|palacio|panoram|aerial|skyline|roof|tejado|dome|cupola/.test(texto))b+=14;
+  if(/interior|inside|altar|nave|ceiling|fresco|vault/.test(texto))b+=8;
+  if(/street|calle|gasse/.test(texto))b+=2;
+  return b;
+}
 function puntuacionFotoBase(p,nombre,ciudad){
   const ii=p.imageinfo?.[0]||{};
   const titulo=normalizarClaveMedia(p.title||"");
@@ -63,6 +85,8 @@ function puntuacionFotoBase(p,nombre,ciudad){
   const bueno=/panoram|aerial|interior|garden|square|plaza|skyline|overview|view|castle|church|cathedral|palace|market|park|fortress|street|historic|roof|garten|kirche|schloss|markt|platz/;
   if(malo.test(titulo))score-=30;
   if(bueno.test(titulo))score+=12;
+  score+=bonusIconicoFoto(titulo);
+  if(/crowd|crowded|people|tourists|menschenmenge|touristen/.test(titulo))score-=8;
   return score;
 }
 function licenciaFotoPermitida(meta){
@@ -79,6 +103,8 @@ function puntuacionFotoFinal(p,nombre,ciudad){
   ct.forEach(t=>{if(texto.includes(t))score+=3;});
   if(/featured|quality image|valued image|picture of the day|potd/.test(texto))score+=20;
   if(/panoram|aerial|interior|garden|square|plaza|skyline|overview|historic|roof|market|fortress|castle|cathedral|church|palace/.test(texto))score+=8;
+  score+=bonusIconicoFoto(texto);
+  if(/crowd|crowded|people|tourists|menschenmenge|touristen/.test(texto))score-=8;
   if(/sign|logo|plaque|poster|advert|information board|ticket|schild|tafel|plakat|cartel|letrero|placa/.test(texto))score-=28;
   return score;
 }
@@ -87,18 +113,19 @@ async function buscarFotoAutomatica(nombre,ciudad,tipo="visit"){
   const key=claveFotoAuto(nombre,ciudad,tipo);
   if(fotoAutoCache.has(key))return fotoAutoCache.get(key);
   try{
-    const consultas=[`${nombre} ${ciudad||""}`.trim(),nombre].filter(Boolean);
-    let candidatos=[];
+    const consultas=consultasFotoVisita(nombre,ciudad);
+    const mapaCandidatos=new Map();
     for(const consulta of consultas){
-      const params=new URLSearchParams({action:"query",generator:"search",gsrsearch:consulta,gsrnamespace:"6",gsrlimit:"12",prop:"imageinfo",iiprop:"url|dimensions",iiurlwidth:"1600",format:"json",origin:"*"});
+      const params=new URLSearchParams({action:"query",generator:"search",gsrsearch:consulta,gsrnamespace:"6",gsrlimit:"10",prop:"imageinfo",iiprop:"url|dimensions",iiurlwidth:"1600",format:"json",origin:"*"});
       const r=await fetch(`https://commons.wikimedia.org/w/api.php?${params}`);
       if(!r.ok)continue;
-      const d=await r.json(); candidatos=Object.values(d.query?.pages||{}).filter(p=>p.imageinfo?.[0]);
-      if(candidatos.length)break;
+      const d=await r.json();
+      Object.values(d.query?.pages||{}).filter(p=>p.imageinfo?.[0]).forEach(p=>mapaCandidatos.set(p.title,p));
     }
+    let candidatos=[...mapaCandidatos.values()];
     if(!candidatos.length)return null;
     candidatos.sort((a,b)=>puntuacionFotoBase(b,nombre,ciudad)-puntuacionFotoBase(a,nombre,ciudad));
-    const finalistas=candidatos.slice(0,5);
+    const finalistas=candidatos.slice(0,8);
     const titles=finalistas.map(p=>p.title).join("|");
     const params2=new URLSearchParams({action:"query",titles,prop:"imageinfo",iiprop:"url|dimensions|extmetadata",iiurlwidth:"1600",iiextmetadatalanguage:"en",iiextmetadatafilter:"ImageDescription|Artist|Credit|LicenseShortName|LicenseUrl|UsageTerms|Categories|Assessments",format:"json",origin:"*"});
     const r2=await fetch(`https://commons.wikimedia.org/w/api.php?${params2}`);
@@ -108,7 +135,7 @@ async function buscarFotoAutomatica(nombre,ciudad,tipo="visit"){
     completas.sort((a,b)=>puntuacionFotoFinal(b,nombre,ciudad)-puntuacionFotoFinal(a,nombre,ciudad));
     const ganadora=completas[0]; if(!ganadora)return null;
     const score=puntuacionFotoFinal(ganadora,nombre,ciudad);
-    if(score<28)return null;
+    if(score<36)return null;
     const ii=ganadora.imageinfo[0],m=ii.extmetadata||{};
     const foto={
       image_url:ii.thumburl||ii.url||"",
