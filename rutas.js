@@ -1,3 +1,4 @@
+
 // ==========================================
 // CAMPINGS & ÁREAS - RUTAS FASE 21 · RUTA DE EJEMPLO + PORTADA + GUÍA COMPLETA
 // Geoapify: autocomplete + routing + mapa + paradas inteligentes + recálculo real + pernoctas propias
@@ -760,67 +761,72 @@ function pintarRuta(data,lugares){
 
 async function pintarResultado(data,lugares,datos){
   const feature=data.features[0], p=feature.properties||{};
-  let planWorker=[];
-  const distancia=p.distance||0, tiempo=p.time||0;
+  const distancia=Number(p.distance)||0, tiempo=Number(p.time)||0;
   const maxHoras=Math.max(1,Number(datos.maxConduccion)||4);
-  const jornadas=Math.max(1,Math.ceil(tiempo/(maxHoras*3600)));
+  const jornadasConduccion=Math.max(1,Math.ceil(tiempo/(maxHoras*3600)));
+  const diasSolicitados=Math.max(1,Number(datos.dias)||1);
+
+  if(diasSolicitados<jornadasConduccion){
+    throw new Error(`Con un máximo de ${maxHoras} h de conducción al día, este trayecto necesita al menos ${jornadasConduccion} días. Has elegido ${diasSolicitados}. Aumenta los días del viaje o las horas máximas de conducción.`);
+  }
+
   document.getElementById("estadoCalculo").textContent=`${lugares[0].formatted||datos.origen} → ${lugares[lugares.length-1].formatted||datos.destinoPrincipal}`;
-  pintarMetricas(distancia,tiempo,jornadas,lugares.length);
+  pintarMetricas(distancia,tiempo,diasSolicitados,lugares.length);
 
   let html=htmlRecorrido(feature,lugares);
-  if(jornadas>1)html+=`<div class="aviso-ruta"><strong>Plan de conducción:</strong> con un máximo de ${escapar(maxHoras)} h al día, el trayecto necesita aproximadamente ${jornadas} jornadas.</div>`;
+  if(jornadasConduccion>1){
+    html+=`<div class="aviso-ruta"><strong>Plan de conducción:</strong> con un máximo de ${escapar(maxHoras)} h al día, el desplazamiento necesita ${jornadasConduccion} jornadas de carretera.</div>`;
+  }
+  if(diasSolicitados>jornadasConduccion){
+    const libres=diasSolicitados-jornadasConduccion;
+    html+=`<div class="aviso-optimizacion"><strong>🗓️ Viaje de ${diasSolicitados} días:</strong> el trayecto ocupa ${jornadasConduccion} ${jornadasConduccion===1?"día":"días"} de conducción y ${libres} ${libres===1?"día queda":"días quedan"} para disfrutar del destino.</div>`;
+  }
 
-  // Primero mostramos la ruta directa para mantener la página ágil.
-  document.getElementById("etapasRuta").innerHTML=html + (jornadas>1 ? '<div id="cargandoParadas" class="aviso-suave">🔎 Buscando paradas interesantes y comprobando el desvío real…</div>' : '');
+  document.getElementById("etapasRuta").innerHTML=html+'<div id="cargandoParadas" class="aviso-suave">🔎 Preparando todas las jornadas, visitas, gastronomía y pernocta…</div>';
   pintarRuta(data,lugares);
 
-  if(jornadas>1){
-    const plan=await crearPlanJornadas(feature,lugares,datos);
-    planWorker=plan;
-    const promesaPernoctas=completarPernoctas(plan,datos);
-    const promesaGastronomia=completarGastronomia(plan,datos);
-    const promesaVisitasDestino=completarVisitasDestino(plan,datos);
-    // Se lanza después de completar las visitas del destino para enriquecer solo una ficha principal por jornada.
-    const promesaFichas=promesaVisitasDestino.then(()=>completarFichasEnriquecidas(plan));
-    document.getElementById("cargandoParadas")?.remove();
+  const plan=await crearPlanJornadas(feature,lugares,datos);
+  const promesaPernoctas=completarPernoctas(plan,datos);
+  const promesaGastronomia=completarGastronomia(plan,datos);
+  const promesaVisitasDestino=completarVisitasDestino(plan,datos);
+  const promesaFichas=promesaVisitasDestino.then(()=>completarFichasEnriquecidas(plan));
+  document.getElementById("cargandoParadas")?.remove();
 
-    const conParadas=plan.filter(e=>e.intermedia && e.poiPrincipal && Array.isArray(e.coordRecomendada));
-    if(conParadas.length){
-      try{
-        document.getElementById("estadoCalculo").textContent="Recalculando la carretera por las mejores paradas…";
-        const lugaresOpt=[lugares[0],...conParadas.map(e=>({
-          lat:e.coordRecomendada[1], lon:e.coordRecomendada[0], formatted:e.hasta,
-          name:e.poiPrincipal, recomendada:true
-        })),lugares.at(-1)];
-        const rutaOpt=await calcularRuta(lugaresOpt,datos);
-        const fOpt=rutaOpt.features[0], pOpt=fOpt.properties||{};
-        const tiempoExtra=Math.max(0,(pOpt.time||0)-tiempo);
-        const distanciaExtra=Math.max(0,(pOpt.distance||0)-distancia);
-        const jornadasOpt=Math.max(1,Math.ceil((pOpt.time||0)/(maxHoras*3600)));
+  const conParadas=plan.filter(e=>e.intermedia && e.poiPrincipal && Array.isArray(e.coordRecomendada));
+  if(conParadas.length){
+    try{
+      document.getElementById("estadoCalculo").textContent="Recalculando la carretera por las mejores paradas…";
+      const lugaresOpt=[lugares[0],...conParadas.map(e=>({
+        lat:e.coordRecomendada[1], lon:e.coordRecomendada[0], formatted:e.hasta,
+        name:e.poiPrincipal, recomendada:true
+      })),lugares.at(-1)];
+      const rutaOpt=await calcularRuta(lugaresOpt,datos);
+      const fOpt=rutaOpt.features[0], pOpt=fOpt.properties||{};
+      const tiempoExtra=Math.max(0,(pOpt.time||0)-tiempo);
+      const distanciaExtra=Math.max(0,(pOpt.distance||0)-distancia);
 
-        pintarRuta(rutaOpt,lugaresOpt);
-        pintarMetricas(pOpt.distance||0,pOpt.time||0,jornadasOpt,lugaresOpt.length);
-        document.getElementById("estadoCalculo").textContent=`Ruta optimizada: ${lugaresOpt[0].formatted||datos.origen} → ${lugaresOpt.at(-1).formatted||datos.destinoPrincipal}`;
-        document.getElementById("etapasRuta").innerHTML=htmlRecorrido(fOpt,lugaresOpt,"🚐 Recorrido optimizado");
-        document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlResumenDesvio(distanciaExtra,tiempoExtra,conParadas.length));
-        await Promise.all([promesaPernoctas,promesaGastronomia,promesaVisitasDestino,promesaFichas]);
-        await prepararFotosPlanGenerico(plan);
-        document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlPlanJornadas(plan,datos,fOpt,lugaresOpt));
-      }catch(err){
-        console.warn("No se pudo recalcular por las paradas recomendadas",err);
-        await Promise.all([promesaPernoctas,promesaGastronomia,promesaVisitasDestino,promesaFichas]);
-        await prepararFotosPlanGenerico(plan);
-      document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlPlanJornadas(plan,datos));
-        document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",'<div class="aviso-suave">Las recomendaciones son válidas, pero no hemos podido recalcular el desvío completo en esta ocasión. Se mantiene la ruta directa.</div>');
-      }
-    }else{
+      pintarRuta(rutaOpt,lugaresOpt);
+      pintarMetricas(pOpt.distance||0,pOpt.time||0,diasSolicitados,lugaresOpt.length);
+      document.getElementById("estadoCalculo").textContent=`Ruta optimizada: ${lugaresOpt[0].formatted||datos.origen} → ${lugaresOpt.at(-1)?.formatted||datos.destinoPrincipal}`;
+      document.getElementById("etapasRuta").innerHTML=htmlRecorrido(fOpt,lugaresOpt,"🚐 Recorrido optimizado");
+      document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlResumenDesvio(distanciaExtra,tiempoExtra,conParadas.length));
       await Promise.all([promesaPernoctas,promesaGastronomia,promesaVisitasDestino,promesaFichas]);
       await prepararFotosPlanGenerico(plan);
       document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlPlanJornadas(plan,datos));
+    }catch(err){
+      console.warn("No se pudo recalcular por las paradas recomendadas",err);
+      await Promise.all([promesaPernoctas,promesaGastronomia,promesaVisitasDestino,promesaFichas]);
+      await prepararFotosPlanGenerico(plan);
+      document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlPlanJornadas(plan,datos));
+      document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",'<div class="aviso-suave">Las recomendaciones son válidas, pero no hemos podido recalcular el desvío completo en esta ocasión. Se mantiene la ruta directa.</div>');
     }
+  }else{
+    await Promise.all([promesaPernoctas,promesaGastronomia,promesaVisitasDestino,promesaFichas]);
+    await prepararFotosPlanGenerico(plan);
+    document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlPlanJornadas(plan,datos));
   }
 
-  return {plan:planWorker};
+  return {plan};
 }
 
 function pintarMetricas(distancia,tiempo,jornadas,puntos){
@@ -1037,6 +1043,11 @@ function puntuacionPOI(f,datos){
   if(/fotopoint|photo ?point|fotopunkt|spielplatz|playground/.test(nombre))puntos-=14;
   if(/theme_park|zoo|aquarium|castle|museum/.test(texto))puntos+=5;
   if(p.wiki_and_media?.wikipedia||p.wiki_and_media?.wikidata)puntos+=8;
+  const popularidad=Number(p.rank?.popularity)||0;
+  const importancia=Number(p.rank?.importance)||0;
+  if(popularidad>0)puntos+=Math.min(24,popularidad*3);
+  if(importancia>0)puntos+=Math.min(18,importancia*18);
+  if(/point z[eé]ro|kilom[eè]tre z[eé]ro|zero point|plaque|bust|fotopoint|photo ?point/i.test(nombre))puntos-=16;
   const dist=Number(p.distance)||0; puntos+=Math.max(0,6-dist/5000);
   return puntos;
 }
@@ -1046,7 +1057,7 @@ async function buscarPOIs(coord,datos){
     categories:categorias.join(","),
     filter:`circle:${coord[0]},${coord[1]},25000`,
     bias:`proximity:${coord[0]},${coord[1]}`,
-    limit:"18",lang:"es",apiKey:config.GEOAPIFY_API_KEY
+    limit:"40",lang:"es",apiKey:config.GEOAPIFY_API_KEY
   });
   const r=await fetch(`https://api.geoapify.com/v2/places?${params}`); if(!r.ok)return [];
   const d=await r.json();
@@ -1054,7 +1065,7 @@ async function buscarPOIs(coord,datos){
 }
 async function enriquecerCorte(corte,datos){
   const pois=await buscarPOIs(corte.coord,datos);
-  const mejores=pois.slice(0,3);
+  const mejores=pois.slice(0,2);
   // El POI mejor valorado sirve para desplazar la zona recomendada; todavía no altera la carretera.
   if(mejores[0]){
     const p=mejores[0].properties||{}, c=mejores[0].geometry?.coordinates;
@@ -1080,61 +1091,91 @@ async function enriquecerCorte(corte,datos){
   return corte;
 }
 async function crearPlanJornadas(feature,lugares,datos){
-  const p=feature.properties||{}, totalTiempo=p.time||0, totalDist=p.distance||0;
+  const p=feature.properties||{}, totalTiempo=Number(p.time)||0, totalDist=Number(p.distance)||0;
   const maxSeg=Math.max(1,Number(datos.maxConduccion)||4)*3600;
-  const jornadas=Math.max(1,Math.ceil(totalTiempo/maxSeg));
-  if(jornadas<=1)return [];
-  const coords=puntosLinea(feature.geometry); if(coords.length<2)return [];
-  const acum=distanciaAcumulada(coords), geomTotal=acum.at(-1)||totalDist;
-  const cortes=[]; let desde=0;
-  for(let dia=1;dia<jornadas;dia++){
-    const objetivo=geomTotal*(dia/jornadas), idx=indiceCercano(acum,objetivo,desde+1); desde=idx;
-    cortes.push({coord:coords[idx],nombre:"Buscando una parada interesante…",distRuta:totalDist*(dia/jornadas),tiempoRuta:totalTiempo*(dia/jornadas)});
+  const jornadasConduccion=Math.max(1,Math.ceil(totalTiempo/maxSeg));
+  const diasSolicitados=Math.max(1,Number(datos.dias)||1);
+  if(diasSolicitados<jornadasConduccion)throw new Error(`El trayecto necesita al menos ${jornadasConduccion} días de conducción con el límite elegido.`);
+
+  const destinoFinal=lugares.at(-1);
+  const destinoNombre=destinoFinal?.formatted||datos.destinoPrincipal;
+  const destinoCoord=(destinoFinal?.lon!=null&&destinoFinal?.lat!=null)?[Number(destinoFinal.lon),Number(destinoFinal.lat)]:null;
+  const destinoPais=String(destinoFinal?.country_code||"").toLowerCase();
+  const puntos=[{nombre:lugares[0]?.formatted||datos.origen,distRuta:0,tiempoRuta:0}];
+
+  if(jornadasConduccion>1){
+    const coords=puntosLinea(feature.geometry); if(coords.length<2)throw new Error("No se pudieron calcular las jornadas de carretera.");
+    const acum=distanciaAcumulada(coords), geomTotal=acum.at(-1)||totalDist;
+    const cortes=[]; let desde=0;
+    for(let dia=1;dia<jornadasConduccion;dia++){
+      const objetivo=geomTotal*(dia/jornadasConduccion), idx=indiceCercano(acum,objetivo,desde+1); desde=idx;
+      cortes.push({coord:coords[idx],nombre:"Buscando una parada interesante…",distRuta:totalDist*(dia/jornadasConduccion),tiempoRuta:totalTiempo*(dia/jornadasConduccion)});
+    }
+    const cortesEnriquecidos=await Promise.all(cortes.map(c=>enriquecerCorte(c,datos)));
+    puntos.push(...cortesEnriquecidos);
   }
 
-  // Las búsquedas de las distintas jornadas son independientes: ejecutarlas en
-  // paralelo reduce mucho el tiempo total en viajes largos.
-  const cortesEnriquecidos=await Promise.all(cortes.map(c=>enriquecerCorte(c,datos)));
-  const destinoFinal=lugares.at(-1);
-  const puntos=[
-    {nombre:lugares[0]?.formatted||datos.origen,distRuta:0,tiempoRuta:0},
-    ...cortesEnriquecidos,
-    {
-      nombre:destinoFinal?.formatted||datos.destinoPrincipal,
-      distRuta:totalDist,
-      tiempoRuta:totalTiempo,
-      coordRecomendada:(destinoFinal?.lon!=null&&destinoFinal?.lat!=null)?[Number(destinoFinal.lon),Number(destinoFinal.lat)]:null,
-      codigoPais:String(destinoFinal?.country_code||"").toLowerCase(),
-      esDestino:true
-    }
-  ];
-  return puntos.slice(0,-1).map((a,i)=>{
-    const b=puntos[i+1];
-    const esDestino=i===puntos.length-2;
+  puntos.push({
+    nombre:destinoNombre,distRuta:totalDist,tiempoRuta:totalTiempo,
+    coordRecomendada:destinoCoord,codigoPais:destinoPais,esDestino:true
+  });
+
+  const plan=puntos.slice(0,-1).map((a,i)=>{
+    const b=puntos[i+1], esDestino=i===puntos.length-2;
     return {
       dia:i+1,desde:a.nombre,hasta:b.nombre,distancia:b.distRuta-a.distRuta,tiempo:b.tiempoRuta-a.tiempoRuta,
-      intermedia:!esDestino,esDestino,pois:b.pois||[],poiPrincipal:b.poiPrincipal||null,
-      coordRecomendada:b.coordRecomendada||null,coordIdeal:b.coord||null,codigoPais:b.codigoPais||null,alojamientos:[]
+      intermedia:!esDestino,esDestino,estanciaDestino:false,pois:b.pois||[],poiPrincipal:b.poiPrincipal||null,
+      coordRecomendada:b.coordRecomendada||null,coordIdeal:b.coord||null,codigoPais:b.codigoPais||null,alojamientos:[],restaurantes:[]
     };
   });
-}
-// ---------- Fase 7: el destino también forma parte de la guía ----------
-async function completarVisitasDestino(plan,datos){
-  if(!plan.length)return plan;
-  const ultima=plan.at(-1);
-  if(!Array.isArray(ultima.coordRecomendada))return plan;
-  try{
-    const pois=(await buscarPOIs(ultima.coordRecomendada,datos)).slice(0,5);
-    ultima.pois=pois.map(f=>{
-      const p=f.properties||{}, c=f.geometry?.coordinates||[];
-      return {nombre:p.name||"Lugar de interés",localidad:nombreLocalidad(p),direccion:p.formatted||p.address_line2||"",distancia:Number(p.distance)||0,categorias:p.categories||[],etiqueta:etiquetaCategoria(p.categories||[]),lat:Number(c[1]),lon:Number(c[0]),web:p.website||p.contact?.website||p.datasource?.raw?.website||"",placeId:p.place_id||"",descripcion:p.description||p.datasource?.raw?.description||"",horarios:p.opening_hours||p.datasource?.raw?.opening_hours||"",imagen:"",wikiUrl:"",wikiTitulo:""};
+
+  // Los días elegidos por el usuario son la duración REAL del viaje. Los días que
+  // sobran después de llegar se convierten en jornadas completas en el destino.
+  for(let dia=jornadasConduccion+1;dia<=diasSolicitados;dia++){
+    plan.push({
+      dia,desde:destinoNombre,hasta:destinoNombre,distancia:0,tiempo:0,
+      intermedia:false,esDestino:true,estanciaDestino:true,pois:[],poiPrincipal:null,
+      coordRecomendada:destinoCoord,coordIdeal:destinoCoord,codigoPais:destinoPais,alojamientos:[],restaurantes:[]
     });
-    ultima.poiPrincipal=ultima.pois[0]?.nombre||null;
-  }catch{}
+  }
+  return plan;
+}
+// ---------- Fase 7:// ---------- Fase 7: el destino también forma parte de la guía ----------
+async function completarVisitasDestino(plan,datos){
+  const diasDestino=plan.filter(e=>e.esDestino&&Array.isArray(e.coordRecomendada));
+  if(!diasDestino.length)return plan;
+  const centro=diasDestino[0].coordRecomendada;
+  try{
+    const resultados=await buscarPOIs(centro,datos);
+    const unicos=[]; const vistos=new Set();
+    for(const f of resultados){
+      const nombre=String(f.properties?.name||"").trim();
+      const clave=normalizarClaveMedia(nombre);
+      if(!nombre||vistos.has(clave))continue;
+      vistos.add(clave); unicos.push(f);
+    }
+    let cursor=0;
+    for(const etapa of diasDestino){
+      const horasConduccion=(Number(etapa.tiempo)||0)/3600;
+      const ritmo=String(datos.ritmo||"equilibrado");
+      let cantidad=ritmo==="tranquilo"?3:ritmo==="intenso"?5:4;
+      if(!etapa.estanciaDestino){
+        if(horasConduccion>=5)cantidad=1;
+        else if(horasConduccion>=3)cantidad=Math.min(cantidad,2);
+        else if(horasConduccion>=1.5)cantidad=Math.min(cantidad,3);
+      }
+      const seleccion=unicos.slice(cursor,cursor+cantidad); cursor+=seleccion.length;
+      etapa.pois=seleccion.map(f=>{
+        const p=f.properties||{}, c=f.geometry?.coordinates||[];
+        return {nombre:p.name||"Lugar de interés",localidad:nombreLocalidad(p),direccion:p.formatted||p.address_line2||"",distancia:Number(p.distance)||0,categorias:p.categories||[],etiqueta:etiquetaCategoria(p.categories||[]),lat:Number(c[1]),lon:Number(c[0]),web:p.website||p.contact?.website||p.datasource?.raw?.website||"",placeId:p.place_id||"",descripcion:p.description||p.datasource?.raw?.description||"",horarios:p.opening_hours||p.datasource?.raw?.opening_hours||"",imagen:"",wikiUrl:"",wikiTitulo:""};
+      });
+      etapa.poiPrincipal=etapa.pois[0]?.nombre||null;
+    }
+  }catch(err){console.warn("No se pudieron distribuir las visitas del destino",err);}
   return plan;
 }
 
-// ---------- Fase 8: fichas enriquecidas + fotografía del lugar principal ----------
+// ---------- Fase 8:// ---------- Fase 8: fichas enriquecidas + fotografía del lugar principal ----------
 function tiempoVisitaPOI(x){
   const c=(x.categorias||[]).join(" ");
   if(/theme_park|water_park|zoo|aquarium/.test(c))return "3–5 h";
@@ -1215,11 +1256,21 @@ async function enriquecerFichaPrincipal(etapa){
   return etapa;
 }
 async function completarFichasEnriquecidas(plan){
-  await Promise.all(plan.map(enriquecerFichaPrincipal));
+  const tareas=[];
+  for(const etapa of plan){
+    for(const poi of (etapa.pois||[])){
+      tareas.push((async()=>{
+        poi.tiempoVisita=tiempoVisitaPOI(poi);
+        await detallesGeoapifyPOI(poi);
+        await wikipediaPOI(poi);
+      })());
+    }
+  }
+  await Promise.all(tareas);
   return plan;
 }
 
-// ---------- Fase 6: pernoctas con nuestra propia base de datos ----------
+// ---------- Fase 6:// ---------- Fase 6: pernoctas con nuestra propia base de datos ----------
 const cacheAlojamientos=new Map();
 const archivosPernocta={
   es:["campings-espana-definitivo.json?v=1","areas-parkings-espana-v3.json?v=1"],
@@ -1335,12 +1386,12 @@ async function buscarRestaurantesEtapa(etapa,datos){
       categories:"catering.restaurant",
       filter:`circle:${coord[0]},${coord[1]},10000`,
       bias:`proximity:${coord[0]},${coord[1]}`,
-      limit:"8",lang:"es",apiKey:config.GEOAPIFY_API_KEY
+      limit:"18",lang:"es",apiKey:config.GEOAPIFY_API_KEY
     });
     const r=await fetch(`https://api.geoapify.com/v2/places?${params}`);
     if(!r.ok)return [];
     const d=await r.json();
-    return (d.features||[]).filter(f=>f.properties?.name).slice(0,3).map(f=>{
+    return (d.features||[]).filter(f=>f.properties?.name).slice(0,12).map(f=>{
       const p=f.properties||{}, c=f.geometry?.coordinates||[];
       const cuisine=p.datasource?.raw?.cuisine||p.cuisine||"";
       const web=p.website||p.contact?.website||p.datasource?.raw?.website||"";
@@ -1356,7 +1407,14 @@ async function buscarRestaurantesEtapa(etapa,datos){
 }
 async function completarGastronomia(plan,datos){
   if(!(datos.intereses||[]).includes("gastronomia"))return plan;
-  await Promise.all(plan.map(async e=>{e.restaurantes=await buscarRestaurantesEtapa(e,datos);}));
+  const usados=new Set();
+  for(const e of plan){
+    const candidatos=await buscarRestaurantesEtapa(e,datos);
+    let elegidos=candidatos.filter(x=>!usados.has(normalizarClaveMedia(x.nombre))).slice(0,3);
+    if(elegidos.length<3)elegidos=[...elegidos,...candidatos.filter(x=>!elegidos.includes(x)).slice(0,3-elegidos.length)];
+    e.restaurantes=elegidos;
+    elegidos.forEach(x=>usados.add(normalizarClaveMedia(x.nombre)));
+  }
   return plan;
 }
 function htmlGastronomia(etapa,esDestino=false){
@@ -1404,68 +1462,70 @@ function htmlDormirEditorial(etapa,esDestino=false){
 }
 function htmlPlanJornadas(plan,datos,rutaOptimizada=null,lugaresOpt=[]){
   if(!plan.length)return "";
-  const legsOpt=rutaOptimizada?.properties?.legs||[];
   let h='<div class="guia-pdf"><header class="guia-portada"><span>GUÍA PERSONALIZADA DE VIAJE</span><h2>Tu ruta, día a día</h2><p>Una propuesta organizada con desplazamientos, visitas, gastronomía y pernocta.</p></header>';
   plan.forEach((e,idx)=>{
-    const leg=legsOpt[idx]||null, desde=lugaresOpt[idx]?.formatted||e.desde, hasta=lugaresOpt[idx+1]?.formatted||e.hasta;
-    const distancia=leg?.distance??e.distancia, tiempo=leg?.time??e.tiempo, esUltima=idx===plan.length-1;
-    h+=`<section class="guia-dia-editorial"><div class="guia-dia-titulo"><span>DÍA ${e.dia}</span><h2>${escapar(desde)} → ${escapar(hasta)}</h2><p>🚐 ${formatoKm(distancia)} · ${formatoTiempo(tiempo)}</p></div>`;
-    h+=`<div class="guia-narrativa"><p><strong>Plan del día.</strong> Tras el desplazamiento previsto, dedicamos el resto de la jornada a conocer ${escapar(e.pois?.[0]?.localidad||hasta)}. La selección se adapta a los intereses indicados y deja alternativas por si prefieres cambiar el ritmo.</p></div>`;
-    if(e.pois?.[0])h+=htmlVisitaEditorial(e.pois[0])+htmlAlternativasEditorial(e.pois);
-    else h+='<section class="guia-seccion-editorial"><h3>📍 Qué visitar</h3><p>Esta etapa se utiliza principalmente como parada de viaje. No hemos encontrado una visita suficientemente sólida para recomendarla como principal.</p></section>';
-    if((datos.intereses||[]).includes("gastronomia"))h+=htmlComerEditorial(e,esUltima);
-    h+=htmlDormirEditorial(e,esUltima);
+    const esUltima=idx===plan.length-1;
+    const sinConduccion=(Number(e.distancia)||0)<100 && (Number(e.tiempo)||0)<60;
+    h+=`<section class="guia-dia-editorial"><div class="guia-dia-titulo"><span>DÍA ${e.dia}</span><h2>${e.estanciaDestino?`Día completo en ${escapar(e.hasta)}`:`${escapar(e.desde)} → ${escapar(e.hasta)}`}</h2><p>${sinConduccion?'📍 Jornada en destino':`🚐 ${formatoKm(e.distancia)} · ${formatoTiempo(e.tiempo)}`}</p></div>`;
+    if(e.estanciaDestino){
+      h+=`<div class="guia-narrativa"><p><strong>Plan del día.</strong> Jornada completa para disfrutar de ${escapar(e.hasta)} sin conducción de larga distancia. Hemos repartido visitas distintas para aprovechar el viaje sin repetir las jornadas anteriores.</p></div>`;
+    }else{
+      h+=`<div class="guia-narrativa"><p><strong>Plan del día.</strong> Tras el desplazamiento previsto, dedicamos el resto de la jornada a conocer ${escapar(e.pois?.[0]?.localidad||e.hasta)}. La cantidad de visitas se ajusta al tiempo de conducción y al ritmo elegido.</p></div>`;
+    }
+    if(e.pois?.length){
+      h+='<section class="guia-seccion-editorial"><h3>📍 Visitas recomendadas</h3>';
+      e.pois.forEach(x=>{h+=htmlVisitaEditorial(x);});
+      h+='</section>';
+    }else{
+      h+='<section class="guia-seccion-editorial"><h3>📍 Qué visitar</h3><p>No hemos encontrado suficientes visitas sólidas para completar esta jornada sin repetir lugares.</p></section>';
+    }
+    if((datos.intereses||[]).includes("gastronomia"))h+=htmlComerEditorial(e,true);
+    h+=htmlDormirEditorial(e,true);
     h+='</section>';
   });
   return h+'</div>';
 }
 
-
-// ---------- Rutas genéricas: fotografías verificadas sin coste OpenAI ----------
+// ---------- Rutas genéricas: fotografías// ---------- Rutas genéricas: fotografías verificadas sin coste OpenAI ----------
 async function prepararFotosPlanGenerico(plan=[]){
   if(!Array.isArray(plan)||!plan.length)return plan;
   const tareas=[];
   for(const etapa of plan){
-    const principal=etapa?.pois?.[0];
-    if(!principal?.nombre)continue;
-    tareas.push((async()=>{
-      try{
-        // Primero respetamos una ficha verificada del catálogo propio si existe.
-        const verificado=buscarLugarVerificado(principal.nombre,"visit");
-        if(verificado?.image_url){
-          principal.imagen=verificado.image_url;
-          principal.commonsUrl=verificado.image_source_url||principal.commonsUrl||"";
-          return;
-        }
-        // Después usamos el mismo selector editorial/licenciado de la demo.
-        const auto=await buscarFotoAutomatica(principal.nombre,principal.localidad||etapa.hasta||"","visit");
-        if(auto?.image_url){
-          principal.imagen=auto.image_url;
-          principal.commonsUrl=auto.source_url||auto.description_url||principal.commonsUrl||"";
-        }else{
-          // Si no hay una candidata que pase el umbral, no conservamos una foto dudosa.
-          principal.imagen="";
-        }
-      }catch(err){
-        console.warn("No se pudo seleccionar foto genérica",principal.nombre,err);
-      }
-    })());
+    for(const poi of (etapa?.pois||[])){
+      if(!poi?.nombre)continue;
+      tareas.push((async()=>{
+        try{
+          const verificado=buscarLugarVerificado(poi.nombre,"visit");
+          if(verificado?.image_url){
+            poi.imagen=verificado.image_url;
+            poi.commonsUrl=verificado.image_source_url||poi.commonsUrl||"";
+            return;
+          }
+          const auto=await buscarFotoAutomatica(poi.nombre,poi.localidad||etapa.hasta||"","visit");
+          if(auto?.image_url){
+            poi.imagen=auto.image_url;
+            poi.commonsUrl=auto.source_url||auto.description_url||poi.commonsUrl||"";
+          }else poi.imagen="";
+        }catch(err){console.warn("No se pudo seleccionar foto genérica",poi.nombre,err);}
+      })());
+    }
   }
   await Promise.all(tareas);
   return plan;
 }
 
 function stopsDesdePlanGenerico(plan=[]){
-  return (Array.isArray(plan)?plan:[]).map((e,i,arr)=>({
-    day:Number(e?.dia)||i+1,
-    place:String(e?.hasta||"").trim(),
-    country:"",
-    driving_km:Math.round((Number(e?.distancia)||0)/1000),
-    driving_minutes:Math.round((Number(e?.tiempo)||0)/60),
-    is_final:i===arr.length-1
-  })).filter(x=>x.place);
+  const etapas=(Array.isArray(plan)?plan:[]).filter(e=>(Number(e?.distancia)||0)>1000 || (Number(e?.tiempo)||0)>300);
+  const out=[]; const vistos=new Set();
+  for(const e of etapas){
+    const place=String(e?.hasta||"").trim(); if(!place)continue;
+    const clave=normalizarClaveMedia(place); if(vistos.has(clave))continue;
+    vistos.add(clave);
+    out.push({day:Number(e?.dia)||out.length+1,place,country:"",driving_km:Math.round((Number(e?.distancia)||0)/1000),driving_minutes:Math.round((Number(e?.tiempo)||0)/60),is_final:false});
+  }
+  if(out.length)out[out.length-1].is_final=true;
+  return out;
 }
-
 
 async function crearGuiaUnaJornada(feature,lugares,datos){
   const p=feature?.properties||{};
