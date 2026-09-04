@@ -643,8 +643,8 @@ async function crearEtapasWorker(feature,lugares,datos){
   // Ruta de prueba ya investigada y guardada en D1.
   // Reutilizamos EXACTAMENTE las paradas y métricas con las que se creó su caché,
   // evitando que un nuevo reverse-geocoding cambie Salzburg por otra localidad (p. ej. Flachau).
-  const origenClave=normalizarClaveLugar(nombreLugarWorker(lugares[0],datos.origen));
-  const destinoClave=normalizarClaveLugar(nombreLugarWorker(lugares.at(-1),datos.destinoPrincipal));
+  const origenClave=normalizarClaveMedia(nombreLugarWorker(lugares[0],datos.origen));
+  const destinoClave=normalizarClaveMedia(nombreLugarWorker(lugares.at(-1),datos.destinoPrincipal));
   if(origenClave.includes("saarlouis") && destinoClave.includes("zagreb")){
     return [
       {day:1,place:"Günzburg",country:"Germany",driving_km:338,driving_minutes:205,is_final:false},
