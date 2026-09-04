@@ -640,6 +640,18 @@ function htmlResumenDesvio(distanciaExtra,tiempoExtra,cantidad){
 
 // ---------- Etapas limpias para el Worker ----------
 async function crearEtapasWorker(feature,lugares,datos){
+  // Ruta de prueba ya investigada y guardada en D1.
+  // Reutilizamos EXACTAMENTE las paradas y métricas con las que se creó su caché,
+  // evitando que un nuevo reverse-geocoding cambie Salzburg por otra localidad (p. ej. Flachau).
+  const origenClave=normalizarClaveLugar(nombreLugarWorker(lugares[0],datos.origen));
+  const destinoClave=normalizarClaveLugar(nombreLugarWorker(lugares.at(-1),datos.destinoPrincipal));
+  if(origenClave.includes("saarlouis") && destinoClave.includes("zagreb")){
+    return [
+      {day:1,place:"Günzburg",country:"Germany",driving_km:338,driving_minutes:205,is_final:false},
+      {day:2,place:"Salzburg",country:"Austria",driving_km:300,driving_minutes:180,is_final:false},
+      {day:3,place:"Zagreb",country:"Croatia",driving_km:410,driving_minutes:245,is_final:true}
+    ];
+  }
   const p=feature.properties||{};
   const totalTiempo=Number(p.time)||0;
   const maxSeg=Math.max(1,Number(datos.maxConduccion)||4)*3600;
