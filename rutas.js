@@ -1,5 +1,5 @@
 // ==========================================
-// CAMPINGS & ÁREAS - RUTAS FASE 12
+// CAMPINGS & ÁREAS - RUTAS FASE 13
 // Geoapify: autocomplete + routing + mapa + paradas inteligentes + recálculo real + pernoctas propias
 // ==========================================
 
@@ -198,6 +198,12 @@ function perfilWorker(datos,lugares,stops=[]){
     overnight_preference:preferenciaPernoctaWorker(datos),
     stops
   };
+}
+
+async function consultarRutaPreparada(datos,lugares){
+  const perfil=perfilWorker(datos,lugares,[]);
+  delete perfil.country;
+  return llamarWorker("/prepared-route",perfil);
 }
 
 async function consultarPlanificadorIA(datos,lugares,stops){
@@ -1086,18 +1092,28 @@ formRuta.addEventListener("submit",async event=>{
     document.getElementById("estadoCalculo").textContent="Cargando fotografías verificadas…";
     await cargarMediaVerificado();
 
-    document.getElementById("estadoCalculo").textContent="Preparando las etapas para la guía…";
-    const stops=await crearEtapasWorker(ruta.features[0],lugares,datos);
+    document.getElementById("estadoCalculo").textContent="Buscando la ruta preparada en D1…";
+    const rutaPreparada=await consultarRutaPreparada(datos,lugares);
+    console.info("Rutas IA · Ruta preparada",rutaPreparada);
 
-    document.getElementById("estadoCalculo").textContent="Consultando la planificación guardada en D1…";
-    const respuestaPlan=await consultarPlanificadorIA(datos,lugares,stops);
-    console.info("Rutas IA · Planificador",respuestaPlan);
-
-    if(!(respuestaPlan?.ok&&respuestaPlan?.status==="planned"&&respuestaPlan?.plan)){
-      document.getElementById("estadoCalculo").textContent="Carretera calculada · guía no disponible";
-      document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",htmlEstadoIA(respuestaPlan));
+    if(!(rutaPreparada?.ok&&rutaPreparada?.status==="prepared"&&rutaPreparada?.plan&&Array.isArray(rutaPreparada?.stops)&&rutaPreparada.stops.length)){
+      document.getElementById("estadoCalculo").textContent="Carretera calculada · ruta preparada no disponible";
+      document.getElementById("etapasRuta").insertAdjacentHTML("beforeend",
+        `<div class="aviso-ruta"><strong>🔎 Ruta todavía no preparada.</strong><br>
+        No existe una planificación compatible almacenada en D1 para este perfil.
+        No se ha llamado a OpenAI y no se ha generado contenido automático de sustitución.</div>`);
       return;
     }
+
+    const stops=rutaPreparada.stops;
+    const respuestaPlan={
+      ok:true,
+      status:"planned",
+      plan:rutaPreparada.plan,
+      planner:rutaPreparada.planner,
+      openai_called:false,
+      cache:rutaPreparada.cache
+    };
 
     document.getElementById("estadoCalculo").textContent="Cargando la guía editorial guardada en D1…";
     const respuestaGuia=await consultarRedactorIA(datos,lugares,stops,respuestaPlan.plan);
