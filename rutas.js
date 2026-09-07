@@ -1,6 +1,6 @@
 
 // ==========================================
-// CAMPINGS & ÁREAS - RUTAS FASE 31 · MEDIA OFICIAL PRIMERO + D1 PREMIUM + FALLBACK SEGURO
+// CAMPINGS & ÁREAS - RUTAS FASE 32 · MEDIA IA GUARDADA EN D1 PRIMERO + FALLBACK SEGURO
 // Geoapify: autocomplete + routing + mapa + paradas inteligentes + recálculo real + pernoctas propias
 // ==========================================
 
@@ -638,15 +638,58 @@ async function consultarMediaOficial(nombre,ciudad,tipo,website){
   return null;
 }
 
-async function prepararFotosInvestigacionPremium(research,destino){
+async function cargarMediaDestinoD1(destino,country=""){
+  try{
+    const base=String(config.WORKER_BASE_URL||"").replace(/\/+$/,"");
+    if(!base||!destino)return 0;
+
+    const u=new URL(`${base}/media-cache`);
+    u.searchParams.set("place",destino);
+    if(country)u.searchParams.set("country",country);
+
+    const r=await fetch(u.toString(),{method:"GET",cache:"no-store"});
+    if(!r.ok)return 0;
+
+    const d=await r.json();
+    if(!(d?.ok&&Array.isArray(d?.media)))return 0;
+
+    let cargadas=0;
+    for(const x of d.media){
+      if(!x?.entity_name||!x?.entity_type||!x?.image_url||Number(x?.verified_exact)!==1)continue;
+
+      const key=claveMediaOficial(x.entity_name,destino,x.entity_type);
+      mediaOficialCache.set(key,{
+        image_url:x.image_url,
+        source_page:x.source_page_url||x.website_url||"",
+        credit:x.source_method==="openai-web-search"?"Fuente oficial verificada":"Web oficial",
+        official:true,
+        from_d1:true
+      });
+      cargadas++;
+    }
+    return cargadas;
+  }catch(e){
+    console.info("Media D1 no disponible para",destino,e);
+    return 0;
+  }
+}
+
+async function prepararFotosInvestigacionPremium(research,destino,country=""){
   cargarFotoAutoLocal();
+
+  // Primero reutilizamos las fotografías ya investigadas y verificadas en D1.
+  // Esta lectura no llama a OpenAI ni vuelve a rastrear las webs oficiales.
+  await cargarMediaDestinoD1(destino,country);
+
   const tareas=[];
   for(const x of (research?.must_see||[])){
     tareas.push(buscarFotoAutomatica(x.name,destino,"visit",x.photo_search_terms||[]));
   }
   for(const x of (research?.gastronomy?.restaurants||[])){
     tareas.push((async()=>{
-      const oficial=await consultarMediaOficial(x.name,destino,"restaurant",x.website);
+      const key=claveMediaOficial(x.name,destino,"restaurant");
+      let oficial=mediaOficialCache.get(key)||null;
+      if(!oficial)oficial=await consultarMediaOficial(x.name,destino,"restaurant",x.website);
       if(!oficial){
         await buscarFotoAutomatica(x.name,destino,"restaurant",[`"${x.name}" ${x.address||destino} restaurant facade`,`"${x.name}" ${destino} restaurant interior`]);
       }
@@ -654,7 +697,9 @@ async function prepararFotosInvestigacionPremium(research,destino){
   }
   for(const x of (research?.overnight||[])){
     tareas.push((async()=>{
-      const oficial=await consultarMediaOficial(x.name,destino,"overnight",x.website);
+      const key=claveMediaOficial(x.name,destino,"overnight");
+      let oficial=mediaOficialCache.get(key)||null;
+      if(!oficial)oficial=await consultarMediaOficial(x.name,destino,"overnight",x.website);
       if(!oficial){
         await buscarFotoAutomatica(x.name,destino,"overnight",[`"${x.name}" ${x.address||destino} camping aerial`,`"${x.name}" ${destino} campsite pitches caravan`]);
       }
@@ -2033,7 +2078,11 @@ formRuta.addEventListener("submit",async event=>{
       if(cacheDestino?.research){
         await Promise.all([cargarMediaVerificado(),cargarLugaresVerificados()]);
         document.getElementById("estadoCalculo").textContent="Seleccionando fotografías de visitas, restaurantes y pernocta…";
-        await prepararFotosInvestigacionPremium(cacheDestino.research,cacheDestino.research.destination||datos.destinoPrincipal);
+        await prepararFotosInvestigacionPremium(
+          cacheDestino.research,
+          cacheDestino.research.destination||datos.destinoPrincipal,
+          paisCanonico(lugares.at(-1)?.country_code,lugares.at(-1)?.country)
+        );
         pintarResultadoBase(ruta,lugares,datos);
         montarPortadaAntesMapa(datos);
         colocarResumenDebajoMapa();
