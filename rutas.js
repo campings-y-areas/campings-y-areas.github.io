@@ -1,6 +1,6 @@
 
 // ==========================================
-// CAMPINGS & ÁREAS - RUTAS FASE 33 · MEDIA D1 VALIDADA + SIN FOTOS DUDOSAS EN NEGOCIOS
+// CAMPINGS & ÁREAS - RUTAS FASE 34 · FLUJO AUTOMÁTICO DE ESTADOS IA + MEDIA D1 VALIDADA
 // Geoapify: autocomplete + routing + mapa + paradas inteligentes + recálculo real + pernoctas propias
 // ==========================================
 
@@ -959,13 +959,21 @@ function htmlGuiaIA(guide,datos={}){
 function htmlEstadoIA(respuesta){
   if(respuesta?.status==="research_required"){
     const faltan=(respuesta.missing_research||[]).map(x=>x.place).filter(Boolean);
-    return `<div class="aviso-ruta"><strong>🔎 Ruta todavía no preparada.</strong><br>
-      Falta investigación almacenada en D1${faltan.length?`: ${escapar(faltan.join(", "))}`:""}.
-      No se ha llamado a OpenAI y no se ha generado contenido automático de sustitución.</div>`;
+    return `<div class="aviso-ruta"><strong>🔎 Ruta pendiente de investigación.</strong><br>
+      Faltan destinos por preparar en Rutas con Campings & Áreas IA${faltan.length?`: ${escapar(faltan.join(", "))}`:""}.
+      La carretera está calculada, pero la guía IA no se completa hasta disponer de investigación verificada.</div>`;
+  }
+  if(respuesta?.status==="media_research_required"){
+    const destinos=(respuesta.missing_media||[]).map(x=>x.place).filter(Boolean);
+    const pendientes=(respuesta.missing_media||[]).reduce((n,x)=>n+(Number(x.unresolved_count)||0),0);
+    return `<div class="aviso-ruta"><strong>📷 Ruta pendiente de completar fotografías.</strong><br>
+      La investigación ya existe${destinos.length?` para ${escapar(destinos.join(", "))}`:""}, pero todavía faltan ${pendientes||"algunas"} comprobaciones multimedia.
+      La ruta no usará fotografías dudosas ni contenido de sustitución.</div>`;
   }
   if(respuesta?.status==="cost_guard_active"){
-    return `<div class="aviso-ruta"><strong>🔒 Protección de coste activa.</strong><br>
-      La ruta no está todavía en la caché de IA. OpenAI permanece bloqueado y no se mostrará una guía inventada.</div>`;
+    return `<div class="aviso-ruta"><strong>🔒 Ruta todavía no planificada por la IA.</strong><br>
+      La investigación del destino está disponible, pero este recorrido concreto todavía no tiene un plan guardado.
+      Durante el desarrollo OpenAI permanece bloqueado para evitar gastos.</div>`;
   }
   return `<div class="error-ruta"><strong>⚠️ No hay una guía preparada para esta ruta.</strong><br>
     La carretera sí se ha calculado, pero la guía editorial no está disponible en D1.</div>`;
@@ -2049,10 +2057,13 @@ formRuta.addEventListener("submit",async event=>{
     // RUTAS NUEVAS: primero consultamos D1. Si esa ruta ya existe, reutilizamos
     // su plan y su guía sin investigar de nuevo y sin generar ningún coste.
     let stopsCache=[];
+    let estadoPlanIA=null;
     try{
-      document.getElementById("estadoCalculo").textContent="Comprobando si esta ruta ya está guardada…";
+      document.getElementById("estadoCalculo").textContent="Comprobando investigación, fotografías y caché de la ruta…";
       stopsCache=await crearEtapasWorker(ruta.features[0],lugares,datos,false);
       const planCache=await consultarPlanificadorIA(datos,lugares,stopsCache);
+      estadoPlanIA=planCache;
+
       if(planCache?.ok&&planCache?.status==="planned"&&planCache?.plan){
         const guiaCache=await consultarRedactorIA(datos,lugares,stopsCache,planCache.plan);
         if(guiaCache?.ok&&guiaCache?.status==="written"&&guiaCache?.guide){
@@ -2069,8 +2080,23 @@ formRuta.addEventListener("submit",async event=>{
           return;
         }
       }
+
+      // v34: el propio Worker decide si faltan investigaciones o multimedia.
+      // En esos estados la web se detiene de forma limpia y NO fabrica una guía genérica.
+      if(planCache?.status==="research_required"||planCache?.status==="media_research_required"){
+        pintarResultadoBase(ruta,lugares,datos);
+        montarPortadaAntesMapa(datos);
+        colocarResumenDebajoMapa();
+        instalarAccionesRuta(lugares,stopsCache,datos);
+        document.getElementById("etapasRuta").innerHTML=htmlEstadoIA(planCache);
+        document.getElementById("estadoCalculo").textContent=
+          planCache.status==="research_required"
+            ? "Ruta pendiente de investigación IA"
+            : "Ruta pendiente de fotografías verificadas";
+        return;
+      }
     }catch(errCache){
-      console.info("Ruta no disponible en D1; se prepara sin coste OpenAI.",errCache);
+      console.info("No se pudo comprobar el estado IA de la ruta; se mantiene el flujo de coste cero.",errCache);
     }
 
     // Si no existe una guía de ruta exacta, comprobamos si el destino ya tiene
