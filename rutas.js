@@ -1,6 +1,6 @@
 
 // ==========================================
-// CAMPINGS & ÁREAS - RUTAS FASE 30 · FOTOS EDITORIALES SEGURAS + D1 PREMIUM + SIN REPETICIONES
+// CAMPINGS & ÁREAS - RUTAS FASE 31 · MEDIA OFICIAL PRIMERO + D1 PREMIUM + FALLBACK SEGURO
 // Geoapify: autocomplete + routing + mapa + paradas inteligentes + recálculo real + pernoctas propias
 // ==========================================
 
@@ -21,6 +21,7 @@ const MEDIA_VERIFICADO_URL = "rutas-media-verificado-v1.json?v=1";
 const LUGARES_VERIFICADOS_URL = "rutas-lugares-verificados-v2.json?v=2";
 let mediaVerificadoCache = null;
 let lugaresVerificadosCache = null;
+const mediaOficialCache = new Map();
 
 // ---------- Selector fotográfico automático (sin OpenAI) ----------
 const FOTO_AUTO_STORAGE_KEY = "campingsAreasFotoAutoV3";
@@ -354,13 +355,14 @@ function htmlFotoVerificada(nombre,ciudad,tipo){
   const claveNombre=normalizarClaveMedia(nombre);
   const editorial=tipo==="visit"?IMAGENES_EDITORIALES_PRIORITARIAS[claveNombre]||null:null;
   const extra=IMAGENES_VERIFICADAS_SUPLEMENTARIAS[claveNombre]||null;
+  const oficial=mediaOficialCache.get(claveMediaOficial(nombre,ciudad,tipo))||null;
   const auto=fotoAutoCache.get(claveFotoAuto(nombre,ciudad,tipo))||null;
   // Las excepciones editoriales verificadas corrigen solo lugares donde una coincidencia automática era semánticamente correcta pero visualmente inadecuada.
-  const imageUrl=editorial?.image_url||auto?.image_url||lugar?.image_url||media?.image_url||extra?.image_url||"";
+  const imageUrl=editorial?.image_url||oficial?.image_url||auto?.image_url||lugar?.image_url||media?.image_url||extra?.image_url||"";
   if(!imageUrl)return "";
   const pie=lugar?.name||media?.name||nombre;
-  const sourcePage=editorial?.source_page||auto?.source_page||lugar?.image_source_page||media?.source_page||extra?.source_page||"";
-  const credit=editorial?.credit||auto?.credit||lugar?.image_credit||media?.credit||extra?.credit||"";
+  const sourcePage=editorial?.source_page||oficial?.source_page||auto?.source_page||lugar?.image_source_page||media?.source_page||extra?.source_page||"";
+  const credit=editorial?.credit||oficial?.credit||auto?.credit||lugar?.image_credit||media?.credit||extra?.credit||"";
   const fuente=sourcePage
     ? `<a href="${escapar(sourcePage)}" target="_blank" rel="noopener">Fuente de la imagen</a>`
     : "";
@@ -603,6 +605,39 @@ function restaurantesParaDiaPremium(research,visitas,indiceDia){
   return out;
 }
 
+
+function claveMediaOficial(nombre,ciudad,tipo){
+  return [tipo,normalizarClaveMedia(nombre),normalizarClaveMedia(ciudad)].join("|");
+}
+
+async function consultarMediaOficial(nombre,ciudad,tipo,website){
+  if(!nombre||!website||!["restaurant","overnight"].includes(tipo))return null;
+  const key=claveMediaOficial(nombre,ciudad,tipo);
+  if(mediaOficialCache.has(key))return mediaOficialCache.get(key);
+  try{
+    const base=String(config.WORKER_BASE_URL||"").replace(/\/+$/,"");
+    if(!base)return null;
+    const u=new URL(`${base}/official-media`);
+    u.searchParams.set("website",website);
+    u.searchParams.set("name",nombre);
+    u.searchParams.set("type",tipo);
+    const r=await fetch(u.toString(),{method:"GET",cache:"no-store"});
+    if(!r.ok)return null;
+    const d=await r.json();
+    if(d?.ok&&d?.image_url){
+      const item={
+        image_url:d.image_url,
+        source_page:d.source_page_url||website,
+        credit:"Web oficial",
+        official:true
+      };
+      mediaOficialCache.set(key,item);
+      return item;
+    }
+  }catch(e){console.info("Media oficial no disponible",nombre,e);}
+  return null;
+}
+
 async function prepararFotosInvestigacionPremium(research,destino){
   cargarFotoAutoLocal();
   const tareas=[];
@@ -610,10 +645,20 @@ async function prepararFotosInvestigacionPremium(research,destino){
     tareas.push(buscarFotoAutomatica(x.name,destino,"visit",x.photo_search_terms||[]));
   }
   for(const x of (research?.gastronomy?.restaurants||[])){
-    tareas.push(buscarFotoAutomatica(x.name,destino,"restaurant",[`"${x.name}" ${x.address||destino} restaurant facade`,`"${x.name}" ${destino} restaurant interior`]));
+    tareas.push((async()=>{
+      const oficial=await consultarMediaOficial(x.name,destino,"restaurant",x.website);
+      if(!oficial){
+        await buscarFotoAutomatica(x.name,destino,"restaurant",[`"${x.name}" ${x.address||destino} restaurant facade`,`"${x.name}" ${destino} restaurant interior`]);
+      }
+    })());
   }
   for(const x of (research?.overnight||[])){
-    tareas.push(buscarFotoAutomatica(x.name,destino,"overnight",[`"${x.name}" ${x.address||destino} camping aerial`,`"${x.name}" ${destino} campsite pitches caravan`]));
+    tareas.push((async()=>{
+      const oficial=await consultarMediaOficial(x.name,destino,"overnight",x.website);
+      if(!oficial){
+        await buscarFotoAutomatica(x.name,destino,"overnight",[`"${x.name}" ${x.address||destino} camping aerial`,`"${x.name}" ${destino} campsite pitches caravan`]);
+      }
+    })());
   }
   await Promise.allSettled(tareas);
 }
