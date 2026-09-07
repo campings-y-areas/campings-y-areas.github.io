@@ -1,6 +1,6 @@
 
 // ==========================================
-// CAMPINGS & ÁREAS - RUTAS FASE 21 · RUTA DE EJEMPLO + PORTADA + GUÍA COMPLETA
+// CAMPINGS & ÁREAS - RUTAS FASE 30 · FOTOS EDITORIALES SEGURAS + D1 PREMIUM + SIN REPETICIONES
 // Geoapify: autocomplete + routing + mapa + paradas inteligentes + recálculo real + pernoctas propias
 // ==========================================
 
@@ -23,7 +23,7 @@ let mediaVerificadoCache = null;
 let lugaresVerificadosCache = null;
 
 // ---------- Selector fotográfico automático (sin OpenAI) ----------
-const FOTO_AUTO_STORAGE_KEY = "campingsAreasFotoAutoV2";
+const FOTO_AUTO_STORAGE_KEY = "campingsAreasFotoAutoV3";
 const fotoAutoCache = new Map();
 
 function cargarFotoAutoLocal(){
@@ -59,10 +59,25 @@ function consultasFotoVisita(nombre,ciudad,tipo="visit",terminosExtra=[]){
     .filter(x=>x.length>=4 && !/^(casco historico|casco histórico|centro historico|centro histórico)$/i.test(x));
   const q=[];
   const add=v=>{v=String(v||"").replace(/\s+/g," ").trim();if(v&&!q.includes(v))q.push(v);};
+
+  if(tipo==="restaurant"){
+    (Array.isArray(terminosExtra)?terminosExtra:[]).forEach(add);
+    add(`"${original}" restaurant ${ciudadTxt}`);
+    add(`"${original}" ${ciudadTxt} restaurant`);
+    add(`"${original}" ${ciudadTxt}`);
+    return q.slice(0,5);
+  }
+  if(tipo==="overnight"){
+    (Array.isArray(terminosExtra)?terminosExtra:[]).forEach(add);
+    add(`"${original}" camping ${ciudadTxt}`);
+    add(`"${original}" campsite ${ciudadTxt}`);
+    add(`"${original}" caravan ${ciudadTxt}`);
+    add(`"${original}" ${ciudadTxt}`);
+    return q.slice(0,6);
+  }
+
   (Array.isArray(terminosExtra)?terminosExtra:[]).forEach(add);
   partes.forEach(x=>add(`${x} ${ciudadTxt}`));
-  if(tipo==="restaurant") add(`${original} restaurant ${ciudadTxt}`);
-  if(tipo==="overnight") add(`${original} camping ${ciudadTxt}`);
   add(`${original} ${ciudadTxt}`);
   add(original);
   return q.slice(0,8);
@@ -98,11 +113,12 @@ function licenciaFotoPermitida(meta){
   if(!l)return false;
   return /cc0|public domain|cc by|cc-by|cc by-sa|cc-by-sa/.test(l);
 }
-function puntuacionFotoFinal(p,nombre,ciudad){
+function puntuacionFotoFinal(p,nombre,ciudad,tipo="visit"){
   const ii=p.imageinfo?.[0]||{}, m=ii.extmetadata||{};
   let score=puntuacionFotoBase(p,nombre,ciudad);
   const texto=normalizarClaveMedia([p.title,textoPlanoHtml(m.ImageDescription?.value),textoPlanoHtml(m.Categories?.value),textoPlanoHtml(m.Assessments?.value)].join(" "));
   const nt=tokensFoto(nombre), ct=tokensFoto(ciudad);
+  const coincidenciasNombre=nt.filter(t=>texto.includes(t)).length;
   nt.forEach(t=>{if(texto.includes(t))score+=5;});
   ct.forEach(t=>{if(texto.includes(t))score+=3;});
   if(/featured|quality image|valued image|picture of the day|potd/.test(texto))score+=20;
@@ -110,6 +126,20 @@ function puntuacionFotoFinal(p,nombre,ciudad){
   score+=bonusIconicoFoto(texto);
   if(/crowd|crowded|people|tourists|menschenmenge|touristen/.test(texto))score-=8;
   if(/sign|logo|plaque|poster|advert|information board|ticket|schild|tafel|plakat|cartel|letrero|placa/.test(texto))score-=28;
+
+  if(tipo==="restaurant"){
+    if(coincidenciasNombre===0)return -999;
+    if(/restaurant|restaurante|brasserie|bistro|cafe|café|dining|facade|façade|interior|terrace|terrasse|cuisine/.test(texto))score+=22;
+    if(/book|books|librairie|bookstall|bouquiniste|kiosk|kiosque|newsstand|shop|store|poster|archive|historic photo|historical photo|old photograph|carte postale|postcard/.test(texto))score-=80;
+    if(/19[0-8][0-9]|18[0-9]{2}/.test(texto))score-=35;
+  }
+
+  if(tipo==="overnight"){
+    if(coincidenciasNombre===0)return -999;
+    if(/camping|campsite|campground|caravan|motorhome|rv|pitch|parcel|mobile home|mobilhome|aerial|pool|swimming|reception|rezeption/.test(texto))score+=25;
+    if(/aerial|overview|panoram|pitch|parcel|caravan|motorhome|mobile home|pool|swimming/.test(texto))score+=18;
+    if(/tunnel|underpass|passage|subway|bridge underside|road|street|entrance only|gate|barrier|sign|logo|map/.test(texto))score-=90;
+  }
   return score;
 }
 async function buscarFotoAutomatica(nombre,ciudad,tipo="visit",terminosExtra=[]){
@@ -136,10 +166,10 @@ async function buscarFotoAutomatica(nombre,ciudad,tipo="visit",terminosExtra=[])
     if(!r2.ok)return null;
     const d2=await r2.json();
     const completas=Object.values(d2.query?.pages||{}).filter(p=>p.imageinfo?.[0]&&licenciaFotoPermitida(p.imageinfo[0].extmetadata||{}));
-    completas.sort((a,b)=>puntuacionFotoFinal(b,nombre,ciudad)-puntuacionFotoFinal(a,nombre,ciudad));
+    completas.sort((a,b)=>puntuacionFotoFinal(b,nombre,ciudad,tipo)-puntuacionFotoFinal(a,nombre,ciudad,tipo));
     const ganadora=completas[0]; if(!ganadora)return null;
-    const score=puntuacionFotoFinal(ganadora,nombre,ciudad);
-    const minimo=tipo==="visit"?36:48;
+    const score=puntuacionFotoFinal(ganadora,nombre,ciudad,tipo);
+    const minimo=tipo==="visit"?36:(tipo==="restaurant"?70:78);
     if(score<minimo)return null;
     const ii=ganadora.imageinfo[0],m=ii.extmetadata||{};
     const foto={
@@ -561,14 +591,15 @@ function seleccionarVisitasPremium(research,diasDestino,hayConduccionLlegada){
 }
 
 function restaurantesParaDiaPremium(research,visitas,indiceDia){
-  const lista=Array.isArray(research?.gastronomy?.restaurants)?research.gastronomy.restaurants:[];
+  const lista=(Array.isArray(research?.gastronomy?.restaurants)?research.gastronomy.restaurants:[]).filter(x=>x?.name);
   if(!lista.length)return [];
-  const zona=normalizarZonaPremium(visitas?.[0]?.zone||"");
-  const exactos=lista.filter(x=>normalizarZonaPremium(x.zone)===zona);
-  const usados=new Set();
+  const porDia=Math.min(2,lista.length);
+  const inicio=(indiceDia*porDia)%lista.length;
   const out=[];
-  for(const x of exactos){if(out.length>=2)break;out.push(x);usados.add(x.name);}
-  for(let n=0;n<lista.length&&out.length<2;n++){const x=lista[(indiceDia*2+n)%lista.length];if(!usados.has(x.name)){out.push(x);usados.add(x.name);}}
+  for(let n=0;n<lista.length&&out.length<porDia;n++){
+    const x=lista[(inicio+n)%lista.length];
+    if(!out.some(y=>normalizarClaveMedia(y.name)===normalizarClaveMedia(x.name)))out.push(x);
+  }
   return out;
 }
 
@@ -579,10 +610,10 @@ async function prepararFotosInvestigacionPremium(research,destino){
     tareas.push(buscarFotoAutomatica(x.name,destino,"visit",x.photo_search_terms||[]));
   }
   for(const x of (research?.gastronomy?.restaurants||[])){
-    tareas.push(buscarFotoAutomatica(x.name,destino,"restaurant",[`${x.name} ${x.address||destino}`]));
+    tareas.push(buscarFotoAutomatica(x.name,destino,"restaurant",[`"${x.name}" ${x.address||destino} restaurant facade`,`"${x.name}" ${destino} restaurant interior`]));
   }
   for(const x of (research?.overnight||[])){
-    tareas.push(buscarFotoAutomatica(x.name,destino,"overnight",[`${x.name} ${x.address||destino}`]));
+    tareas.push(buscarFotoAutomatica(x.name,destino,"overnight",[`"${x.name}" ${x.address||destino} camping aerial`,`"${x.name}" ${destino} campsite pitches caravan`]));
   }
   await Promise.allSettled(tareas);
 }
@@ -1974,7 +2005,7 @@ formRuta.addEventListener("submit",async event=>{
 
     // Si D1 tampoco tiene investigación del destino, durante el desarrollo usamos el flujo genérico de coste cero.
     // Geoapify calcula carretera, POIs y restaurantes; nuestra base aporta pernoctas;
-    // Wikimedia Commons aporta fotografías con licencia comprobada.
+    // Las fotografías automáticas se aceptan solo con licencia reutilizable y coincidencia visual estricta; para negocios se prioriza una imagen representativa y se descartan coincidencias dudosas.
     document.getElementById("estadoCalculo").textContent="Preparando jornadas, visitas, gastronomía y pernocta…";
     await Promise.all([cargarMediaVerificado(),cargarLugaresVerificados()]);
     const generica=await pintarResultado(ruta,lugares,datos);
