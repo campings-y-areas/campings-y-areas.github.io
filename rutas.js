@@ -471,7 +471,12 @@ function paisCanonico(codigo,nombre=""){
 }
 
 function nombreLugarWorker(lugar,fallback=""){
-  return lugar?.city||lugar?.town||lugar?.village||lugar?.municipality||lugar?.name||fallback||lugar?.formatted||"";
+  // Para las claves D1 usamos primero el nombre original/canónico de OpenStreetMap.
+  // Geoapify se consulta en español para la interfaz y puede traducir ciudades
+  // (por ejemplo Salzburg -> Salzburgo), pero D1 conserva el nombre original.
+  // Esta función afecta solo a los nombres enviados al Worker, no a lo mostrado al usuario.
+  const raw=lugar?.datasource?.raw||{};
+  return raw["name:en"]||raw.name||lugar?.city||lugar?.town||lugar?.village||lugar?.municipality||lugar?.name||fallback||lugar?.formatted||"";
 }
 
 function ritmoWorker(valor){
