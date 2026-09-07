@@ -1,6 +1,6 @@
 
 // ==========================================
-// CAMPINGS & ÁREAS - RUTAS FASE 34 · FLUJO AUTOMÁTICO DE ESTADOS IA + MEDIA D1 VALIDADA
+// CAMPINGS & ÁREAS - RUTAS FASE 35 · COLA MULTIMEDIA AUTOMÁTICA + ESTADOS IA + MEDIA D1 VALIDADA
 // Geoapify: autocomplete + routing + mapa + paradas inteligentes + recálculo real + pernoctas propias
 // ==========================================
 
@@ -968,7 +968,7 @@ function htmlEstadoIA(respuesta){
     const pendientes=(respuesta.missing_media||[]).reduce((n,x)=>n+(Number(x.unresolved_count)||0),0);
     return `<div class="aviso-ruta"><strong>📷 Ruta pendiente de completar fotografías.</strong><br>
       La investigación ya existe${destinos.length?` para ${escapar(destinos.join(", "))}`:""}, pero todavía faltan ${pendientes||"algunas"} comprobaciones multimedia.
-      La ruta no usará fotografías dudosas ni contenido de sustitución.</div>`;
+      ${respuesta?.media_jobs_prepared?"Las comprobaciones pendientes han quedado registradas automáticamente para completarlas en el flujo multimedia. ":""}La ruta no usará fotografías dudosas ni contenido de sustitución.</div>`;
   }
   if(respuesta?.status==="cost_guard_active"){
     return `<div class="aviso-ruta"><strong>🔒 Ruta todavía no planificada por la IA.</strong><br>
