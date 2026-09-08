@@ -2047,9 +2047,29 @@ formRuta.addEventListener("submit",async event=>{
       await Promise.all([cargarMediaVerificado(),cargarLugaresVerificados()]);
       const stops=await crearEtapasWorker(ruta.features[0],lugares,datos,true);
       document.getElementById("estadoCalculo").textContent="Cargando la ruta de ejemplo guardada…";
-      const respuestaPlan=await consultarPlanificadorIA(datos,lugares,stops);
+      // La caché histórica de la demo se creó con los nombres canónicos fijos
+      // Saarlouis / Zagreb. No dejamos que una variante administrativa de
+      // Geoapify (p. ej. "Grad Zagreb") cambie la clave de esa caché.
+      const perfilDemo={
+        origin:"Saarlouis",
+        destination:"Zagreb",
+        country:"Croatia",
+        vehicle:datos.vehiculo,
+        adults:Number(datos.adultos)||0,
+        children:(datos.edades||[]).map(Number).filter(Number.isFinite),
+        pet:Boolean(datos.mascota),
+        max_driving_hours:Number(datos.maxConduccion)||4,
+        pace:ritmoWorker(datos.ritmo),
+        interests:interesesWorker(datos.intereses),
+        overnight_preference:preferenciaPernoctaWorker(datos),
+        stops
+      };
+      const respuestaPlan=await llamarWorker("/plan-route",perfilDemo);
       if(!(respuestaPlan?.ok&&respuestaPlan?.status==="planned"&&respuestaPlan?.plan))throw new Error("La ruta de ejemplo guardada no está disponible.");
-      const respuestaGuia=await consultarRedactorIA(datos,lugares,stops,respuestaPlan.plan);
+      const perfilRedactorDemo={...perfilDemo,plan:respuestaPlan.plan};
+      delete perfilRedactorDemo.country;
+      delete perfilRedactorDemo.max_driving_hours;
+      const respuestaGuia=await llamarWorker("/write-route",perfilRedactorDemo);
       if(!(respuestaGuia?.ok&&respuestaGuia?.status==="written"&&respuestaGuia?.guide))throw new Error("La guía de ejemplo guardada no está disponible.");
       document.getElementById("estadoCalculo").textContent="Seleccionando las mejores fotografías…";
       await prepararFotosGuia(respuestaGuia.guide);
