@@ -754,86 +754,32 @@ function htmlPernoctaPremium(x,destino,principal=false){
   </div>`;
 }
 
-function htmlGuiaInvestigacionPremium(research,datos,rutaFeature,lugarDestino,stops=[]){
+function htmlGuiaInvestigacionPremium(research,datos,rutaFeature,lugarDestino){
   const p=rutaFeature?.properties||{};
-  const diasSolicitados=Math.max(1,Number(datos?.dias)||1);
+  const totalDias=Math.max(1,Number(datos?.dias)||1);
   const tiempo=Number(p.time)||0,distancia=Number(p.distance)||0;
+  const hayConduccion=tiempo>900;
   const destino=research?.destination||nombreLugarWorker(lugarDestino,datos?.destinoPrincipal)||"Destino";
-  const etapas=Array.isArray(stops)&&stops.length
-    ? stops.map((x,i)=>({
-        day:Number(x?.day)||i+1,
-        place:String(x?.place||"").trim()||`Parada día ${i+1}`,
-        country:String(x?.country||"").trim(),
-        driving_km:Number(x?.driving_km)||0,
-        driving_minutes:Number(x?.driving_minutes)||0,
-        is_final:Boolean(x?.is_final)
-      }))
-    : [{
-        day:1,
-        place:destino,
-        country:paisCanonico(lugarDestino?.country_code,lugarDestino?.country),
-        driving_km:Math.round(distancia/1000),
-        driving_minutes:Math.round(tiempo/60),
-        is_final:true
-      }];
-
-  const diasConduccion=Math.max(1,etapas.length);
-  const diasReales=Math.max(diasSolicitados,diasConduccion);
-  const faltanDias=Math.max(0,diasConduccion-diasSolicitados);
-  const diasDestinoDisponibles=Math.max(0,diasReales-diasConduccion);
-  const visitasPorDia=Math.max(1,diasDestinoDisponibles+1);
-  const diasVisita=seleccionarVisitasPremium(research,visitasPorDia,true);
+  const diasVisita=seleccionarVisitasPremium(research,totalDias,hayConduccion);
   const pernoctas=Array.isArray(research?.overnight)?research.overnight:[];
   const base=pernoctas[0]||null;
   const restaurantesUsados=new Set();
-
   let h=`<div class="guia-pdf guia-ia-real guia-investigacion-premium">
     <header class="guia-portada"><span>RUTAS CON CAMPINGS & ÁREAS IA</span><h2>${escapar(datos?.origen||"")} → ${escapar(destino)}</h2><p>Guía construida con investigación turística verificada y almacenada en D1.</p></header>
     <section class="guia-seccion-editorial"><h3>🧭 Por qué merece este viaje</h3><p>${escapar(limpiarTextoGuia(research?.verdict||""))}</p>${research?.recommended_time?`<p><strong>Estancia recomendada en el destino:</strong> ${escapar(research.recommended_time)}</p>`:""}${research?.visit_narrative?`<p>${escapar(limpiarTextoGuia(research.visit_narrative))}</p>`:""}</section>`;
 
-  if(faltanDias>0){
-    h+=`<section class="guia-seccion-editorial"><h3>⚠️ Duración ajustada al límite de conducción</h3>
-      <p>Has indicado <strong>${diasSolicitados} ${diasSolicitados===1?"día":"días"}</strong> y un máximo de <strong>${escapar(datos?.maxConduccion||"4")} h de conducción al día</strong>.
-      La carretera necesita <strong>${diasConduccion} jornadas</strong> para respetar ese límite, por lo que esta guía muestra ${diasConduccion} jornadas de viaje en lugar de forzar una etapa demasiado larga.</p></section>`;
-  }
-
-  let origenEtapa=String(datos?.origen||"Origen").split(",")[0].trim()||"Origen";
-  let indiceVisita=0;
-
-  etapas.forEach((etapa,idx)=>{
-    const esFinal=Boolean(etapa.is_final)||idx===etapas.length-1;
-    const pais=etapa.country?`, ${etapa.country}`:"";
-    const titulo=`${escapar(origenEtapa)} → ${escapar(etapa.place)}${pais?` ${escapar(pais)}`:""}`;
-    h+=`<section class="guia-dia-editorial">
-      <div class="guia-dia-titulo"><span>DÍA ${idx+1}</span><h2>${titulo}</h2>
-      <p>🚐 ${new Intl.NumberFormat("es-ES").format(Math.round(etapa.driving_km))} km · ${formatoTiempo(Math.max(0,etapa.driving_minutes)*60)}</p></div>`;
-
-    if(!esFinal){
-      h+=`<div class="guia-narrativa"><p><strong>Etapa técnica de conducción.</strong> Esta parada se ha calculado para respetar el máximo diario indicado. No añadimos visitas, restaurantes ni pernoctas no verificadas para ${escapar(etapa.place)}.</p></div>`;
-    }else{
-      h+=`<div class="guia-narrativa"><p><strong>Llegada a ${escapar(destino)}.</strong> Tras completar la última etapa, proponemos una toma de contacto ligera y compatible con la hora de llegada.</p></div>`;
-      const visitas=diasVisita[indiceVisita++]||[];
-      if(visitas.length)h+=`<section class="guia-seccion-editorial"><h3>🏛️ Visitas recomendadas</h3>${visitas.map(x=>htmlVisitaPremium(x,destino)).join("")}</section>`;
-      const rests=restaurantesParaDiaPremium(research,visitas,0,restaurantesUsados);
-      if((datos?.intereses||[]).includes("gastronomia")&&rests.length)h+=`<section class="guia-seccion-editorial"><h3>🍴 Dónde comer</h3>${rests.map((x,j)=>htmlRestaurantePremium(x,destino,j===0)).join("")}</section>`;
-      if(base)h+=`<section class="guia-seccion-editorial"><h3>🚐 Dónde dormir</h3>${htmlPernoctaPremium(base,destino,true)}${pernoctas.slice(1,3).map(x=>htmlPernoctaPremium(x,destino,false)).join("")}</section>`;
-    }
-    h+=`</section>`;
-    origenEtapa=etapa.place;
-  });
-
-  for(let extra=0;extra<diasDestinoDisponibles;extra++){
-    const dia=etapas.length+extra+1;
-    const visitas=diasVisita[indiceVisita++]||[];
-    h+=`<section class="guia-dia-editorial"><div class="guia-dia-titulo"><span>DÍA ${dia}</span><h2>Día completo en ${escapar(destino)}</h2><p>📍 Jornada en destino</p></div>`;
-    h+=`<div class="guia-narrativa"><p><strong>Plan del día.</strong> Dedicamos la jornada a una zona coherente de ${escapar(destino)} para reducir desplazamientos y aprovechar mejor el tiempo.</p></div>`;
-    if(visitas.length)h+=`<section class="guia-seccion-editorial"><h3>🏛️ Visitas recomendadas</h3>${visitas.map(x=>htmlVisitaPremium(x,destino)).join("")}</section>`;
-    const rests=restaurantesParaDiaPremium(research,visitas,extra+1,restaurantesUsados);
-    if((datos?.intereses||[]).includes("gastronomia")&&rests.length)h+=`<section class="guia-seccion-editorial"><h3>🍴 Dónde comer</h3>${rests.map((x,j)=>htmlRestaurantePremium(x,destino,j===0)).join("")}</section>`;
-    if(base)h+=`<section class="guia-seccion-editorial"><h3>🌙 Pernocta</h3><p>Para evitar mover la autocaravana innecesariamente, mantenemos como base <strong>${escapar(base.name)}</strong> durante la estancia.</p>${htmlEnlacesPremium(base.name,base.address,base.website)}</section>`;
+  for(let i=0;i<totalDias;i++){
+    const llegada=i===0&&hayConduccion;
+    const visitas=diasVisita[i]||[];
+    h+=`<section class="guia-dia-editorial"><div class="guia-dia-titulo"><span>DÍA ${i+1}</span><h2>${llegada?`${escapar(datos?.origen||"Origen")} → ${escapar(destino)}`:`Día completo en ${escapar(destino)}`}</h2>${llegada?`<p>🚐 ${formatoKm(distancia)} · ${formatoTiempo(tiempo)}</p>`:`<p>📍 Jornada en destino</p>`}</div>`;
+    h+=`<div class="guia-narrativa"><p><strong>Plan del día.</strong> ${llegada?`Tras la conducción, proponemos una tarde ligera con visitas compatibles con la hora de llegada.`:`Dedicamos la jornada a una zona coherente de ${escapar(destino)} para reducir desplazamientos y aprovechar mejor el tiempo.`}</p></div>`;
+    if(visitas.length){h+=`<section class="guia-seccion-editorial"><h3>🏛️ Visitas recomendadas</h3>${visitas.map(x=>htmlVisitaPremium(x,destino)).join("")}</section>`;}
+    const rests=restaurantesParaDiaPremium(research,visitas,i,restaurantesUsados);
+    if((datos?.intereses||[]).includes("gastronomia")&&rests.length){h+=`<section class="guia-seccion-editorial"><h3>🍴 Dónde comer</h3>${rests.map((x,j)=>htmlRestaurantePremium(x,destino,j===0)).join("")}</section>`;}
+    if(i===0&&base){h+=`<section class="guia-seccion-editorial"><h3>🚐 Dónde dormir</h3>${htmlPernoctaPremium(base,destino,true)}${pernoctas.slice(1,3).map(x=>htmlPernoctaPremium(x,destino,false)).join("")}</section>`;}
+    else if(base){h+=`<section class="guia-seccion-editorial"><h3>🌙 Pernocta</h3><p>Para evitar mover la autocaravana innecesariamente, mantenemos como base <strong>${escapar(base.name)}</strong> durante la estancia.</p>${htmlEnlacesPremium(base.name,base.address,base.website)}</section>`;}
     h+=`</section>`;
   }
-
   if(Array.isArray(research?.current_warnings)&&research.current_warnings.length)h+=`<section class="guia-seccion-editorial"><h3>⚠️ Conviene comprobar antes de ir</h3>${htmlLista(research.current_warnings)}</section>`;
   if(research?.final_recommendation)h+=`<section class="guia-seccion-editorial"><h3>📌 Recomendación final</h3><p>${escapar(limpiarTextoGuia(research.final_recommendation))}</p></section>`;
   return h+`</div>`;
@@ -2114,13 +2060,32 @@ formRuta.addEventListener("submit",async event=>{
       return;
     }
 
-    // RUTAS NUEVAS: primero consultamos D1. Si esa ruta ya existe, reutilizamos
-    // su plan y su guía sin investigar de nuevo y sin generar ningún coste.
-    let stopsCache=[];
+    // RUTAS NUEVAS: primero calculamos los FINES DE JORNADA reales según el
+    // máximo de horas de conducción elegido. Si el número de días solicitado
+    // no permite llegar respetando ese límite, avisamos antes de consultar IA/D1.
+    const stopsCalculados=await crearEtapasWorker(ruta.features[0],lugares,datos,false);
+    const diasSolicitados=Math.max(1,Number(datos.dias)||1);
+    const diasMinimosConduccion=Math.max(1,stopsCalculados.length);
+
+    if(diasSolicitados<diasMinimosConduccion){
+      pintarResultadoBase(ruta,lugares,datos);
+      montarPortadaAntesMapa(datos);
+      colocarResumenDebajoMapa();
+      instalarAccionesRuta(lugares,stopsCalculados,datos);
+      document.getElementById("etapasRuta").innerHTML=`<div class="aviso-ruta"><strong>⚠️ Con esos días no se puede respetar el límite de conducción.</strong><br>
+        Has elegido <strong>${diasSolicitados} ${diasSolicitados===1?"día":"días"}</strong> y un máximo de <strong>${escapar(datos.maxConduccion||"4")} h de conducción al día</strong>.
+        Esta ruta necesita como mínimo <strong>${diasMinimosConduccion} jornadas de viaje</strong> para llegar al destino sin superar ese límite.
+        Aumenta la duración del viaje a ${diasMinimosConduccion} días o más.</div>`;
+      document.getElementById("estadoCalculo").textContent="Duración insuficiente para el límite de conducción";
+      return;
+    }
+
+    // Si la duración sí es viable, seguimos exactamente el modelo de la demo:
+    // cada stop es un fin de jornada con visita/comida/pernocta, no una parada técnica.
+    let stopsCache=stopsCalculados;
     let estadoPlanIA=null;
     try{
       document.getElementById("estadoCalculo").textContent="Comprobando investigación, fotografías y caché de la ruta…";
-      stopsCache=await crearEtapasWorker(ruta.features[0],lugares,datos,false);
       const planCache=await consultarPlanificadorIA(datos,lugares,stopsCache);
       estadoPlanIA=planCache;
 
@@ -2177,7 +2142,7 @@ formRuta.addEventListener("submit",async event=>{
         colocarResumenDebajoMapa();
         const stopsPremium=stopsCache.length?stopsCache:[{day:1,place:nombreLugarWorker(lugares.at(-1),datos.destinoPrincipal),country:paisCanonico(lugares.at(-1)?.country_code,lugares.at(-1)?.country),driving_km:Math.round((Number(ruta.features?.[0]?.properties?.distance)||0)/1000),driving_minutes:Math.round((Number(ruta.features?.[0]?.properties?.time)||0)/60),is_final:true}];
         instalarAccionesRuta(lugares,stopsPremium,datos);
-        document.getElementById("etapasRuta").innerHTML=htmlGuiaInvestigacionPremium(cacheDestino.research,datos,ruta.features[0],lugares.at(-1),stopsPremium);
+        document.getElementById("etapasRuta").innerHTML=htmlGuiaInvestigacionPremium(cacheDestino.research,datos,ruta.features[0],lugares.at(-1));
         instalarBotonPDF();
         document.getElementById("estadoCalculo").textContent="Guía Premium preparada desde D1";
         return;
