@@ -1180,10 +1180,12 @@ function htmlResumenDesvio(distanciaExtra,tiempoExtra,cantidad){
 let ejecutarRutaComoDemo=false;
 
 async function crearEtapasWorker(feature,lugares,datos,esDemo=false){
-  // La demo conserva exactamente las etapas con las que se creó su caché en D1.
-  const origenClave=normalizarClaveMedia(nombreLugarWorker(lugares[0],datos.origen));
-  const destinoClave=normalizarClaveMedia(nombreLugarWorker(lugares.at(-1),datos.destinoPrincipal));
-  if(esDemo && origenClave.includes("saarlouis") && destinoClave.includes("zagreb")){
+  // La demo es fija. Para reconocerla usamos los valores escritos en el formulario,
+  // no el nombre canónico devuelto por Geoapify, porque Geoapify puede devolver
+  // variantes administrativas/localizadas como "Grad Zagreb" y romper la detección.
+  const origenDemoClave=normalizarClaveMedia(datos?.origen||"");
+  const destinoDemoClave=normalizarClaveMedia(datos?.destinoPrincipal||"");
+  if(esDemo && origenDemoClave.includes("saarlouis") && destinoDemoClave.includes("zagreb")){
     return [
       {day:1,place:"Günzburg",country:"Germany",driving_km:338,driving_minutes:205,is_final:false},
       {day:2,place:"Salzburg",country:"Austria",driving_km:300,driving_minutes:180,is_final:false},
