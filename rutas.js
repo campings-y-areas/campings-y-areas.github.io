@@ -1,6 +1,6 @@
 
 // ==========================================
-// CAMPINGS & ÁREAS - RUTAS FASE 35 · COLA MULTIMEDIA AUTOMÁTICA + ESTADOS IA + MEDIA D1 VALIDADA
+// CAMPINGS & ÁREAS - RUTAS FASE 43 · MULTIMEDIA NO BLOQUEANTE + ETAPAS MULTIDÍA PROTEGIDAS
 // Geoapify: autocomplete + routing + mapa + paradas inteligentes + recálculo real + pernoctas propias
 // ==========================================
 
@@ -2135,7 +2135,11 @@ formRuta.addEventListener("submit",async event=>{
     try{
       document.getElementById("estadoCalculo").textContent="Comprobando investigación Premium del destino…";
       const cacheDestino=await consultarInvestigacionDestinoD1(lugares.at(-1),datos);
-      if(cacheDestino?.research){
+      // FASE43: una investigación D1 de SOLO el destino final no puede sustituir
+      // una ruta de varias jornadas. Si hay varias etapas, seguimos con el flujo
+      // genérico de coste cero para conservar los fines de jornada reales.
+      // La guía Premium de destino se usa únicamente en rutas de una sola jornada.
+      if(cacheDestino?.research && stopsCache.length===1){
         await Promise.all([cargarMediaVerificado(),cargarLugaresVerificados()]);
         document.getElementById("estadoCalculo").textContent="Seleccionando fotografías de visitas, restaurantes y pernocta…";
         await prepararFotosInvestigacionPremium(
