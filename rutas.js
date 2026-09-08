@@ -511,6 +511,8 @@ function perfilWorker(datos,lugares,stops=[]){
     children:(datos.edades||[]).map(Number).filter(Number.isFinite),
     pet:Boolean(datos.mascota),
     max_driving_hours:Number(datos.maxConduccion)||4,
+    trip_days:Math.max(1,Number(datos.dias)||1),
+    requested_via:Array.isArray(datos.destinosExtra)?datos.destinosExtra.map(x=>String(x||"").trim()).filter(Boolean):[],
     pace:ritmoWorker(datos.ritmo),
     interests:interesesWorker(datos.intereses),
     overnight_preference:preferenciaPernoctaWorker(datos),
@@ -2096,8 +2098,14 @@ formRuta.addEventListener("submit",async event=>{
       estadoPlanIA=planCache;
 
       if(planCache?.ok&&planCache?.status==="planned"&&planCache?.plan){
+        if(Array.isArray(planCache.resolved_stops)&&planCache.resolved_stops.length){
+          stopsCache=planCache.resolved_stops;
+        }
         const guiaCache=await consultarRedactorIA(datos,lugares,stopsCache,planCache.plan);
         if(guiaCache?.ok&&guiaCache?.status==="written"&&guiaCache?.guide){
+          if(Array.isArray(guiaCache.resolved_stops)&&guiaCache.resolved_stops.length){
+            stopsCache=guiaCache.resolved_stops;
+          }
           await Promise.all([cargarMediaVerificado(),cargarLugaresVerificados()]);
           document.getElementById("estadoCalculo").textContent="Seleccionando las mejores fotografías…";
           await prepararFotosGuia(guiaCache.guide);
