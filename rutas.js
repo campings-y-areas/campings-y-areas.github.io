@@ -527,7 +527,8 @@ async function consultarPlanificadorIA(datos,lugares,stops){
 async function consultarRedactorIA(datos,lugares,stops,plan){
   const perfil=perfilWorker(datos,lugares,stops);
   delete perfil.country;
-  delete perfil.max_driving_hours;
+  // v41: mantenemos max_driving_hours también en /write-route para que la
+  // identidad de una guía futura conserve el mismo límite logístico de la ruta.
   return llamarWorker("/write-route",{...perfil,plan});
 }
 
