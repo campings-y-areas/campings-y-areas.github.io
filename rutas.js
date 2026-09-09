@@ -2384,15 +2384,6 @@ formRuta.addEventListener("submit",async event=>{
           document.getElementById("estadoCalculo").textContent="Investigación preparada. Comprobando de nuevo el plan de ruta…";
           planCache=await consultarPlanificadorIA(datos,lugares,stopsCache);
           estadoPlanIA=planCache;
-        }else if(investigacionPlan?.failed?.place){
-          planCache={
-            ...planCache,
-            missing_research:[investigacionPlan.failed],
-            research_failure:investigacionPlan.response||null
-          };
-          estadoPlanIA=planCache;
-          document.getElementById("estadoCalculo").textContent=
-            `No se pudo completar la investigación de ${investigacionPlan.failed.place}`;
         }
       }
 
@@ -2410,14 +2401,6 @@ formRuta.addEventListener("submit",async event=>{
           if(investigacionGuia?.ok){
             document.getElementById("estadoCalculo").textContent="Investigaciones de las etapas preparadas. Redactando la guía…";
             guiaCache=await consultarRedactorIA(datos,lugares,stopsCache,planCache.plan);
-          }else if(investigacionGuia?.failed?.place){
-            guiaCache={
-              ...guiaCache,
-              missing_research:[investigacionGuia.failed],
-              research_failure:investigacionGuia.response||null
-            };
-            document.getElementById("estadoCalculo").textContent=
-              `No se pudo completar la investigación de ${investigacionGuia.failed.place}`;
           }
         }
 
