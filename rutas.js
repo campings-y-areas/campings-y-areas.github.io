@@ -549,6 +549,72 @@ async function consultarInvestigacionDestinoD1(lugar,datos){
   return d;
 }
 
+// ---------- FASE43: investigación automática únicamente de destinos pendientes ----------
+// El Worker mantiene la protección de costes. Con OPENAI_SPEND_ENABLED=false esta
+// función puede comprobar el flujo, pero nunca puede provocar una llamada de pago.
+async function investigarDestinoPendienteIA(place,country=""){
+  const base=String(config.WORKER_BASE_URL||"").replace(/\/+$/,"");
+  if(!base)return {ok:false,status:"worker_unavailable",openai_called:false};
+  const nombre=String(place||"").trim();
+  const pais=String(country||"").trim();
+  if(!nombre)return {ok:false,status:"invalid_destination",openai_called:false};
+
+  const u=new URL(`${base}/research-destination`);
+  u.searchParams.set("place",nombre);
+  if(pais)u.searchParams.set("country",pais);
+
+  const r=await fetch(u.toString(),{method:"GET",cache:"no-store"});
+  let d=null;
+  try{d=await r.json();}catch{}
+  if(!r.ok){
+    return {
+      ok:false,
+      status:d?.status||"research_error",
+      openai_called:Boolean(d?.openai_called),
+      place:nombre,
+      country:pais||null,
+      message:d?.message||d?.error||`El Worker respondió con error ${r.status}.`,
+      details:d||null
+    };
+  }
+  return d||{ok:false,status:"research_error",openai_called:false,place:nombre,country:pais||null};
+}
+
+async function completarInvestigacionesPendientesIA(missingResearch=[]){
+  const unicos=[];
+  const vistos=new Set();
+  for(const item of (Array.isArray(missingResearch)?missingResearch:[])){
+    const place=String(item?.place||"").trim();
+    const country=String(item?.country||"").trim();
+    const key=String(item?.place_key||`${place}|${country}`).trim().toLowerCase();
+    if(!place||vistos.has(key))continue;
+    vistos.add(key);
+    unicos.push({place,country,place_key:item?.place_key||key});
+  }
+
+  for(let i=0;i<unicos.length;i++){
+    const item=unicos[i];
+    document.getElementById("estadoCalculo").textContent=
+      `Preparando investigación de ${item.place} (${i+1}/${unicos.length})…`;
+    const d=await investigarDestinoPendienteIA(item.place,item.country);
+
+    // Éxito tanto si ya estaba en D1 como si se acaba de investigar y guardar.
+    if(d?.ok&&(d?.research||d?.cached===true||d?.cache?.saved===true))continue;
+
+    // La protección de costes sigue mandando. No transformamos este estado en una
+    // guía genérica ni intentamos investigar otros destinos después del bloqueo.
+    return {
+      ok:false,
+      status:d?.status||"research_error",
+      openai_called:Boolean(d?.openai_called),
+      failed:item,
+      response:d
+    };
+  }
+
+  return {ok:true,status:"research_ready",openai_called:false};
+}
+
 function minutosTexto(min){
   const n=Math.max(0,Number(min)||0);
   if(!n)return "";
@@ -2095,14 +2161,39 @@ formRuta.addEventListener("submit",async event=>{
     let estadoPlanIA=null;
     try{
       document.getElementById("estadoCalculo").textContent="Comprobando investigación, fotografías y caché de la ruta…";
-      const planCache=await consultarPlanificadorIA(datos,lugares,stopsCache);
+      let planCache=await consultarPlanificadorIA(datos,lugares,stopsCache);
       estadoPlanIA=planCache;
+
+      // FASE43: si el Planificador indica exactamente qué investigación falta,
+      // pedimos únicamente esos destinos y reintentamos el plan una sola vez.
+      // Con el gasto bloqueado el Worker devuelve cost_guard_active y conservamos
+      // el research_required original para mostrar el aviso correcto al usuario.
+      if(planCache?.ok&&planCache?.status==="research_required"&&Array.isArray(planCache?.missing_research)&&planCache.missing_research.length){
+        const investigacionPlan=await completarInvestigacionesPendientesIA(planCache.missing_research);
+        if(investigacionPlan?.ok){
+          document.getElementById("estadoCalculo").textContent="Investigación preparada. Comprobando de nuevo el plan de ruta…";
+          planCache=await consultarPlanificadorIA(datos,lugares,stopsCache);
+          estadoPlanIA=planCache;
+        }
+      }
 
       if(planCache?.ok&&planCache?.status==="planned"&&planCache?.plan){
         if(Array.isArray(planCache.resolved_stops)&&planCache.resolved_stops.length){
           stopsCache=planCache.resolved_stops;
         }
-        const guiaCache=await consultarRedactorIA(datos,lugares,stopsCache,planCache.plan);
+        let guiaCache=await consultarRedactorIA(datos,lugares,stopsCache,planCache.plan);
+
+        // El Redactor puede descubrir que faltan investigaciones de las etapas
+        // intermedias creadas por el plan. Investigamos solo esas etapas y
+        // reintentamos /write-route una sola vez.
+        if(guiaCache?.ok&&guiaCache?.status==="research_required"&&Array.isArray(guiaCache?.missing_research)&&guiaCache.missing_research.length){
+          const investigacionGuia=await completarInvestigacionesPendientesIA(guiaCache.missing_research);
+          if(investigacionGuia?.ok){
+            document.getElementById("estadoCalculo").textContent="Investigaciones de las etapas preparadas. Redactando la guía…";
+            guiaCache=await consultarRedactorIA(datos,lugares,stopsCache,planCache.plan);
+          }
+        }
+
         if(guiaCache?.ok&&guiaCache?.status==="written"&&guiaCache?.guide){
           if(Array.isArray(guiaCache.resolved_stops)&&guiaCache.resolved_stops.length){
             stopsCache=guiaCache.resolved_stops;
