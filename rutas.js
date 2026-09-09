@@ -201,7 +201,13 @@ async function prepararFotosGuia(guide,stops=[]){
   const trabajos=[];
   (guide?.days||[]).forEach(d=>{
     const ciudad=ciudadDeDiaGuia(d,stops);
-    (d.highlights||[]).forEach(x=>trabajos.push(buscarFotoAutomatica(x.name,ciudad,"visit")));
+    const country=paisDeDiaGuia(d,stops);
+    (d.highlights||[]).forEach(x=>{
+      trabajos.push(buscarFotoAutomatica(x.name,ciudad,"visit"));
+      const r=buscarEntidadInvestigacionRuta(x.name,"visit",ciudad,country);
+      const web=webOficialCorregida(x.name,x.url||r?.website||"");
+      if(web)trabajos.push(consultarMediaOficial(x.name,ciudad,"visit",web));
+    });
   });
   await Promise.allSettled(trabajos);
 }
@@ -382,6 +388,14 @@ function buscarEntidadInvestigacionRuta(nombre,tipo="",ciudad="",country=""){
   return null;
 }
 
+
+const URLS_OFICIALES_CORREGIDAS=Object.freeze({
+  "laichinger tiefenhohle":"https://www.tiefenhoehle.de/"
+});
+function webOficialCorregida(nombre,url=""){
+  return URLS_OFICIALES_CORREGIDAS[normalizarClaveMedia(nombre)]||String(url||"").trim();
+}
+
 function htmlDatosLugar(nombre,tipo="",webGuia="",ciudad="",country=""){
   const l=buscarLugarVerificado(nombre,tipo);
   const r=buscarEntidadInvestigacionRuta(nombre,tipo,ciudad,country);
@@ -393,7 +407,7 @@ function htmlDatosLugar(nombre,tipo="",webGuia="",ciudad="",country=""){
   const enlaces=[];
   const mapsUrl=l?.maps_url||urlGoogleMapsTexto(nombre,address);
   if(mapsUrl)enlaces.push(htmlEnlaceGuia("📍 Abrir en Google Maps",mapsUrl));
-  const web=webGuia||r?.website||l?.website||"";
+  const web=webOficialCorregida(nombre,webGuia||r?.website||l?.website||"");
   if(web)enlaces.push(htmlEnlaceGuia(tipo==="visit"?"🌐 Información oficial":"🌐 Web oficial",web));
   if(enlaces.length)h+=`<div class="guia-enlaces">${enlaces.join("")}</div>`;
   return h;
@@ -441,11 +455,11 @@ function htmlFotoVerificada(nombre,ciudad,tipo){
   }
 
   // Visitas turísticas: se conserva el selector editorial/licenciado que ya funcionaba bien.
-  const imageUrl=editorial?.image_url||auto?.image_url||lugar?.image_url||media?.image_url||extra?.image_url||"";
+  const imageUrl=editorial?.image_url||auto?.image_url||oficial?.image_url||lugar?.image_url||media?.image_url||extra?.image_url||"";
   if(!imageUrl)return "";
   const pie=lugar?.name||media?.name||nombre;
-  const sourcePage=editorial?.source_page||auto?.source_page||lugar?.image_source_page||media?.source_page||extra?.source_page||"";
-  const credit=editorial?.credit||auto?.credit||lugar?.image_credit||media?.credit||extra?.credit||"";
+  const sourcePage=editorial?.source_page||auto?.source_page||oficial?.source_page||lugar?.image_source_page||media?.source_page||extra?.source_page||"";
+  const credit=editorial?.credit||auto?.credit||oficial?.credit||lugar?.image_credit||media?.credit||extra?.credit||"";
   const fuente=sourcePage
     ? `<a href="${escapar(sourcePage)}" target="_blank" rel="noopener">Fuente de la imagen</a>`
     : "";
@@ -775,7 +789,8 @@ function claveMediaOficial(nombre,ciudad,tipo){
 }
 
 async function consultarMediaOficial(nombre,ciudad,tipo,website){
-  if(!nombre||!website||!["restaurant","overnight"].includes(tipo))return null;
+  if(!nombre||!website||!["restaurant","overnight","visit"].includes(tipo))return null;
+  website=webOficialCorregida(nombre,website);
   const key=claveMediaOficial(nombre,ciudad,tipo);
   if(mediaOficialCache.has(key))return mediaOficialCache.get(key);
   try{
