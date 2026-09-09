@@ -2119,11 +2119,30 @@ formRuta.addEventListener("submit",async event=>{
           document.getElementById("estadoCalculo").textContent="Guía preparada";
           return;
         }
+
+        // Si el plan existe pero la guía no puede completarse todavía, detenemos aquí
+        // el flujo. No se debe convertir la investigación del destino en una falsa
+        // guía de ruta que ignore las jornadas reales de conducción.
+        if(["research_required","media_research_required","cost_guard_active"].includes(guiaCache?.status)){
+          pintarResultadoBase(ruta,lugares,datos);
+          montarPortadaAntesMapa(datos);
+          colocarResumenDebajoMapa();
+          instalarAccionesRuta(lugares,stopsCache,datos);
+          document.getElementById("etapasRuta").innerHTML=htmlEstadoIA(guiaCache);
+          document.getElementById("estadoCalculo").textContent=
+            guiaCache.status==="research_required"
+              ? "Ruta pendiente de investigación IA"
+              : guiaCache.status==="media_research_required"
+                ? "Ruta pendiente de fotografías verificadas"
+                : "Ruta pendiente de planificación IA";
+          return;
+        }
       }
 
-      // v34: el propio Worker decide si faltan investigaciones o multimedia.
-      // En esos estados la web se detiene de forma limpia y NO fabrica una guía genérica.
-      if(planCache?.status==="research_required"||planCache?.status==="media_research_required"){
+      // El propio Worker decide si faltan investigaciones, multimedia o si OpenAI
+      // está bloqueado. En cualquiera de esos estados la web se detiene de forma
+      // limpia y NO fabrica una guía genérica a partir únicamente del destino.
+      if(["research_required","media_research_required","cost_guard_active"].includes(planCache?.status)){
         pintarResultadoBase(ruta,lugares,datos);
         montarPortadaAntesMapa(datos);
         colocarResumenDebajoMapa();
@@ -2132,7 +2151,9 @@ formRuta.addEventListener("submit",async event=>{
         document.getElementById("estadoCalculo").textContent=
           planCache.status==="research_required"
             ? "Ruta pendiente de investigación IA"
-            : "Ruta pendiente de fotografías verificadas";
+            : planCache.status==="media_research_required"
+              ? "Ruta pendiente de fotografías verificadas"
+              : "Ruta pendiente de planificación IA";
         return;
       }
     }catch(errCache){
