@@ -183,11 +183,24 @@ async function buscarFotoAutomatica(nombre,ciudad,tipo="visit",terminosExtra=[])
   }catch(e){console.warn("Selector fotográfico",e);}
   return null;
 }
-async function prepararFotosGuia(guide){
+function stopDeDiaGuia(dia,stops=[]){
+  const n=Number(dia?.day);
+  return (stops||[]).find(x=>Number(x?.day)===n)||null;
+}
+
+function ciudadDeDiaGuia(dia,stops=[]){
+  return String(dia?.city||dia?.destination||stopDeDiaGuia(dia,stops)?.place||"").trim();
+}
+
+function paisDeDiaGuia(dia,stops=[]){
+  return String(dia?.country||stopDeDiaGuia(dia,stops)?.country||"").trim();
+}
+
+async function prepararFotosGuia(guide,stops=[]){
   cargarFotoAutoLocal();
   const trabajos=[];
   (guide?.days||[]).forEach(d=>{
-    const ciudad=d.city||d.destination||"";
+    const ciudad=ciudadDeDiaGuia(d,stops);
     (d.highlights||[]).forEach(x=>trabajos.push(buscarFotoAutomatica(x.name,ciudad,"visit")));
   });
   await Promise.allSettled(trabajos);
@@ -315,16 +328,72 @@ function limpiarTextoGuia(texto){
     .trim();
 }
 
-function htmlDatosLugar(nombre,tipo="",webGuia=""){
+const investigacionRutaD1Cache=new Map();
+
+function claveInvestigacionRuta(place,country=""){
+  return `${normalizarClaveMedia(place)}|${normalizarClaveMedia(country)}`;
+}
+
+async function cargarInvestigacionRutaD1(place,country=""){
+  const nombre=String(place||"").trim();
+  if(!nombre)return null;
+  const key=claveInvestigacionRuta(nombre,country);
+  if(investigacionRutaD1Cache.has(key))return investigacionRutaD1Cache.get(key);
+  try{
+    const base=String(config.WORKER_BASE_URL||"").replace(/\/+$/,"" );
+    if(!base)return null;
+    const u=new URL(`${base}/research-cache`);
+    u.searchParams.set("place",nombre);
+    if(country)u.searchParams.set("country",country);
+    const r=await fetch(u.toString(),{method:"GET",cache:"no-store"});
+    if(!r.ok)return null;
+    const d=await r.json();
+    const research=(d?.ok&&d?.found&&d?.cache_valid&&d?.research)?d.research:null;
+    if(research)investigacionRutaD1Cache.set(key,research);
+    return research;
+  }catch(e){
+    console.info("Investigación D1 no disponible para",nombre,e);
+    return null;
+  }
+}
+
+function buscarEntidadInvestigacionRuta(nombre,tipo="",ciudad="",country=""){
+  const target=normalizarClaveMedia(nombre);
+  if(!target)return null;
+  const investigaciones=[];
+  if(ciudad){
+    const exacta=investigacionRutaD1Cache.get(claveInvestigacionRuta(ciudad,country));
+    if(exacta)investigaciones.push(exacta);
+    if(!exacta){
+      for(const [key,value] of investigacionRutaD1Cache){
+        if(key.startsWith(`${normalizarClaveMedia(ciudad)}|`))investigaciones.push(value);
+      }
+    }
+  }
+  if(!investigaciones.length)investigaciones.push(...investigacionRutaD1Cache.values());
+  for(const research of investigaciones){
+    let lista=[];
+    if(tipo==="restaurant")lista=research?.gastronomy?.restaurants||[];
+    else if(tipo==="overnight")lista=research?.overnight||[];
+    else if(tipo==="visit")lista=research?.must_see||[];
+    const found=(lista||[]).find(x=>normalizarClaveMedia(x?.name)===target);
+    if(found)return found;
+  }
+  return null;
+}
+
+function htmlDatosLugar(nombre,tipo="",webGuia="",ciudad="",country=""){
   const l=buscarLugarVerificado(nombre,tipo);
-  if(!l)return webGuia?`<div class="guia-enlaces">${htmlEnlaceGuia("🌐 Web oficial",webGuia)}</div>`:"";
+  const r=buscarEntidadInvestigacionRuta(nombre,tipo,ciudad,country);
   let h="";
-  if(tipo==="visit"&&l.visit_time)h+=`<p><strong>⏱️ Tiempo orientativo:</strong> ${escapar(l.visit_time)}</p>`;
-  if(tipo==="visit"&&l.what_to_see)h+=`<p><strong>👀 Qué merece la pena ver:</strong> ${escapar(l.what_to_see)}</p>`;
-  if(l.address)h+=`<p><strong>📍 Dirección:</strong> ${escapar(l.address)}</p>`;
+  if(tipo==="visit"&&l?.visit_time)h+=`<p><strong>⏱️ Tiempo orientativo:</strong> ${escapar(l.visit_time)}</p>`;
+  if(tipo==="visit"&&l?.what_to_see)h+=`<p><strong>👀 Qué merece la pena ver:</strong> ${escapar(l.what_to_see)}</p>`;
+  const address=String(r?.address||l?.address||"").trim();
+  if(address)h+=`<p><strong>📍 Dirección:</strong> ${escapar(address)}</p>`;
   const enlaces=[];
-  if(l.maps_url)enlaces.push(htmlEnlaceGuia("📍 Abrir en Google Maps",l.maps_url));
-  const web=webGuia||l.website||"";
+  const mapsUrl=l?.maps_url||urlGoogleMapsTexto(nombre,address);
+  if(mapsUrl)enlaces.push(htmlEnlaceGuia("📍 Abrir en Google Maps",mapsUrl));
+  const web=webGuia||r?.website||l?.website||"";
   if(web)enlaces.push(htmlEnlaceGuia(tipo==="visit"?"🌐 Información oficial":"🌐 Web oficial",web));
   if(enlaces.length)h+=`<div class="guia-enlaces">${enlaces.join("")}</div>`;
   return h;
@@ -769,6 +838,47 @@ async function cargarMediaDestinoD1(destino,country=""){
   }
 }
 
+async function investigarMediaDestinoIA(place,country=""){
+  try{
+    const base=String(config.WORKER_BASE_URL||"").replace(/\/+$/,"" );
+    if(!base||!place||!country)return null;
+    const r=await fetch(`${base}/research-media`,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({place,country})
+    });
+    const d=await r.json().catch(()=>null);
+    // El multimedia nunca bloquea la ruta. Si el gasto está desactivado, si no
+    // existe una foto adecuada o si una búsqueda falla, la guía continúa sin ella.
+    if(!r.ok&&d?.status!=="cost_guard_active")console.info("Multimedia IA no completada para",place,d);
+    return d;
+  }catch(e){
+    console.info("Multimedia IA no disponible para",place,e);
+    return null;
+  }
+}
+
+async function prepararDatosYMediaGuia(stops=[]){
+  const unicos=[];
+  const vistos=new Set();
+  for(const stop of (stops||[])){
+    const place=String(stop?.place||"").trim();
+    const country=String(stop?.country||"").trim();
+    if(!place||!country)continue;
+    const key=claveInvestigacionRuta(place,country);
+    if(vistos.has(key))continue;
+    vistos.add(key);
+    unicos.push({place,country});
+  }
+
+  for(const x of unicos){
+    document.getElementById("estadoCalculo").textContent=`Comprobando datos y fotografías de ${x.place}…`;
+    await cargarInvestigacionRutaD1(x.place,x.country);
+    await investigarMediaDestinoIA(x.place,x.country);
+    await cargarMediaDestinoD1(x.place,x.country);
+  }
+}
+
 async function prepararFotosInvestigacionPremium(research,destino,country=""){
   cargarFotoAutoLocal();
 
@@ -920,7 +1030,7 @@ function montarPortadaAntesMapa(datos={}){
   mapaEl.insertAdjacentHTML('beforebegin',htmlPortadaRuta(datos));
 }
 
-function htmlGuiaIA(guide,datos={}){
+function htmlGuiaIA(guide,datos={},stops=[]){
   if(!guide||typeof guide!=="object")return '<div class="error-ruta"><strong>⚠️ La guía almacenada no tiene un formato válido.</strong></div>';
   let h=`<div class="guia-pdf guia-ia-real">
     <header class="guia-portada">
@@ -945,6 +1055,8 @@ function htmlGuiaIA(guide,datos={}){
   }
 
   (guide.days||[]).forEach(d=>{
+    const ciudadDia=ciudadDeDiaGuia(d,stops);
+    const paisDia=paisDeDiaGuia(d,stops);
     h+=`<section class="guia-dia-editorial">
       <div class="guia-dia-titulo">
         <span>DÍA ${escapar(d.day||"")}</span>
@@ -963,10 +1075,10 @@ function htmlGuiaIA(guide,datos={}){
       d.highlights.forEach(x=>{
         h+=`<div class="guia-recomendacion">
           <h4>${escapar(x.name||"Visita")}</h4>
-          ${htmlFotoVerificada(x.name,d.city||d.destination||"", "visit")}
+          ${htmlFotoVerificada(x.name,ciudadDia, "visit")}
           ${x.description?`<p>${escapar(limpiarTextoGuia(x.description))}</p>`:""}
           ${x.practical_note?`<p><strong>Información práctica:</strong> ${escapar(limpiarTextoGuia(x.practical_note))}</p>`:""}
-          ${htmlDatosLugar(x.name,"visit",x.url||"")}
+          ${htmlDatosLugar(x.name,"visit",x.url||"",ciudadDia,paisDia)}
         </div>`;
       });
       h+=`</section>`;
@@ -978,11 +1090,11 @@ function htmlGuiaIA(guide,datos={}){
       d.restaurants.forEach((x,i)=>{
         h+=`<div class="guia-recomendacion ${i===0?"principal":""}">
           <h4>${i===0?"⭐ Recomendado · ":""}${escapar(x.name||"Restaurante")}</h4>
-          ${htmlFotoVerificada(x.name,d.city||d.destination||"", "restaurant")}
+          ${htmlFotoVerificada(x.name,ciudadDia, "restaurant")}
           ${x.why?`<p>${escapar(limpiarTextoGuia(x.why))}</p>`:""}
           ${x.specialty?`<p><strong>Qué probar:</strong> ${escapar(limpiarTextoGuia(x.specialty))}</p>`:""}
           ${x.practical_note?`<p><strong>Consejo:</strong> ${escapar(limpiarTextoGuia(x.practical_note))}</p>`:""}
-          ${htmlDatosLugar(x.name,"restaurant",x.website||"")}
+          ${htmlDatosLugar(x.name,"restaurant",x.website||"",ciudadDia,paisDia)}
         </div>`;
       });
       h+=`</section>`;
@@ -994,12 +1106,12 @@ function htmlGuiaIA(guide,datos={}){
       d.overnight.forEach((x,i)=>{
         h+=`<div class="guia-recomendacion ${i===0?"principal":""}">
           <h4>${i===0?"⭐ Recomendado · ":""}${escapar(x.name||"Pernocta")}</h4>
-          ${htmlFotoVerificada(x.name,d.city||d.destination||"", "overnight")}
+          ${htmlFotoVerificada(x.name,ciudadDia, "overnight")}
           ${x.type?`<p><strong>Tipo:</strong> ${escapar(limpiarTextoGuia(x.type))}</p>`:""}
           ${x.why?`<p>${escapar(limpiarTextoGuia(x.why))}</p>`:""}
           ${x.services?`<p><strong>Servicios:</strong> ${escapar(limpiarTextoGuia(x.services))}</p>`:""}
           ${x.practical_info?`<p><strong>Información práctica:</strong> ${escapar(limpiarTextoGuia(x.practical_info))}</p>`:""}
-          ${htmlDatosLugar(x.name,"overnight",x.website||"")}
+          ${htmlDatosLugar(x.name,"overnight",x.website||"",ciudadDia,paisDia)}
         </div>`;
       });
       h+=`</section>`;
@@ -2077,8 +2189,75 @@ function instalarRutaEjemplo(){
   });
 }
 
+let rutaEnPreparacion=false;
+let observadorEsperaRuta=null;
+
+function mostrarPantallaEsperaRuta(){
+  rutaEnPreparacion=true;
+  document.getElementById("pantallaEsperaRutaIA")?.remove();
+  const capa=document.createElement("div");
+  capa.id="pantallaEsperaRutaIA";
+  capa.style.cssText="position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:clamp(14px,3vw,34px);text-align:center;overflow:auto;background:#173348;";
+
+  // FASE45: pantalla de espera visual. La imagen se guarda junto a rutas.html
+  // con el nombre ruta-espera-ia.png. Si por cualquier motivo no carga,
+  // el degradado de fondo mantiene el aviso perfectamente legible.
+  capa.innerHTML=`
+    <div aria-hidden="true" style="position:absolute;inset:0;background:
+      linear-gradient(180deg,rgba(5,24,38,.12),rgba(5,24,38,.28)),
+      url('ruta-espera-ia.png') center center / cover no-repeat;"></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.04) 0%,rgba(0,0,0,.02) 58%,rgba(0,0,0,.28) 100%);pointer-events:none"></div>
+
+    <div style="position:relative;z-index:1;width:min(760px,94vw);margin:auto;padding-top:min(40vh,420px)">
+      <div style="background:rgba(255,255,255,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.78);border-radius:22px;padding:18px 20px 16px;box-shadow:0 18px 55px rgba(0,0,0,.28)">
+        <div id="mensajeEsperaRutaIA" style="font-size:clamp(15px,2vw,18px);font-weight:850;color:#103f57;line-height:1.35">Iniciando preparación…</div>
+        <div style="height:7px;background:#dfe9ee;border-radius:999px;overflow:hidden;margin:12px auto 0">
+          <div style="width:38%;height:100%;background:#0a8fa7;border-radius:999px;animation:esperaRutaIA 1.35s ease-in-out infinite alternate"></div>
+        </div>
+      </div>
+      <div style="margin:12px auto 0;background:rgba(255,241,241,.96);border:1px solid rgba(201,45,45,.26);border-radius:18px;padding:12px 16px;color:#a21919;font-weight:800;box-shadow:0 10px 30px rgba(0,0,0,.18)">
+        ⚠️ Puede tardar varios minutos. No actualices, cierres ni vuelvas atrás mientras se prepara la ruta.
+      </div>
+    </div>`;
+  if(!document.getElementById("estiloEsperaRutaIA")){
+    const st=document.createElement("style");
+    st.id="estiloEsperaRutaIA";
+    st.textContent=`
+      @keyframes esperaRutaIA{from{transform:translateX(-70%)}to{transform:translateX(190%)}}
+      @media (max-width:700px){#pantallaEsperaRutaIA>div[style*="padding-top"]{padding-top:52vh!important}}
+    `;
+    document.head.appendChild(st);
+  }
+  document.body.appendChild(capa);
+  const estado=document.getElementById("estadoCalculo");
+  if(estado){
+    observadorEsperaRuta?.disconnect();
+    observadorEsperaRuta=new MutationObserver(()=>{
+      const m=document.getElementById("mensajeEsperaRutaIA");
+      if(m&&estado.textContent.trim())m.textContent=estado.textContent.trim();
+    });
+    observadorEsperaRuta.observe(estado,{childList:true,subtree:true,characterData:true});
+  }
+}
+
+function ocultarPantallaEsperaRuta(){
+  rutaEnPreparacion=false;
+  observadorEsperaRuta?.disconnect();
+  observadorEsperaRuta=null;
+  document.getElementById("pantallaEsperaRutaIA")?.remove();
+}
+
+window.addEventListener("beforeunload",event=>{
+  if(!rutaEnPreparacion)return;
+  event.preventDefault();
+  event.returnValue="";
+});
+
 formRuta.addEventListener("submit",async event=>{
   event.preventDefault(); if(!validarPasoActual())return;
+  const botonSubmit=formRuta.querySelector('button[type="submit"]');
+  if(botonSubmit)botonSubmit.disabled=true;
+  mostrarPantallaEsperaRuta();
   const esDemo=ejecutarRutaComoDemo;
   ejecutarRutaComoDemo=false;
   const datos=recogerDatos(); localStorage.setItem("campingsAreasRutaBorrador",JSON.stringify(datos));
@@ -2125,12 +2304,12 @@ formRuta.addEventListener("submit",async event=>{
       const guiaDemo={"title":"De Saarlouis a Zagreb: una ruta tranquila por Günzburg y Salzburg","subtitle":"Tres etapas en autocaravana entre patrimonio suabo, el barroco de Salzburg y la capital croata","introduction":"Esta ruta está pensada para dos adultos que prefieren combinar conducción razonable, paseos urbanos y gastronomía local sin convertir cada llegada en una carrera. Günzburg funciona como una escala ligera y práctica; Salzburg aporta la gran parada cultural del trayecto; Zagreb es el destino final, con una primera toma de contacto posible tras instalarse en un camping autorizado.","trip_summary":{"days":3,"route":"Saarlouis – Günzburg – Salzburg – Zagreb","travel_style":"Autocaravana, ritmo equilibrado, visitas culturales y gastronomía local","key_advice":"Dejad la autocaravana en cada pernocta y visitad las ciudades a pie o en transporte público. La última etapa dura aproximadamente 4 horas y 5 minutos, ligeramente por encima del límite deseado; si cuatro horas es un máximo estricto, habría que añadir una etapa intermedia no incluida en la investigación."},"before_you_go":["Reservad las pernoctas con antelación, especialmente en temporada alta y en Salzburg.","Confirmad antes de salir los horarios de atracciones, restaurantes y servicios de las áreas, ya que pueden cambiar por temporada, obras, festivos o eventos.","En Günzburg, el área del Waldbad es funcional, pero sus instalaciones sanitarias permanentes están cerradas por reforma y cuenta con un aseo provisional.","No intentéis entrar con la autocaravana en los centros históricos de Salzburg o Zagreb ni improviséis la pernocta en aparcamientos urbanos.","Si queréis visitar la Fortaleza de Hohensalzburg con calma, la mejora más valiosa sería añadir una noche en Salzburg.","La ruta no incluye LEGOLAND: sin niños y con solo una noche, exigiría una jornada completa que descompensaría el viaje."],"days":[{"day":1,"heading":"Günzburg: una llegada ligera entre plazas suabas","driving":"338 km y 205 minutos desde Saarlouis. Es una jornada cercana a cuatro horas, por lo que la visita debe ser una extensión relajada de la llegada, no un día turístico completo.","recommended_visit_time":"Entre 2 y 4 horas para el casco histórico. El paseo hacia Bürgerpark y Schloss Reisensburg puede añadir 1 o 2 horas si todavía queda energía.","arrival_strategy":"Instalad la autocaravana en Wohnmobilstellplatz Günzburg am Waldbad y no volváis a moverla. Desde allí, el centro queda a unos 15 minutos a pie. La zona está junto al Waldbad, con restaurante y biergarten próximos.","pace_advice":"Después de una etapa larga, caminad primero por el centro y dejad el parque como opción flexible. Si la conducción se retrasa, basta con Marktplatz, Stadtturm y Frauenkirche y una cena tranquila.","opening_narrative":"La primera etapa no necesita una gran atracción para funcionar. Günzburg ofrece una transición amable entre la carretera y el viaje: se aparca, se estiran las piernas y, en pocos minutos, aparece una plaza histórica con terrazas, torre y arquitectura rococó. Es una escala pensada para recuperar el ritmo, no para acumular visitas.","visit_story":"Comenzad en Marktplatz, donde se concentran el ambiente urbano y las opciones para hacer una pausa. Continuad hacia el Stadtturm y la Frauenkirche, uno de los templos rococó destacados de Dominikus Zimmermann. Si la tarde sigue abierta, prolongad el paseo por Bürgerpark hacia Schloss Reisensburg. El Heimatmuseum queda como alternativa breve para un día lluvioso o para quienes prefieran historia local a un paseo al aire libre.","highlights":[{"name":"Casco histórico: Marktplatz, Stadtturm y Frauenkirche","description":"El recorrido más compensado para una primera toma de contacto: reúne la plaza principal, el emblema urbano y la Frauenkirche en un paseo compacto.","practical_note":"Calculad 2-4 horas a ritmo lento, incluyendo una pausa. La iglesia indica apertura diaria desde las 9:00 hasta el anochecer, pero el acceso debe confirmarse antes de la visita. Los martes por la mañana hay mercado semanal en la plaza.","url":"https://www.guenzburg-tourismus.de/en/"},{"name":"Bürgerpark y paseo hacia Schloss Reisensburg","description":"Una extensión verde y tranquila que contrasta con el centro y ayuda a cerrar la jornada después de conducir.","practical_note":"Es adecuado para una caminata de 1-2 horas, pero no justifica por sí solo el desvío hasta Günzburg.","url":"https://www.guenzburg-tourismus.de/erkunden/sehenswuerdigkeiten/lieblingsplaetze/"},{"name":"Heimatmuseum Günzburg","description":"Pequeño complemento histórico sobre los asentamientos, el pasado romano y la evolución cultural de la ciudad.","practical_note":"Reservad aproximadamente una hora. Es la mejor alternativa si llueve o si el centro deja ganas de profundizar.","url":"https://www.guenzburg-tourismus.de/service/"}],"family_section":"No viajan niños, así que LEGOLAND queda fuera del programa. El casco antiguo y el parque ofrecen una escala suficiente para dos adultos; el parque temático solo tendría sentido reservando una jornada completa y, preferiblemente, dos noches.","gastronomy_intro":"La cena encaja mejor en el centro, sin desplazamientos adicionales. Buscad cocina suaba y elegid un plato contundente, como Kässpatzle, Maultaschen o Zwiebelrostbraten; para una opción más informal, una Brotzeit o Weißwurst con brezel resulta adecuada.","restaurants":[{"name":"Restaurant Zum Rad","why":"Está en Marktplatz, junto al Stadtturm, y permite cenar justo después del paseo sin volver a utilizar la autocaravana.","specialty":"Kässpatzle, Zwiebelrostbraten y otras propuestas de cocina suaba.","practical_note":"Es la opción más lógica para una cena sentados en el centro; conviene confirmar la carta y el horario de la fecha elegida.","website":"https://www.xn--zumradgnzburg-2ob.de/"},{"name":"Brauereigasthof Zur Münz","why":"Alternativa céntrica de estilo tradicional, con terraza y ubicación directa en Marktplatz.","specialty":"Cocina regional casera y platos suabos según la carta del día.","practical_note":"Puede ser una buena elección si preferís un ambiente de cervecería tradicional.","website":"https://www.hotel-muenz.de/"}],"overnight_intro":"Para una sola noche, priorizad la proximidad al centro y la facilidad de llegada. El área municipal es práctica, pero no ofrece ahora el confort sanitario completo de un camping.","overnight":[{"name":"Wohnmobilstellplatz Günzburg am Waldbad","type":"Área municipal para autocaravanas","why":"Es el mejor encaje para una noche de tránsito: está junto al bosque aluvial del Danubio y permite ir andando al centro sin mover el vehículo.","services":"Abierta todo el año y 24 horas. Dispone actualmente de un contenedor provisional con aseo; en verano puede utilizarse la ducha del Waldbad de 9:00 a 11:00, previa gestión con la taquilla. Hay restaurante, quiosco y biergarten junto al área.","practical_info":"Heidenheimer Straße 6, 89312 Günzburg. Está destinada a autocaravanas, no a caravanas o remolques. Confirmad antes de llegar el estado de los servicios, la disponibilidad y las condiciones de pago.","website":"https://wohnmobilstellplatz-guenzburg.de/"},{"name":"Camping Gutshof Donauried","type":"Camping para autocaravanas, caravanas y tiendas","why":"Es la alternativa cómoda si preferís instalaciones completas o queréis permanecer más de una noche, especialmente para combinar naturaleza y una visita prolongada a la zona.","services":"Parcelas con electricidad, agua y vaciado junto al bloque sanitario, además de conexión wifi, quiosco, pequeño bistró, desayunos bajo pedido y reserva de pan.","practical_info":"Heidenheimer Straße 115, 89312 Günzburg. Está a unos 10 km de LEGOLAND. El camping anuncia un cierre del 20 al 24 de septiembre de 2026; confirmad temporada y disponibilidad.","website":"https://campingplatz-guenzburg.de/"}],"practical_advice":["No contéis con duchas completas en el área del Waldbad sin confirmar previamente sus condiciones.","Si llegáis cansados, no añadáis el Bürgerpark: el centro histórico ya proporciona una visita suficiente.","La Frauenkirche, el Stadtturm, los restaurantes y el museo pueden modificar sus horarios por temporada o eventos."],"useful_links":[{"label":"Turismo de Günzburg","purpose":"Información general para completar el paseo por la ciudad y comprobar horarios.","url":"https://www.guenzburg-tourismus.de/en/"},{"label":"Área de autocaravanas del Waldbad","purpose":"Condiciones de la pernocta y estado de los servicios.","url":"https://wohnmobilstellplatz-guenzburg.de/"}],"visual_plan":{"hero":{"subject":"Marktplatz de Günzburg con el Stadtturm y fachadas históricas","purpose":"Mostrar que la escala ofrece un centro compacto y caminable tras la conducción.","caption":"Una primera tarde suaba que se recorre sin prisas desde la propia pernocta.","source_page_url":"https://www.guenzburg-tourismus.de/en/"},"gallery":[{"subject":"Interior o fachada de la Frauenkirche","purpose":"Reforzar el interés patrimonial de una visita breve.","caption":"La Frauenkirche aporta el gran acento rococó de la escala.","source_page_url":"https://www.guenzburg-tourismus.de/en/"},{"subject":"Sendero arbolado del Bürgerpark","purpose":"Ayudar a valorar la alternativa de paseo y descanso al aire libre.","caption":"Una prolongación verde para terminar el día sin añadir conducción.","source_page_url":"https://www.guenzburg-tourismus.de/erkunden/sehenswuerdigkeiten/lieblingsplaetze/"},{"subject":"Autocaravanas en el área del Waldbad","purpose":"Mostrar la relación entre la pernocta y el centro histórico.","caption":"Una base funcional para dejar el vehículo y caminar hasta la ciudad.","source_page_url":"https://wohnmobilstellplatz-guenzburg.de/"}]}},{"day":2,"heading":"Salzburg: una tarde barroca bien escogida","driving":"300 km y 180 minutos desde Günzburg. La duración deja margen para instalarse y hacer una primera visita concentrada.","recommended_visit_time":"Entre 2 y 4 horas durante la tarde de llegada. La Fortaleza de Hohensalzburg, DomQuartier y Hellbrunn requieren más tiempo y encajan mejor con una noche adicional.","arrival_strategy":"Dejad la autocaravana en Camping Aigen, Camping Nord-Sam o Reisemobil Stellplatz Salzburg, según disponibilidad y preferencias. Entrad al centro a pie o en transporte público; no intentéis circular por el casco histórico.","pace_advice":"Concentrad la tarde en un único eje: Mirabell, Salzach, Getreidegasse y catedral. No encadenéis museos ni Hellbrunn después de la conducción.","opening_narrative":"Salzburg merece una visita, pero no conviene recibirla con una lista imposible. La llegada funciona mejor como una introducción: jardines barrocos, un paseo junto al Salzach, las calles del casco histórico y la catedral. La fortaleza queda arriba, visible durante todo el recorrido, como promesa de una segunda jornada que esta ruta compacta no llega a conceder.","visit_story":"Empezad en los jardines de Mirabell para entrar en la ciudad con una perspectiva amplia de Hohensalzburg. Cruzad el Salzach y continuad por Getreidegasse hasta el casco histórico y la catedral. Este itinerario ofrece arquitectura, ambiente y vistas sin depender de horarios de museo. Si podéis añadir una noche, dedicad el día siguiente a la fortaleza y, según la temporada, a Hellbrunn o DomQuartier.","highlights":[{"name":"Jardines de Mirabell","description":"Jardines barrocos de acceso sencillo y uno de los mejores encuadres de la fortaleza sobre la ciudad.","practical_note":"Funcionan especialmente bien como comienzo de una visita de tarde. El palacio tiene horarios propios y algunas zonas pueden cerrar por actos municipales.","url":"https://www2.salzburg.info/en/sights/top10/mirabell-palace-gardens"},{"name":"Getreidegasse, casco histórico y Catedral de Salzburg","description":"El conjunto urbano más equilibrado para pocas horas: callejuelas, fachadas barrocas, plazas y la catedral.","practical_note":"Hacedlo a pie y reservad margen para servicios religiosos o eventos que limiten el acceso a la catedral.","url":"https://www.salzburg.info/PDF/02_Sehenswertes/Sights.pdf"},{"name":"Fortaleza de Hohensalzburg","description":"El gran símbolo de Salzburg, con patios, museos, salas históricas y panorámicas de la ciudad y las montañas.","practical_note":"Calculad entre 2,5 y 4 horas con el funicular y los miradores. En esta ruta queda como motivo principal para añadir una noche.","url":"https://www.salzburg.info/en/sights/top10/hohensalzburg-fortress"}],"family_section":"No es necesario adaptar el programa a niños. Para dos adultos interesados en patrimonio y gastronomía, el paseo urbano es suficiente para la tarde. Hellbrunn y el Museo del Juguete no se fuerzan por falta de tiempo.","gastronomy_intro":"La cena puede cerrar el recorrido sin salir del centro. Elegid entre Pinzgauer Kasnockn, Schweinsbraten o una Brettljause; el Salzburger Nockerl queda como postre para compartir si está disponible.","restaurants":[{"name":"StieglKeller","why":"Su terraza y sus vistas hacen que tenga sentido al final del paseo o de una futura visita a la fortaleza, sin buscar una experiencia excesivamente formal.","specialty":"Brettljause, Salzburger Nockerl y cerveza de Stiegl.","practical_note":"Es una buena elección para una comida o cena de ambiente local; confirmad disponibilidad de terraza y horario.","website":"https://www.restaurant-stieglkeller.at/"},{"name":"Herzl Restaurant","why":"Está en Getreidegasse y permite cenar dentro del propio itinerario del casco histórico.","specialty":"Cocina austríaca tradicional, asados, trucha local y Salzburger Nockerl.","practical_note":"Encaja si preferís cenar antes de regresar al camping, sin añadir desplazamientos.","website":"https://www.restaurantherzl.at/"}],"overnight_intro":"La elección depende de si buscáis una noche funcional o el descanso y los servicios de un camping. En ambos casos, la prioridad es dejar el vehículo fuera del centro.","overnight":[{"name":"Camping Aigen","type":"Camping para autocaravana, camper y caravana","why":"Es la opción más equilibrada para descansar: está en una zona verde al pie del Gaisberg, relativamente cerca del centro y con restaurante propio.","services":"Abierto todo el año, con sanitarios, duchas, restaurante y posibilidad de reservar parcela en línea.","practical_info":"Weberbartlweg 20P, 5026 Salzburg. La entrada y salida cierran de 22:00 a 07:00; si llegáis tarde, el establecimiento indica que se puede ocupar una parcela libre y formalizar el registro después. Confirmad dimensiones y disponibilidad.","website":"https://www.campingaigen.com/"},{"name":"Reisemobil Stellplatz Salzburg","type":"Área exclusiva para autocaravanas","why":"Es la solución más práctica para una sola noche de tránsito y está orientada específicamente a autocaravanas.","services":"106 plazas y parada de autobús junto al recinto, con conexión a la red urbana.","practical_info":"Carl-Zuckmayer-Straße, Salzburg-Kasern. No es adecuada para caravanas remolcadas. Confirmad tarifa, disponibilidad y servicios concretos.","website":"https://www.reisemobilstellplatz-salzburg.at/"}],"practical_advice":["La pernocta libre está prohibida en espacios públicos al aire libre de Salzburg; utilizad solo campings y áreas autorizadas.","Si se añade una noche, priorizad Hohensalzburg y dejad Hellbrunn para una jornada con tiempo y dentro de su temporada de apertura.","Camping Nord-Sam es otra opción si necesitáis un camping periférico que contemple expresamente autocaravanas y caravanas.","Planificad la llegada dentro de los horarios de acceso del camping elegido."],"useful_links":[{"label":"Información de autocaravanas en Salzburg","purpose":"Orientación oficial sobre llegada, circulación y estacionamiento con vehículo vivienda.","url":"https://cms.salzburg.info/en/travel-info/arrival-traffic/campervan"},{"label":"Información de la Fortaleza de Hohensalzburg","purpose":"Horarios, entradas y planificación de la visita principal si añadís una noche.","url":"https://www.salzburg.info/en/sights/top10/hohensalzburg-fortress"},{"label":"Camping Aigen","purpose":"Reserva y condiciones del camping más cómodo para esta etapa.","url":"https://www.campingaigen.com/"}],"visual_plan":{"hero":{"subject":"Vista de Salzburg desde los jardines de Mirabell hacia la fortaleza","purpose":"Explicar visualmente por qué el eje Mirabell-centro funciona en una tarde corta.","caption":"La primera mirada a Salzburg: jardines, tejados históricos y la fortaleza dominando el horizonte.","source_page_url":"https://www2.salzburg.info/en/sights/top10/mirabell-palace-gardens"},"gallery":[{"subject":"Jardines de Mirabell con la fortaleza al fondo","purpose":"Mostrar el comienzo sencillo y caminable de la visita.","caption":"Un punto de partida sereno para dejar atrás la carretera.","source_page_url":"https://www2.salzburg.info/en/sights/top10/mirabell-palace-gardens"},{"subject":"Getreidegasse y fachadas del casco histórico","purpose":"Ayudar a imaginar el paseo urbano y sus distancias compactas.","caption":"El ambiente del centro histórico se disfruta mejor a pie.","source_page_url":"https://www.salzburg.info/PDF/02_Sehenswertes/Sights.pdf"},{"subject":"Panorámica desde Hohensalzburg","purpose":"Mostrar el atractivo de añadir una noche para visitar la fortaleza con calma.","caption":"La recompensa de reservar más tiempo a Salzburg.","source_page_url":"https://www.salzburg.info/en/sights/top10/hohensalzburg-fortress"}]}},{"day":3,"heading":"Zagreb: llegada al destino y primer paseo por la Ciudad Alta","driving":"410 km y 245 minutos desde Salzburg, aproximadamente 4 horas y 5 minutos. La etapa supera ligeramente el máximo diario deseado; salid descansados y prevéd una pausa de conducción.","recommended_visit_time":"Entre 2 y 4 horas si la llegada es temprana. Para conocer Zagreb con calma, lo ideal es añadir una noche y dedicar el día siguiente al centro.","arrival_strategy":"Instalad la autocaravana en Camp Zagreb, junto al lago Rakitje, y descansad antes de entrar en la ciudad. Para la visita, utilizad transporte público autorizado o un traslado adecuado; no llevéis el vehículo grande al casco histórico.","pace_advice":"Tras la conducción, limitad la primera toma de contacto a Dolac y Gornji grad. El Museum of Broken Relationships solo debe añadirse si queda energía real; Maksimir y el zoo requieren medio día y no encajan en esta llegada.","opening_narrative":"Zagreb aparece al final de una etapa exigente, así que la llegada no debe convertirse en una segunda jornada completa. Camp Zagreb ofrece una base para recuperar fuerzas junto al lago Rakitje. Si todavía queda tarde, el centro permite una primera caminata compacta: mercado, calles históricas, iglesias y miradores, con la cocina local como cierre.","visit_story":"Para una visita breve, entrad temprano en Dolac y continuad por Tkalčićeva hacia Kamenita vrata, la iglesia de San Marcos y el paseo Strossmayer. Es el Zagreb más reconocible y se recorre a pie, aunque los adoquines y las pendientes aconsejan no tener prisa. Con un día entero, añadid el Museum of Broken Relationships; Maksimir y el zoo quedan como alternativa para una estancia posterior más larga.","highlights":[{"name":"Dolac Market y Gornji grad","description":"El recorrido que mejor resume Zagreb: mercado cotidiano, calles históricas, cafés, miradores y los principales símbolos de la Ciudad Alta.","practical_note":"Visitad Dolac por la mañana; la oficina de turismo recomienda hacerlo antes de las 13:00. Calculad 2-4 horas sin museos y tened en cuenta el pavimento irregular y las pendientes.","url":""},{"name":"Iglesia de San Marcos y Kamenita vrata","description":"Dos paradas breves y esenciales: la cubierta policromada de San Marcos y la antigua Puerta de Piedra.","practical_note":"El exterior de San Marcos suele bastar para una llegada corta. El acceso interior puede estar restringido por oficios o seguridad; la Puerta de Piedra es gratuita.","url":""},{"name":"Museum of Broken Relationships","description":"Un museo singular basado en objetos personales y relatos de rupturas, apropiado para una visita adulta y diferente.","practical_note":"Reservad 60-90 minutos. Añadidlo solo con tiempo real, no a costa del descanso tras la carretera.","url":"https://www.visitzagreb.hr/zagreb/museum-broken-relationships/"},{"name":"Parque Maksimir y Zoo de Zagreb","description":"La mejor ampliación para una estancia de día completo: parque histórico, lagos y un zoo con enfoque educativo y de conservación.","practical_note":"Requiere medio día y queda fuera de la tarde de llegada. Es la opción preferible si ampliáis la estancia.","url":""}],"family_section":"No viajan niños. Por eso, el centro histórico y el museo bastan para una primera visita. Si añadís una noche, Maksimir y el zoo aportan una pausa verde y más tiempo al aire libre.","gastronomy_intro":"La llegada pide una comida o cena sin rodeos, preferiblemente en el centro si aún vais a pasear. Buscad štrukli, purica s mlincima o cocina continental de taberna; orehnjača y makovnjača son buenos cierres dulces.","restaurants":[{"name":"Gostionica Ficlek","why":"Está en el centro y ofrece una cocina tradicional de Zagreb que encaja naturalmente con el paseo por la Ciudad Alta.","specialty":"Štrukli y cocina tradicional zagrebí.","practical_note":"Es la elección más coherente para sentarse a comer durante una jornada dedicada al centro; confirmad horario y disponibilidad.","website":"https://ficlek.hr/en/"},{"name":"Didov san","why":"Permite cerrar el recorrido de Gornji grad sin desplazamiento adicional y mantiene el enfoque en la cocina croata tradicional.","specialty":"Štrukli horneados, entrantes tradicionales y vinos locales.","practical_note":"Adecuado si preferís una comida pausada antes de regresar al camping.","website":"https://www.deliciouszagreb.com/en/restaurants/traditional/didov-san"}],"overnight_intro":"Aunque Zagreb sea el destino final, dormir fuera del centro simplifica mucho la llegada y evita las calles estrechas, los adoquines y las limitaciones de estacionamiento de la zona histórica.","overnight":[{"name":"Camp Zagreb","type":"Camping de 4 estrellas para autocaravana, camper y caravana","why":"Es la base más útil para terminar la ruta: está junto al lago Rakitje, a unos 14 km de Zagreb, y permite descansar sin mover la autocaravana por el centro.","services":"Parcelas para vehículos grandes y caravanas, electricidad, agua, algunas parcelas con desagüe, sanitarios, lavandería, vaciado de WC químico y servicios para campers. También ofrece restaurante, tienda, wifi, parque infantil, alquiler de bicicletas y embarcaciones.","practical_info":"Jezerska 6, 10437 Rakitje. Las parcelas A están destinadas a vehículos grandes y conjuntos con caravana de más de 9 m. El camping indica recepción 24 horas; confirmad disponibilidad y condiciones de parcela antes de llegar.","website":"https://www.campzagreb.com/?lang=en"}],"practical_advice":["No planteéis acampada libre: utilizad el camping autorizado.","Antes de visitar Zagreb, comprobad obras y restricciones de acceso, especialmente en la catedral y otros edificios afectados por rehabilitaciones.","El centro histórico presenta adoquines, cuestas y posibles cambios de recorrido; reservad más tiempo del que sugieren las distancias sobre el mapa.","Si llegáis cansados, una cena en Camp Zagreb y un paseo junto al lago serán un mejor cierre que forzar una visita nocturna.","Si el límite de cuatro horas es estricto, esta etapa debe dividirse con una parada intermedia verificada; no se propone una ubicación no incluida en la investigación."],"useful_links":[{"label":"Camp Zagreb","purpose":"Reserva, servicios y condiciones de la pernocta final.","url":"https://www.campzagreb.com/?lang=en"},{"label":"Transporte urbano de Zagreb","purpose":"Planificar la entrada a la ciudad sin mover la autocaravana.","url":"https://new.infozagreb.hr/en/travel-plan/traveling-in-town/public-transport-and-parking/zagreb-municipal-transit-system-zet"},{"label":"Información turística de Zagreb","purpose":"Consultar obras, accesos y planificación del recorrido por la ciudad.","url":"https://www.infozagreb.hr/en/"}],"visual_plan":{"hero":{"subject":"Vista de la Ciudad Alta de Zagreb con la iglesia de San Marcos","purpose":"Mostrar el carácter histórico y compacto de la primera visita al destino.","caption":"La imagen más reconocible de Zagreb para empezar a conocer la capital a pie.","source_page_url":""},"gallery":[{"subject":"Mercado de Dolac por la mañana","purpose":"Ayudar a decidir el mejor momento para iniciar el recorrido.","caption":"Dolac marca el comienzo natural de una mañana por Zagreb.","source_page_url":""},{"subject":"Calles y miradores de Gornji grad","purpose":"Mostrar las pendientes y el ambiente peatonal de la Ciudad Alta.","caption":"Un paseo histórico que conviene recorrer sin prisas.","source_page_url":""},{"subject":"Camp Zagreb junto al lago Rakitje","purpose":"Transmitir la comodidad de descansar fuera del centro con la autocaravana.","caption":"Una base tranquila para terminar la ruta y visitar Zagreb sin circular por el casco histórico.","source_page_url":"https://www.campzagreb.com/?lang=en"}]}}],"final_notes":"La ruta funciona como un itinerario compacto de tres días: Günzburg aporta una escala ligera, Salzburg una tarde cultural concentrada y Zagreb una llegada final con paseo opcional. La principal concesión está en la última etapa, que supera ligeramente las cuatro horas. Si disponéis de tiempo adicional, añadid primero una noche en Salzburg para visitar Hohensalzburg con calma y después otra en Zagreb para recorrer Maksimir o sus museos sin prisas.","media_status":"pending_enrichment"};
 
       document.getElementById("estadoCalculo").textContent="Seleccionando las mejores fotografías…";
-      await prepararFotosGuia(guiaDemo);
+      await prepararFotosGuia(guiaDemo,stops);
       document.getElementById("estadoCalculo").textContent="Guía preparada";
       montarPortadaAntesMapa(datos);
       colocarResumenDebajoMapa();
       instalarAccionesRuta(lugares,stops,datos);
-      document.getElementById("etapasRuta").innerHTML=htmlGuiaIA(guiaDemo,datos);
+      document.getElementById("etapasRuta").innerHTML=htmlGuiaIA(guiaDemo,datos,stops);
       instalarBotonPDF();
       return;
     }
@@ -2199,13 +2378,14 @@ formRuta.addEventListener("submit",async event=>{
             stopsCache=guiaCache.resolved_stops;
           }
           await Promise.all([cargarMediaVerificado(),cargarLugaresVerificados()]);
+          await prepararDatosYMediaGuia(stopsCache);
           document.getElementById("estadoCalculo").textContent="Seleccionando las mejores fotografías…";
-          await prepararFotosGuia(guiaCache.guide);
+          await prepararFotosGuia(guiaCache.guide,stopsCache);
           pintarResultadoBase(ruta,lugares,datos);
           montarPortadaAntesMapa(datos);
           colocarResumenDebajoMapa();
           instalarAccionesRuta(lugares,stopsCache,datos);
-          document.getElementById("etapasRuta").innerHTML=htmlGuiaIA(guiaCache.guide,datos);
+          document.getElementById("etapasRuta").innerHTML=htmlGuiaIA(guiaCache.guide,datos,stopsCache);
           instalarBotonPDF();
           document.getElementById("estadoCalculo").textContent="Guía preparada";
           return;
@@ -2312,6 +2492,8 @@ formRuta.addEventListener("submit",async event=>{
     document.getElementById("etapasRuta").innerHTML=`<div class="error-ruta"><strong>⚠️ ${escapar(e.message)}</strong><br>No se ha generado una guía automática de sustitución.</div>`;
   }finally{
     resultado.classList.remove("cargando-ruta");
+    ocultarPantallaEsperaRuta();
+    if(botonSubmit)botonSubmit.disabled=false;
   }
 });
 
