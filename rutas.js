@@ -2197,25 +2197,21 @@ function mostrarPantallaEsperaRuta(){
   document.getElementById("pantallaEsperaRutaIA")?.remove();
   const capa=document.createElement("div");
   capa.id="pantallaEsperaRutaIA";
-  capa.style.cssText="position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:clamp(14px,3vw,34px);text-align:center;overflow:auto;background:#173348;";
+  capa.style.cssText="position:fixed;inset:0;z-index:99999;width:100vw;height:100vh;height:100dvh;overflow:hidden;text-align:center;background:#173348;";
 
-  // FASE45: pantalla de espera visual. La imagen se guarda junto a rutas.html
-  // con el nombre ruta-espera-ia.png. Si por cualquier motivo no carga,
-  // el degradado de fondo mantiene el aviso perfectamente legible.
+  // FASE46: espera visual responsive. La fotografía completa nunca se recorta:
+  // un fondo ampliado rellena la pantalla y, encima, la imagen original se muestra
+  // con object-fit:contain para PC, tablet, móvil vertical y móvil horizontal.
   capa.innerHTML=`
-    <div aria-hidden="true" style="position:absolute;inset:0;background:
-      linear-gradient(180deg,rgba(5,24,38,.12),rgba(5,24,38,.28)),
-      url('ruta-espera-ia.png') center center / cover no-repeat;"></div>
-    <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.04) 0%,rgba(0,0,0,.02) 58%,rgba(0,0,0,.28) 100%);pointer-events:none"></div>
-
-    <div style="position:relative;z-index:1;width:min(760px,94vw);margin:auto;padding-top:min(40vh,420px)">
-      <div style="background:rgba(255,255,255,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.78);border-radius:22px;padding:18px 20px 16px;box-shadow:0 18px 55px rgba(0,0,0,.28)">
-        <div id="mensajeEsperaRutaIA" style="font-size:clamp(15px,2vw,18px);font-weight:850;color:#103f57;line-height:1.35">Iniciando preparación…</div>
-        <div style="height:7px;background:#dfe9ee;border-radius:999px;overflow:hidden;margin:12px auto 0">
-          <div style="width:38%;height:100%;background:#0a8fa7;border-radius:999px;animation:esperaRutaIA 1.35s ease-in-out infinite alternate"></div>
-        </div>
+    <div class="espera-ruta-fondo" aria-hidden="true"></div>
+    <img class="espera-ruta-imagen" src="ruta-espera-ia.png" alt="" aria-hidden="true">
+    <div class="espera-ruta-sombra" aria-hidden="true"></div>
+    <div class="espera-ruta-estado">
+      <div class="espera-ruta-panel">
+        <div id="mensajeEsperaRutaIA">Iniciando preparación…</div>
+        <div class="espera-ruta-barra"><div></div></div>
       </div>
-      <div style="margin:12px auto 0;background:rgba(255,241,241,.96);border:1px solid rgba(201,45,45,.26);border-radius:18px;padding:12px 16px;color:#a21919;font-weight:800;box-shadow:0 10px 30px rgba(0,0,0,.18)">
+      <div class="espera-ruta-aviso">
         ⚠️ Puede tardar varios minutos. No actualices, cierres ni vuelvas atrás mientras se prepara la ruta.
       </div>
     </div>`;
@@ -2224,7 +2220,27 @@ function mostrarPantallaEsperaRuta(){
     st.id="estiloEsperaRutaIA";
     st.textContent=`
       @keyframes esperaRutaIA{from{transform:translateX(-70%)}to{transform:translateX(190%)}}
-      @media (max-width:700px){#pantallaEsperaRutaIA>div[style*="padding-top"]{padding-top:52vh!important}}
+      #pantallaEsperaRutaIA .espera-ruta-fondo{position:absolute;inset:-3%;background:linear-gradient(rgba(6,25,38,.30),rgba(6,25,38,.42)),url('ruta-espera-ia.png') center/cover no-repeat;filter:blur(16px);transform:scale(1.05)}
+      #pantallaEsperaRutaIA .espera-ruta-imagen{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center;display:block}
+      #pantallaEsperaRutaIA .espera-ruta-sombra{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.02) 0%,rgba(0,0,0,.02) 62%,rgba(0,0,0,.30) 100%);pointer-events:none}
+      #pantallaEsperaRutaIA .espera-ruta-estado{position:absolute;z-index:2;left:50%;bottom:clamp(12px,2.2vh,28px);transform:translateX(-50%);width:min(720px,calc(100vw - 28px));display:grid;gap:clamp(7px,1.2vh,12px)}
+      #pantallaEsperaRutaIA .espera-ruta-panel{background:rgba(255,255,255,.94);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);border:1px solid rgba(255,255,255,.8);border-radius:clamp(14px,2vw,22px);padding:clamp(10px,1.8vh,17px) clamp(12px,2.2vw,20px);box-shadow:0 14px 45px rgba(0,0,0,.28)}
+      #pantallaEsperaRutaIA #mensajeEsperaRutaIA{font-size:clamp(13px,1.35vw,18px);font-weight:850;color:#103f57;line-height:1.3}
+      #pantallaEsperaRutaIA .espera-ruta-barra{height:clamp(5px,.8vh,7px);background:#dfe9ee;border-radius:999px;overflow:hidden;margin:clamp(7px,1.2vh,12px) auto 0}
+      #pantallaEsperaRutaIA .espera-ruta-barra>div{width:38%;height:100%;background:#0a8fa7;border-radius:999px;animation:esperaRutaIA 1.35s ease-in-out infinite alternate}
+      #pantallaEsperaRutaIA .espera-ruta-aviso{background:rgba(255,241,241,.96);border:1px solid rgba(201,45,45,.28);border-radius:clamp(12px,1.8vw,18px);padding:clamp(8px,1.4vh,12px) clamp(10px,2vw,16px);color:#a21919;font-size:clamp(11px,1.12vw,15px);line-height:1.25;font-weight:800;box-shadow:0 9px 26px rgba(0,0,0,.20)}
+      @media (max-width:700px) and (orientation:portrait){
+        #pantallaEsperaRutaIA .espera-ruta-imagen{object-position:center center}
+        #pantallaEsperaRutaIA .espera-ruta-estado{bottom:max(10px,env(safe-area-inset-bottom));width:calc(100vw - 20px);gap:7px}
+        #pantallaEsperaRutaIA .espera-ruta-panel{padding:9px 11px;border-radius:14px}
+        #pantallaEsperaRutaIA .espera-ruta-aviso{padding:8px 10px;border-radius:13px}
+      }
+      @media (max-height:560px) and (orientation:landscape){
+        #pantallaEsperaRutaIA .espera-ruta-estado{left:auto;right:10px;bottom:10px;transform:none;width:min(430px,46vw);gap:6px}
+        #pantallaEsperaRutaIA .espera-ruta-panel{padding:8px 10px;border-radius:12px}
+        #pantallaEsperaRutaIA #mensajeEsperaRutaIA{font-size:12px}
+        #pantallaEsperaRutaIA .espera-ruta-aviso{font-size:10px;padding:7px 9px;border-radius:11px}
+      }
     `;
     document.head.appendChild(st);
   }
