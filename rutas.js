@@ -528,7 +528,13 @@ function formatoKm(m){ return new Intl.NumberFormat("es-ES",{maximumFractionDigi
 
 
 // ---------- Backend IA: Cloudflare Worker ----------
+// v49: blindaje de la demo editorial. Mientras la demo está en curso,
+// ninguna ruta capaz de planificar, redactar o investigar con OpenAI puede ejecutarse.
+let demoEnCurso=false;
 async function llamarWorker(ruta, cuerpo){
+  if(demoEnCurso && ["/plan-route","/write-route","/research-destination","/research-media"].includes(String(ruta||""))){
+    throw new Error("La demo editorial no puede llamar a servicios IA de pago.");
+  }
   const base=String(config.WORKER_BASE_URL||"").replace(/\/+$/,"");
   if(!base)throw new Error("Falta configurar la dirección del Worker de Rutas.");
   const r=await fetch(`${base}${ruta}`,{
@@ -2198,6 +2204,7 @@ function instalarRutaEjemplo(){
     const b=document.getElementById("verRutaDemo");
     b.disabled=true;b.textContent="Preparando ruta de ejemplo…";
     ejecutarRutaComoDemo=true;
+    formRuta.dataset.rutaDemo="1";
     prepararRutaEjemplo();
     formRuta.requestSubmit();
     setTimeout(()=>{b.disabled=false;b.textContent="▶ Ver ruta de ejemplo";},1200);
@@ -2289,8 +2296,12 @@ formRuta.addEventListener("submit",async event=>{
   const botonSubmit=formRuta.querySelector('button[type="submit"]');
   if(botonSubmit)botonSubmit.disabled=true;
   mostrarPantallaEsperaRuta();
-  const esDemo=ejecutarRutaComoDemo;
+  // v49: doble identificación de la demo. El dataset evita que una actualización
+  // del formulario o un submit intermedio pueda perder el indicador de demo.
+  const esDemo=ejecutarRutaComoDemo || formRuta.dataset.rutaDemo==="1";
   ejecutarRutaComoDemo=false;
+  delete formRuta.dataset.rutaDemo;
+  demoEnCurso=esDemo;
   const datos=recogerDatos(); localStorage.setItem("campingsAreasRutaBorrador",JSON.stringify(datos));
   const resumen=document.getElementById("resumenRuta"); const resultado=document.getElementById("resultadoReal");
   resumen.classList.add("oculto"); resultado.classList.remove("oculto"); resultado.classList.add("cargando-ruta");
@@ -2522,6 +2533,7 @@ formRuta.addEventListener("submit",async event=>{
     document.getElementById("estadoCalculo").textContent="No se pudo crear la ruta";
     document.getElementById("etapasRuta").innerHTML=`<div class="error-ruta"><strong>⚠️ ${escapar(e.message)}</strong><br>No se ha generado una guía automática de sustitución.</div>`;
   }finally{
+    demoEnCurso=false;
     resultado.classList.remove("cargando-ruta");
     ocultarPantallaEsperaRuta();
     if(botonSubmit)botonSubmit.disabled=false;
