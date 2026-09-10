@@ -576,18 +576,27 @@ function ritmoWorker(valor){
 }
 
 function interesesWorker(intereses=[]){
-  const s=new Set(intereses||[]);
-  const out=[];
-  if(["ciudades","monumentos","pueblos","museos-ninos","naturaleza","montana","playa","senderismo","animales","acuarios","parques"].some(x=>s.has(x)))out.push("turismo");
-  if(s.has("gastronomia"))out.push("gastronomía");
-  return out.length?out:["turismo"];
+  const etiquetas={
+    naturaleza:"naturaleza",
+    playa:"playa",
+    montana:"montaña",
+    pueblos:"pueblos",
+    ciudades:"ciudades",
+    monumentos:"monumentos",
+    gastronomia:"gastronomía",
+    senderismo:"senderismo",
+    animales:"animales",
+    acuarios:"acuarios",
+    parques:"parques temáticos",
+    "museos-ninos":"museos interactivos"
+  };
+  return [...new Set(intereses||[])].map(x=>etiquetas[x]||String(x||"").trim()).filter(Boolean);
 }
 
 function preferenciaPernoctaWorker(datos){
-  if(datos.vehiculo==="autocaravana"||datos.vehiculo==="camper"){
-    return "campings, áreas o parkings adecuados para autocaravana";
-  }
-  return (datos.pernocta||[]).join(", ");
+  const tipos=(datos.pernocta||[]).map(x=>String(x||"").trim()).filter(Boolean);
+  if(!tipos.length)return "sin preferencia indicada";
+  return `solo estas opciones seleccionadas por el usuario: ${tipos.join(", ")}`;
 }
 
 function perfilWorker(datos,lugares,stops=[]){
@@ -595,16 +604,24 @@ function perfilWorker(datos,lugares,stops=[]){
     origin:nombreLugarWorker(lugares[0],datos.origen),
     destination:nombreLugarWorker(lugares.at(-1),datos.destinoPrincipal),
     country:paisCanonico(lugares.at(-1)?.country_code,lugares.at(-1)?.country),
+    start_date:String(datos.fechaSalida||"").trim(),
     vehicle:datos.vehiculo,
     adults:Number(datos.adultos)||0,
+    children_count:Math.max(0,Number(datos.ninos)||0),
     children:(datos.edades||[]).map(Number).filter(Number.isFinite),
+    family_recommendations:Boolean(datos.recomendacionesNinos),
     pet:Boolean(datos.mascota),
     max_driving_hours:Number(datos.maxConduccion)||4,
     trip_days:Math.max(1,Number(datos.dias)||1),
     requested_via:Array.isArray(datos.destinosExtra)?datos.destinosExtra.map(x=>String(x||"").trim()).filter(Boolean):[],
     pace:ritmoWorker(datos.ritmo),
     interests:interesesWorker(datos.intereses),
+    overnight_types:Array.isArray(datos.pernocta)?datos.pernocta.map(x=>String(x||"").trim()).filter(Boolean):[],
     overnight_preference:preferenciaPernoctaWorker(datos),
+    avoid_preferences:Array.isArray(datos.evitar)?datos.evitar.map(x=>String(x||"").trim()).filter(Boolean):[],
+    budget:String(datos.presupuesto||"").trim(),
+    visual_content:String(datos.contenidoVisual||"").trim(),
+    user_notes:String(datos.notas||"").trim(),
     stops
   };
 }
@@ -2401,6 +2418,16 @@ formRuta.addEventListener("submit",async event=>{
       if(planCache?.ok&&planCache?.status==="planned"&&planCache?.plan){
         if(Array.isArray(planCache.resolved_stops)&&planCache.resolved_stops.length){
           stopsCache=planCache.resolved_stops;
+        }
+        const diasSolicitadosPlan=Math.max(1,Number(datos.dias)||1);
+        const diasDevueltosPlan=Array.isArray(planCache.plan?.days)?planCache.plan.days.length:0;
+        if(diasDevueltosPlan!==diasSolicitadosPlan){
+          montarPortadaAntesMapa(datos);
+          colocarResumenDebajoMapa();
+          instalarAccionesRuta(lugares,stopsCache,datos);
+          document.getElementById("etapasRuta").innerHTML=`<div class="aviso-ruta"><strong>⚠️ El plan IA no respeta la duración elegida.</strong><br>Has pedido <strong>${diasSolicitadosPlan} días</strong>, pero el Planificador ha devuelto <strong>${diasDevueltosPlan}</strong>. La guía no se redactará para evitar gastar en un resultado incompleto.</div>`;
+          document.getElementById("estadoCalculo").textContent="Plan incompleto: no se ha redactado la guía";
+          return;
         }
         let guiaCache=await consultarRedactorIA(datos,lugares,stopsCache,planCache.plan);
 
