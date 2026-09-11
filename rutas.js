@@ -1410,21 +1410,6 @@ function htmlResumenDesvio(distanciaExtra,tiempoExtra,cantidad){
 // ---------- Etapas limpias para el Worker ----------
 let ejecutarRutaComoDemo=false;
 
-function minutosObjetivoEtapa(datos,totalMinutos,totalDiasDisponibles=1){
-  const maxMinutes=Math.max(60,Math.round((Number(datos?.maxConduccion)||4)*60));
-  const ritmo=String(datos?.ritmo||"equilibrado");
-  const objetivoBase=ritmo==="tranquilo"?150:ritmo==="intenso"?225:195;
-  let objetivo=Math.min(maxMinutes,objetivoBase);
-
-  // El valor elegido es un MÁXIMO, no una obligación de conducir hasta agotarlo.
-  // Si el ritmo deseado produciría más jornadas de las disponibles, subimos el
-  // objetivo solo lo necesario, sin superar nunca el máximo indicado.
-  const total=Math.max(1,Number(totalMinutos)||1);
-  const dias=Math.max(1,Number(totalDiasDisponibles)||1);
-  if(Math.ceil(total/objetivo)>dias)objetivo=Math.min(maxMinutes,Math.ceil(total/dias));
-  return Math.max(60,objetivo);
-}
-
 function indicesMuestraCandidatos(candidatos,maximo=5){
   if(candidatos.length<=maximo)return candidatos;
   const out=[];
@@ -1448,29 +1433,37 @@ async function valorarFinJornadaRuta(candidato,datos,idealMinutes,ultimoLugar=""
     const fp=f?.properties||{};
     const localidad=normalizarClaveMedia(nombreLocalidad(fp));
     const dist=Number(fp.distance)||0;
-    return dist<=12000 || (placeKey&&localidad===placeKey);
+    // La investigación Premium se hará para la localidad elegida. Por eso no
+    // permitimos que varios POI lejanos conviertan artificialmente un pequeño
+    // punto de carretera en una gran base turística.
+    return dist<=8000 || (placeKey&&localidad===placeKey);
   });
   const top=poisLocales.slice(0,6);
   const poiScore=top.slice(0,5).reduce((a,f)=>a+Math.max(0,puntuacionPOI(f,datos)),0);
-  let localityBoost=0;
   const intereses=new Set(datos?.intereses||[]);
-  if(rev?.city)localityBoost+=24+(intereses.has("ciudades")?18:0);
-  else if(rev?.town)localityBoost+=18+(intereses.has("pueblos")?18:0);
-  else if(rev?.village)localityBoost+=8+(intereses.has("pueblos")?18:0);
-  else if(rev?.municipality)localityBoost+=6;
-  const importance=Number(rev?.rank?.importance)||0;
-  localityBoost+=Math.min(20,importance*20);
-  if(place&&ultimoLugar&&normalizarClaveMedia(place)===normalizarClaveMedia(ultimoLugar))localityBoost-=40;
 
-  // La calidad turística manda, pero evitamos escoger sistemáticamente el punto
-  // más temprano si dos localidades tienen atractivo parecido.
+  let settlementTier=0,localityBoost=0;
+  if(rev?.city){ settlementTier=3; localityBoost=48+(intereses.has("ciudades")?38:0); }
+  else if(rev?.town){ settlementTier=2; localityBoost=40+(intereses.has("pueblos")?30:0); }
+  else if(rev?.village){ settlementTier=1; localityBoost=10+(intereses.has("pueblos")?16:0); }
+  else if(rev?.municipality){ settlementTier=0; localityBoost=2; }
+
+  const importance=Number(rev?.rank?.importance)||0;
+  const popularity=Number(rev?.rank?.popularity)||0;
+  localityBoost+=Math.min(28,importance*28)+Math.min(18,popularity*2);
+  if(top.length===0)localityBoost-=28;
+  else if(top.length===1)localityBoost-=10;
+  if(place&&ultimoLugar&&normalizarClaveMedia(place)===normalizarClaveMedia(ultimoLugar))localityBoost-=60;
+
   const desviacion=Math.abs((Number(candidato.minutes)||0)-idealMinutes);
-  const timingPenalty=Math.min(35,desviacion*0.18);
+  const timingPenalty=Math.min(32,desviacion*0.16);
   return {
     ...candidato,
     place:place||"Zona de parada",
     country:country||"",
     lat:Number(coord[1]),lon:Number(coord[0]),
+    settlement_tier:settlementTier,
+    local_poi_count:top.length,
     tourist_score:poiScore,
     score:poiScore+localityBoost-timingPenalty
   };
@@ -1547,14 +1540,21 @@ async function elegirFinJornadaInteligente({steps,line,startStep,endStep,totalRe
   // La puntuación turística decide ENTRE soluciones correctas; nunca puede romper
   // la partición logística del resto del trayecto.
   const ordenados=[...candidatos].sort((a,b)=>a.minutes-b.minutes);
-  const muestra=indicesMuestraCandidatos(ordenados,5);
+  const muestra=indicesMuestraCandidatos(ordenados,8);
   const ideal=[...ordenados].sort((a,b)=>Math.abs(a.minutes-idealMinutes)-Math.abs(b.minutes-idealMinutes))[0];
   if(ideal&&!muestra.includes(ideal))muestra.push(ideal);
 
   const valorados=(await Promise.all(muestra.map(c=>valorarFinJornadaRuta(c,datos,idealMinutes,ultimoLugar)))).filter(Boolean);
   if(!valorados.length)throw new Error("No se pudo valorar ninguna base segura para finalizar la jornada.");
-  valorados.sort((a,b)=>b.score-a.score || Math.abs(a.minutes-idealMinutes)-Math.abs(b.minutes-idealMinutes));
-  return valorados[0];
+
+  // Si dentro de los cortes seguros existe una ciudad o localidad de entidad
+  // razonable con interés real alrededor, no dejamos que una aldea o simple
+  // municipio gane únicamente por unos pocos POI cercanos. Si no existe ninguna
+  // alternativa de ese nivel, conservamos el mejor corte seguro disponible.
+  const preferentes=valorados.filter(x=>Number(x.settlement_tier)>=2 && Number(x.local_poi_count)>=1);
+  const pool=preferentes.length?preferentes:valorados;
+  pool.sort((a,b)=>b.score-a.score || Math.abs(a.minutes-idealMinutes)-Math.abs(b.minutes-idealMinutes));
+  return pool[0];
 }
 
 async function crearEtapasWorker(feature,lugares,datos,esDemo=false){
@@ -1667,6 +1667,41 @@ async function crearEtapasWorker(feature,lugares,datos,esDemo=false){
   if(!stops.length || !stops.at(-1)?.is_final)throw new Error("No se pudo construir una secuencia completa de etapas.");
   if(stops.some(x=>Number(x.driving_minutes)>maxMinutes+1))throw new Error("La secuencia final contiene una jornada que supera el máximo de conducción.");
   return stops;
+}
+
+function validarLogisticaLocal(stops,vacationDays,datos){
+  const etapas=Array.isArray(stops)?stops:[];
+  const days=Array.isArray(vacationDays)?vacationDays:[];
+  const totalDias=Math.max(1,Number(datos?.dias)||1);
+  const maxMinutes=Math.max(60,Math.round((Number(datos?.maxConduccion)||4)*60));
+
+  if(!etapas.length)return {ok:false,reason:"sin_etapas"};
+  if(days.length!==totalDias)return {ok:false,reason:"dias_vacaciones",expected:totalDias,actual:days.length};
+  if(!etapas.at(-1)?.is_final)return {ok:false,reason:"sin_destino_final"};
+  if(etapas.slice(0,-1).some(x=>x?.is_final))return {ok:false,reason:"destino_final_duplicado"};
+  if(etapas.some(x=>!String(x?.place||"").trim()))return {ok:false,reason:"etapa_sin_localidad"};
+  if(etapas.some(x=>Number(x?.driving_minutes)>maxMinutes+1))return {ok:false,reason:"etapa_supera_maximo"};
+
+  for(let i=0;i<days.length;i++){
+    const d=days[i]||{};
+    if(Number(d.day)!==i+1)return {ok:false,reason:"numeracion_dias",day:i+1};
+    const baseIndex=Number(d.base_stop_index);
+    if(!Number.isInteger(baseIndex)||baseIndex<1||baseIndex>etapas.length)return {ok:false,reason:"base_invalida",day:i+1};
+    const stop=etapas[baseIndex-1]||{};
+    if(normalizarClaveMedia(d.place)!==normalizarClaveMedia(stop.place))return {ok:false,reason:"base_no_coincide",day:i+1};
+    if(normalizarClaveMedia(d.country)!==normalizarClaveMedia(stop.country||""))return {ok:false,reason:"pais_no_coincide",day:i+1};
+    if(d.day_type==="visita" && (Number(d.driving_minutes)!==0||Number(d.driving_km)!==0))return {ok:false,reason:"visita_con_conduccion",day:i+1};
+  }
+
+  const driveDays=days.filter(d=>d?.day_type==="conduccion_y_visita");
+  if(driveDays.length!==etapas.length)return {ok:false,reason:"jornadas_conduccion",expected:etapas.length,actual:driveDays.length};
+  for(let i=0;i<etapas.length;i++){
+    const stop=etapas[i],d=driveDays[i]||{};
+    if(Number(d.driving_stage_index)!==i+1 || Number(d.base_stop_index)!==i+1)return {ok:false,reason:"orden_etapas",stage:i+1};
+    if(Math.round(Number(d.driving_minutes)||0)!==Math.round(Number(stop.driving_minutes)||0))return {ok:false,reason:"minutos_no_coinciden",stage:i+1};
+    if(Math.round(Number(d.driving_km)||0)!==Math.round(Number(stop.driving_km)||0))return {ok:false,reason:"km_no_coinciden",stage:i+1};
+  }
+  return {ok:true};
 }
 
 async function prepararEsqueletoVacaciones(stops,datos){
@@ -2663,6 +2698,10 @@ formRuta.addEventListener("submit",async event=>{
     // enriquecerla, pero no alterar ciudades, orden, kilómetros, minutos ni días.
     document.getElementById("estadoCalculo").textContent="Distribuyendo los días de vacaciones entre las mejores bases de la ruta…";
     const vacationDays=await prepararEsqueletoVacaciones(stopsCalculados,datos);
+    const contratoLocal=validarLogisticaLocal(stopsCalculados,vacationDays,datos);
+    if(!contratoLocal.ok){
+      throw new Error(`La validación local de la ruta ha detectado una incoherencia (${contratoLocal.reason}). No se consultará investigación ni IA.`);
+    }
     let stopsCache=stopsCalculados;
     let estadoPlanIA=null;
     try{
