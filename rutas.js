@@ -184,32 +184,16 @@ async function buscarFotoAutomatica(nombre,ciudad,tipo="visit",terminosExtra=[])
   return null;
 }
 function stopDeDiaGuia(dia,stops=[]){
-  const baseIndex=Number(dia?._base_stop_index);
-  if(Number.isInteger(baseIndex)&&baseIndex>=1&&baseIndex<=stops.length)return stops[baseIndex-1]||null;
   const n=Number(dia?.day);
   return (stops||[]).find(x=>Number(x?.day)===n)||null;
 }
 
 function ciudadDeDiaGuia(dia,stops=[]){
-  return String(dia?._route_place||dia?.city||dia?.destination||stopDeDiaGuia(dia,stops)?.place||"").trim();
+  return String(dia?.city||dia?.destination||stopDeDiaGuia(dia,stops)?.place||"").trim();
 }
 
 function paisDeDiaGuia(dia,stops=[]){
-  return String(dia?._route_country||dia?.country||stopDeDiaGuia(dia,stops)?.country||"").trim();
-}
-
-function aplicarLogisticaGuia(guide,vacationDays=[],stops=[]){
-  if(!guide||!Array.isArray(guide.days))return guide;
-  const skeleton=Array.isArray(vacationDays)?vacationDays:[];
-  guide.days.forEach((dia,i)=>{
-    const log=skeleton[i]||{};
-    const baseIndex=Number(log.base_stop_index);
-    const stop=Number.isInteger(baseIndex)&&baseIndex>=1?stops[baseIndex-1]||null:null;
-    dia._base_stop_index=Number.isInteger(baseIndex)&&baseIndex>=1?baseIndex:null;
-    dia._route_place=String(log.place||stop?.place||"").trim();
-    dia._route_country=String(log.country||stop?.country||"").trim();
-  });
-  return guide;
+  return String(dia?.country||stopDeDiaGuia(dia,stops)?.country||"").trim();
 }
 
 async function prepararFotosGuia(guide,stops=[]){
@@ -1597,6 +1581,7 @@ async function crearEtapasWorker(feature,lugares,datos,esDemo=false){
   }
 
   const legTotals=legs.map(leg=>(Array.isArray(leg?.steps)?leg.steps:[]).reduce((a,s)=>a+Math.max(0,Number(s?.time)||0)/60,0));
+  const totalDias=Math.max(1,Number(datos?.dias)||1);
 
   // v55: "máximo de conducción" significa exactamente eso: un límite, no un
   // objetivo que añada jornadas artificiales. Primero calculamos el MÍNIMO REAL
@@ -1608,10 +1593,10 @@ async function crearEtapasWorker(feature,lugares,datos,esDemo=false){
   if(legStageCounts.some(x=>!Number.isFinite(x))){
     throw new Error(`Geoapify devolvió un segmento individual que supera el máximo diario de ${Math.round(maxMinutes/60*10)/10} h.`);
   }
-  // No bloqueamos aquí por número de días: primero construimos todas las jornadas
-  // necesarias y el flujo principal compara después ese total con los días elegidos.
-  // Así el usuario recibe el aviso específico de duración insuficiente y no un error
-  // genérico antes de poder conocer cuántas jornadas necesita realmente la ruta.
+  const totalStages=legStageCounts.reduce((a,x)=>a+Math.max(1,Number(x)||1),0);
+  if(totalStages>totalDias){
+    throw new Error(`Con un máximo de ${Math.round(maxMinutes/60*10)/10} h de conducción al día, los destinos elegidos necesitan al menos ${totalStages} jornadas de carretera.`);
+  }
 
   const stops=[];
   let day=1,ultimoLugar="";
@@ -1671,11 +1656,7 @@ async function crearEtapasWorker(feature,lugares,datos,esDemo=false){
         lat:elegido.lat,lon:elegido.lon,
         driving_km:Math.max(0,Math.round(elegido.km)),
         driving_minutes:Math.max(1,Math.round(elegido.minutes)),
-        requested_waypoint:false,requested_index:null,is_final:false,
-        settlement_tier:Number(elegido.settlement_tier)||0,
-        local_poi_count:Number(elegido.local_poi_count)||0,
-        tourist_score:Number(elegido.tourist_score)||0,
-        technical_stop:true
+        requested_waypoint:false,requested_index:null,is_final:false
       });
       ultimoLugar=elegido.place||ultimoLugar;
       consumedMinutes+=elegido.minutes; consumedKm+=elegido.km;
@@ -1685,16 +1666,6 @@ async function crearEtapasWorker(feature,lugares,datos,esDemo=false){
 
   if(!stops.length || !stops.at(-1)?.is_final)throw new Error("No se pudo construir una secuencia completa de etapas.");
   if(stops.some(x=>Number(x.driving_minutes)>maxMinutes+1))throw new Error("La secuencia final contiene una jornada que supera el máximo de conducción.");
-
-  // Control de integridad: al dividir por steps no puede desaparecer ni duplicarse
-  // tiempo/distancia respecto de la ruta original. Admitimos solo el pequeño error
-  // acumulado de redondear cada jornada a minutos y kilómetros enteros.
-  const expectedMinutes=Math.round(legTotals.reduce((a,x)=>a+Math.max(0,Number(x)||0),0));
-  const actualMinutes=stops.reduce((a,x)=>a+Math.max(0,Number(x?.driving_minutes)||0),0);
-  if(Math.abs(actualMinutes-expectedMinutes)>stops.length+1)throw new Error("La suma de tiempos de las etapas no coincide con la ruta calculada.");
-  const expectedKm=Math.round(Math.max(0,Number(p.distance)||0)/1000);
-  const actualKm=stops.reduce((a,x)=>a+Math.max(0,Number(x?.driving_km)||0),0);
-  if(expectedKm>0&&Math.abs(actualKm-expectedKm)>stops.length+2)throw new Error("La suma de kilómetros de las etapas no coincide con la ruta calculada.");
   return stops;
 }
 
@@ -1710,14 +1681,6 @@ function validarLogisticaLocal(stops,vacationDays,datos){
   if(etapas.slice(0,-1).some(x=>x?.is_final))return {ok:false,reason:"destino_final_duplicado"};
   if(etapas.some(x=>!String(x?.place||"").trim()))return {ok:false,reason:"etapa_sin_localidad"};
   if(etapas.some(x=>Number(x?.driving_minutes)>maxMinutes+1))return {ok:false,reason:"etapa_supera_maximo"};
-
-  const requested=etapas.filter(x=>x?.requested_waypoint);
-  const expectedRequested=(Array.isArray(datos?.destinosExtra)?datos.destinosExtra.length:0)+1;
-  if(requested.length!==expectedRequested)return {ok:false,reason:"waypoints_solicitados",expected:expectedRequested,actual:requested.length};
-  for(let i=0;i<requested.length;i++){
-    if(Number(requested[i]?.requested_index)!==i+1)return {ok:false,reason:"orden_waypoints",waypoint:i+1};
-  }
-  if(!requested.at(-1)?.is_final)return {ok:false,reason:"waypoint_final"};
 
   for(let i=0;i<days.length;i++){
     const d=days[i]||{};
@@ -1759,37 +1722,20 @@ async function prepararEsqueletoVacaciones(stops,datos){
       category:etiquetaCategoria(f?.properties?.categories||[]),
       score:Math.round(puntuacionPOI(f,datos))
     })).filter(x=>x.name);
-    const positivos=destacados.filter(x=>Number(x.score)>=6);
-    const poiScore=positivos.slice(0,5).reduce((a,x)=>a+Math.max(0,Number(x.score)||0),0);
+    const poiScore=destacados.slice(0,5).reduce((a,x)=>a+Math.max(0,Number(x.score)||0),0);
     const requestedBoost=stop.requested_waypoint?35:0;
     const finalBoost=stop.is_final?25:0;
-
-    // Una parada necesaria para cortar la conducción no se convierte automáticamente
-    // en base de vacaciones. Los días completos adicionales solo pueden asignarse al
-    // destino final, a un waypoint pedido por el usuario o a una localidad intermedia
-    // que demuestre suficiente interés turístico alrededor del punto calculado.
-    const settlementTier=Number(stop.settlement_tier)||0;
-    const localPoiCount=Math.max(Number(stop.local_poi_count)||0,positivos.length);
-    const touristScore=Math.max(Number(stop.tourist_score)||0,poiScore);
-    const stayEligible=Boolean(stop.is_final||stop.requested_waypoint||(settlementTier>=2&&localPoiCount>=2&&touristScore>=24));
-    bases.push({
-      stop_index:i+1,
-      score:stayEligible?Math.max(1,poiScore+requestedBoost+finalBoost):0,
-      highlights:destacados,
-      stay_eligible:stayEligible
-    });
+    bases.push({stop_index:i+1,score:Math.max(1,poiScore+requestedBoost+finalBoost),highlights:destacados});
   }
 
   const extra=totalDias-etapas.length;
   const asignados=new Array(etapas.length).fill(0);
-  const elegibles=bases.map((b,i)=>b.stay_eligible?i:-1).filter(i=>i>=0);
-  if(extra>0&&!elegibles.length)throw new Error("No existe ninguna base válida para asignar los días de estancia.");
   for(let n=0;n<extra;n++){
-    let best=elegibles[0],bestValue=-Infinity;
-    for(const i of elegibles){
+    let best=0,bestValue=-Infinity;
+    for(let i=0;i<bases.length;i++){
       const b=bases[i];
-      // La penalización progresiva reparte las estancias entre bases atractivas.
-      // Las paradas puramente técnicas quedan fuera de este reparto.
+      // La penalización progresiva reparte las estancias entre bases atractivas
+      // en vez de enviar automáticamente todos los días al destino final.
       const value=b.score/Math.pow(1+asignados[i],2);
       if(value>bestValue){bestValue=value;best=i;}
     }
@@ -2472,16 +2418,9 @@ function urlGoogleMapsRuta(lugares=[],stops=[],datos={}){
   const origen=nombreMapsLugar(lugares[0],datos.origen);
   const destino=nombreMapsLugar(lugares.at(-1),datos.destinoPrincipal);
   if(!origen||!destino)return "";
-  // Los cortes automáticos de conducción son puntos técnicos de cálculo, no lugares
-  // seguros a los que debamos mandar al usuario con Google Maps. En navegación solo
-  // incluimos los waypoints que el propio usuario pidió expresamente. Las pernoctas
-  // concretas de cada jornada se muestran por separado en la guía.
   const intermedios=(Array.isArray(stops)?stops:[])
-    .filter(x=>!x?.is_final&&x?.requested_waypoint)
-    .map(x=>{
-      if(Number.isFinite(Number(x?.lat))&&Number.isFinite(Number(x?.lon)))return `${Number(x.lat)},${Number(x.lon)}`;
-      return String(x?.place||"").trim();
-    })
+    .filter(x=>!x?.is_final)
+    .map(x=>String(x?.place||"").trim())
     .filter(Boolean);
   const q=new URLSearchParams({api:"1",origin:origen,destination:destino,travelmode:"driving"});
   if(intermedios.length)q.set("waypoints",intermedios.join("|"));
@@ -2696,10 +2635,7 @@ formRuta.addEventListener("submit",async event=>{
       return;
     }
 
-    // Orden real de la ruta: origen → destinos adicionales pedidos por el usuario → destino final.
-    // El destino principal siempre debe cerrar el itinerario; de lo contrario, un waypoint
-    // manual quedaría después del destino y alteraría también la identidad enviada al Worker.
-    const inputs=[document.getElementById("origen"),...document.querySelectorAll(".destinoAdicional"),document.getElementById("destinoPrincipal")].filter(i=>i.value.trim());
+    const inputs=[document.getElementById("origen"),document.getElementById("destinoPrincipal"),...document.querySelectorAll(".destinoAdicional")].filter(i=>i.value.trim());
     const lugares=[];
     for(const input of inputs){
       document.getElementById("estadoCalculo").textContent=`Localizando ${input.value.trim()}…`;
@@ -2818,7 +2754,6 @@ formRuta.addEventListener("submit",async event=>{
             stopsCache=guiaCache.resolved_stops;
           }
           await Promise.all([cargarMediaVerificado(),cargarLugaresVerificados()]);
-          aplicarLogisticaGuia(guiaCache.guide,vacationDays,stopsCache);
           await prepararDatosYMediaGuia(stopsCache);
           document.getElementById("estadoCalculo").textContent="Seleccionando las mejores fotografías…";
           await prepararFotosGuia(guiaCache.guide,stopsCache);
