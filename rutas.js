@@ -1410,6 +1410,120 @@ function htmlResumenDesvio(distanciaExtra,tiempoExtra,cantidad){
 // ---------- Etapas limpias para el Worker ----------
 let ejecutarRutaComoDemo=false;
 
+function minutosObjetivoEtapa(datos,totalMinutos,totalDiasDisponibles=1){
+  const maxMinutes=Math.max(60,Math.round((Number(datos?.maxConduccion)||4)*60));
+  const ritmo=String(datos?.ritmo||"equilibrado");
+  const objetivoBase=ritmo==="tranquilo"?150:ritmo==="intenso"?225:195;
+  let objetivo=Math.min(maxMinutes,objetivoBase);
+
+  // El valor elegido es un MÁXIMO, no una obligación de conducir hasta agotarlo.
+  // Si el ritmo deseado produciría más jornadas de las disponibles, subimos el
+  // objetivo solo lo necesario, sin superar nunca el máximo indicado.
+  const total=Math.max(1,Number(totalMinutos)||1);
+  const dias=Math.max(1,Number(totalDiasDisponibles)||1);
+  if(Math.ceil(total/objetivo)>dias)objetivo=Math.min(maxMinutes,Math.ceil(total/dias));
+  return Math.max(60,objetivo);
+}
+
+function indicesMuestraCandidatos(candidatos,maximo=5){
+  if(candidatos.length<=maximo)return candidatos;
+  const out=[];
+  for(let i=0;i<maximo;i++){
+    const pos=Math.round(i*(candidatos.length-1)/(maximo-1));
+    if(!out.includes(candidatos[pos]))out.push(candidatos[pos]);
+  }
+  return out;
+}
+
+async function valorarFinJornadaRuta(candidato,datos,idealMinutes,ultimoLugar=""){
+  const coord=candidato?.coord;
+  if(!Array.isArray(coord)||coord.length<2)return null;
+  const rev=await reverseLugar(coord);
+  const place=nombreLugarWorker(rev,nombreLocalidad(rev));
+  const country=paisCanonico(rev?.country_code,rev?.country);
+  let pois=[];
+  try{ pois=await buscarPOIs(coord,datos); }catch{}
+  const placeKey=normalizarClaveMedia(place);
+  const poisLocales=pois.filter(f=>{
+    const fp=f?.properties||{};
+    const localidad=normalizarClaveMedia(nombreLocalidad(fp));
+    const dist=Number(fp.distance)||0;
+    return dist<=12000 || (placeKey&&localidad===placeKey);
+  });
+  const top=poisLocales.slice(0,6);
+  const poiScore=top.slice(0,5).reduce((a,f)=>a+Math.max(0,puntuacionPOI(f,datos)),0);
+  let localityBoost=0;
+  const intereses=new Set(datos?.intereses||[]);
+  if(rev?.city)localityBoost+=24+(intereses.has("ciudades")?18:0);
+  else if(rev?.town)localityBoost+=18+(intereses.has("pueblos")?18:0);
+  else if(rev?.village)localityBoost+=8+(intereses.has("pueblos")?18:0);
+  else if(rev?.municipality)localityBoost+=6;
+  const importance=Number(rev?.rank?.importance)||0;
+  localityBoost+=Math.min(20,importance*20);
+  if(place&&ultimoLugar&&normalizarClaveMedia(place)===normalizarClaveMedia(ultimoLugar))localityBoost-=40;
+
+  // La calidad turística manda, pero evitamos escoger sistemáticamente el punto
+  // más temprano si dos localidades tienen atractivo parecido.
+  const desviacion=Math.abs((Number(candidato.minutes)||0)-idealMinutes);
+  const timingPenalty=Math.min(35,desviacion*0.18);
+  return {
+    ...candidato,
+    place:place||"Zona de parada",
+    country:country||"",
+    lat:Number(coord[1]),lon:Number(coord[0]),
+    tourist_score:poiScore,
+    score:poiScore+localityBoost-timingPenalty
+  };
+}
+
+async function elegirFinJornadaInteligente({steps,line,startStep,endStep,totalRemainingMinutes,stagesRemaining,maxMinutes,idealMinutes,datos,ultimoLugar}){
+  const candidatos=[];
+  let minutos=0,km=0;
+  const minNecesario=Math.max(1,totalRemainingMinutes-stagesRemaining*maxMinutes);
+  const minTuristico=Math.max(minNecesario,Math.min(120,idealMinutes*0.55));
+
+  for(let si=startStep;si<=endStep;si++){
+    const step=steps[si]||{};
+    minutos+=Math.max(0,Number(step.time)||0)/60;
+    km+=Math.max(0,Number(step.distance)||0)/1000;
+    if(minutos>maxMinutes+0.01)break;
+    if(minutos+0.01<minTuristico)continue;
+    const idx=Number(step.to_index);
+    if(!Number.isFinite(idx))continue;
+    const coord=line[Math.max(0,Math.min(line.length-1,Math.round(idx)))];
+    if(!Array.isArray(coord)||coord.length<2)continue;
+    candidatos.push({stepIndex:si,minutes:minutos,km,coord});
+  }
+
+  if(!candidatos.length){
+    // Caso límite: usamos el último final de step que todavía respeta el máximo.
+    minutos=0;km=0;
+    for(let si=startStep;si<=endStep;si++){
+      const step=steps[si]||{};
+      const nextMin=minutos+Math.max(0,Number(step.time)||0)/60;
+      if(nextMin>maxMinutes+0.01)break;
+      minutos=nextMin;
+      km+=Math.max(0,Number(step.distance)||0)/1000;
+      const idx=Number(step.to_index);
+      const coord=Number.isFinite(idx)?line[Math.max(0,Math.min(line.length-1,Math.round(idx)))]:null;
+      if(Array.isArray(coord)&&coord.length>=2)candidatos.push({stepIndex:si,minutes:minutos,km,coord});
+    }
+  }
+  if(!candidatos.length)throw new Error("No se encontró un final de jornada que respete el máximo de conducción.");
+
+  // Evaluamos pocos puntos representativos para no disparar el número de consultas
+  // gratuitas a Geoapify. Siempre añadimos el candidato más próximo al tiempo ideal.
+  const ordenados=[...candidatos].sort((a,b)=>a.minutes-b.minutes);
+  const muestra=indicesMuestraCandidatos(ordenados,5);
+  const ideal=[...ordenados].sort((a,b)=>Math.abs(a.minutes-idealMinutes)-Math.abs(b.minutes-idealMinutes))[0];
+  if(ideal&&!muestra.includes(ideal))muestra.push(ideal);
+
+  const valorados=(await Promise.all(muestra.map(c=>valorarFinJornadaRuta(c,datos,idealMinutes,ultimoLugar)))).filter(Boolean);
+  if(!valorados.length)throw new Error("No se pudo valorar ninguna base segura para finalizar la jornada.");
+  valorados.sort((a,b)=>b.score-a.score || Math.abs(a.minutes-idealMinutes)-Math.abs(b.minutes-idealMinutes));
+  return valorados[0];
+}
+
 async function crearEtapasWorker(feature,lugares,datos,esDemo=false){
   // La demo actual queda aislada; se sustituirá posteriormente por otra más completa.
   const origenDemoClave=normalizarClaveMedia(datos?.origen||"");
@@ -1429,83 +1543,94 @@ async function crearEtapasWorker(feature,lugares,datos,esDemo=false){
     (geometry?.type==="LineString"?[geometry.coordinates||[]]:[]);
   const maxMinutes=Math.max(60,Math.round((Number(datos.maxConduccion)||4)*60));
 
-  // Geoapify devuelve un leg por cada par de waypoints cuando usamos stopover.
-  // Si esa estructura no llega completa, se detiene la creación: es preferible
-  // mostrar un error a inventar etapas o tiempos.
   if(!legs.length || legs.length!==Math.max(1,lugares.length-1) || lines.length!==legs.length){
     throw new Error("Geoapify no devolvió el detalle necesario para dividir la ruta con seguridad.");
   }
 
+  const legTotals=legs.map(leg=>(Array.isArray(leg?.steps)?leg.steps:[]).reduce((a,s)=>a+Math.max(0,Number(s?.time)||0)/60,0));
+  const totalRutaMin=legTotals.reduce((a,x)=>a+x,0);
+  const totalDias=Math.max(1,Number(datos?.dias)||1);
+  let targetMinutes=minutosObjetivoEtapa(datos,totalRutaMin,totalDias);
+
+  // Los waypoints elegidos por el usuario son obligatorios y cada leg necesita al
+  // menos una jornada. Ajustamos el objetivo hacia arriba si el redondeo por legs
+  // produciría más jornadas que días disponibles.
+  const stagesForTarget=t=>legTotals.reduce((a,m)=>a+Math.max(1,Math.ceil(m/t)),0);
+  if(stagesForTarget(targetMinutes)>totalDias){
+    for(let t=targetMinutes;t<=maxMinutes;t+=5){
+      if(stagesForTarget(t)<=totalDias){targetMinutes=t;break;}
+    }
+  }
+  const totalStages=stagesForTarget(targetMinutes);
+  if(totalStages>totalDias){
+    throw new Error(`Con un máximo de ${Math.round(maxMinutes/60*10)/10} h de conducción al día, los destinos elegidos necesitan al menos ${totalStages} jornadas de carretera.`);
+  }
+
   const stops=[];
-  let day=1;
+  let day=1,ultimoLugar="";
   for(let legIndex=0;legIndex<legs.length;legIndex++){
     const leg=legs[legIndex]||{};
     const line=Array.isArray(lines[legIndex])?lines[legIndex]:[];
     const steps=Array.isArray(leg.steps)?leg.steps.filter(s=>Number(s?.time)>=0):[];
-    if(line.length<2 || !steps.length){
-      throw new Error(`No se pudo calcular con precisión el tramo ${legIndex+1} de la ruta.`);
-    }
-
-    let stageMinutes=0,stageKm=0,stageEndIndex=0;
-    const stages=[];
-    const finishStage=()=>{
-      if(stageMinutes<=0 && stageKm<=0)return;
-      stages.push({minutes:stageMinutes,km:stageKm,end_index:stageEndIndex});
-      stageMinutes=0; stageKm=0;
-    };
-
-    for(let si=0;si<steps.length;si++){
-      const step=steps[si]||{};
-      const stepMinutes=Math.max(0,Number(step.time)||0)/60;
-      const stepKm=Math.max(0,Number(step.distance)||0)/1000;
-      if(stepMinutes>maxMinutes+0.01){
+    if(line.length<2 || !steps.length)throw new Error(`No se pudo calcular con precisión el tramo ${legIndex+1} de la ruta.`);
+    for(const step of steps){
+      if(Math.max(0,Number(step.time)||0)/60>maxMinutes+0.01){
         throw new Error(`Geoapify devolvió un segmento individual de más de ${maxMinutes} minutos; no se puede garantizar el límite elegido.`);
       }
-      if(stageMinutes>0 && stageMinutes+stepMinutes>maxMinutes+0.01)finishStage();
-      stageMinutes+=stepMinutes;
-      stageKm+=stepKm;
-      const idx=Number(step.to_index);
-      if(Number.isFinite(idx))stageEndIndex=Math.max(0,Math.min(line.length-1,Math.round(idx)));
-      if(si===steps.length-1)finishStage();
     }
 
+    const legTotal=legTotals[legIndex];
+    const stageCount=Math.max(1,Math.ceil(legTotal/targetMinutes));
+    let startStep=0,consumedMinutes=0,consumedKm=0;
     const requestedPlace=lugares[legIndex+1];
-    for(let stageIndex=0;stageIndex<stages.length;stageIndex++){
-      const s=stages[stageIndex];
-      const lastOfLeg=stageIndex===stages.length-1;
-      let place="",country="",lat=null,lon=null;
+
+    for(let stageIndex=0;stageIndex<stageCount;stageIndex++){
+      const lastOfLeg=stageIndex===stageCount-1;
       if(lastOfLeg){
-        place=nombreLugarWorker(requestedPlace,legIndex===lugares.length-2?datos.destinoPrincipal:(datos.destinosExtra?.[legIndex]||""));
-        country=paisCanonico(requestedPlace?.country_code,requestedPlace?.country);
-        lat=Number(requestedPlace?.lat); lon=Number(requestedPlace?.lon);
-      }else{
-        const coord=line[s.end_index]||null;
-        if(!Array.isArray(coord)||coord.length<2)throw new Error("No se pudo localizar el final de una jornada de conducción.");
-        const rev=await reverseLugar(coord);
-        place=nombreLugarWorker(rev,nombreLocalidad(rev));
-        country=paisCanonico(rev?.country_code,rev?.country);
-        lon=Number(coord[0]); lat=Number(coord[1]);
+        let minutes=0,km=0;
+        for(let si=startStep;si<steps.length;si++){
+          minutes+=Math.max(0,Number(steps[si]?.time)||0)/60;
+          km+=Math.max(0,Number(steps[si]?.distance)||0)/1000;
+        }
+        if(minutes>maxMinutes+1)throw new Error(`La última etapa del tramo ${legIndex+1} supera el máximo diario; no se guardará una logística incorrecta.`);
+        const place=nombreLugarWorker(requestedPlace,legIndex===lugares.length-2?datos.destinoPrincipal:(datos.destinosExtra?.[legIndex]||""));
+        const country=paisCanonico(requestedPlace?.country_code,requestedPlace?.country);
+        stops.push({
+          day:day++,place:place||`Destino ${legIndex+1}`,country:country||"",
+          lat:Number.isFinite(Number(requestedPlace?.lat))?Number(requestedPlace.lat):null,
+          lon:Number.isFinite(Number(requestedPlace?.lon))?Number(requestedPlace.lon):null,
+          driving_km:Math.max(0,Math.round(km)),driving_minutes:Math.max(1,Math.round(minutes)),
+          requested_waypoint:true,requested_index:legIndex+1,is_final:legIndex===legs.length-1
+        });
+        ultimoLugar=place||ultimoLugar;
+        consumedMinutes+=minutes; consumedKm+=km;
+        startStep=steps.length;
+        continue;
       }
-      const drivingMinutes=Math.max(1,Math.round(s.minutes));
-      if(drivingMinutes>maxMinutes+1){
-        throw new Error(`Una etapa calculada supera el máximo de ${maxMinutes} minutos de conducción.`);
-      }
-      stops.push({
-        day:day++,
-        place:place||`Parada de ruta ${day-1}`,
-        country:country||"",
-        lat:Number.isFinite(lat)?lat:null,
-        lon:Number.isFinite(lon)?lon:null,
-        driving_km:Math.max(0,Math.round(s.km)),
-        driving_minutes:drivingMinutes,
-        requested_waypoint:lastOfLeg,
-        requested_index:lastOfLeg?legIndex+1:null,
-        is_final:lastOfLeg && legIndex===legs.length-1
+
+      const stagesRemaining=stageCount-stageIndex-1;
+      const remainingMinutes=Math.max(0,legTotal-consumedMinutes);
+      const idealMinutes=Math.min(maxMinutes,remainingMinutes/(stagesRemaining+1));
+      const elegido=await elegirFinJornadaInteligente({
+        steps,line,startStep,endStep:steps.length-1,totalRemainingMinutes:remainingMinutes,
+        stagesRemaining,maxMinutes,idealMinutes,datos,ultimoLugar
       });
+      if(!elegido)throw new Error("No se pudo seleccionar una base adecuada para finalizar la jornada.");
+      stops.push({
+        day:day++,place:elegido.place,country:elegido.country||"",
+        lat:elegido.lat,lon:elegido.lon,
+        driving_km:Math.max(0,Math.round(elegido.km)),
+        driving_minutes:Math.max(1,Math.round(elegido.minutes)),
+        requested_waypoint:false,requested_index:null,is_final:false
+      });
+      ultimoLugar=elegido.place||ultimoLugar;
+      consumedMinutes+=elegido.minutes; consumedKm+=elegido.km;
+      startStep=elegido.stepIndex+1;
     }
   }
 
   if(!stops.length || !stops.at(-1)?.is_final)throw new Error("No se pudo construir una secuencia completa de etapas.");
+  if(stops.some(x=>Number(x.driving_minutes)>maxMinutes+1))throw new Error("La secuencia final contiene una jornada que supera el máximo de conducción.");
   return stops;
 }
 
