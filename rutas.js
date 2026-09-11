@@ -1476,6 +1476,29 @@ async function valorarFinJornadaRuta(candidato,datos,idealMinutes,ultimoLugar=""
   };
 }
 
+function minimoJornadasDesdeStep(steps,startStep,maxMinutes){
+  if(startStep>=steps.length)return 0;
+  let jornadas=1,minutos=0;
+  for(let si=startStep;si<steps.length;si++){
+    const stepMinutes=Math.max(0,Number(steps[si]?.time)||0)/60;
+    if(stepMinutes>maxMinutes+0.01)return Infinity;
+    if(minutos>0 && minutos+stepMinutes>maxMinutes+0.01){
+      jornadas++;
+      minutos=0;
+    }
+    minutos+=stepMinutes;
+  }
+  return jornadas;
+}
+
+function restoDivisibleEnJornadas(steps,startStep,jornadasRestantes,maxMinutes){
+  const restantes=Math.max(0,steps.length-startStep);
+  if(jornadasRestantes===0)return restantes===0;
+  if(restantes<jornadasRestantes)return false;
+  const minimas=minimoJornadasDesdeStep(steps,startStep,maxMinutes);
+  return Number.isFinite(minimas) && minimas<=jornadasRestantes;
+}
+
 async function elegirFinJornadaInteligente({steps,line,startStep,endStep,totalRemainingMinutes,stagesRemaining,maxMinutes,idealMinutes,datos,ultimoLugar}){
   const candidatos=[];
   let minutos=0,km=0;
@@ -1488,6 +1511,13 @@ async function elegirFinJornadaInteligente({steps,line,startStep,endStep,totalRe
     km+=Math.max(0,Number(step.distance)||0)/1000;
     if(minutos>maxMinutes+0.01)break;
     if(minutos+0.01<minTuristico)continue;
+
+    // No basta con que el tiempo total restante quepa matemáticamente. Los steps
+    // de Geoapify son indivisibles: el corte elegido solo es válido si el sufijo
+    // todavía puede repartirse, en límites de step reales, entre TODAS las jornadas
+    // que quedan sin superar maxMinutes. Así evitamos dejar una última etapa > máximo.
+    if(!restoDivisibleEnJornadas(steps,si+1,stagesRemaining,maxMinutes))continue;
+
     const idx=Number(step.to_index);
     if(!Number.isFinite(idx))continue;
     const coord=line[Math.max(0,Math.min(line.length-1,Math.round(idx)))];
@@ -1496,7 +1526,8 @@ async function elegirFinJornadaInteligente({steps,line,startStep,endStep,totalRe
   }
 
   if(!candidatos.length){
-    // Caso límite: usamos el último final de step que todavía respeta el máximo.
+    // Segundo intento sin mínimo turístico: prioriza SIEMPRE la viabilidad completa
+    // de la ruta. Nunca se acepta un punto que deje un resto imposible de dividir.
     minutos=0;km=0;
     for(let si=startStep;si<=endStep;si++){
       const step=steps[si]||{};
@@ -1504,15 +1535,17 @@ async function elegirFinJornadaInteligente({steps,line,startStep,endStep,totalRe
       if(nextMin>maxMinutes+0.01)break;
       minutos=nextMin;
       km+=Math.max(0,Number(step.distance)||0)/1000;
+      if(!restoDivisibleEnJornadas(steps,si+1,stagesRemaining,maxMinutes))continue;
       const idx=Number(step.to_index);
       const coord=Number.isFinite(idx)?line[Math.max(0,Math.min(line.length-1,Math.round(idx)))]:null;
       if(Array.isArray(coord)&&coord.length>=2)candidatos.push({stepIndex:si,minutes:minutos,km,coord});
     }
   }
-  if(!candidatos.length)throw new Error("No se encontró un final de jornada que respete el máximo de conducción.");
+  if(!candidatos.length)throw new Error("No existe un corte de jornada por steps que permita completar el tramo respetando el máximo diario.");
 
-  // Evaluamos pocos puntos representativos para no disparar el número de consultas
-  // gratuitas a Geoapify. Siempre añadimos el candidato más próximo al tiempo ideal.
+  // Solo se valoran candidatos que ya han superado la prueba de viabilidad global.
+  // La puntuación turística decide ENTRE soluciones correctas; nunca puede romper
+  // la partición logística del resto del trayecto.
   const ordenados=[...candidatos].sort((a,b)=>a.minutes-b.minutes);
   const muestra=indicesMuestraCandidatos(ordenados,5);
   const ideal=[...ordenados].sort((a,b)=>Math.abs(a.minutes-idealMinutes)-Math.abs(b.minutes-idealMinutes))[0];
@@ -1553,9 +1586,14 @@ async function crearEtapasWorker(feature,lugares,datos,esDemo=false){
   let targetMinutes=minutosObjetivoEtapa(datos,totalRutaMin,totalDias);
 
   // Los waypoints elegidos por el usuario son obligatorios y cada leg necesita al
-  // menos una jornada. Ajustamos el objetivo hacia arriba si el redondeo por legs
-  // produciría más jornadas que días disponibles.
-  const stagesForTarget=t=>legTotals.reduce((a,m)=>a+Math.max(1,Math.ceil(m/t)),0);
+  // menos una jornada. El número mínimo real no se calcula solo con tiempo total:
+  // también respeta los límites indivisibles de los steps devueltos por Geoapify.
+  const legSteps=legs.map(leg=>(Array.isArray(leg?.steps)?leg.steps:[]).filter(s=>Number(s?.time)>=0));
+  const stagesForTarget=t=>legTotals.reduce((a,m,i)=>{
+    const porObjetivo=Math.max(1,Math.ceil(m/t));
+    const minimoReal=minimoJornadasDesdeStep(legSteps[i],0,maxMinutes);
+    return a+Math.max(porObjetivo,minimoReal);
+  },0);
   if(stagesForTarget(targetMinutes)>totalDias){
     for(let t=targetMinutes;t<=maxMinutes;t+=5){
       if(stagesForTarget(t)<=totalDias){targetMinutes=t;break;}
@@ -1580,7 +1618,11 @@ async function crearEtapasWorker(feature,lugares,datos,esDemo=false){
     }
 
     const legTotal=legTotals[legIndex];
-    const stageCount=Math.max(1,Math.ceil(legTotal/targetMinutes));
+    const stageCount=Math.max(
+      1,
+      Math.ceil(legTotal/targetMinutes),
+      minimoJornadasDesdeStep(steps,0,maxMinutes)
+    );
     let startStep=0,consumedMinutes=0,consumedKm=0;
     const requestedPlace=lugares[legIndex+1];
 
