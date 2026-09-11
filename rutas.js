@@ -1581,25 +1581,19 @@ async function crearEtapasWorker(feature,lugares,datos,esDemo=false){
   }
 
   const legTotals=legs.map(leg=>(Array.isArray(leg?.steps)?leg.steps:[]).reduce((a,s)=>a+Math.max(0,Number(s?.time)||0)/60,0));
-  const totalRutaMin=legTotals.reduce((a,x)=>a+x,0);
   const totalDias=Math.max(1,Number(datos?.dias)||1);
-  let targetMinutes=minutosObjetivoEtapa(datos,totalRutaMin,totalDias);
 
-  // Los waypoints elegidos por el usuario son obligatorios y cada leg necesita al
-  // menos una jornada. El número mínimo real no se calcula solo con tiempo total:
-  // también respeta los límites indivisibles de los steps devueltos por Geoapify.
+  // v55: "máximo de conducción" significa exactamente eso: un límite, no un
+  // objetivo que añada jornadas artificiales. Primero calculamos el MÍNIMO REAL
+  // de jornadas que necesita cada leg respetando los steps indivisibles de
+  // Geoapify. Los días restantes son días de estancia y se reparten después.
+  // Esto mantiene además cada waypoint manual como final obligatorio de un leg.
   const legSteps=legs.map(leg=>(Array.isArray(leg?.steps)?leg.steps:[]).filter(s=>Number(s?.time)>=0));
-  const stagesForTarget=t=>legTotals.reduce((a,m,i)=>{
-    const porObjetivo=Math.max(1,Math.ceil(m/t));
-    const minimoReal=minimoJornadasDesdeStep(legSteps[i],0,maxMinutes);
-    return a+Math.max(porObjetivo,minimoReal);
-  },0);
-  if(stagesForTarget(targetMinutes)>totalDias){
-    for(let t=targetMinutes;t<=maxMinutes;t+=5){
-      if(stagesForTarget(t)<=totalDias){targetMinutes=t;break;}
-    }
+  const legStageCounts=legSteps.map(steps=>minimoJornadasDesdeStep(steps,0,maxMinutes));
+  if(legStageCounts.some(x=>!Number.isFinite(x))){
+    throw new Error(`Geoapify devolvió un segmento individual que supera el máximo diario de ${Math.round(maxMinutes/60*10)/10} h.`);
   }
-  const totalStages=stagesForTarget(targetMinutes);
+  const totalStages=legStageCounts.reduce((a,x)=>a+Math.max(1,Number(x)||1),0);
   if(totalStages>totalDias){
     throw new Error(`Con un máximo de ${Math.round(maxMinutes/60*10)/10} h de conducción al día, los destinos elegidos necesitan al menos ${totalStages} jornadas de carretera.`);
   }
@@ -1618,11 +1612,10 @@ async function crearEtapasWorker(feature,lugares,datos,esDemo=false){
     }
 
     const legTotal=legTotals[legIndex];
-    const stageCount=Math.max(
-      1,
-      Math.ceil(legTotal/targetMinutes),
-      minimoJornadasDesdeStep(steps,0,maxMinutes)
-    );
+    // Número mínimo REAL de jornadas para este tramo. No añadimos una quinta
+    // jornada solo porque el ritmo "equilibrado" tenga un objetivo interno menor.
+    // El ritmo se usa para las visitas; el límite de conducción lo fija el usuario.
+    const stageCount=Math.max(1,legStageCounts[legIndex]);
     let startStep=0,consumedMinutes=0,consumedKm=0;
     const requestedPlace=lugares[legIndex+1];
 
@@ -1770,7 +1763,13 @@ function pintarResultadoBase(data,lugares,datos){
   const feature=data.features[0],p=feature.properties||{};
   const distancia=p.distance||0,tiempo=p.time||0;
   const maxHoras=Math.max(1,Number(datos.maxConduccion)||4);
-  const jornadas=Math.max(1,Math.ceil(tiempo/(maxHoras*3600)));
+  // Si ya existe la partición logística, la métrica debe mostrar ESA realidad.
+  // Math.ceil(tiempo/max) puede ser menor cuando los steps de Geoapify son
+  // indivisibles o hay waypoints obligatorios.
+  const jornadasCalculadas=Number(datos?._jornadasConduccion);
+  const jornadas=Number.isFinite(jornadasCalculadas)&&jornadasCalculadas>0
+    ? Math.round(jornadasCalculadas)
+    : Math.max(1,Math.ceil(tiempo/(maxHoras*3600)));
   document.getElementById("estadoCalculo").textContent=`${lugares[0].formatted||datos.origen} → ${lugares.at(-1).formatted||datos.destinoPrincipal}`;
   pintarMetricas(distancia,tiempo,Math.max(1,Number(datos.dias)||1),jornadas,lugares.length);
   document.getElementById("etapasRuta").innerHTML=htmlRecorrido(feature,lugares);
