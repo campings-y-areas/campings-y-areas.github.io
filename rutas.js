@@ -1681,7 +1681,7 @@ function coordEnLineaPorFraccion(line,fraccion){
 function coordTecnicaPorMinutos(tramo,targetMinutes){
   const totalSeconds=Math.max(1,Number(tramo?.time)||Number(tramo?.feature?.properties?.time)||0);
   const targetSeconds=Math.max(0,Math.min(totalSeconds,Number(targetMinutes||0)*60));
-  const line=getRouteGeometryLine(tramo?.feature);
+  const line=puntosLinea(tramo?.feature?.geometry);
   if(!Array.isArray(line)||line.length<2)return null;
   const props=tramo?.feature?.properties||{};
   const leg=Array.isArray(props.legs)&&props.legs.length?props.legs[0]:null;
@@ -1748,7 +1748,7 @@ async function calcularTramoCarretera(origen, destino, datos){
     distance: Number(p.distance) || 0,
     time: Number(p.time) || 0,
     feature: f,
-    line: getRouteGeometryLine(f)
+    line: puntosLinea(f?.geometry)
   };
 }
 
