@@ -16,12 +16,22 @@ let capaRuta = null;
 let marcadores = [];
 const lugaresSeleccionados = new WeakMap();
 
+// Estado interno v3: FINAL_READY nunca se deduce de un texto visible.
+const ROUTE_V3_STATES=new Set(["REQUEST_VALID","LOGISTICS_READY","RESEARCH_PENDING","RESEARCH_READY","PLAN_READY","GUIDE_TEXT_READY","MEDIA_PARTIAL","MEDIA_SUFFICIENT","FINAL_READY"]);
+let routeV3State=null;
+function setRouteV3State(next){
+  if(!ROUTE_V3_STATES.has(next))throw new Error(`Estado Rutas v3 no válido: ${next}`);
+  routeV3State=next;
+  if(formRuta)formRuta.dataset.routeV3State=next;
+}
+
 // ---------- Multimedia + lugares verificados ----------
 const MEDIA_VERIFICADO_URL = "rutas-media-verificado-v1.json?v=1";
 const LUGARES_VERIFICADOS_URL = "rutas-lugares-verificados-v2.json?v=2";
 let mediaVerificadoCache = null;
 let lugaresVerificadosCache = null;
 const mediaOficialCache = new Map();
+const mediaPorEntityIdCache = new Map();
 
 // ---------- Selector fotográfico automático (sin OpenAI) ----------
 const FOTO_AUTO_STORAGE_KEY = "campingsAreasFotoAutoV3";
@@ -184,16 +194,52 @@ async function buscarFotoAutomatica(nombre,ciudad,tipo="visit",terminosExtra=[])
   return null;
 }
 function stopDeDiaGuia(dia,stops=[]){
-  const n=Number(dia?.day);
-  return (stops||[]).find(x=>Number(x?.day)===n)||null;
+  if(!dia)return null;
+  const lista=Array.isArray(stops)?stops:[];
+  if(dia.base_id){
+    const porBase=lista.find(x=>x?.base_id===dia.base_id);
+    if(porBase)return porBase;
+  }
+  if(dia.driving_stage_id){
+    const porEtapa=lista.find(x=>x?.driving_stage_id===dia.driving_stage_id);
+    if(porEtapa)return porEtapa;
+  }
+  const baseIdx=Number(dia.base_stop_index);
+  if(Number.isInteger(baseIdx)&&baseIdx>=1&&baseIdx<=lista.length){
+    return lista[baseIdx-1];
+  }
+  const stageIdx=Number(dia.driving_stage_index);
+  if(Number.isInteger(stageIdx)&&stageIdx>=1&&stageIdx<=lista.length){
+    return lista[stageIdx-1];
+  }
+  // Si es un día de conducción sin IDs específicos, intentar por stage
+  if(dia.day_type==="conduccion_y_visita"||dia.driving_minutes>0){
+    const driveStops=lista.filter(x=>x?.driving_minutes>0||!x?.is_stay);
+    const diaNum=Number(dia?.day);
+    return driveStops[diaNum-1]||lista[0]||null;
+  }
+  return null;
 }
 
 function ciudadDeDiaGuia(dia,stops=[]){
-  return String(dia?.city||dia?.destination||stopDeDiaGuia(dia,stops)?.place||"").trim();
+  return String(dia?.place||dia?.city||dia?.destination||stopDeDiaGuia(dia,stops)?.place||"").trim();
 }
 
 function paisDeDiaGuia(dia,stops=[]){
   return String(dia?.country||stopDeDiaGuia(dia,stops)?.country||"").trim();
+}
+
+function mediaGuiaSuficiente(guide,stops=[]){
+  const days=Array.isArray(guide?.days)?guide.days:[];
+  if(!days.length)return false;
+  return days.every(d=>{
+    const ciudad=ciudadDeDiaGuia(d,stops);
+    return (Array.isArray(d?.highlights)?d.highlights:[]).some(x=>{
+      const exacta=buscarMediaVerificado(x?.name,ciudad,"visit",x?.entity_id||"");
+      const oficial=mediaOficialCache.get(claveMediaOficial(x?.name,ciudad,"visit",x?.entity_id||""))||mediaPorEntityIdCache.get(String(x?.entity_id||""));
+      return Boolean(exacta?.verified_exact===true || (oficial?.from_d1&&oficial?.image_url));
+    });
+  });
 }
 
 async function prepararFotosGuia(guide,stops=[]){
@@ -204,9 +250,9 @@ async function prepararFotosGuia(guide,stops=[]){
     const country=paisDeDiaGuia(d,stops);
     (d.highlights||[]).forEach(x=>{
       trabajos.push(buscarFotoAutomatica(x.name,ciudad,"visit"));
-      const r=buscarEntidadInvestigacionRuta(x.name,"visit",ciudad,country);
+      const r=buscarEntidadInvestigacionRuta(x.name,"visit",ciudad,country,x.entity_id||"");
       const web=webOficialCorregida(x.name,x.url||r?.website||"");
-      if(web)trabajos.push(consultarMediaOficial(x.name,ciudad,"visit",web));
+      if(web)trabajos.push(consultarMediaOficial(x.name,ciudad,"visit",web,x.entity_id||""));
     });
   });
   await Promise.allSettled(trabajos);
@@ -363,9 +409,10 @@ async function cargarInvestigacionRutaD1(place,country=""){
   }
 }
 
-function buscarEntidadInvestigacionRuta(nombre,tipo="",ciudad="",country=""){
+function buscarEntidadInvestigacionRuta(nombre,tipo="",ciudad="",country="",entityId=""){
   const target=normalizarClaveMedia(nombre);
-  if(!target)return null;
+  const targetId=String(entityId||"").trim();
+  if(!target&&!targetId)return null;
   const investigaciones=[];
   if(ciudad){
     const exacta=investigacionRutaD1Cache.get(claveInvestigacionRuta(ciudad,country));
@@ -382,7 +429,9 @@ function buscarEntidadInvestigacionRuta(nombre,tipo="",ciudad="",country=""){
     if(tipo==="restaurant")lista=research?.gastronomy?.restaurants||[];
     else if(tipo==="overnight")lista=research?.overnight||[];
     else if(tipo==="visit")lista=research?.must_see||[];
-    const found=(lista||[]).find(x=>normalizarClaveMedia(x?.name)===target);
+    const found=targetId
+      ? (lista||[]).find(x=>String(x?.entity_id||"").trim()===targetId)
+      : (lista||[]).find(x=>normalizarClaveMedia(x?.name)===target);
     if(found)return found;
   }
   return null;
@@ -396,16 +445,26 @@ function webOficialCorregida(nombre,url=""){
   return URLS_OFICIALES_CORREGIDAS[normalizarClaveMedia(nombre)]||String(url||"").trim();
 }
 
-function htmlDatosLugar(nombre,tipo="",webGuia="",ciudad="",country=""){
+function urlGoogleMapsEntidad(entityId,nombre,tipo="",ciudad="",country=""){
+  const r=buscarEntidadInvestigacionRuta(nombre,tipo,ciudad,country,entityId);
+  const lat=Number(r?.latitude),lon=Number(r?.longitude);
+  if(!String(entityId||"").trim()||!Number.isFinite(lat)||!Number.isFinite(lon))return "";
+  const q=new URLSearchParams({api:"1",destination:`${lat.toFixed(6)},${lon.toFixed(6)}`});
+  return `https://www.google.com/maps/dir/?${q.toString()}`;
+}
+
+function htmlDatosLugar(nombre,tipo="",webGuia="",ciudad="",country="",entityId=""){
   const l=buscarLugarVerificado(nombre,tipo);
-  const r=buscarEntidadInvestigacionRuta(nombre,tipo,ciudad,country);
+  const r=buscarEntidadInvestigacionRuta(nombre,tipo,ciudad,country,entityId);
   let h="";
   if(tipo==="visit"&&l?.visit_time)h+=`<p><strong>⏱️ Tiempo orientativo:</strong> ${escapar(l.visit_time)}</p>`;
   if(tipo==="visit"&&l?.what_to_see)h+=`<p><strong>👀 Qué merece la pena ver:</strong> ${escapar(l.what_to_see)}</p>`;
   const address=String(r?.address||l?.address||"").trim();
   if(address)h+=`<p><strong>📍 Dirección:</strong> ${escapar(address)}</p>`;
   const enlaces=[];
-  const mapsUrl=l?.maps_url||urlGoogleMapsTexto(nombre,address);
+  const mapsUrl=String(entityId||"").trim()
+    ? urlGoogleMapsEntidad(entityId,nombre,tipo,ciudad,country)
+    : (l?.maps_url||urlGoogleMapsTexto(nombre,address));
   if(mapsUrl)enlaces.push(htmlEnlaceGuia("📍 Abrir en Google Maps",mapsUrl));
   const web=webOficialCorregida(nombre,webGuia||r?.website||l?.website||"");
   if(web)enlaces.push(htmlEnlaceGuia(tipo==="visit"?"🌐 Información oficial":"🌐 Web oficial",web));
@@ -413,7 +472,14 @@ function htmlDatosLugar(nombre,tipo="",webGuia="",ciudad="",country=""){
   return h;
 }
 
-function buscarMediaVerificado(nombre,ciudad="",tipo=""){
+function buscarMediaVerificado(nombre,ciudad="",tipo="",entityId=""){
+  const id=String(entityId||"").trim();
+  if(id){
+    const porId=mediaPorEntityIdCache.get(id);
+    if(porId)return porId;
+    const catalogo=(mediaVerificadoCache||[]).find(x=>String(x?.entity_id||"").trim()===id&&x?.verified_exact===true);
+    if(catalogo)return catalogo;
+  }
   const nombreN=normalizarClaveMedia(nombre);
   const ciudadN=normalizarClaveMedia(ciudad);
   const lista=mediaVerificadoCache||[];
@@ -432,13 +498,13 @@ function buscarMediaVerificado(nombre,ciudad="",tipo=""){
   return null;
 }
 
-function htmlFotoVerificada(nombre,ciudad,tipo){
+function htmlFotoVerificada(nombre,ciudad,tipo,entityId=""){
   const lugar=buscarLugarVerificado(nombre,tipo);
-  const media=buscarMediaVerificado(nombre,ciudad,tipo);
+  const media=buscarMediaVerificado(nombre,ciudad,tipo,entityId);
   const claveNombre=normalizarClaveMedia(nombre);
   const editorial=tipo==="visit"?IMAGENES_EDITORIALES_PRIORITARIAS[claveNombre]||null:null;
   const extra=tipo==="visit"?IMAGENES_VERIFICADAS_SUPLEMENTARIAS[claveNombre]||null:null;
-  const oficial=mediaOficialCache.get(claveMediaOficial(nombre,ciudad,tipo))||null;
+  const oficial=mediaOficialCache.get(claveMediaOficial(nombre,ciudad,tipo,entityId))||mediaPorEntityIdCache.get(String(entityId||""))||null;
   const auto=tipo==="visit"?fotoAutoCache.get(claveFotoAuto(nombre,ciudad,tipo))||null:null;
 
   // Restaurantes y pernoctas: solo se muestra multimedia exacta ya validada y guardada en D1.
@@ -600,31 +666,116 @@ function preferenciaPernoctaWorker(datos){
 }
 
 function perfilWorker(datos,lugares,stops=[],vacationDays=[]){
+  const origenLugar=lugares[0]||{};
+  const destinoLugar=lugares.at(-1)||{};
+  const viasLugares=lugares.slice(1,-1);
+
+  const requestPoints=[
+    {
+      request_point_id:origenLugar.request_point_id||"req-origin",
+      role:"origin",
+      order:0,
+      name:nombreLugarWorker(origenLugar,datos.origen),
+      place:nombreLugarWorker(origenLugar,datos.origen),
+      country:paisCanonico(origenLugar?.country_code,origenLugar?.country),
+      lat:Number.isFinite(Number(origenLugar?.lat))?Number(origenLugar.lat):null,
+      lon:Number.isFinite(Number(origenLugar?.lon))?Number(origenLugar.lon):null
+    },
+    ...viasLugares.map((vl,idx)=>({
+      request_point_id:vl.request_point_id||`req-via-${idx+1}`,
+      role:"user_via",
+      order:idx+1,
+      name:nombreLugarWorker(vl,datos.vias?.[idx]||datos.destinosExtra?.[idx]||""),
+      place:nombreLugarWorker(vl,datos.vias?.[idx]||datos.destinosExtra?.[idx]||""),
+      country:paisCanonico(vl?.country_code,vl?.country),
+      lat:Number.isFinite(Number(vl?.lat))?Number(vl.lat):null,
+      lon:Number.isFinite(Number(vl?.lon))?Number(vl.lon):null
+    })),
+    {
+      request_point_id:destinoLugar.request_point_id||"req-final",
+      role:"final_destination",
+      order:viasLugares.length+1,
+      name:nombreLugarWorker(destinoLugar,datos.destinoFinal||datos.destinoPrincipal),
+      place:nombreLugarWorker(destinoLugar,datos.destinoFinal||datos.destinoPrincipal),
+      country:paisCanonico(destinoLugar?.country_code,destinoLugar?.country),
+      lat:Number.isFinite(Number(destinoLugar?.lat))?Number(destinoLugar.lat):null,
+      lon:Number.isFinite(Number(destinoLugar?.lon))?Number(destinoLugar.lon):null
+    }
+  ];
+
+  const stagesFormatted=(Array.isArray(stops)?stops:[]).map(s=>({
+    driving_stage_id:s.driving_stage_id||`stage-${s.day}`,
+    base_id:s.base_id||`base-${s.day}`,
+    overnight_id:s.overnight_id||`overnight-${s.day}`,
+    day:s.day,
+    place:s.place,
+    country:s.country||"",
+    lat:Number.isFinite(Number(s.lat))?Number(s.lat):null,
+    lon:Number.isFinite(Number(s.lon))?Number(s.lon):null,
+    driving_km:Math.round(Number(s.driving_km)||0),
+    driving_minutes:Math.round(Number(s.driving_minutes)||0),
+    start_lat:Number.isFinite(Number(s.start_lat))?Number(s.start_lat):null,
+    start_lon:Number.isFinite(Number(s.start_lon))?Number(s.start_lon):null,
+    request_point_id:s.request_point_id==null?null:String(s.request_point_id),
+    requested_role:s.requested_role==null?null:String(s.requested_role),
+    requested_lat:Number.isFinite(Number(s.requested_lat))?Number(s.requested_lat):null,
+    requested_lon:Number.isFinite(Number(s.requested_lon))?Number(s.requested_lon):null,
+    is_final:Boolean(s.is_final),
+    requested_waypoint:Boolean(s.requested_waypoint),
+    stay_eligible:Boolean(s.stay_eligible),
+    overnight:s.overnight||null
+  }));
+
+  const vdaysFormatted=(Array.isArray(vacationDays)?vacationDays:[]).map(d=>({
+    vacation_day_id:d.vacation_day_id||`vday-${d.day}`,
+    logistics_id:d.logistics_id||((d.day_type==="visita"||d.day_type==="estancia")?`stay-${d.base_stop_index||1}-${d.day}`:`drive-${d.driving_stage_index||d.base_stop_index||1}`),
+    day:d.day,
+    travel_date:d.travel_date||null,
+    day_type:d.day_type||"conduccion_y_visita",
+    place:d.place,
+    country:d.country||"",
+    base_id:d.base_id||`base-${d.base_stop_index||1}`,
+    overnight_id:d.overnight_id||null,
+    driving_stage_id:(d.day_type==="visita"||d.day_type==="estancia"||d.driving_minutes===0)?null:(d.driving_stage_id||`stage-${d.driving_stage_index||1}`),
+    driving_stage_index:(d.day_type==="visita"||d.day_type==="estancia")?0:Math.max(1,Number(d.driving_stage_index)||Number(d.base_stop_index)||1),
+    base_stop_index:Math.max(1,Number(d.base_stop_index)||1),
+    driving_km:(d.day_type==="visita"||d.day_type==="estancia")?0:Math.round(Number(d.driving_km)||0),
+    driving_minutes:(d.day_type==="visita"||d.day_type==="estancia")?0:Math.round(Number(d.driving_minutes)||0),
+    request_point_id:d.request_point_id==null?null:String(d.request_point_id),
+    is_final:Boolean(d.is_final),
+    requested_waypoint:Boolean(d.requested_waypoint),
+    stay_eligible:Boolean(d.stay_eligible),
+    candidate_highlights:d.candidate_highlights||[]
+  }));
+
   return {
-    route_contract_version:"route-contract-v2",
-    origin:nombreLugarWorker(lugares[0],datos.origen),
-    destination:nombreLugarWorker(lugares.at(-1),datos.destinoPrincipal),
-    country:paisCanonico(lugares.at(-1)?.country_code,lugares.at(-1)?.country),
+    route_contract_version:"route-contract-v3",
+    origin:nombreLugarWorker(origenLugar,datos.origen),
+    destination:nombreLugarWorker(destinoLugar,datos.destinoFinal||datos.destinoPrincipal),
+    country:paisCanonico(destinoLugar?.country_code,destinoLugar?.country),
     start_date:String(datos.fechaSalida||"").trim(),
-    vehicle:datos.vehiculo,
-    adults:Number(datos.adultos)||0,
+    vehicle:datos.vehiculo||"autocaravana",
+    adults:Number(datos.adultos)||1,
     children_count:Math.max(0,Number(datos.ninos)||0),
     children:(datos.edades||[]).map(Number).filter(Number.isFinite),
     family_recommendations:Boolean(datos.recomendacionesNinos),
     pet:Boolean(datos.mascota),
     max_driving_hours:Number(datos.maxConduccion)||4,
+    minimum_required_days:Math.max(1,Number(datos.minimum_required_days)||Number(stops?.length)||1),
     trip_days:Math.max(1,Number(datos.dias)||1),
-    requested_via:Array.isArray(datos.destinosExtra)?datos.destinosExtra.map(x=>String(x||"").trim()).filter(Boolean):[],
+    requested_via:(datos.vias||datos.destinosExtra||[]).map(x=>String(x||"").trim()).filter(Boolean),
     pace:ritmoWorker(datos.ritmo),
     interests:interesesWorker(datos.intereses),
     overnight_types:Array.isArray(datos.pernocta)?datos.pernocta.map(x=>String(x||"").trim()).filter(Boolean):[],
     overnight_preference:preferenciaPernoctaWorker(datos),
     avoid_preferences:Array.isArray(datos.evitar)?datos.evitar.map(x=>String(x||"").trim()).filter(Boolean):[],
     budget:String(datos.presupuesto||"").trim(),
-    visual_content:String(datos.contenidoVisual||"").trim(),
+    visual_content:datos.contenidoVisual==="minimo"?"minimo":"completo",
     user_notes:String(datos.notas||"").trim(),
-    stops,
-    vacation_days:Array.isArray(vacationDays)?vacationDays:[]
+    request_points:requestPoints,
+    stages:stagesFormatted,
+    vacation_days:vdaysFormatted,
+    stops:stagesFormatted
   };
 }
 
@@ -807,14 +958,15 @@ function restaurantesParaDiaPremium(research,visitas,indiceDia,usadosGlobal=null
 }
 
 
-function claveMediaOficial(nombre,ciudad,tipo){
-  return [tipo,normalizarClaveMedia(nombre),normalizarClaveMedia(ciudad)].join("|");
+function claveMediaOficial(nombre,ciudad,tipo,entityId=""){
+  const id=String(entityId||"").trim();
+  return id?`entity|${id}`:[tipo,normalizarClaveMedia(nombre),normalizarClaveMedia(ciudad)].join("|");
 }
 
-async function consultarMediaOficial(nombre,ciudad,tipo,website){
+async function consultarMediaOficial(nombre,ciudad,tipo,website,entityId=""){
   if(!nombre||!website||!["restaurant","overnight","visit"].includes(tipo))return null;
   website=webOficialCorregida(nombre,website);
-  const key=claveMediaOficial(nombre,ciudad,tipo);
+  const key=claveMediaOficial(nombre,ciudad,tipo,entityId);
   if(mediaOficialCache.has(key))return mediaOficialCache.get(key);
   try{
     const base=String(config.WORKER_BASE_URL||"").replace(/\/+$/,"");
@@ -823,6 +975,7 @@ async function consultarMediaOficial(nombre,ciudad,tipo,website){
     u.searchParams.set("website",website);
     u.searchParams.set("name",nombre);
     u.searchParams.set("type",tipo);
+    if(entityId)u.searchParams.set("entity_id",entityId);
     const r=await fetch(u.toString(),{method:"GET",cache:"no-store"});
     if(!r.ok)return null;
     const d=await r.json();
@@ -859,14 +1012,18 @@ async function cargarMediaDestinoD1(destino,country=""){
     for(const x of d.media){
       if(!x?.entity_name||!x?.entity_type||!x?.image_url||Number(x?.verified_exact)!==1)continue;
 
-      const key=claveMediaOficial(x.entity_name,destino,x.entity_type);
-      mediaOficialCache.set(key,{
+      const entityId=String(x.entity_id||"").trim();
+      const key=claveMediaOficial(x.entity_name,destino,x.entity_type,entityId);
+      const item={
+        entity_id:entityId||null,
         image_url:x.image_url,
         source_page:x.source_page_url||x.website_url||"",
         credit:x.source_method==="openai-web-search"?"Fuente oficial verificada":"Web oficial",
         official:true,
         from_d1:true
-      });
+      };
+      mediaOficialCache.set(key,item);
+      if(entityId)mediaPorEntityIdCache.set(entityId,item);
       cargadas++;
     }
     return cargadas;
@@ -936,7 +1093,7 @@ async function prepararFotosInvestigacionPremium(research,destino,country=""){
 function htmlVisitaPremium(x,destino){
   return `<div class="guia-recomendacion">
     <h4>${escapar(x.name||"Visita")}${x.priority?` <small>· ${escapar(x.priority.replaceAll("_"," "))}</small>`:""}</h4>
-    ${htmlFotoVerificada(x.name,destino,"visit")}
+    ${htmlFotoVerificada(x.name,destino,"visit",x.entity_id||"")}
     ${x.why?`<p><strong>Por qué merece la pena:</strong> ${escapar(limpiarTextoGuia(x.why))}</p>`:""}
     ${x.category?`<p><strong>Qué vas a visitar:</strong> ${escapar(x.category)}${x.zone?` · ${escapar(x.zone)}`:""}</p>`:""}
     ${x.recommended_minutes?`<p><strong>⏱️ Tiempo recomendado:</strong> ${escapar(minutosTexto(x.recommended_minutes))}</p>`:""}
@@ -949,7 +1106,7 @@ function htmlVisitaPremium(x,destino){
 function htmlRestaurantePremium(x,destino,principal=false){
   return `<div class="guia-recomendacion ${principal?"principal":""}">
     <h4>${principal?"⭐ Recomendado · ":""}${escapar(x.name||"Restaurante")}</h4>
-    ${htmlFotoVerificada(x.name,destino,"restaurant")}
+    ${htmlFotoVerificada(x.name,destino,"restaurant",x.entity_id||"")}
     ${x.why?`<p><strong>Por qué lo recomendamos:</strong> ${escapar(limpiarTextoGuia(x.why))}</p>`:""}
     ${x.specialty?`<p><strong>🍴 Qué probar:</strong> ${escapar(limpiarTextoGuia(x.specialty))}</p>`:""}
     ${x.zone?`<p><strong>Zona:</strong> ${escapar(x.zone)}</p>`:""}
@@ -961,7 +1118,7 @@ function htmlRestaurantePremium(x,destino,principal=false){
 function htmlPernoctaPremium(x,destino,principal=false){
   return `<div class="guia-recomendacion ${principal?"principal":""}">
     <h4>${principal?"⭐ Base recomendada · ":""}${escapar(x.name||"Pernocta")}</h4>
-    ${htmlFotoVerificada(x.name,destino,"overnight")}
+    ${htmlFotoVerificada(x.name,destino,"overnight",x.entity_id||"")}
     ${x.why?`<p><strong>Por qué la recomendamos:</strong> ${escapar(limpiarTextoGuia(x.why))}</p>`:""}
     ${x.type?`<p><strong>Tipo:</strong> ${escapar(x.type)}</p>`:""}
     ${x.services?`<p><strong>Servicios:</strong> ${escapar(limpiarTextoGuia(x.services))}</p>`:""}
@@ -1078,6 +1235,15 @@ function montarPortadaAntesMapa(datos={}){
   mapaEl.insertAdjacentHTML('beforebegin',htmlPortadaRuta(datos));
 }
 
+function formatoFecha(f){
+  if(!f)return "";
+  try{
+    const [y,m,d]=String(f).split("-");
+    if(y&&m&&d)return `${d}/${m}/${y}`;
+    return String(f);
+  }catch(e){return String(f);}
+}
+
 function htmlGuiaIA(guide,datos={},stops=[]){
   if(!guide||typeof guide!=="object")return '<div class="error-ruta"><strong>⚠️ La guía almacenada no tiene un formato válido.</strong></div>';
   let h=`<div class="guia-pdf guia-ia-real">
@@ -1105,12 +1271,18 @@ function htmlGuiaIA(guide,datos={},stops=[]){
   (guide.days||[]).forEach(d=>{
     const ciudadDia=ciudadDeDiaGuia(d,stops);
     const paisDia=paisDeDiaGuia(d,stops);
-    h+=`<section class="guia-dia-editorial">
+    const esConduccion=Boolean(d.driving||d.day_type==="conduccion_y_visita"||(Number(d.driving_minutes)>0));
+    const claseTipo=esConduccion?"dia-conduccion":"dia-estancia";
+    const fechaTexto=d.travel_date?` · ${formatoFecha(d.travel_date)}`:"";
+    const badgeTipo=!esConduccion?'<span class="badge-estancia">🏡 Día de estancia y visitas</span>':"";
+    h+=`<section class="guia-dia-editorial ${claseTipo}"${d.request_point_id?` data-request-point-id="${escapar(d.request_point_id)}"`:""}>
       <div class="guia-dia-titulo">
-        <span>DÍA ${escapar(d.day||"")}</span>
+        <span>DÍA ${escapar(d.day||"")}${fechaTexto}</span>
+        ${badgeTipo}
         <h2>${escapar(d.heading||"Etapa")}</h2>
         ${d.driving?`<p>🚐 ${escapar(d.driving)}</p>`:""}
-      </div>`;
+      </div>
+      ${htmlGoogleMapsDia(d,stops)}`;
 
     if(d.opening_narrative)h+=`<div class="guia-narrativa"><p>${escapar(limpiarTextoGuia(d.opening_narrative))}</p></div>`;
     if(d.arrival_strategy)h+=`<div class="guia-narrativa"><p><strong>Al llegar:</strong> ${escapar(limpiarTextoGuia(d.arrival_strategy))}</p></div>`;
@@ -1123,10 +1295,10 @@ function htmlGuiaIA(guide,datos={},stops=[]){
       d.highlights.forEach(x=>{
         h+=`<div class="guia-recomendacion">
           <h4>${escapar(x.name||"Visita")}</h4>
-          ${htmlFotoVerificada(x.name,ciudadDia, "visit")}
+          ${htmlFotoVerificada(x.name,ciudadDia,"visit",x.entity_id||"")}
           ${x.description?`<p>${escapar(limpiarTextoGuia(x.description))}</p>`:""}
           ${x.practical_note?`<p><strong>Información práctica:</strong> ${escapar(limpiarTextoGuia(x.practical_note))}</p>`:""}
-          ${htmlDatosLugar(x.name,"visit",x.url||"",ciudadDia,paisDia)}
+          ${htmlDatosLugar(x.name,"visit",x.url||"",ciudadDia,paisDia,x.entity_id||"")}
         </div>`;
       });
       h+=`</section>`;
@@ -1138,11 +1310,11 @@ function htmlGuiaIA(guide,datos={},stops=[]){
       d.restaurants.forEach((x,i)=>{
         h+=`<div class="guia-recomendacion ${i===0?"principal":""}">
           <h4>${i===0?"⭐ Recomendado · ":""}${escapar(x.name||"Restaurante")}</h4>
-          ${htmlFotoVerificada(x.name,ciudadDia, "restaurant")}
+          ${htmlFotoVerificada(x.name,ciudadDia,"restaurant",x.entity_id||"")}
           ${x.why?`<p>${escapar(limpiarTextoGuia(x.why))}</p>`:""}
           ${x.specialty?`<p><strong>Qué probar:</strong> ${escapar(limpiarTextoGuia(x.specialty))}</p>`:""}
           ${x.practical_note?`<p><strong>Consejo:</strong> ${escapar(limpiarTextoGuia(x.practical_note))}</p>`:""}
-          ${htmlDatosLugar(x.name,"restaurant",x.website||"",ciudadDia,paisDia)}
+          ${htmlDatosLugar(x.name,"restaurant",x.website||"",ciudadDia,paisDia,x.entity_id||"")}
         </div>`;
       });
       h+=`</section>`;
@@ -1154,12 +1326,12 @@ function htmlGuiaIA(guide,datos={},stops=[]){
       d.overnight.forEach((x,i)=>{
         h+=`<div class="guia-recomendacion ${i===0?"principal":""}">
           <h4>${i===0?"⭐ Recomendado · ":""}${escapar(x.name||"Pernocta")}</h4>
-          ${htmlFotoVerificada(x.name,ciudadDia, "overnight")}
+          ${htmlFotoVerificada(x.name,ciudadDia,"overnight",x.entity_id||"")}
           ${x.type?`<p><strong>Tipo:</strong> ${escapar(limpiarTextoGuia(x.type))}</p>`:""}
           ${x.why?`<p>${escapar(limpiarTextoGuia(x.why))}</p>`:""}
           ${x.services?`<p><strong>Servicios:</strong> ${escapar(limpiarTextoGuia(x.services))}</p>`:""}
           ${x.practical_info?`<p><strong>Información práctica:</strong> ${escapar(limpiarTextoGuia(x.practical_info))}</p>`:""}
-          ${htmlDatosLugar(x.name,"overnight",x.website||"",ciudadDia,paisDia)}
+          ${htmlDatosLugar(x.name,"overnight",x.website||"",ciudadDia,paisDia,x.entity_id||"")}
         </div>`;
       });
       h+=`</section>`;
@@ -1259,14 +1431,25 @@ async function resolverLugar(input){
 prepararAutocomplete(document.getElementById("origen"));
 prepararAutocomplete(document.getElementById("destinoPrincipal"));
 
-let contadorDestinos=0;
+function actualizarNumerosVias(){
+  const items=document.querySelectorAll("#destinosExtra .via-item");
+  items.forEach((item,index)=>{
+    const badge=item.querySelector(".via-numero");
+    if(badge)badge.textContent=`${index+1}`;
+  });
+}
+
 document.getElementById("anadirDestino").addEventListener("click",()=>{
-  contadorDestinos++;
-  const fila=document.createElement("div"); fila.className="destino-extra";
-  fila.innerHTML=`<label><span>📍 Destino adicional ${contadorDestinos}</span><input type="text" class="destinoAdicional" placeholder="Ciudad, región o lugar"></label><button type="button" class="boton-secundario eliminar-destino" aria-label="Eliminar destino">✕</button>`;
-  document.getElementById("destinosExtra").appendChild(fila);
+  const contenedor=document.getElementById("destinosExtra");
+  const num=contenedor.querySelectorAll(".via-item").length+1;
+  const fila=document.createElement("div"); fila.className="via-item";
+  fila.innerHTML=`<span class="via-numero">${num}</span><input type="text" class="destinoAdicional" placeholder="Parada intermedia (ej. Burdeos, Francia)" required><button type="button" class="via-eliminar" aria-label="Eliminar parada">✕</button>`;
+  contenedor.appendChild(fila);
   prepararAutocomplete(fila.querySelector(".destinoAdicional"));
-  fila.querySelector(".eliminar-destino").addEventListener("click",()=>fila.remove());
+  fila.querySelector(".via-eliminar").addEventListener("click",()=>{
+    fila.remove();
+    actualizarNumerosVias();
+  });
 });
 
 function modoGeoapify(vehiculo){
@@ -1492,7 +1675,58 @@ function restoDivisibleEnJornadas(steps,startStep,jornadasRestantes,maxMinutes){
   return Number.isFinite(minimas) && minimas<=jornadasRestantes;
 }
 
-async function elegirFinJornadaInteligente({steps,line,startStep,endStep,totalRemainingMinutes,stagesRemaining,maxMinutes,idealMinutes,datos,ultimoLugar}){
+async function buscarCandidatosPernoctaCorredor(coordPaso, datos, radioMetros = 45000){
+  if(!Array.isArray(coordPaso) || coordPaso.length < 2) return [];
+  let rev = null;
+  try { rev = await reverseLugar(coordPaso); } catch(e){}
+  const codigo = (rev?.country_code || "").toLowerCase();
+  if(!codigo) return [];
+  const todos = await cargarAlojamientosPais(codigo);
+  if(!todos || !todos.length) return [];
+  const compatibles = todos.filter(x => alojamientoCompatible(x, datos));
+  if(!compatibles.length) return [];
+  const centro = [Number(coordPaso[0]), Number(coordPaso[1])];
+  const conDistancia = compatibles.map(x => {
+    const d = distanciaHaversine(centro, [Number(x.lon), Number(x.lat)]);
+    return { ...x, _distancia: d, _score: puntosAlojamiento(x, datos, d), _countryCode: codigo };
+  }).filter(x => x._distancia <= radioMetros);
+  conDistancia.sort((a, b) => b._score - a._score || a._distancia - b._distancia);
+  return conDistancia.slice(0, 10);
+}
+
+async function calcularTramoCarretera(origen, destino, datos){
+  const waypoints = `${origen.lat},${origen.lon}|${destino.lat},${destino.lon}`;
+  const params = new URLSearchParams({
+    waypoints,
+    mode: modoGeoapify(datos.vehiculo),
+    traffic: "approximated",
+    units: "metric",
+    lang: "es",
+    format: "geojson",
+    apiKey: config.GEOAPIFY_API_KEY
+  });
+  if ((datos.evitar || []).includes("carreteras-complicadas")) params.set("type", "less_maneuvers");
+  const evita = evitarGeoapify(datos.evitar);
+  if (evita.length) params.set("avoid", evita.join("|"));
+  const r = await fetch(`https://api.geoapify.com/v1/routing?${params}`);
+  if (!r.ok) {
+    let msg = "";
+    try { msg = (await r.json()).message || ""; } catch(e){}
+    throw new Error(msg || "Geoapify no pudo calcular el tramo de carretera.");
+  }
+  const data = await r.json();
+  const f = data.features?.[0];
+  if (!f) throw new Error("No se encontró trazado para el tramo.");
+  const p = f.properties || {};
+  return {
+    distance: Number(p.distance) || 0,
+    time: Number(p.time) || 0,
+    feature: f,
+    line: f.geometry?.coordinates || []
+  };
+}
+
+async function elegirFinJornadaRealV3({steps,line,startStep,endStep,totalRemainingMinutes,stagesRemaining,maxMinutes,idealMinutes,datos,ultimoLugar,puntoInicioEtapa}){
   const candidatos=[];
   let minutos=0,km=0;
   const minNecesario=Math.max(1,totalRemainingMinutes-stagesRemaining*maxMinutes);
@@ -1504,11 +1738,6 @@ async function elegirFinJornadaInteligente({steps,line,startStep,endStep,totalRe
     km+=Math.max(0,Number(step.distance)||0)/1000;
     if(minutos>maxMinutes+0.01)break;
     if(minutos+0.01<minTuristico)continue;
-
-    // No basta con que el tiempo total restante quepa matemáticamente. Los steps
-    // de Geoapify son indivisibles: el corte elegido solo es válido si el sufijo
-    // todavía puede repartirse, en límites de step reales, entre TODAS las jornadas
-    // que quedan sin superar maxMinutes. Así evitamos dejar una última etapa > máximo.
     if(!restoDivisibleEnJornadas(steps,si+1,stagesRemaining,maxMinutes))continue;
 
     const idx=Number(step.to_index);
@@ -1519,8 +1748,6 @@ async function elegirFinJornadaInteligente({steps,line,startStep,endStep,totalRe
   }
 
   if(!candidatos.length){
-    // Segundo intento sin mínimo turístico: prioriza SIEMPRE la viabilidad completa
-    // de la ruta. Nunca se acepta un punto que deje un resto imposible de dividir.
     minutos=0;km=0;
     for(let si=startStep;si<=endStep;si++){
       const step=steps[si]||{};
@@ -1534,38 +1761,116 @@ async function elegirFinJornadaInteligente({steps,line,startStep,endStep,totalRe
       if(Array.isArray(coord)&&coord.length>=2)candidatos.push({stepIndex:si,minutes:minutos,km,coord});
     }
   }
-  if(!candidatos.length)throw new Error("No existe un corte de jornada por steps que permita completar el tramo respetando el máximo diario.");
+  if(!candidatos.length){
+    const err=new Error("NO_FEASIBLE_OVERNIGHT: No existe un corte por steps en la ruta que permita respetar el límite de conducción diario.");
+    err.code="NO_FEASIBLE_OVERNIGHT";
+    throw err;
+  }
 
-  // Solo se valoran candidatos que ya han superado la prueba de viabilidad global.
-  // La puntuación turística decide ENTRE soluciones correctas; nunca puede romper
-  // la partición logística del resto del trayecto.
-  const ordenados=[...candidatos].sort((a,b)=>a.minutes-b.minutes);
-  const muestra=indicesMuestraCandidatos(ordenados,8);
-  const ideal=[...ordenados].sort((a,b)=>Math.abs(a.minutes-idealMinutes)-Math.abs(b.minutes-idealMinutes))[0];
-  if(ideal&&!muestra.includes(ideal))muestra.push(ideal);
+  // Ordenar candidatos por proximidad al tiempo ideal y tomar los mejores cortes técnicos
+  const ordenados=[...candidatos].sort((a,b)=>Math.abs(a.minutes-idealMinutes)-Math.abs(b.minutes-idealMinutes));
+  const cortesMuestra=ordenados.slice(0,4);
 
-  const valorados=(await Promise.all(muestra.map(c=>valorarFinJornadaRuta(c,datos,idealMinutes,ultimoLugar)))).filter(Boolean);
-  if(!valorados.length)throw new Error("No se pudo valorar ninguna base segura para finalizar la jornada.");
+  // Buscar pernoctas reales compatibles en el corredor de cada corte
+  const opcionesViables=[];
+  for(const corte of cortesMuestra){
+    let alojamientos=await buscarCandidatosPernoctaCorredor(corte.coord,datos,45000);
+    if(!alojamientos.length){
+      alojamientos=await buscarCandidatosPernoctaCorredor(corte.coord,datos,70000);
+    }
+    for(const cand of alojamientos.slice(0,3)){
+      try{
+        const tramoReal=await calcularTramoCarretera(puntoInicioEtapa,{lat:cand.lat,lon:cand.lon},datos);
+        const minutosReal=tramoReal.time/60;
+        const kmReal=tramoReal.distance/1000;
+        if(minutosReal<=maxMinutes+1){
+          const puntuacion=cand._score+(Math.max(0,25-Math.abs(minutosReal-idealMinutes)*0.15));
+          opcionesViables.push({
+            cand,
+            stepIndex:corte.stepIndex,
+            minutosReal,
+            kmReal,
+            score:puntuacion
+          });
+        }
+      }catch(e){
+        // Si no se puede rutear hasta ese alojamiento, se descarta
+      }
+    }
+    if(opcionesViables.length>=3)break;
+  }
 
-  // Si dentro de los cortes seguros existe una ciudad o localidad de entidad
-  // razonable con interés real alrededor, no dejamos que una aldea o simple
-  // municipio gane únicamente por unos pocos POI cercanos. Si no existe ninguna
-  // alternativa de ese nivel, conservamos el mejor corte seguro disponible.
-  const preferentes=valorados.filter(x=>Number(x.settlement_tier)>=2 && Number(x.local_poi_count)>=1);
-  const pool=preferentes.length?preferentes:valorados;
-  pool.sort((a,b)=>b.score-a.score || Math.abs(a.minutes-idealMinutes)-Math.abs(b.minutes-idealMinutes));
-  return pool[0];
+  if(!opcionesViables.length){
+    const tiposTexto=(datos.pernocta||[]).join(", ")||"camping/área";
+    const err=new Error(`NO_FEASIBLE_OVERNIGHT: No se encontró ningún alojamiento compatible (${tiposTexto}) dentro del límite diario de ${Math.round(maxMinutes/60*10)/10} h.`);
+    err.code="NO_FEASIBLE_OVERNIGHT";
+    throw err;
+  }
+
+  opcionesViables.sort((a,b)=>b.score-a.score);
+  const elegida=opcionesViables[0];
+  const cand=elegida.cand;
+
+  return {
+    stepIndex:elegida.stepIndex,
+    minutes:elegida.minutosReal,
+    km:elegida.kmReal,
+    place:nombreAlojamiento(cand),
+    country:paisCanonico(cand._countryCode,cand.pais),
+    lat:Number(cand.lat),
+    lon:Number(cand.lon),
+    overnight:{
+      id:cand.id||`overnight-${cand.tipo}-${cand.lat}-${cand.lon}`,
+      nombre:nombreAlojamiento(cand),
+      tipo:cand.tipo,
+      lat:Number(cand.lat),
+      lon:Number(cand.lon),
+      localidad:localidadAlojamiento(cand),
+      servicios:detallesPernocta(cand),
+      web:cand.web||""
+    }
+  };
+}
+
+async function elegirFinJornadaInteligente(params){
+  return elegirFinJornadaRealV3({...params, puntoInicioEtapa: params.puntoInicioEtapa || {lat: params.line[0][1], lon: params.line[0][0]}});
 }
 
 async function crearEtapasWorker(feature,lugares,datos,esDemo=false){
-  // La demo actual queda aislada; se sustituirá posteriormente por otra más completa.
   const origenDemoClave=normalizarClaveMedia(datos?.origen||"");
-  const destinoDemoClave=normalizarClaveMedia(datos?.destinoPrincipal||"");
+  const destinoDemoClave=normalizarClaveMedia(datos?.destinoFinal||datos?.destinoPrincipal||"");
   if(esDemo && origenDemoClave.includes("saarlouis") && destinoDemoClave.includes("zagreb")){
     return [
-      {day:1,place:"Günzburg",country:"Germany",driving_km:338,driving_minutes:205,is_final:false},
-      {day:2,place:"Salzburg",country:"Austria",driving_km:300,driving_minutes:180,is_final:false},
-      {day:3,place:"Zagreb",country:"Croatia",driving_km:410,driving_minutes:245,is_final:true}
+      {
+        driving_stage_id:"stage-1",
+        base_id:"base-1",
+        overnight_id:"overnight-1",
+        day:1,place:"Günzburg",country:"Germany",
+        lat:48.4557,lon:10.2785,
+        driving_km:338,driving_minutes:205,
+        is_final:false,requested_waypoint:false,stay_eligible:true,
+        overnight:{id:"wohnmobilstellplatz-guenzburg",nombre:"Wohnmobilstellplatz Günzburg am Waldbad",tipo:"area",lat:48.4557,lon:10.2785}
+      },
+      {
+        driving_stage_id:"stage-2",
+        base_id:"base-2",
+        overnight_id:"overnight-2",
+        day:2,place:"Salzburg",country:"Austria",
+        lat:47.8095,lon:13.0550,
+        driving_km:300,driving_minutes:180,
+        is_final:false,requested_waypoint:false,stay_eligible:true,
+        overnight:{id:"camping-aigen-salzburg",nombre:"Camping Aigen",tipo:"camping",lat:47.8095,lon:13.0550}
+      },
+      {
+        driving_stage_id:"stage-3",
+        base_id:"base-3",
+        overnight_id:"overnight-3",
+        day:3,place:"Zagreb",country:"Croatia",
+        lat:45.8150,lon:15.9819,
+        driving_km:410,driving_minutes:245,
+        is_final:true,requested_waypoint:true,stay_eligible:true,
+        overnight:{id:"camp-zagreb",nombre:"Camp Zagreb",tipo:"camping",lat:45.8150,lon:15.9819}
+      }
     ];
   }
 
@@ -1583,84 +1888,155 @@ async function crearEtapasWorker(feature,lugares,datos,esDemo=false){
   const legTotals=legs.map(leg=>(Array.isArray(leg?.steps)?leg.steps:[]).reduce((a,s)=>a+Math.max(0,Number(s?.time)||0)/60,0));
   const totalDias=Math.max(1,Number(datos?.dias)||1);
 
-  // v55: "máximo de conducción" significa exactamente eso: un límite, no un
-  // objetivo que añada jornadas artificiales. Primero calculamos el MÍNIMO REAL
-  // de jornadas que necesita cada leg respetando los steps indivisibles de
-  // Geoapify. Los días restantes son días de estancia y se reparten después.
-  // Esto mantiene además cada waypoint manual como final obligatorio de un leg.
   const legSteps=legs.map(leg=>(Array.isArray(leg?.steps)?leg.steps:[]).filter(s=>Number(s?.time)>=0));
   const legStageCounts=legSteps.map(steps=>minimoJornadasDesdeStep(steps,0,maxMinutes));
   if(legStageCounts.some(x=>!Number.isFinite(x))){
     throw new Error(`Geoapify devolvió un segmento individual que supera el máximo diario de ${Math.round(maxMinutes/60*10)/10} h.`);
   }
-  const totalStages=legStageCounts.reduce((a,x)=>a+Math.max(1,Number(x)||1),0);
-  if(totalStages>totalDias){
-    throw new Error(`Con un máximo de ${Math.round(maxMinutes/60*10)/10} h de conducción al día, los destinos elegidos necesitan al menos ${totalStages} jornadas de carretera.`);
-  }
+  // El mínimo real de días NO se decide aquí. Primero se resuelven pernoctas reales y
+  // se recalcula cada jornada hasta sus coordenadas exactas; después, stops.length es
+  // minimum_required_days. Así evitamos aceptar/rechazar por una geometría nominal.
 
   const stops=[];
   let day=1,ultimoLugar="";
+  let puntoInicioEtapa={lat:Number(lugares[0].lat),lon:Number(lugares[0].lon)};
+
   for(let legIndex=0;legIndex<legs.length;legIndex++){
     const leg=legs[legIndex]||{};
     const line=Array.isArray(lines[legIndex])?lines[legIndex]:[];
     const steps=Array.isArray(leg.steps)?leg.steps.filter(s=>Number(s?.time)>=0):[];
     if(line.length<2 || !steps.length)throw new Error(`No se pudo calcular con precisión el tramo ${legIndex+1} de la ruta.`);
-    for(const step of steps){
-      if(Math.max(0,Number(step.time)||0)/60>maxMinutes+0.01){
-        throw new Error(`Geoapify devolvió un segmento individual de más de ${maxMinutes} minutos; no se puede garantizar el límite elegido.`);
-      }
-    }
 
     const legTotal=legTotals[legIndex];
-    // Número mínimo REAL de jornadas para este tramo. No añadimos una quinta
-    // jornada solo porque el ritmo "equilibrado" tenga un objetivo interno menor.
-    // El ritmo se usa para las visitas; el límite de conducción lo fija el usuario.
     const stageCount=Math.max(1,legStageCounts[legIndex]);
     let startStep=0,consumedMinutes=0,consumedKm=0;
     const requestedPlace=lugares[legIndex+1];
+    const isFinalLeg=legIndex===legs.length-1;
 
     for(let stageIndex=0;stageIndex<stageCount;stageIndex++){
       const lastOfLeg=stageIndex===stageCount-1;
       if(lastOfLeg){
-        let minutes=0,km=0;
-        for(let si=startStep;si<steps.length;si++){
-          minutes+=Math.max(0,Number(steps[si]?.time)||0)/60;
-          km+=Math.max(0,Number(steps[si]?.distance)||0)/1000;
+        const origenEtapa={lat:Number(puntoInicioEtapa.lat),lon:Number(puntoInicioEtapa.lon)};
+        // Un user_via/final_destination es un STOPOVER físico obligatorio. La jornada
+        // aceptada se calcula explícitamente origen real -> request_point -> pernocta real.
+        // Nunca sustituimos la vía por un camping "cercano".
+        const requestCoord={lat:Number(requestedPlace.lat),lon:Number(requestedPlace.lon)};
+        if(!Number.isFinite(requestCoord.lat)||!Number.isFinite(requestCoord.lon)){
+          throw new Error(`El punto solicitado ${legIndex+1} no tiene coordenadas verificadas.`);
         }
-        if(minutes>maxMinutes+1)throw new Error(`La última etapa del tramo ${legIndex+1} supera el máximo diario; no se guardará una logística incorrecta.`);
-        const place=nombreLugarWorker(requestedPlace,legIndex===lugares.length-2?datos.destinoPrincipal:(datos.destinosExtra?.[legIndex]||""));
+        const tramoHastaRequest=await calcularTramoCarretera(origenEtapa,requestCoord,datos);
+        let minutes=Number(tramoHastaRequest.time||0)/60;
+        let km=Number(tramoHastaRequest.distance||0)/1000;
+        const place=nombreLugarWorker(requestedPlace,isFinalLeg?(datos.destinoFinal||datos.destinoPrincipal):(datos.vias?.[legIndex]||datos.destinosExtra?.[legIndex]||""));
         const country=paisCanonico(requestedPlace?.country_code,requestedPlace?.country);
+
+        // Buscar una pernocta compatible alrededor del request_point y aceptar SOLO
+        // una cuya conducción completa origen -> request_point -> pernocta respete el máximo.
+        let mejorPernocta=null,tramoRequestPernocta=null;
+        let pernoctasDestino=[];
+        try{
+          pernoctasDestino=await buscarPernoctasEtapa({coordRecomendada:[Number(requestedPlace.lon),Number(requestedPlace.lat)],codigoPais:requestedPlace.country_code},datos);
+        }catch(e){}
+        for(const candidata of pernoctasDestino){
+          if(!Number.isFinite(Number(candidata?.lat))||!Number.isFinite(Number(candidata?.lon)))continue;
+          try{
+            const tramo=await calcularTramoCarretera(requestCoord,{lat:Number(candidata.lat),lon:Number(candidata.lon)},datos);
+            const totalMin=Number(tramoHastaRequest.time||0)/60+Number(tramo.time||0)/60;
+            if(totalMin<=maxMinutes+1){
+              mejorPernocta=candidata;
+              tramoRequestPernocta=tramo;
+              break;
+            }
+          }catch(e){}
+        }
+
+        if(!mejorPernocta||!tramoRequestPernocta){
+          const err=new Error(`NO_FEASIBLE_OVERNIGHT: no existe una pernocta compatible verificada que permita pasar por ${place||`destino ${legIndex+1}`} sin superar el máximo diario.`);
+          err.code="NO_FEASIBLE_OVERNIGHT";
+          throw err;
+        }
+        // Después del stopover solicitado se conduce hasta la pernocta compatible.
+        minutes=Number(tramoHastaRequest.time||0)/60+Number(tramoRequestPernocta.time||0)/60;
+        km=Number(tramoHastaRequest.distance||0)/1000+Number(tramoRequestPernocta.distance||0)/1000;
+
+        const stageDay=day++;
         stops.push({
-          day:day++,place:place||`Destino ${legIndex+1}`,country:country||"",
-          lat:Number.isFinite(Number(requestedPlace?.lat))?Number(requestedPlace.lat):null,
-          lon:Number.isFinite(Number(requestedPlace?.lon))?Number(requestedPlace.lon):null,
-          driving_km:Math.max(0,Math.round(km)),driving_minutes:Math.max(1,Math.round(minutes)),
-          requested_waypoint:true,requested_index:legIndex+1,is_final:legIndex===legs.length-1
+          driving_stage_id:`stage-${stageDay}`,
+          base_id:`base-${stageDay}`,
+          overnight_id:mejorPernocta.id||`overnight-${stageDay}`,
+          day:stageDay,
+          place:place||`Destino ${legIndex+1}`,
+          country:country||"",
+          lat:Number(mejorPernocta.lat),
+          lon:Number(mejorPernocta.lon),
+          driving_km:Math.max(0,Math.round(km)),
+          driving_minutes:Math.max(1,Math.round(minutes)),
+          start_lat:origenEtapa.lat,
+          start_lon:origenEtapa.lon,
+          requested_waypoint:true,
+          requested_index:legIndex+1,
+          request_point_id:String(requestedPlace.request_point_id||`req-${legIndex+1}`),
+          requested_role:String(requestedPlace.role|| (isFinalLeg?"final_destination":"user_via")),
+          requested_lat:requestCoord.lat,
+          requested_lon:requestCoord.lon,
+          is_final:isFinalLeg,
+          stay_eligible:true,
+          overnight:mejorPernocta?{
+            id:mejorPernocta.id||`overnight-${stageDay}`,
+            nombre:nombreAlojamiento(mejorPernocta),
+            tipo:mejorPernocta.tipo,
+            lat:Number(mejorPernocta.lat),
+            lon:Number(mejorPernocta.lon),
+            localidad:localidadAlojamiento(mejorPernocta),
+            servicios:detallesPernocta(mejorPernocta),
+            web:mejorPernocta.web||""
+          }:null
         });
         ultimoLugar=place||ultimoLugar;
         consumedMinutes+=minutes; consumedKm+=km;
         startStep=steps.length;
+        puntoInicioEtapa={lat:Number(mejorPernocta.lat),lon:Number(mejorPernocta.lon)};
         continue;
       }
 
+      const origenEtapa={lat:Number(puntoInicioEtapa.lat),lon:Number(puntoInicioEtapa.lon)};
       const stagesRemaining=stageCount-stageIndex-1;
       const remainingMinutes=Math.max(0,legTotal-consumedMinutes);
       const idealMinutes=Math.min(maxMinutes,remainingMinutes/(stagesRemaining+1));
-      const elegido=await elegirFinJornadaInteligente({
+      const elegido=await elegirFinJornadaRealV3({
         steps,line,startStep,endStep:steps.length-1,totalRemainingMinutes:remainingMinutes,
-        stagesRemaining,maxMinutes,idealMinutes,datos,ultimoLugar
+        stagesRemaining,maxMinutes,idealMinutes,datos,ultimoLugar,puntoInicioEtapa
       });
-      if(!elegido)throw new Error("No se pudo seleccionar una base adecuada para finalizar la jornada.");
+
+      const stageDay=day++;
       stops.push({
-        day:day++,place:elegido.place,country:elegido.country||"",
-        lat:elegido.lat,lon:elegido.lon,
+        driving_stage_id:`stage-${stageDay}`,
+        base_id:`base-${stageDay}`,
+        overnight_id:elegido.overnight?.id||`overnight-${stageDay}`,
+        day:stageDay,
+        place:elegido.place,
+        country:elegido.country||"",
+        lat:elegido.lat,
+        lon:elegido.lon,
         driving_km:Math.max(0,Math.round(elegido.km)),
         driving_minutes:Math.max(1,Math.round(elegido.minutes)),
-        requested_waypoint:false,requested_index:null,is_final:false
+        start_lat:origenEtapa.lat,
+        start_lon:origenEtapa.lon,
+        requested_waypoint:false,
+        requested_index:null,
+        request_point_id:null,
+        requested_role:null,
+        requested_lat:null,
+        requested_lon:null,
+        is_final:false,
+        stay_eligible:false,
+        overnight:elegido.overnight
       });
       ultimoLugar=elegido.place||ultimoLugar;
       consumedMinutes+=elegido.minutes; consumedKm+=elegido.km;
       startStep=elegido.stepIndex+1;
+      // Continuidad geométrica estricta: el siguiente tramo arranca desde las coordenadas del alojamiento elegido
+      puntoInicioEtapa={lat:elegido.lat,lon:elegido.lon};
     }
   }
 
@@ -1681,6 +2057,10 @@ function validarLogisticaLocal(stops,vacationDays,datos){
   if(etapas.slice(0,-1).some(x=>x?.is_final))return {ok:false,reason:"destino_final_duplicado"};
   if(etapas.some(x=>!String(x?.place||"").trim()))return {ok:false,reason:"etapa_sin_localidad"};
   if(etapas.some(x=>Number(x?.driving_minutes)>maxMinutes+1))return {ok:false,reason:"etapa_supera_maximo"};
+  if(etapas.some(x=>!x?.overnight||!String(x?.overnight_id||"").trim()))return {ok:false,reason:"pernocta_no_verificada"};
+  if(etapas.some(x=>!Number.isFinite(Number(x?.lat))||!Number.isFinite(Number(x?.lon))))return {ok:false,reason:"coordenadas_etapa_invalidas"};
+  if(etapas.some(x=>Math.abs(Number(x.lat)-Number(x.overnight?.lat))>1e-7||Math.abs(Number(x.lon)-Number(x.overnight?.lon))>1e-7))return {ok:false,reason:"fin_etapa_no_es_pernocta"};
+  if(etapas.some(x=>x?.requested_waypoint && (!String(x?.request_point_id||"").trim()||!Number.isFinite(Number(x?.requested_lat))||!Number.isFinite(Number(x?.requested_lon)))))return {ok:false,reason:"request_point_no_preservado"};
 
   for(let i=0;i<days.length;i++){
     const d=days[i]||{};
@@ -1690,7 +2070,14 @@ function validarLogisticaLocal(stops,vacationDays,datos){
     const stop=etapas[baseIndex-1]||{};
     if(normalizarClaveMedia(d.place)!==normalizarClaveMedia(stop.place))return {ok:false,reason:"base_no_coincide",day:i+1};
     if(normalizarClaveMedia(d.country)!==normalizarClaveMedia(stop.country||""))return {ok:false,reason:"pais_no_coincide",day:i+1};
-    if(d.day_type==="visita" && (Number(d.driving_minutes)!==0||Number(d.driving_km)!==0))return {ok:false,reason:"visita_con_conduccion",day:i+1};
+    if(d.base_id && stop.base_id && d.base_id!==stop.base_id)return {ok:false,reason:"base_id_no_coincide",day:i+1};
+    if(!String(d.vacation_day_id||"").trim()||!String(d.logistics_id||"").trim())return {ok:false,reason:"identidad_dia_incompleta",day:i+1};
+    if(String(datos?.fechaSalida||"").trim()&&!/^\d{4}-\d{2}-\d{2}$/.test(String(d.travel_date||"")))return {ok:false,reason:"travel_date_invalida",day:i+1};
+    if((d.overnight_id||null)!==(stop.overnight_id||null))return {ok:false,reason:"overnight_id_no_coincide",day:i+1};
+    if(d.day_type==="visita"||d.day_type==="estancia"){
+      if(d.driving_stage_id!==null&&d.driving_stage_id!==undefined)return {ok:false,reason:"estancia_con_stage_id",day:i+1};
+      if(Number(d.driving_minutes)!==0||Number(d.driving_km)!==0)return {ok:false,reason:"estancia_con_conduccion",day:i+1};
+    }
   }
 
   const driveDays=days.filter(d=>d?.day_type==="conduccion_y_visita");
@@ -1700,6 +2087,7 @@ function validarLogisticaLocal(stops,vacationDays,datos){
     if(Number(d.driving_stage_index)!==i+1 || Number(d.base_stop_index)!==i+1)return {ok:false,reason:"orden_etapas",stage:i+1};
     if(Math.round(Number(d.driving_minutes)||0)!==Math.round(Number(stop.driving_minutes)||0))return {ok:false,reason:"minutos_no_coinciden",stage:i+1};
     if(Math.round(Number(d.driving_km)||0)!==Math.round(Number(stop.driving_km)||0))return {ok:false,reason:"km_no_coinciden",stage:i+1};
+    if(d.driving_stage_id && stop.driving_stage_id && d.driving_stage_id!==stop.driving_stage_id)return {ok:false,reason:"stage_id_no_coincide",stage:i+1};
   }
   return {ok:true};
 }
@@ -1710,12 +2098,23 @@ async function prepararEsqueletoVacaciones(stops,datos){
   if(!etapas.length)throw new Error("No hay etapas de conducción para preparar el viaje.");
   if(totalDias<etapas.length)throw new Error("Los días disponibles no permiten respetar el límite de conducción.");
 
+  const fechaBaseTexto=String(datos?.fechaSalida||"").trim();
+  const fechaBaseMatch=/^(\d{4})-(\d{2})-(\d{2})$/.exec(fechaBaseTexto);
+  function fechaDia(diaNum){
+    if(!fechaBaseMatch)return null;
+    const y=Number(fechaBaseMatch[1]),m=Number(fechaBaseMatch[2]),d=Number(fechaBaseMatch[3]);
+    const utc=Date.UTC(y,m-1,d)+Math.max(0,Number(diaNum)-1)*86400000;
+    const out=new Date(utc);
+    if(Number.isNaN(out.getTime()))return null;
+    return out.toISOString().slice(0,10);
+  }
+
   const bases=[];
   for(let i=0;i<etapas.length;i++){
     const stop=etapas[i];
     let pois=[];
     if(Number.isFinite(Number(stop.lon))&&Number.isFinite(Number(stop.lat))){
-      try{ pois=await buscarPOIs([Number(stop.lon),Number(stop.lat)],datos); }catch{}
+      try{ pois=await buscarPOIs([Number(stop.lon),Number(stop.lat)],datos); }catch(e){}
     }
     const destacados=pois.slice(0,6).map(f=>({
       name:String(f?.properties?.name||"").trim(),
@@ -1723,55 +2122,82 @@ async function prepararEsqueletoVacaciones(stops,datos){
       score:Math.round(puntuacionPOI(f,datos))
     })).filter(x=>x.name);
     const poiScore=destacados.slice(0,5).reduce((a,x)=>a+Math.max(0,Number(x.score)||0),0);
-    const requestedBoost=stop.requested_waypoint?35:0;
-    const finalBoost=stop.is_final?25:0;
-    bases.push({stop_index:i+1,score:Math.max(1,poiScore+requestedBoost+finalBoost),highlights:destacados});
+    const requestedBoost=stop.requested_waypoint?40:0;
+    const finalBoost=stop.is_final?60:0;
+    const stayEligible = Boolean(stop.stay_eligible || stop.is_final || stop.requested_waypoint);
+    bases.push({
+      stop_index:i+1,
+      stay_eligible:stayEligible,
+      score:stayEligible ? Math.max(1,poiScore+requestedBoost+finalBoost) : 0,
+      highlights:destacados
+    });
   }
 
   const extra=totalDias-etapas.length;
   const asignados=new Array(etapas.length).fill(0);
-  for(let n=0;n<extra;n++){
-    let best=0,bestValue=-Infinity;
-    for(let i=0;i<bases.length;i++){
-      const b=bases[i];
-      // La penalización progresiva reparte las estancias entre bases atractivas
-      // en vez de enviar automáticamente todos los días al destino final.
-      const value=b.score/Math.pow(1+asignados[i],2);
-      if(value>bestValue){bestValue=value;best=i;}
+  const eligibleBases = bases.filter(b => b.stay_eligible);
+  if(extra > 0 && eligibleBases.length > 0){
+    for(let n=0;n<extra;n++){
+      let best=-1,bestValue=-Infinity;
+      for(let i=0;i<bases.length;i++){
+        if(!bases[i].stay_eligible) continue;
+        const b=bases[i];
+        const value=b.score/Math.pow(1+asignados[i],2);
+        if(value>bestValue){bestValue=value;best=i;}
+      }
+      if(best>=0) asignados[best]++;
+      else asignados[etapas.length-1]++;
     }
-    asignados[best]++;
+  } else if(extra > 0) {
+    asignados[etapas.length-1] = extra;
   }
 
   const days=[];
   for(let i=0;i<etapas.length;i++){
     const stop=etapas[i],base=bases[i];
+    const dayDriveNum = days.length + 1;
     days.push({
+      vacation_day_id:`vday-${dayDriveNum}`,
       logistics_id:`drive-${i+1}`,
-      day:days.length+1,
+      day:dayDriveNum,
+      travel_date:fechaDia(dayDriveNum),
       day_type:"conduccion_y_visita",
       place:stop.place,
       country:stop.country||"",
+      base_id:stop.base_id||`base-${i+1}`,
+      overnight_id:stop.overnight_id||null,
+      driving_stage_id:stop.driving_stage_id||`stage-${i+1}`,
       driving_stage_index:i+1,
       base_stop_index:i+1,
-      driving_km:Number(stop.driving_km)||0,
-      driving_minutes:Number(stop.driving_minutes)||0,
+      driving_km:Math.round(Number(stop.driving_km)||0),
+      driving_minutes:Math.round(Number(stop.driving_minutes)||0),
+      request_point_id:stop.request_point_id==null?null:String(stop.request_point_id),
       is_final:Boolean(stop.is_final),
       requested_waypoint:Boolean(stop.requested_waypoint),
+      stay_eligible:Boolean(stop.stay_eligible),
       candidate_highlights:base.highlights
     });
     for(let j=0;j<asignados[i];j++){
+      const dayStayNum = days.length + 1;
       days.push({
+        vacation_day_id:`vday-${dayStayNum}`,
         logistics_id:`stay-${i+1}-${j+1}`,
-        day:days.length+1,
-        day_type:"visita",
+        day:dayStayNum,
+        travel_date:fechaDia(dayStayNum),
+        day_type:"estancia",
         place:stop.place,
         country:stop.country||"",
+        base_id:stop.base_id||`base-${i+1}`,
+        overnight_id:stop.overnight_id||null,
+        driving_stage_id:null,
         driving_stage_index:0,
         base_stop_index:i+1,
         driving_km:0,
         driving_minutes:0,
+        request_point_id:stop.request_point_id==null?null:String(stop.request_point_id),
         is_final:Boolean(stop.is_final),
         requested_waypoint:Boolean(stop.requested_waypoint),
+        stay_eligible:true,
         candidate_highlights:base.highlights
       });
     }
@@ -2113,7 +2539,7 @@ async function completarFichasEnriquecidas(plan){
 // ---------- Fase 6:// ---------- Fase 6: pernoctas con nuestra propia base de datos ----------
 const cacheAlojamientos=new Map();
 const archivosPernocta={
-  es:["campings-espana-definitivo.json?v=1","areas-parkings-espana-v3.json?v=1"],
+  es:["campings-espana-definitivo.json?v=1","areas-parkings-espana-v4-corregido.json?v=1"],
   it:["campings-italia-definitivo.json?v=1","areas-italia-definitivo-v3.json?v=3"],
   pt:["campings-portugal-definitivo.json?v=1","areas-portugal-definitivo.json?v=2"],
   fr:["campings-francia-definitivo.json?v=1","areas-francia-definitivo.json?v=1"],
@@ -2148,7 +2574,7 @@ const archivosPernocta={
   ee:["campings-estonia-definitivo.json?v=1","areas-estonia-definitivo.json?v=1"],
   lv:["campings-letonia-definitivo.json?v=1","areas-letonia-definitivo.json?v=1"],
   lt:["campings-lituania-definitivo.json?v=1","areas-lituania-definitivo.json?v=1"],
-  md:["campings-moldavia-definitivo.json?v=1","areas-moldavia-definitivo.json?v=1"],
+  md:["campings-moldavia-definitivo.json?v=1"],
   ua:["campings-ucrania-definitivo.json?v=1","areas-ucrania-definitivo.json?v=1"],
   cy:["campings-chipre-definitivo.json?v=1","areas-chipre-definitivo.json?v=1"],
   xk:["campings-kosovo-definitivo.json?v=1","areas-kosovo-definitivo.json?v=1"]
@@ -2414,17 +2840,61 @@ function nombreMapsLugar(x,alternativa=""){
   return String(x?.formatted||x?.name||x?.place||alternativa||"").trim();
 }
 
-function urlGoogleMapsRuta(lugares=[],stops=[],datos={}){
-  const origen=nombreMapsLugar(lugares[0],datos.origen);
-  const destino=nombreMapsLugar(lugares.at(-1),datos.destinoPrincipal);
-  if(!origen||!destino)return "";
-  const intermedios=(Array.isArray(stops)?stops:[])
-    .filter(x=>!x?.is_final)
-    .map(x=>String(x?.place||"").trim())
-    .filter(Boolean);
-  const q=new URLSearchParams({api:"1",origin:origen,destination:destino,travelmode:"driving"});
-  if(intermedios.length)q.set("waypoints",intermedios.join("|"));
+function coordMaps(lat,lon){
+  return Number.isFinite(Number(lat))&&Number.isFinite(Number(lon))
+    ? `${Number(lat).toFixed(6)},${Number(lon).toFixed(6)}`
+    : "";
+}
+
+function urlGoogleMapsDesdePuntos(puntos=[]){
+  const clean=[];
+  for(const p of puntos){
+    const c=String(p||"").trim();
+    if(c&&clean.at(-1)!==c)clean.push(c);
+  }
+  if(clean.length<2)return "";
+  const q=new URLSearchParams({api:"1",origin:clean[0],destination:clean.at(-1),travelmode:"driving"});
+  if(clean.length>2)q.set("waypoints",clean.slice(1,-1).join("|"));
   return `https://www.google.com/maps/dir/?${q.toString()}`;
+}
+
+function urlGoogleMapsRuta(lugares=[],stops=[],datos={}){
+  const origenLugar=lugares[0];
+  if(!origenLugar)return "";
+  const puntos=[coordMaps(origenLugar.lat,origenLugar.lon)||nombreMapsLugar(origenLugar,datos.origen)];
+  // La secuencia refleja la logística aceptada: cada request_point obligatorio se
+  // inserta ANTES de la pernocta que cierra su leg; las bases técnicas solo añaden
+  // su pernocta. El destino de Maps es por tanto el fin físico real de la última jornada.
+  for(const stop of (Array.isArray(stops)?stops:[])){
+    if(stop?.requested_waypoint){
+      const req=coordMaps(stop.requested_lat,stop.requested_lon);
+      if(req)puntos.push(req);
+    }
+    const overnight=coordMaps(stop?.lat,stop?.lon);
+    if(overnight)puntos.push(overnight);
+  }
+  return urlGoogleMapsDesdePuntos(puntos);
+}
+
+function urlGoogleMapsDia(dia,stops=[]){
+  if(!dia||dia.day_type!=="conduccion_y_visita")return "";
+  const stop=stopDeDiaGuia(dia,stops);
+  if(!stop)return "";
+  const origen=coordMaps(stop.start_lat,stop.start_lon);
+  const destino=coordMaps(stop.lat,stop.lon);
+  if(!origen||!destino)return "";
+  const puntos=[origen];
+  if(stop.requested_waypoint){
+    const req=coordMaps(stop.requested_lat,stop.requested_lon);
+    if(req)puntos.push(req);
+  }
+  puntos.push(destino);
+  return urlGoogleMapsDesdePuntos(puntos);
+}
+
+function htmlGoogleMapsDia(dia,stops=[]){
+  const url=urlGoogleMapsDia(dia,stops);
+  return url?`<div class="guia-enlaces"><a href="${escapar(url)}" target="_blank" rel="noopener">🧭 Abrir etapa del día en Google Maps</a></div>`:"";
 }
 
 function colocarResumenDebajoMapa(){
@@ -2635,11 +3105,33 @@ formRuta.addEventListener("submit",async event=>{
       return;
     }
 
-    const inputs=[document.getElementById("origen"),document.getElementById("destinoPrincipal"),...document.querySelectorAll(".destinoAdicional")].filter(i=>i.value.trim());
-    const lugares=[];
-    for(const input of inputs){
-      document.getElementById("estadoCalculo").textContent=`Localizando ${input.value.trim()}…`;
-      lugares.push(await resolverLugar(input));
+    if(datos.contenidoVisual === "minimo"){
+      document.getElementById("etapasRuta")?.classList.add("modo-visual-minimo");
+    } else {
+      document.getElementById("etapasRuta")?.classList.remove("modo-visual-minimo");
+    }
+
+    const origenInput = document.getElementById("origen");
+    const destinoInput = document.getElementById("destinoPrincipal");
+    const viasInputs = [...document.querySelectorAll("#destinosExtra .destinoAdicional")];
+    const inputs = [origenInput, ...viasInputs, destinoInput].filter(i => i && i.value.trim());
+
+    setRouteV3State("REQUEST_VALID");
+    const lugares = [];
+    for(let i = 0; i < inputs.length; i++){
+      const input = inputs[i];
+      document.getElementById("estadoCalculo").textContent = `Localizando ${input.value.trim()}…`;
+      const res = await resolverLugar(input);
+      const isOrigin = i === 0;
+      const isFinal = i === inputs.length - 1;
+      const role = isOrigin ? "origin" : (isFinal ? "final_destination" : "user_via");
+      const reqId = isOrigin ? "req-origin" : (isFinal ? "req-final" : `req-via-${i}`);
+      lugares.push({
+        ...res,
+        role,
+        request_point_id: reqId,
+        order: i
+      });
     }
 
     document.getElementById("estadoCalculo").textContent="Calculando carretera, kilómetros y tiempo…";
@@ -2679,7 +3171,10 @@ formRuta.addEventListener("submit",async event=>{
     const stopsCalculados=await crearEtapasWorker(ruta.features[0],lugares,datos,false);
     datos._jornadasConduccion=stopsCalculados.length;
     const diasSolicitados=Math.max(1,Number(datos.dias)||1);
+    // minimum_required_days se calcula únicamente DESPUÉS de resolver y recalcular
+    // todas las pernoctas reales. Este valor es el contrato determinista previo a IA.
     const diasMinimosConduccion=Math.max(1,stopsCalculados.length);
+    datos.minimum_required_days=diasMinimosConduccion;
 
     if(diasSolicitados<diasMinimosConduccion){
       pintarResultadoBase(ruta,lugares,datos);
@@ -2702,10 +3197,12 @@ formRuta.addEventListener("submit",async event=>{
     if(!contratoLocal.ok){
       throw new Error(`La validación local de la ruta ha detectado una incoherencia (${contratoLocal.reason}). No se consultará investigación ni IA.`);
     }
+    setRouteV3State("LOGISTICS_READY");
     let stopsCache=stopsCalculados;
     let estadoPlanIA=null;
     try{
       document.getElementById("estadoCalculo").textContent="Comprobando investigación, fotografías y caché de la ruta…";
+      setRouteV3State("RESEARCH_PENDING");
       let planCache=await consultarPlanificadorIA(datos,lugares,stopsCache,vacationDays);
       estadoPlanIA=planCache;
 
@@ -2723,6 +3220,8 @@ formRuta.addEventListener("submit",async event=>{
       }
 
       if(planCache?.ok&&planCache?.status==="planned"&&planCache?.plan){
+        setRouteV3State("RESEARCH_READY");
+        setRouteV3State("PLAN_READY");
         if(Array.isArray(planCache.resolved_stops)&&planCache.resolved_stops.length){
           stopsCache=planCache.resolved_stops;
         }
@@ -2750,6 +3249,7 @@ formRuta.addEventListener("submit",async event=>{
         }
 
         if(guiaCache?.ok&&guiaCache?.status==="written"&&guiaCache?.guide){
+          setRouteV3State("GUIDE_TEXT_READY");
           if(Array.isArray(guiaCache.resolved_stops)&&guiaCache.resolved_stops.length){
             stopsCache=guiaCache.resolved_stops;
           }
@@ -2757,13 +3257,18 @@ formRuta.addEventListener("submit",async event=>{
           await prepararDatosYMediaGuia(stopsCache);
           document.getElementById("estadoCalculo").textContent="Seleccionando las mejores fotografías…";
           await prepararFotosGuia(guiaCache.guide,stopsCache);
+          const mediaSuficiente=datos.contenidoVisual==="minimo" || mediaGuiaSuficiente(guiaCache.guide,stopsCache);
+          setRouteV3State(mediaSuficiente?"MEDIA_SUFFICIENT":"MEDIA_PARTIAL");
+          if(mediaSuficiente)setRouteV3State("FINAL_READY");
           pintarResultadoBase(ruta,lugares,datos);
           montarPortadaAntesMapa(datos);
           colocarResumenDebajoMapa();
           instalarAccionesRuta(lugares,stopsCache,datos);
           document.getElementById("etapasRuta").innerHTML=htmlGuiaIA(guiaCache.guide,datos,stopsCache);
           instalarBotonPDF();
-          document.getElementById("estadoCalculo").textContent="Guía preparada";
+          document.getElementById("estadoCalculo").textContent=mediaSuficiente
+            ? "Guía preparada"
+            : "Guía textual preparada · multimedia incompleta";
           return;
         }
 

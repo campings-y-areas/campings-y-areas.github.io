@@ -17,7 +17,7 @@
   </script>
 
   <link rel="stylesheet" href="style.css?v=2">
-  <link rel="stylesheet" href="rutas.css?v=8">
+  <link rel="stylesheet" href="rutas.css?v=9">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
 </head>
 
@@ -52,7 +52,7 @@
       </p>
       <p class="estado">
         Esta primera versión prepara todos los datos necesarios para construir
-        después las etapas, visitas, actividades, comidas, fotos, vídeos y lugares de pernocta.
+        después las etapas, visitas, actividades, comidas, fotografías verificadas y lugares de pernocta.
       </p>
     </section>
 
@@ -80,11 +80,11 @@
               <small>Introduce uno o varios destinos y organizaremos el viaje alrededor de ellos.</small>
             </label>
 
-            <label class="opcion-grande">
-              <input type="radio" name="modoRuta" value="propuesta">
+            <label class="opcion-grande opcion-deshabilitada">
+              <input type="radio" name="modoRuta" value="propuesta" disabled>
               <span class="opcion-icono">✨</span>
-              <strong>Organízame las vacaciones</strong>
-              <small>Dinos desde dónde sales, cuántos días tienes y qué os gusta.</small>
+              <strong>Organízame las vacaciones <small class="badge-proximamente">(Próximamente)</small></strong>
+              <small>Modo en preparación para proponer destinos verificados sin inventar paradas.</small>
             </label>
           </div>
 
@@ -94,17 +94,21 @@
               <input type="text" id="origen" required placeholder="Ej. Saarlouis, Alemania">
             </label>
 
-            <div id="zonaDestinos">
+            <div id="zonaItinerario">
+              <div class="subbloque-vias">
+                <div class="cabecera-vias">
+                  <span>📍 Paradas de paso intermedias (opcional)</span>
+                  <button type="button" class="boton-secundario boton-pequeno" id="anadirDestino">
+                    ➕ Añadir parada intermedia
+                  </button>
+                </div>
+                <div id="destinosExtra" class="vias-lista"></div>
+              </div>
+
               <label>
-                <span>🏁 Destino principal</span>
-                <input type="text" id="destinoPrincipal" placeholder="Ej. Split, Croacia">
+                <span>🏁 Destino final</span>
+                <input type="text" id="destinoPrincipal" required placeholder="Ej. Split, Croacia">
               </label>
-
-              <div id="destinosExtra"></div>
-
-              <button type="button" class="boton-secundario" id="anadirDestino">
-                ➕ Añadir otro destino
-              </button>
             </div>
 
             <div class="fila-doble">
@@ -174,7 +178,7 @@
                 <option value="3" selected>3 horas</option>
                 <option value="4">4 horas</option>
                 <option value="5">5 horas</option>
-                <option value="6">6 horas o más</option>
+                <option value="6">Máximo 6 horas</option>
               </select>
             </label>
 
@@ -225,8 +229,8 @@
               <label><input type="checkbox" name="evitar" value="peajes"><span>💶 Peajes</span></label>
               <label><input type="checkbox" name="evitar" value="autopistas"><span>🛣️ Autopistas</span></label>
               <label><input type="checkbox" name="evitar" value="ferris"><span>⛴️ Ferris</span></label>
-              <label><input type="checkbox" name="evitar" value="carreteras-complicadas"><span>⛰️ Carreteras complicadas</span></label>
-              <label><input type="checkbox" name="evitar" value="grandes-ciudades"><span>🏙️ Grandes ciudades</span></label>
+              <label title="Aplica less_maneuvers en Geoapify: prioriza trayectos con menos maniobras y curvas"><input type="checkbox" name="evitar" value="carreteras-complicadas"><span>⛰️ Carreteras complicadas (menos maniobras)</span></label>
+              <label title="Penaliza núcleos urbanos densos al seleccionar bases y paradas automáticas"><input type="checkbox" name="evitar" value="grandes-ciudades"><span>🏙️ Evitar bases en grandes ciudades</span></label>
             </div>
           </div>
 
@@ -242,11 +246,10 @@
             </label>
 
             <label>
-              <span>📸 Contenido visual</span>
+              <span>📸 Modo visual</span>
               <select id="contenidoVisual">
-                <option value="fotos" selected>Fotos</option>
-                <option value="fotos-videos">Fotos y vídeos</option>
-                <option value="minimo">Solo lo imprescindible</option>
+                <option value="completo" selected>Completo (fotografías y detalles)</option>
+                <option value="minimo">Mínimo (solo lo imprescindible)</option>
               </select>
             </label>
           </div>
@@ -283,7 +286,7 @@
   </main>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <script src="rutas-config.js?v=6"></script>
-  <script src="rutas.js?v=11"></script>
+  <script src="rutas-config.js?v=7"></script>
+  <script src="rutas.js?v=12"></script>
 </body>
 </html>
