@@ -1117,7 +1117,7 @@ document.addEventListener(
 
 
         cargarJSON(
-          "restaurantes-espana-v2.json?v=2"
+          "restaurantes-espana-v2.json?v=3"
         ),
 
 
@@ -1140,7 +1140,7 @@ document.addEventListener(
 
 
         cargarJSON(
-          "guarderias-vehiculos-camping-espana-v1.json?v=2"
+          "guarderias-vehiculos-camping-espana-v1.json?v=3"
         )
 
       ]);

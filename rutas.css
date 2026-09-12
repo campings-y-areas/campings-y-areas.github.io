@@ -416,3 +416,118 @@
 .guia-alternativas{margin:24px 0 36px;padding:18px 22px;background:#f5f8f9;border-left:4px solid #6fa7ba}.guia-alternativas h4{margin:0 0 10px;color:#294f5e}.guia-alternativas p{margin:7px 0}
 .guia-seccion-editorial{margin:34px 0}.guia-intro{margin-top:-5px;color:#5c6469}.guia-recomendacion{padding:16px 0;border-bottom:1px solid #e3e3e3}.guia-recomendacion:last-child{border-bottom:0}.guia-recomendacion h4{font-size:1.08rem;margin:0 0 5px;color:#222}.guia-recomendacion p{margin:4px 0}.guia-recomendacion.principal{border-left:4px solid #d6a62a;padding-left:16px}
 @media(max-width:700px){.guia-portada,.guia-dia-editorial{padding-left:20px;padding-right:20px}.guia-portada h2{font-size:1.7rem}.guia-dia-titulo h2{font-size:1.3rem}.guia-foto img{max-height:360px}.guia-enlaces{gap:10px}}
+
+/* ===== RUTAS V3: ITINERARIO ORDENADO, ESTADOS Y MODOS VISUALES ===== */
+.subbloque-vias {
+  margin: 14px 0;
+  padding: 14px;
+  background: #f8faf9;
+  border: 1px dashed #b5d1c4;
+  border-radius: 12px;
+}
+.cabecera-vias {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #174d38;
+}
+.boton-pequeno {
+  font-size: 0.82rem;
+  padding: 6px 12px;
+}
+.vias-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.via-item {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  gap: 8px;
+  align-items: center;
+  background: #fff;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #dde7e2;
+}
+.via-numero {
+  font-weight: 700;
+  color: #2f6f52;
+  font-size: 0.88rem;
+  text-align: center;
+}
+.via-item input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+.via-eliminar {
+  background: none;
+  border: none;
+  color: #b7322a;
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 4px 8px;
+}
+.opcion-deshabilitada {
+  opacity: 0.65;
+  cursor: not-allowed !important;
+  background: #f0f0f0 !important;
+  border-color: #ddd !important;
+}
+.badge-proximamente {
+  display: inline-block;
+  font-size: 0.72rem;
+  background: #e2e8f0;
+  color: #475569;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 6px;
+  font-weight: 600;
+  vertical-align: middle;
+}
+.badge-estado-v3 {
+  display: inline-block;
+  padding: 3px 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.badge-estado-v3.final-ready { background: #dcfce7; color: #166534; }
+.badge-estado-v3.logistics-ready { background: #e0f2fe; color: #0369a1; }
+.badge-estado-v3.media-partial { background: #fef9c3; color: #854d0e; }
+.badge-estado-v3.media-sufficient { background: #dcfce7; color: #166534; }
+
+.dia-guia.dia-estancia {
+  border-left: 5px solid #2563eb;
+  background: #fcfdfe;
+}
+.dia-guia.dia-conduccion {
+  border-left: 5px solid #16a34a;
+}
+.badge-dia-tipo {
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+.badge-dia-tipo.estancia { background: #dbeafe; color: #1e40af; }
+.badge-dia-tipo.conduccion { background: #dcfce7; color: #166534; }
+
+/* Modo visual mínimo */
+.modo-visual-minimo .guia-foto,
+.modo-visual-minimo .poi-foto-wrap,
+.modo-visual-minimo .poi-foto-principal {
+  display: none !important;
+}
+
