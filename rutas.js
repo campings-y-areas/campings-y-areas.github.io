@@ -1652,27 +1652,53 @@ async function valorarFinJornadaRuta(candidato,datos,idealMinutes,ultimoLugar=""
   };
 }
 
-function minimoJornadasDesdeStep(steps,startStep,maxMinutes){
-  if(startStep>=steps.length)return 0;
-  let jornadas=1,minutos=0;
-  for(let si=startStep;si<steps.length;si++){
-    const stepMinutes=Math.max(0,Number(steps[si]?.time)||0)/60;
-    if(stepMinutes>maxMinutes+0.01)return Infinity;
-    if(minutos>0 && minutos+stepMinutes>maxMinutes+0.01){
-      jornadas++;
-      minutos=0;
-    }
-    minutos+=stepMinutes;
+function coordEnLineaPorFraccion(line,fraccion){
+  const pts=(Array.isArray(line)?line:[]).filter(c=>Array.isArray(c)&&c.length>=2&&Number.isFinite(Number(c[0]))&&Number.isFinite(Number(c[1])));
+  if(!pts.length)return null;
+  if(pts.length===1)return [Number(pts[0][0]),Number(pts[0][1])];
+  const f=Math.max(0,Math.min(1,Number(fraccion)||0));
+  const dist=[]; let total=0;
+  for(let i=1;i<pts.length;i++){
+    const d=distanciaHaversine([Number(pts[i-1][0]),Number(pts[i-1][1])],[Number(pts[i][0]),Number(pts[i][1])]);
+    dist.push(d); total+=d;
   }
-  return jornadas;
+  if(total<=0)return [Number(pts[Math.round(f*(pts.length-1))][0]),Number(pts[Math.round(f*(pts.length-1))][1])];
+  const objetivo=total*f; let acc=0;
+  for(let i=0;i<dist.length;i++){
+    const d=dist[i];
+    if(acc+d>=objetivo){
+      const local=d>0?(objetivo-acc)/d:0;
+      return [
+        Number(pts[i][0])+(Number(pts[i+1][0])-Number(pts[i][0]))*local,
+        Number(pts[i][1])+(Number(pts[i+1][1])-Number(pts[i][1]))*local
+      ];
+    }
+    acc+=d;
+  }
+  return [Number(pts.at(-1)[0]),Number(pts.at(-1)[1])];
 }
 
-function restoDivisibleEnJornadas(steps,startStep,jornadasRestantes,maxMinutes){
-  const restantes=Math.max(0,steps.length-startStep);
-  if(jornadasRestantes===0)return restantes===0;
-  if(restantes<jornadasRestantes)return false;
-  const minimas=minimoJornadasDesdeStep(steps,startStep,maxMinutes);
-  return Number.isFinite(minimas) && minimas<=jornadasRestantes;
+function coordTecnicaPorMinutos(tramo,targetMinutes){
+  const totalSeconds=Math.max(1,Number(tramo?.time)||Number(tramo?.feature?.properties?.time)||0);
+  const targetSeconds=Math.max(0,Math.min(totalSeconds,Number(targetMinutes||0)*60));
+  const line=getRouteGeometryLine(tramo?.feature);
+  if(!Array.isArray(line)||line.length<2)return null;
+  const props=tramo?.feature?.properties||{};
+  const leg=Array.isArray(props.legs)&&props.legs.length?props.legs[0]:null;
+  const steps=Array.isArray(leg?.steps)?leg.steps:(Array.isArray(props.steps)?props.steps:[]);
+  let elapsed=0;
+  for(const step of steps){
+    const stepSeconds=Math.max(0,Number(step?.time)||0);
+    if(stepSeconds<=0){ elapsed+=stepSeconds; continue; }
+    if(elapsed+stepSeconds+0.001<targetSeconds){ elapsed+=stepSeconds; continue; }
+    const fraction=Math.max(0,Math.min(1,(targetSeconds-elapsed)/stepSeconds));
+    const from=Math.max(0,Math.min(line.length-1,Math.round(Number(step?.from_index)||0)));
+    const to=Math.max(from,Math.min(line.length-1,Math.round(Number(step?.to_index)||from)));
+    const sub=line.slice(from,to+1);
+    if(sub.length>=2)return coordEnLineaPorFraccion(sub,fraction);
+    break;
+  }
+  return coordEnLineaPorFraccion(line,targetSeconds/totalSeconds);
 }
 
 async function buscarCandidatosPernoctaCorredor(coordPaso, datos, radioMetros = 45000){
@@ -1691,7 +1717,7 @@ async function buscarCandidatosPernoctaCorredor(coordPaso, datos, radioMetros = 
     return { ...x, _distancia: d, _score: puntosAlojamiento(x, datos, d), _countryCode: codigo };
   }).filter(x => x._distancia <= radioMetros);
   conDistancia.sort((a, b) => b._score - a._score || a._distancia - b._distancia);
-  return conDistancia.slice(0, 10);
+  return conDistancia.slice(0, 12);
 }
 
 async function calcularTramoCarretera(origen, destino, datos){
@@ -1722,118 +1748,101 @@ async function calcularTramoCarretera(origen, destino, datos){
     distance: Number(p.distance) || 0,
     time: Number(p.time) || 0,
     feature: f,
-    line: f.geometry?.coordinates || []
+    line: getRouteGeometryLine(f)
   };
 }
 
-async function elegirFinJornadaRealV3({steps,line,startStep,endStep,totalRemainingMinutes,stagesRemaining,maxMinutes,idealMinutes,datos,ultimoLugar,puntoInicioEtapa}){
-  const candidatos=[];
-  let minutos=0,km=0;
-  const minNecesario=Math.max(1,totalRemainingMinutes-stagesRemaining*maxMinutes);
-  const minTuristico=Math.max(minNecesario,Math.min(120,idealMinutes*0.55));
-
-  for(let si=startStep;si<=endStep;si++){
-    const step=steps[si]||{};
-    minutos+=Math.max(0,Number(step.time)||0)/60;
-    km+=Math.max(0,Number(step.distance)||0)/1000;
-    if(minutos>maxMinutes+0.01)break;
-    if(minutos+0.01<minTuristico)continue;
-    if(!restoDivisibleEnJornadas(steps,si+1,stagesRemaining,maxMinutes))continue;
-
-    const idx=Number(step.to_index);
-    if(!Number.isFinite(idx))continue;
-    const coord=line[Math.max(0,Math.min(line.length-1,Math.round(idx)))];
-    if(!Array.isArray(coord)||coord.length<2)continue;
-    candidatos.push({stepIndex:si,minutes:minutos,km,coord});
-  }
-
-  if(!candidatos.length){
-    minutos=0;km=0;
-    for(let si=startStep;si<=endStep;si++){
-      const step=steps[si]||{};
-      const nextMin=minutos+Math.max(0,Number(step.time)||0)/60;
-      if(nextMin>maxMinutes+0.01)break;
-      minutos=nextMin;
-      km+=Math.max(0,Number(step.distance)||0)/1000;
-      if(!restoDivisibleEnJornadas(steps,si+1,stagesRemaining,maxMinutes))continue;
-      const idx=Number(step.to_index);
-      const coord=Number.isFinite(idx)?line[Math.max(0,Math.min(line.length-1,Math.round(idx)))]:null;
-      if(Array.isArray(coord)&&coord.length>=2)candidatos.push({stepIndex:si,minutes:minutos,km,coord});
-    }
-  }
-  if(!candidatos.length){
-    const err=new Error("NO_FEASIBLE_OVERNIGHT: No existe un corte por steps en la ruta que permita respetar el límite de conducción diario.");
-    err.code="NO_FEASIBLE_OVERNIGHT";
-    throw err;
-  }
-
-  // Ordenar candidatos por proximidad al tiempo ideal y tomar los mejores cortes técnicos
-  const ordenados=[...candidatos].sort((a,b)=>Math.abs(a.minutes-idealMinutes)-Math.abs(b.minutes-idealMinutes));
-  const cortesMuestra=ordenados.slice(0,4);
-
-  // Buscar pernoctas reales compatibles en el corredor de cada corte
-  const opcionesViables=[];
-  for(const corte of cortesMuestra){
-    let alojamientos=await buscarCandidatosPernoctaCorredor(corte.coord,datos,45000);
-    if(!alojamientos.length){
-      alojamientos=await buscarCandidatosPernoctaCorredor(corte.coord,datos,70000);
-    }
-    for(const cand of alojamientos.slice(0,3)){
-      try{
-        const tramoReal=await calcularTramoCarretera(puntoInicioEtapa,{lat:cand.lat,lon:cand.lon},datos);
-        const minutosReal=tramoReal.time/60;
-        const kmReal=tramoReal.distance/1000;
-        if(minutosReal<=maxMinutes+1){
-          const puntuacion=cand._score+(Math.max(0,25-Math.abs(minutosReal-idealMinutes)*0.15));
-          opcionesViables.push({
-            cand,
-            stepIndex:corte.stepIndex,
-            minutosReal,
-            kmReal,
-            score:puntuacion
-          });
-        }
-      }catch(e){
-        // Si no se puede rutear hasta ese alojamiento, se descarta
+async function buscarPernoctaFinalRequest(origenEtapa,requestCoord,requestedPlace,datos,maxMinutes){
+  const tramoHastaRequest=await calcularTramoCarretera(origenEtapa,requestCoord,datos);
+  const minHastaRequest=Number(tramoHastaRequest.time||0)/60;
+  if(minHastaRequest>maxMinutes+1)return null;
+  let candidatas=[];
+  try{
+    candidatas=await buscarPernoctasEtapa({coordRecomendada:[requestCoord.lon,requestCoord.lat],codigoPais:requestedPlace?.country_code},datos);
+  }catch(e){}
+  if(candidatas.length<3){
+    try{
+      const extra=await buscarCandidatosPernoctaCorredor([requestCoord.lon,requestCoord.lat],datos,50000);
+      const vistos=new Set(candidatas.map(x=>String(x.id||`${x.lat}|${x.lon}`)));
+      for(const x of extra){
+        const k=String(x.id||`${x.lat}|${x.lon}`); if(!vistos.has(k)){vistos.add(k);candidatas.push(x);}
       }
-    }
-    if(opcionesViables.length>=3)break;
+    }catch(e){}
   }
+  let mejor=null;
+  for(const cand of candidatas.slice(0,10)){
+    if(!Number.isFinite(Number(cand?.lat))||!Number.isFinite(Number(cand?.lon)))continue;
+    try{
+      const tramo=await calcularTramoCarretera(requestCoord,{lat:Number(cand.lat),lon:Number(cand.lon)},datos);
+      const totalMin=minHastaRequest+Number(tramo.time||0)/60;
+      if(totalMin>maxMinutes+1)continue;
+      const score=(Number(cand._score)||0)-Math.abs(maxMinutes-totalMin)*0.05;
+      if(!mejor||score>mejor.score)mejor={cand,tramoHastaRequest,tramoRequestPernocta:tramo,totalMin,totalKm:(Number(tramoHastaRequest.distance||0)+Number(tramo.distance||0))/1000,score};
+    }catch(e){}
+  }
+  return mejor;
+}
 
-  if(!opcionesViables.length){
+async function elegirFinJornadaRealV3({tramoRestante,puntoInicioEtapa,requestCoord,datos,maxMinutes,ultimoLugar}){
+  const remainingMinutes=Math.max(0,Number(tramoRestante?.time)||0)/60;
+  const targets=(remainingMinutes>maxMinutes+1
+    ? [0.90,0.82,0.74,0.66].map(f=>Math.min(maxMinutes*f,remainingMinutes*0.90))
+    : [0.75,0.65,0.55,0.45].map(f=>Math.max(20,remainingMinutes*f)));
+  const cortes=[];
+  for(const target of targets){
+    const coord=coordTecnicaPorMinutos(tramoRestante,target);
+    if(Array.isArray(coord)&&coord.length>=2&&!cortes.some(x=>distanciaHaversine(x.coord,coord)<5000))cortes.push({coord,target});
+  }
+  const opciones=[];
+  for(const corte of cortes){
+    let candidatos=[];
+    try{candidatos=await buscarCandidatosPernoctaCorredor(corte.coord,datos,45000);}catch(e){}
+    if(!candidatos.length){try{candidatos=await buscarCandidatosPernoctaCorredor(corte.coord,datos,70000);}catch(e){}}
+    for(const cand of candidatos.slice(0,5)){
+      if(!Number.isFinite(Number(cand?.lat))||!Number.isFinite(Number(cand?.lon)))continue;
+      try{
+        const destinoCand={lat:Number(cand.lat),lon:Number(cand.lon)};
+        const ida=await calcularTramoCarretera(puntoInicioEtapa,destinoCand,datos);
+        const idaMin=Number(ida.time||0)/60;
+        if(idaMin<25||idaMin>maxMinutes+1)continue;
+        const resto=await calcularTramoCarretera(destinoCand,requestCoord,datos);
+        const restoMin=Number(resto.time||0)/60;
+        const progreso=remainingMinutes-restoMin;
+        if(progreso<Math.max(20,idaMin*0.30))continue;
+        const nombre=nombreAlojamiento(cand);
+        let score=(Number(cand._score)||0)+Math.max(0,32-Math.abs(idaMin-corte.target)*0.20)+Math.min(25,progreso*0.05);
+        if(ultimoLugar&&normalizarClaveMedia(nombre)===normalizarClaveMedia(ultimoLugar))score-=100;
+        opciones.push({cand,ida,idaMin,restoMin,score});
+      }catch(e){}
+    }
+    if(opciones.length>=4)break;
+  }
+  if(!opciones.length){
     const tiposTexto=(datos.pernocta||[]).join(", ")||"camping/área";
-    const err=new Error(`NO_FEASIBLE_OVERNIGHT: No se encontró ningún alojamiento compatible (${tiposTexto}) dentro del límite diario de ${Math.round(maxMinutes/60*10)/10} h.`);
+    const err=new Error(`NO_FEASIBLE_OVERNIGHT: No se encontró ninguna pernocta compatible (${tiposTexto}) que permita avanzar por la ruta sin superar el máximo diario de ${Math.round(maxMinutes/60*10)/10} h.`);
     err.code="NO_FEASIBLE_OVERNIGHT";
     throw err;
   }
-
-  opcionesViables.sort((a,b)=>b.score-a.score);
-  const elegida=opcionesViables[0];
-  const cand=elegida.cand;
-
+  opciones.sort((a,b)=>b.score-a.score);
+  const e=opciones[0],cand=e.cand;
   return {
-    stepIndex:elegida.stepIndex,
-    minutes:elegida.minutosReal,
-    km:elegida.kmReal,
+    minutes:e.idaMin,
+    km:Number(e.ida.distance||0)/1000,
     place:nombreAlojamiento(cand),
     country:paisCanonico(cand._countryCode,cand.pais),
-    lat:Number(cand.lat),
-    lon:Number(cand.lon),
+    lat:Number(cand.lat),lon:Number(cand.lon),
+    remaining_minutes:e.restoMin,
     overnight:{
       id:cand.id||`overnight-${cand.tipo}-${cand.lat}-${cand.lon}`,
-      nombre:nombreAlojamiento(cand),
-      tipo:cand.tipo,
-      lat:Number(cand.lat),
-      lon:Number(cand.lon),
-      localidad:localidadAlojamiento(cand),
-      servicios:detallesPernocta(cand),
-      web:cand.web||""
+      nombre:nombreAlojamiento(cand),tipo:cand.tipo,
+      lat:Number(cand.lat),lon:Number(cand.lon),
+      localidad:localidadAlojamiento(cand),servicios:detallesPernocta(cand),web:cand.web||""
     }
   };
 }
 
 async function elegirFinJornadaInteligente(params){
-  return elegirFinJornadaRealV3({...params, puntoInicioEtapa: params.puntoInicioEtapa || {lat: params.line[0][1], lon: params.line[0][0]}});
+  return elegirFinJornadaRealV3(params);
 }
 
 async function crearEtapasWorker(feature,lugares,datos,esDemo=false){
@@ -1874,169 +1883,111 @@ async function crearEtapasWorker(feature,lugares,datos,esDemo=false){
     ];
   }
 
-  const p=feature?.properties||{};
-  const legs=Array.isArray(p.legs)?p.legs:[];
-  const geometry=feature?.geometry||null;
-  const lines=geometry?.type==="MultiLineString"?(geometry.coordinates||[]):
-    (geometry?.type==="LineString"?[geometry.coordinates||[]]:[]);
-  const maxMinutes=Math.max(60,Math.round((Number(datos.maxConduccion)||4)*60));
-
-  if(!legs.length || legs.length!==Math.max(1,lugares.length-1) || lines.length!==legs.length){
+  if(!feature?.properties || !Array.isArray(lugares) || lugares.length<2){
     throw new Error("Geoapify no devolvió el detalle necesario para dividir la ruta con seguridad.");
   }
-
-  const legTotals=legs.map(leg=>(Array.isArray(leg?.steps)?leg.steps:[]).reduce((a,s)=>a+Math.max(0,Number(s?.time)||0)/60,0));
-  const totalDias=Math.max(1,Number(datos?.dias)||1);
-
-  const legSteps=legs.map(leg=>(Array.isArray(leg?.steps)?leg.steps:[]).filter(s=>Number(s?.time)>=0));
-  const legStageCounts=legSteps.map(steps=>minimoJornadasDesdeStep(steps,0,maxMinutes));
-  if(legStageCounts.some(x=>!Number.isFinite(x))){
-    throw new Error(`Geoapify devolvió un segmento individual que supera el máximo diario de ${Math.round(maxMinutes/60*10)/10} h.`);
-  }
-  // El mínimo real de días NO se decide aquí. Primero se resuelven pernoctas reales y
-  // se recalcula cada jornada hasta sus coordenadas exactas; después, stops.length es
-  // minimum_required_days. Así evitamos aceptar/rechazar por una geometría nominal.
-
+  const maxMinutes=Math.max(60,Math.round((Number(datos.maxConduccion)||4)*60));
   const stops=[];
   let day=1,ultimoLugar="";
-  let puntoInicioEtapa={lat:Number(lugares[0].lat),lon:Number(lugares[0].lon)};
+  let puntoInicioEtapa={lat:Number(lugares[0]?.lat),lon:Number(lugares[0]?.lon)};
+  if(!Number.isFinite(puntoInicioEtapa.lat)||!Number.isFinite(puntoInicioEtapa.lon)){
+    throw new Error("El punto de salida no tiene coordenadas verificadas.");
+  }
 
-  for(let legIndex=0;legIndex<legs.length;legIndex++){
-    const leg=legs[legIndex]||{};
-    const line=Array.isArray(lines[legIndex])?lines[legIndex]:[];
-    const steps=Array.isArray(leg.steps)?leg.steps.filter(s=>Number(s?.time)>=0):[];
-    if(line.length<2 || !steps.length)throw new Error(`No se pudo calcular con precisión el tramo ${legIndex+1} de la ruta.`);
+  // Cada request_point (vía manual o destino final) se conserva como stopover físico.
+  // Las jornadas intermedias se resuelven dinámicamente sobre la geometría real y pueden
+  // cortar dentro de una instrucción de Geoapify; una instrucción de giro NO es una jornada indivisible.
+  for(let legIndex=0;legIndex<lugares.length-1;legIndex++){
+    const requestedPlace=lugares[legIndex+1]||{};
+    const requestCoord={lat:Number(requestedPlace.lat),lon:Number(requestedPlace.lon)};
+    if(!Number.isFinite(requestCoord.lat)||!Number.isFinite(requestCoord.lon)){
+      throw new Error(`El punto solicitado ${legIndex+1} no tiene coordenadas verificadas.`);
+    }
+    const isFinalLeg=legIndex===lugares.length-2;
+    let resuelto=false;
+    let guard=0;
 
-    const legTotal=legTotals[legIndex];
-    const stageCount=Math.max(1,legStageCounts[legIndex]);
-    let startStep=0,consumedMinutes=0,consumedKm=0;
-    const requestedPlace=lugares[legIndex+1];
-    const isFinalLeg=legIndex===legs.length-1;
+    while(!resuelto){
+      guard++;
+      if(guard>24){
+        const err=new Error("NO_FEASIBLE_OVERNIGHT: Se alcanzó el límite de seguridad al dividir la ruta en jornadas reales.");
+        err.code="NO_FEASIBLE_OVERNIGHT";
+        throw err;
+      }
+      const origenEtapa={lat:Number(puntoInicioEtapa.lat),lon:Number(puntoInicioEtapa.lon)};
+      const tramoRestante=await calcularTramoCarretera(origenEtapa,requestCoord,datos);
+      const remainingMinutes=Number(tramoRestante.time||0)/60;
 
-    for(let stageIndex=0;stageIndex<stageCount;stageIndex++){
-      const lastOfLeg=stageIndex===stageCount-1;
-      if(lastOfLeg){
-        const origenEtapa={lat:Number(puntoInicioEtapa.lat),lon:Number(puntoInicioEtapa.lon)};
-        // Un user_via/final_destination es un STOPOVER físico obligatorio. La jornada
-        // aceptada se calcula explícitamente origen real -> request_point -> pernocta real.
-        // Nunca sustituimos la vía por un camping "cercano".
-        const requestCoord={lat:Number(requestedPlace.lat),lon:Number(requestedPlace.lon)};
-        if(!Number.isFinite(requestCoord.lat)||!Number.isFinite(requestCoord.lon)){
-          throw new Error(`El punto solicitado ${legIndex+1} no tiene coordenadas verificadas.`);
-        }
-        const tramoHastaRequest=await calcularTramoCarretera(origenEtapa,requestCoord,datos);
-        let minutes=Number(tramoHastaRequest.time||0)/60;
-        let km=Number(tramoHastaRequest.distance||0)/1000;
+      // Primero intentamos cerrar esta pierna pasando exactamente por el request_point y
+      // terminando en una pernocta compatible. Solo se acepta si TODO cabe en la jornada.
+      const cierre=await buscarPernoctaFinalRequest(origenEtapa,requestCoord,requestedPlace,datos,maxMinutes);
+      if(cierre){
         const place=nombreLugarWorker(requestedPlace,isFinalLeg?(datos.destinoFinal||datos.destinoPrincipal):(datos.vias?.[legIndex]||datos.destinosExtra?.[legIndex]||""));
         const country=paisCanonico(requestedPlace?.country_code,requestedPlace?.country);
-
-        // Buscar una pernocta compatible alrededor del request_point y aceptar SOLO
-        // una cuya conducción completa origen -> request_point -> pernocta respete el máximo.
-        let mejorPernocta=null,tramoRequestPernocta=null;
-        let pernoctasDestino=[];
-        try{
-          pernoctasDestino=await buscarPernoctasEtapa({coordRecomendada:[Number(requestedPlace.lon),Number(requestedPlace.lat)],codigoPais:requestedPlace.country_code},datos);
-        }catch(e){}
-        for(const candidata of pernoctasDestino){
-          if(!Number.isFinite(Number(candidata?.lat))||!Number.isFinite(Number(candidata?.lon)))continue;
-          try{
-            const tramo=await calcularTramoCarretera(requestCoord,{lat:Number(candidata.lat),lon:Number(candidata.lon)},datos);
-            const totalMin=Number(tramoHastaRequest.time||0)/60+Number(tramo.time||0)/60;
-            if(totalMin<=maxMinutes+1){
-              mejorPernocta=candidata;
-              tramoRequestPernocta=tramo;
-              break;
-            }
-          }catch(e){}
-        }
-
-        if(!mejorPernocta||!tramoRequestPernocta){
-          const err=new Error(`NO_FEASIBLE_OVERNIGHT: no existe una pernocta compatible verificada que permita pasar por ${place||`destino ${legIndex+1}`} sin superar el máximo diario.`);
-          err.code="NO_FEASIBLE_OVERNIGHT";
-          throw err;
-        }
-        // Después del stopover solicitado se conduce hasta la pernocta compatible.
-        minutes=Number(tramoHastaRequest.time||0)/60+Number(tramoRequestPernocta.time||0)/60;
-        km=Number(tramoHastaRequest.distance||0)/1000+Number(tramoRequestPernocta.distance||0)/1000;
-
+        const cand=cierre.cand;
         const stageDay=day++;
         stops.push({
           driving_stage_id:`stage-${stageDay}`,
           base_id:`base-${stageDay}`,
-          overnight_id:mejorPernocta.id||`overnight-${stageDay}`,
+          overnight_id:cand.id||`overnight-${stageDay}`,
           day:stageDay,
           place:place||`Destino ${legIndex+1}`,
           country:country||"",
-          lat:Number(mejorPernocta.lat),
-          lon:Number(mejorPernocta.lon),
-          driving_km:Math.max(0,Math.round(km)),
-          driving_minutes:Math.max(1,Math.round(minutes)),
-          start_lat:origenEtapa.lat,
-          start_lon:origenEtapa.lon,
-          requested_waypoint:true,
-          requested_index:legIndex+1,
+          lat:Number(cand.lat),lon:Number(cand.lon),
+          driving_km:Math.max(0,Math.round(cierre.totalKm)),
+          driving_minutes:Math.max(1,Math.round(cierre.totalMin)),
+          start_lat:origenEtapa.lat,start_lon:origenEtapa.lon,
+          requested_waypoint:true,requested_index:legIndex+1,
           request_point_id:String(requestedPlace.request_point_id||`req-${legIndex+1}`),
-          requested_role:String(requestedPlace.role|| (isFinalLeg?"final_destination":"user_via")),
-          requested_lat:requestCoord.lat,
-          requested_lon:requestCoord.lon,
-          is_final:isFinalLeg,
-          stay_eligible:true,
-          overnight:mejorPernocta?{
-            id:mejorPernocta.id||`overnight-${stageDay}`,
-            nombre:nombreAlojamiento(mejorPernocta),
-            tipo:mejorPernocta.tipo,
-            lat:Number(mejorPernocta.lat),
-            lon:Number(mejorPernocta.lon),
-            localidad:localidadAlojamiento(mejorPernocta),
-            servicios:detallesPernocta(mejorPernocta),
-            web:mejorPernocta.web||""
-          }:null
+          requested_role:String(requestedPlace.role||(isFinalLeg?"final_destination":"user_via")),
+          requested_lat:requestCoord.lat,requested_lon:requestCoord.lon,
+          is_final:isFinalLeg,stay_eligible:true,
+          overnight:{
+            id:cand.id||`overnight-${stageDay}`,nombre:nombreAlojamiento(cand),tipo:cand.tipo,
+            lat:Number(cand.lat),lon:Number(cand.lon),localidad:localidadAlojamiento(cand),
+            servicios:detallesPernocta(cand),web:cand.web||""
+          }
         });
         ultimoLugar=place||ultimoLugar;
-        consumedMinutes+=minutes; consumedKm+=km;
-        startStep=steps.length;
-        puntoInicioEtapa={lat:Number(mejorPernocta.lat),lon:Number(mejorPernocta.lon)};
+        puntoInicioEtapa={lat:Number(cand.lat),lon:Number(cand.lon)};
+        resuelto=true;
         continue;
       }
 
-      const origenEtapa={lat:Number(puntoInicioEtapa.lat),lon:Number(puntoInicioEtapa.lon)};
-      const stagesRemaining=stageCount-stageIndex-1;
-      const remainingMinutes=Math.max(0,legTotal-consumedMinutes);
-      const idealMinutes=Math.min(maxMinutes,remainingMinutes/(stagesRemaining+1));
+      // Si todavía no cabe request_point + pernocta, buscamos un corte técnico dentro
+      // de la geometría restante. La pernocta elegida se recalcula por carretera desde
+      // el origen real y además debe producir progreso real hacia el request_point.
       const elegido=await elegirFinJornadaRealV3({
-        steps,line,startStep,endStep:steps.length-1,totalRemainingMinutes:remainingMinutes,
-        stagesRemaining,maxMinutes,idealMinutes,datos,ultimoLugar,puntoInicioEtapa
+        tramoRestante,puntoInicioEtapa:origenEtapa,requestCoord,datos,maxMinutes,ultimoLugar
       });
-
+      if(!elegido){
+        const err=new Error(`NO_FEASIBLE_OVERNIGHT: No se pudo cerrar una jornada compatible antes de ${nombreLugarWorker(requestedPlace,"el punto solicitado")}.`);
+        err.code="NO_FEASIBLE_OVERNIGHT";
+        throw err;
+      }
       const stageDay=day++;
       stops.push({
         driving_stage_id:`stage-${stageDay}`,
         base_id:`base-${stageDay}`,
         overnight_id:elegido.overnight?.id||`overnight-${stageDay}`,
-        day:stageDay,
-        place:elegido.place,
-        country:elegido.country||"",
-        lat:elegido.lat,
-        lon:elegido.lon,
+        day:stageDay,place:elegido.place,country:elegido.country||"",
+        lat:elegido.lat,lon:elegido.lon,
         driving_km:Math.max(0,Math.round(elegido.km)),
         driving_minutes:Math.max(1,Math.round(elegido.minutes)),
-        start_lat:origenEtapa.lat,
-        start_lon:origenEtapa.lon,
-        requested_waypoint:false,
-        requested_index:null,
-        request_point_id:null,
-        requested_role:null,
-        requested_lat:null,
-        requested_lon:null,
-        is_final:false,
-        stay_eligible:false,
+        start_lat:origenEtapa.lat,start_lon:origenEtapa.lon,
+        requested_waypoint:false,requested_index:null,request_point_id:null,requested_role:null,
+        requested_lat:null,requested_lon:null,is_final:false,stay_eligible:false,
         overnight:elegido.overnight
       });
       ultimoLugar=elegido.place||ultimoLugar;
-      consumedMinutes+=elegido.minutes; consumedKm+=elegido.km;
-      startStep=elegido.stepIndex+1;
-      // Continuidad geométrica estricta: el siguiente tramo arranca desde las coordenadas del alojamiento elegido
       puntoInicioEtapa={lat:elegido.lat,lon:elegido.lon};
+
+      // Guardia adicional contra ciclos o retrocesos anómalos de un proveedor externo.
+      if(remainingMinutes>0 && Number(elegido.remaining_minutes)>=remainingMinutes-10){
+        const err=new Error("NO_FEASIBLE_OVERNIGHT: La pernocta candidata no produce avance suficiente hacia el siguiente punto solicitado.");
+        err.code="NO_FEASIBLE_OVERNIGHT";
+        throw err;
+      }
     }
   }
 
