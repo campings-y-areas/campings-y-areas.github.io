@@ -2824,20 +2824,17 @@ function urlGoogleMapsDesdePuntos(puntos=[]){
 }
 
 function urlGoogleMapsRuta(lugares=[],stops=[],datos={}){
-  const origenLugar=lugares[0];
-  if(!origenLugar)return "";
-  const puntos=[coordMaps(origenLugar.lat,origenLugar.lon)||nombreMapsLugar(origenLugar,datos.origen)];
-  // La secuencia refleja la logística aceptada: cada request_point obligatorio se
-  // inserta ANTES de la pernocta que cierra su leg; las bases técnicas solo añaden
-  // su pernocta. El destino de Maps es por tanto el fin físico real de la última jornada.
-  for(const stop of (Array.isArray(stops)?stops:[])){
-    if(stop?.requested_waypoint){
-      const req=coordMaps(stop.requested_lat,stop.requested_lon);
-      if(req)puntos.push(req);
-    }
-    const overnight=coordMaps(stop?.lat,stop?.lon);
-    if(overnight)puntos.push(overnight);
-  }
+  const lista=Array.isArray(lugares)?lugares:[];
+  if(lista.length<2)return "";
+  // El botón general representa exclusivamente los puntos solicitados por el usuario:
+  // origen -> vía(s) manual(es) -> destino final. Las pernoctas técnicas pertenecen a
+  // las jornadas y se mantienen en los enlaces diarios, no como waypoints globales.
+  const puntos=lista.map((lugar,i)=>{
+    const fallback=i===0
+      ? datos.origen
+      : (i===lista.length-1 ? (datos.destinoFinal||datos.destinoPrincipal) : (datos.vias?.[i-1]||datos.destinosExtra?.[i-1]||""));
+    return coordMaps(lugar?.lat,lugar?.lon)||nombreMapsLugar(lugar,fallback);
+  }).filter(Boolean);
   return urlGoogleMapsDesdePuntos(puntos);
 }
 
