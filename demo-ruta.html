@@ -46,12 +46,106 @@
       <section class="creditos-demo">
         <h2>Sobre esta demostración</h2>
         <p>Esta página reproduce la estructura de una guía de Rutas, pero es una muestra estática preparada manualmente. No llama a OpenAI, Worker, D1, Planner, Writer, Research ni a las cachés de producción.</p>
-        <p>Las imágenes de prueba se sirven desde Wikimedia Commons mediante sus fichas públicas. Antes de publicar definitivamente la demo se conservará para cada fotografía la atribución y licencia exactas.</p>
+        <p>Las fotografías proceden de Wikimedia Commons. Cada imagen muestra junto a ella el autor, la licencia aplicable y un enlace a su ficha original.</p>
       </section>
     </main>
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script src="demo-ruta.js?v=1"></script>
+  <script>
+  (() => {
+    "use strict";
+    if (new URLSearchParams(location.search).get("pruebas") !== "manuel") return;
+
+    const mapsSearch = q => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+    const mapsDir = (origin, destination, waypoints = []) => {
+      const p = new URLSearchParams({api:"1", origin, destination, travelmode:"driving"});
+      if (waypoints.length) p.set("waypoints", waypoints.join("|"));
+      return `https://www.google.com/maps/dir/?${p}`;
+    };
+
+    // Enlaces de navegación del día: representan la etapa que encabeza cada tarjeta,
+    // no la etapa del día siguiente.
+    const dayRoutes = [
+      mapsSearch("Barcelona Spain"),
+      mapsDir("Barcelona, Spain", "Montserrat, Spain"),
+      mapsDir("Montserrat, Spain", "PortAventura World"),
+      mapsDir("PortAventura World", "Delta del Ebro, Spain"),
+      mapsDir("Delta del Ebro, Spain", "Valencia, Spain"),
+      mapsSearch("Valencia Spain"),
+      mapsDir("Valencia, Spain", "Alicante, Spain"),
+      mapsDir("Alicante, Spain", "Área Autocaravanas Cartagena", ["Cartagena, Spain", "Cabo de Palos, Spain"]),
+      mapsDir("Área Autocaravanas Cartagena", "Camping Las Lomas Güéjar Sierra"),
+      mapsDir("Camping Las Lomas Güéjar Sierra", "Camping Las Lomas Güéjar Sierra", ["Sierra Nevada, Granada"]),
+      mapsDir("Camping Las Lomas Güéjar Sierra", "Área Málaga Beach"),
+      mapsDir("Área Málaga Beach", "Camping Parque Ardales"),
+      mapsDir("Camping Parque Ardales", "Camping El Sur Ronda"),
+      mapsDir("Camping El Sur Ronda", "Camping Villsom Dos Hermanas Sevilla"),
+      mapsSearch("Sevilla Spain")
+    ];
+    document.querySelectorAll(".ruta-dia a").forEach((a, i) => { if (dayRoutes[i]) a.href = dayRoutes[i]; });
+
+    // Google Maps limita los enlaces de Directions a un máximo de 9 waypoints en
+    // plataformas no móviles (y menos en algunos navegadores móviles). Esta vista
+    // general conserva los grandes hitos; las 15 tarjetas contienen la navegación exacta.
+    const general = mapsDir("Barcelona, Spain", "Sevilla, Spain", [
+      "Montserrat, Spain", "PortAventura World", "Delta del Ebro, Spain", "Valencia, Spain",
+      "Alicante, Spain", "Cartagena, Spain", "Granada, Spain", "Malaga, Spain", "Ronda, Spain"
+    ]);
+    const generalLink = document.querySelector("#navegacionRuta a");
+    if (generalLink) {
+      generalLink.href = general;
+      generalLink.title = "Vista general. Para navegación exacta usa el botón de cada etapa.";
+    }
+
+    const photos = [
+      ["Barcelona Sagrada Familia.JPG", "Jcca76 · CC BY-SA 4.0"],
+      ["Monastery Montserrat, Catalonia - panoramio.jpg", "Eduardo Manchon · CC BY-SA 3.0"],
+      ["Shambala - Port Aventura.jpg", "Teodoromix · CC BY-SA 4.0"],
+      ["Delta del Ebro. Cultivo del arroz. Arrozal.jpg", "Juan Emilio Prades Bel · CC BY 4.0"],
+      ["Valencia - Mercat Central 1.jpg", "Zarateman · CC0 1.0"],
+      ["Ciudad de las Artes y las Ciencias de Valencia.jpg", "Gustavo86 · CC BY-SA 2.5"],
+      ["Santa Bárbara Castle, Alicante.jpg", "Emilio Gómez Fernández · CC BY-SA 4.0"],
+      ["Teatro Romano de la Ciudad de Cartagena.jpg", "Adrian23007 · CC BY-SA 4.0"],
+      ["Alhambra - Granada - 001 - Panorama.jpg", "Roland Geider (Ogre) · dominio público"],
+      ["Sierra Nevada (Spain).jpg", "Antonio Morales García · CC BY-SA 2.0"],
+      ["Alcazaba de Malaga desde Catedral.jpg", "Pedro J Pacheco · CC BY-SA 4.0"],
+      ["Caminito del Rey, Málaga, España, 2023-05-18, DD 20.jpg", "Diego Delso, delso.photo · CC BY-SA (ver ficha)"],
+      ["Panorama of Ronda.jpg", "Tesla Delacroix · CC BY-SA 4.0"],
+      ["Triana Sevilla Guadalquivir.JPG", "Gzzz · CC BY-SA 3.0"],
+      ["Plaza de Espana de Sevilla.jpg", "Gica-cobra · CC BY-SA 4.0"]
+    ];
+
+    const commonsFile = name => `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(name)}?width=1600`;
+    const commonsPage = name => `https://commons.wikimedia.org/wiki/File:${encodeURIComponent(name).replace(/%20/g, "_")}`;
+
+    photos.forEach(([name, credit], index) => {
+      const card = document.getElementById(`dia-${index + 1}`);
+      if (!card) return;
+      let figure = card.querySelector(".guia-foto");
+      if (!figure) {
+        figure = document.createElement("figure");
+        figure.className = "guia-foto";
+        const title = card.querySelector(".guia-dia-titulo");
+        title.insertAdjacentElement("afterend", figure);
+      }
+      figure.innerHTML = "";
+      const img = document.createElement("img");
+      img.loading = index < 2 ? "eager" : "lazy";
+      img.src = commonsFile(name);
+      img.alt = card.querySelector("h2")?.textContent || `Día ${index + 1}`;
+      const caption = document.createElement("figcaption");
+      caption.append(document.createTextNode(`${credit} · `));
+      const source = document.createElement("a");
+      source.href = commonsPage(name);
+      source.target = "_blank";
+      source.rel = "noopener";
+      source.textContent = "fuente/licencia";
+      caption.append(source);
+      figure.append(img, caption);
+    });
+  })();
+  </script>
 </body>
 </html>
