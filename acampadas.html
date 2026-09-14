@@ -7,7 +7,17 @@
 
   <title>Zonas de acampadas controladas | Campings & Áreas</title>
 
+  <script>
+    if (new URLSearchParams(window.location.search).get("pruebas") === "manuel") {
+      document.documentElement.classList.add("acceso-pruebas");
+    }
+  </script>
+
   <link rel="stylesheet" href="style.css?v=2">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+  <link rel="stylesheet" href="mapas.css?v=1">
 </head>
 
 <body>
@@ -134,6 +144,29 @@
     </section>
 
 
+    <section class="selector-vista-campings" aria-label="Vista de resultados">
+      <div class="selector-vista-campings__botones">
+        <button
+          type="button"
+          id="vistaListaAcampada"
+          class="boton-vista activo"
+          aria-pressed="true"
+        >
+          ☰ Lista
+        </button>
+
+        <button
+          type="button"
+          id="vistaMapaAcampada"
+          class="boton-vista"
+          aria-pressed="false"
+        >
+          🗺️ Mapa
+        </button>
+      </div>
+    </section>
+
+
     <section
       id="resultadosAcampadas"
       class="resultados-campings">
@@ -142,7 +175,10 @@
   </main>
 
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
   <script src="acampadas.js?v=2"></script>
+  <script src="acampadas-mapa.js?v=1"></script>
 
 </body>
 
