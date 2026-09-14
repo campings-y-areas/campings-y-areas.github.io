@@ -250,8 +250,25 @@ function cambiarVistaTalleres(vista) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  const pais = document.getElementById("paisTaller");
   const botonLista = document.getElementById("vistaListaTaller");
   const botonMapa = document.getElementById("vistaMapaTaller");
+
+  // El núcleo cambia el contenido de #resultadosTalleres inmediatamente
+  // al seleccionar otro país y después carga su JSON de forma asíncrona.
+  // Destruimos antes la instancia Leaflet activa para evitar que quede
+  // ligada a un contenedor que el núcleo va a retirar del DOM.
+  if (pais) {
+    pais.addEventListener(
+      "change",
+      () => {
+        if (vistaTalleresMapa === "mapa") {
+          destruirMapaTalleres();
+        }
+      },
+      { capture: true }
+    );
+  }
 
   if (botonLista) {
     botonLista.addEventListener("click", () => cambiarVistaTalleres("lista"));
