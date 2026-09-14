@@ -572,13 +572,25 @@ function coordenadasCampingValidas(camping) {
     Number(camping?.lon);
 
 
+  if (
+    !Number.isFinite(lat) ||
+    !Number.isFinite(lon)
+  ) {
+    return false;
+  }
+
+
+  // Campings & Áreas trabaja con Europa.
+  // Este límite amplio conserva Europa continental,
+  // Reino Unido, Irlanda, Islandia, Azores, Madeira,
+  // Canarias, Chipre y los Balcanes, y descarta
+  // coordenadas erróneas que caen en América,
+  // África lejana, Asia u océanos.
   return (
-    Number.isFinite(lat) &&
-    Number.isFinite(lon) &&
-    lat >= -90 &&
-    lat <= 90 &&
-    lon >= -180 &&
-    lon <= 180
+    lat >= 27 &&
+    lat <= 72.5 &&
+    lon >= -33 &&
+    lon <= 45
   );
 }
 
@@ -921,10 +933,23 @@ function mostrarMapaCampings(lista) {
   resumen.className =
     "resumen-mapa-campings";
 
+  const descartados =
+    lista.length -
+    marcadoresValidos;
+
+
   resumen.textContent =
     marcadoresValidos === 1
-      ? "1 camping mostrado en el mapa"
-      : `${marcadoresValidos} campings mostrados en el mapa`;
+      ? (
+          descartados > 0
+            ? `1 camping mostrado en el mapa · ${descartados} con coordenadas no válidas para Europa`
+            : "1 camping mostrado en el mapa"
+        )
+      : (
+          descartados > 0
+            ? `${marcadoresValidos} campings mostrados en el mapa · ${descartados} con coordenadas no válidas para Europa`
+            : `${marcadoresValidos} campings mostrados en el mapa`
+        );
 
   resultados.insertBefore(
     resumen,
