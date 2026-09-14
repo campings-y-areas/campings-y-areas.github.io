@@ -229,16 +229,31 @@ function paisDeDiaGuia(dia,stops=[]){
   return String(dia?.country||stopDeDiaGuia(dia,stops)?.country||"").trim();
 }
 
+function hayFotoVisitaDisponible(nombre,ciudad,entityId=""){
+  const lugar=buscarLugarVerificado(nombre,"visit");
+  const media=buscarMediaVerificado(nombre,ciudad,"visit",entityId);
+  const claveNombre=normalizarClaveMedia(nombre);
+  const editorial=IMAGENES_EDITORIALES_PRIORITARIAS[claveNombre]||null;
+  const extra=IMAGENES_VERIFICADAS_SUPLEMENTARIAS[claveNombre]||null;
+  const oficial=mediaOficialCache.get(claveMediaOficial(nombre,ciudad,"visit",entityId))||mediaPorEntityIdCache.get(String(entityId||""))||null;
+  const auto=fotoAutoCache.get(claveFotoAuto(nombre,ciudad,"visit"))||null;
+  return Boolean(
+    editorial?.image_url||auto?.image_url||oficial?.image_url||
+    lugar?.image_url||media?.image_url||extra?.image_url
+  );
+}
+
 function mediaGuiaSuficiente(guide,stops=[]){
   const days=Array.isArray(guide?.days)?guide.days:[];
   if(!days.length)return false;
+  // "Suficiente" significa cobertura visual real de las jornadas que tienen visitas.
+  // Los días sin highlights no se penalizan. Restaurantes/pernoctas pueden quedar
+  // legítimamente sin foto si D1 registra que no existe una opción fiable.
   return days.every(d=>{
+    const highlights=Array.isArray(d?.highlights)?d.highlights:[];
+    if(!highlights.length)return true;
     const ciudad=ciudadDeDiaGuia(d,stops);
-    return (Array.isArray(d?.highlights)?d.highlights:[]).some(x=>{
-      const exacta=buscarMediaVerificado(x?.name,ciudad,"visit",x?.entity_id||"");
-      const oficial=mediaOficialCache.get(claveMediaOficial(x?.name,ciudad,"visit",x?.entity_id||""))||mediaPorEntityIdCache.get(String(x?.entity_id||""));
-      return Boolean(exacta?.verified_exact===true || (oficial?.from_d1&&oficial?.image_url));
-    });
+    return highlights.some(x=>hayFotoVisitaDisponible(x?.name,ciudad,x?.entity_id||""));
   });
 }
 
@@ -1056,6 +1071,8 @@ async function investigarMediaDestinoIA(place,country=""){
 async function prepararDatosYMediaGuia(stops=[]){
   const unicos=[];
   const vistos=new Set();
+  const resultados=[];
+  let empresarialProcesada=true;
   for(const stop of (stops||[])){
     const place=String(stop?.place||"").trim();
     const country=String(stop?.country||"").trim();
@@ -1069,9 +1086,14 @@ async function prepararDatosYMediaGuia(stops=[]){
   for(const x of unicos){
     document.getElementById("estadoCalculo").textContent=`Comprobando datos y fotografías de ${x.place}…`;
     await cargarInvestigacionRutaD1(x.place,x.country);
-    await investigarMediaDestinoIA(x.place,x.country);
+    const mediaResultado=await investigarMediaDestinoIA(x.place,x.country);
     await cargarMediaDestinoD1(x.place,x.country);
+    resultados.push({place:x.place,country:x.country,result:mediaResultado});
+    if(!["cache_complete","completed"].includes(String(mediaResultado?.status||""))){
+      empresarialProcesada=false;
+    }
   }
+  return {empresarial_procesada:empresarialProcesada,resultados};
 }
 
 async function prepararFotosInvestigacionPremium(research,destino,country=""){
@@ -3216,10 +3238,11 @@ formRuta.addEventListener("submit",async event=>{
             stopsCache=guiaCache.resolved_stops;
           }
           await Promise.all([cargarMediaVerificado(),cargarLugaresVerificados()]);
-          await prepararDatosYMediaGuia(stopsCache);
+          const estadoMedia=await prepararDatosYMediaGuia(stopsCache);
           document.getElementById("estadoCalculo").textContent="Seleccionando las mejores fotografías…";
           await prepararFotosGuia(guiaCache.guide,stopsCache);
-          const mediaSuficiente=datos.contenidoVisual==="minimo" || mediaGuiaSuficiente(guiaCache.guide,stopsCache);
+          const coberturaVisual=mediaGuiaSuficiente(guiaCache.guide,stopsCache);
+          const mediaSuficiente=datos.contenidoVisual==="minimo" || (estadoMedia.empresarial_procesada&&coberturaVisual);
           setRouteV3State(mediaSuficiente?"MEDIA_SUFFICIENT":"MEDIA_PARTIAL");
           if(mediaSuficiente)setRouteV3State("FINAL_READY");
           pintarResultadoBase(ruta,lugares,datos);
