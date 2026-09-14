@@ -1,0 +1,128 @@
+/* ========================================
+   CAMPINGS & ÁREAS
+   Vista Lista / Mapa para Campings
+   ======================================== */
+
+.selector-vista-campings {
+  max-width: 1100px;
+  margin: 0 auto 18px;
+  padding: 0 20px;
+  background: transparent;
+  box-shadow: none;
+}
+
+.selector-vista-campings__botones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.boton-vista {
+  border: 1px solid #cfd8dc;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #126fa0;
+  padding: 10px 16px;
+  font-weight: 700;
+  box-shadow: none;
+}
+
+.boton-vista:hover {
+  background: #eef8fc;
+}
+
+.boton-vista.activo {
+  background: #159bd7;
+  border-color: #159bd7;
+  color: #ffffff;
+}
+
+.mapa-campings {
+  width: 100%;
+  height: min(70vh, 720px);
+  min-height: 480px;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.10);
+  background: #e9eef1;
+}
+
+.resumen-mapa-campings {
+  margin: 0 0 12px;
+  font-weight: 700;
+  color: #126fa0;
+}
+
+.mapa-campings__error {
+  margin: 0;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  background: #ffffff;
+}
+
+.popup-camping {
+  min-width: 210px;
+  max-width: 280px;
+  line-height: 1.4;
+}
+
+.popup-camping strong {
+  display: block;
+  margin-bottom: 7px;
+  color: #126fa0;
+  font-size: 1rem;
+}
+
+.popup-camping p {
+  margin: 5px 0;
+}
+
+.popup-camping__cerrado {
+  font-weight: 700;
+}
+
+.popup-camping__enlaces {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 10px;
+}
+
+.popup-camping__enlaces a {
+  display: inline-block;
+  padding: 6px 9px;
+  border-radius: 7px;
+  background: #159bd7;
+  color: #ffffff !important;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.popup-camping__enlaces a:hover {
+  background: #117daf;
+}
+
+@media (max-width: 700px) {
+  .selector-vista-campings {
+    padding: 0 12px;
+  }
+
+  .selector-vista-campings__botones {
+    justify-content: stretch;
+  }
+
+  .boton-vista {
+    flex: 1;
+  }
+
+  .mapa-campings {
+    height: 65vh;
+    min-height: 420px;
+    border-radius: 10px;
+  }
+}
