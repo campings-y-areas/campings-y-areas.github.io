@@ -10,6 +10,10 @@ let resultadosActuales = [];
 const resultadosPorPagina = 20;
 let paginaActual = 1;
 
+let vistaCampings = "lista";
+let mapaCampings = null;
+let capaMarcadoresCampings = null;
+
 
 // ==========================================
 // NORMALIZAR TEXTO
@@ -488,6 +492,458 @@ function cargarCiudades() {
   }
 }
 
+
+// ==========================================
+// VISTA LISTA / MAPA
+// ==========================================
+
+function actualizarBotonesVistaCampings() {
+
+  const botonLista =
+    document.getElementById(
+      "vistaListaCamping"
+    );
+
+  const botonMapa =
+    document.getElementById(
+      "vistaMapaCamping"
+    );
+
+
+  if (botonLista) {
+
+    const activo =
+      vistaCampings === "lista";
+
+    botonLista.classList.toggle(
+      "activo",
+      activo
+    );
+
+    botonLista.setAttribute(
+      "aria-pressed",
+      String(activo)
+    );
+  }
+
+
+  if (botonMapa) {
+
+    const activo =
+      vistaCampings === "mapa";
+
+    botonMapa.classList.toggle(
+      "activo",
+      activo
+    );
+
+    botonMapa.setAttribute(
+      "aria-pressed",
+      String(activo)
+    );
+  }
+}
+
+
+function cambiarVistaCampings(vista) {
+
+  if (
+    vista !== "lista" &&
+    vista !== "mapa"
+  ) {
+    return;
+  }
+
+
+  vistaCampings = vista;
+
+  actualizarBotonesVistaCampings();
+
+  mostrarPagina();
+}
+
+
+function coordenadasCampingValidas(camping) {
+
+  const lat =
+    Number(camping?.lat);
+
+  const lon =
+    Number(camping?.lon);
+
+
+  return (
+    Number.isFinite(lat) &&
+    Number.isFinite(lon) &&
+    lat >= -90 &&
+    lat <= 90 &&
+    lon >= -180 &&
+    lon <= 180
+  );
+}
+
+
+function crearPopupCamping(camping) {
+
+  const contenedor =
+    document.createElement(
+      "div"
+    );
+
+  contenedor.className =
+    "popup-camping";
+
+
+  const titulo =
+    document.createElement(
+      "strong"
+    );
+
+  titulo.textContent =
+    camping.nombre ||
+    "Camping";
+
+  contenedor.appendChild(
+    titulo
+  );
+
+
+  const ubicacion = [
+
+    camping.localidad,
+    camping.provincia,
+    camping.region,
+    camping.pais
+
+  ]
+    .filter(Boolean);
+
+  if (
+    ubicacion.length > 0
+  ) {
+
+    const zona =
+      document.createElement(
+        "p"
+      );
+
+    zona.textContent =
+      [...new Set(ubicacion)]
+        .join(" · ");
+
+    contenedor.appendChild(
+      zona
+    );
+  }
+
+
+  if (
+    camping.estado ===
+    "cerrado_permanentemente"
+  ) {
+
+    const cerrado =
+      document.createElement(
+        "p"
+      );
+
+    cerrado.className =
+      "popup-camping__cerrado";
+
+    cerrado.textContent =
+      "⛔ Cerrado permanentemente";
+
+    contenedor.appendChild(
+      cerrado
+    );
+  }
+
+
+  const enlaces =
+    document.createElement(
+      "div"
+    );
+
+  enlaces.className =
+    "popup-camping__enlaces";
+
+
+  if (camping.web) {
+
+    const web =
+      document.createElement(
+        "a"
+      );
+
+    web.href =
+      normalizarUrl(
+        camping.web
+      );
+
+    web.target =
+      "_blank";
+
+    web.rel =
+      "noopener noreferrer";
+
+    web.textContent =
+      "🌐 Web";
+
+    enlaces.appendChild(
+      web
+    );
+  }
+
+
+  const enlaceMapa =
+    crearEnlaceMapa(
+      camping
+    );
+
+  if (enlaceMapa) {
+
+    const mapa =
+      document.createElement(
+        "a"
+      );
+
+    mapa.href =
+      enlaceMapa;
+
+    mapa.target =
+      "_blank";
+
+    mapa.rel =
+      "noopener noreferrer";
+
+    mapa.textContent =
+      "📍 Google Maps";
+
+    enlaces.appendChild(
+      mapa
+    );
+  }
+
+
+  if (
+    enlaces.children.length > 0
+  ) {
+
+    contenedor.appendChild(
+      enlaces
+    );
+  }
+
+
+  return contenedor;
+}
+
+
+function mostrarMapaCampings(lista) {
+
+  const resultados =
+    document.getElementById(
+      "resultadosCampings"
+    );
+
+
+  if (!resultados) {
+    return;
+  }
+
+
+  const contenedorMapa =
+    document.createElement(
+      "div"
+    );
+
+  contenedorMapa.id =
+    "mapaCampings";
+
+  contenedorMapa.className =
+    "mapa-campings";
+
+  contenedorMapa.setAttribute(
+    "aria-label",
+    "Mapa de campings encontrados"
+  );
+
+  resultados.appendChild(
+    contenedorMapa
+  );
+
+
+  if (
+    typeof L ===
+    "undefined"
+  ) {
+
+    contenedorMapa.innerHTML =
+      '<p class="mapa-campings__error">' +
+      '⚠️ No se pudo cargar el mapa. Puedes seguir usando la vista de lista.' +
+      '</p>';
+
+    return;
+  }
+
+
+  mapaCampings =
+    L.map(
+      contenedorMapa,
+      {
+        preferCanvas: true
+      }
+    ).setView(
+      [48.5, 10.5],
+      4
+    );
+
+
+  L.tileLayer(
+    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {
+      maxZoom: 19,
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>'
+    }
+  ).addTo(
+    mapaCampings
+  );
+
+
+  if (
+    typeof L.markerClusterGroup ===
+    "function"
+  ) {
+
+    capaMarcadoresCampings =
+      L.markerClusterGroup({
+        chunkedLoading: true,
+        showCoverageOnHover: false,
+        maxClusterRadius: 55
+      });
+  }
+
+  else {
+
+    capaMarcadoresCampings =
+      L.layerGroup();
+  }
+
+
+  const limites = [];
+
+  let marcadoresValidos = 0;
+
+
+  lista.forEach(camping => {
+
+    if (
+      !coordenadasCampingValidas(
+        camping
+      )
+    ) {
+      return;
+    }
+
+
+    const lat =
+      Number(camping.lat);
+
+    const lon =
+      Number(camping.lon);
+
+
+    const marcador =
+      L.marker(
+        [lat, lon],
+        {
+          title:
+            camping.nombre ||
+            "Camping"
+        }
+      );
+
+
+    marcador.bindPopup(
+      crearPopupCamping(
+        camping
+      )
+    );
+
+
+    capaMarcadoresCampings.addLayer(
+      marcador
+    );
+
+    limites.push(
+      [lat, lon]
+    );
+
+    marcadoresValidos++;
+  });
+
+
+  capaMarcadoresCampings.addTo(
+    mapaCampings
+  );
+
+
+  if (
+    limites.length === 1
+  ) {
+
+    mapaCampings.setView(
+      limites[0],
+      13
+    );
+  }
+
+  else if (
+    limites.length > 1
+  ) {
+
+    mapaCampings.fitBounds(
+      limites,
+      {
+        padding: [30, 30],
+        maxZoom: 13
+      }
+    );
+  }
+
+
+  const resumen =
+    document.createElement(
+      "p"
+    );
+
+  resumen.className =
+    "resumen-mapa-campings";
+
+  resumen.textContent =
+    marcadoresValidos === 1
+      ? "1 camping mostrado en el mapa"
+      : `${marcadoresValidos} campings mostrados en el mapa`;
+
+  resultados.insertBefore(
+    resumen,
+    contenedorMapa
+  );
+
+
+  setTimeout(
+    () => {
+
+      if (mapaCampings) {
+        mapaCampings.invalidateSize();
+      }
+    },
+    0
+  );
+}
+
+
 // ==========================================
 // BUSCAR CAMPINGS
 // ==========================================
@@ -674,6 +1130,15 @@ function mostrarPagina() {
   }
 
 
+  if (mapaCampings) {
+
+    mapaCampings.remove();
+
+    mapaCampings = null;
+    capaMarcadoresCampings = null;
+  }
+
+
   resultados.innerHTML = "";
 
 
@@ -723,7 +1188,10 @@ function mostrarPagina() {
   );
 
 
-  if (totalPaginas > 1) {
+  if (
+    vistaCampings === "lista" &&
+    totalPaginas > 1
+  ) {
 
     const paginaInfo =
       document.createElement(
@@ -774,6 +1242,18 @@ function mostrarPagina() {
       mensaje
     );
 
+
+    return;
+  }
+
+
+  if (
+    vistaCampings === "mapa"
+  ) {
+
+    mostrarMapaCampings(
+      resultadosActuales
+    );
 
     return;
   }
@@ -1710,6 +2190,18 @@ document.addEventListener(
       );
 
 
+    const vistaLista =
+      document.getElementById(
+        "vistaListaCamping"
+      );
+
+
+    const vistaMapa =
+      document.getElementById(
+        "vistaMapaCamping"
+      );
+
+
     // ======================================
     // BOTÓN BUSCAR
     // ======================================
@@ -1850,6 +2342,37 @@ document.addEventListener(
         limpiarFiltros
       );
     }
+
+
+    // ======================================
+    // VISTA LISTA / MAPA
+    // ======================================
+
+    if (vistaLista) {
+
+      vistaLista.addEventListener(
+        "click",
+        () =>
+          cambiarVistaCampings(
+            "lista"
+          )
+      );
+    }
+
+
+    if (vistaMapa) {
+
+      vistaMapa.addEventListener(
+        "click",
+        () =>
+          cambiarVistaCampings(
+            "mapa"
+          )
+      );
+    }
+
+
+    actualizarBotonesVistaCampings();
 
 
 // ======================================
