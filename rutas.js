@@ -519,7 +519,10 @@ function htmlFotoVerificada(nombre,ciudad,tipo,entityId=""){
   const claveNombre=normalizarClaveMedia(nombre);
   const editorial=tipo==="visit"?IMAGENES_EDITORIALES_PRIORITARIAS[claveNombre]||null:null;
   const extra=tipo==="visit"?IMAGENES_VERIFICADAS_SUPLEMENTARIAS[claveNombre]||null:null;
-  const oficial=mediaOficialCache.get(claveMediaOficial(nombre,ciudad,tipo,entityId))||mediaPorEntityIdCache.get(String(entityId||""))||null;
+  const oficial=mediaOficialCache.get(claveMediaOficial(nombre,ciudad,tipo,entityId))
+    ||mediaPorEntityIdCache.get(String(entityId||""))
+    ||mediaOficialCache.get(claveMediaOficial(nombre,ciudad,tipo,""))
+    ||null;
   const auto=tipo==="visit"?fotoAutoCache.get(claveFotoAuto(nombre,ciudad,tipo))||null:null;
 
   // Restaurantes y pernoctas: solo se muestra multimedia exacta ya validada y guardada en D1.
@@ -1029,6 +1032,7 @@ async function cargarMediaDestinoD1(destino,country=""){
 
       const entityId=String(x.entity_id||"").trim();
       const key=claveMediaOficial(x.entity_name,destino,x.entity_type,entityId);
+      const legacyKey=claveMediaOficial(x.entity_name,destino,x.entity_type,"");
       const item={
         entity_id:entityId||null,
         image_url:x.image_url,
@@ -1038,6 +1042,10 @@ async function cargarMediaDestinoD1(destino,country=""){
         from_d1:true
       };
       mediaOficialCache.set(key,item);
+      // Compatibilidad segura con filas históricas de D1 sin entity_id: además de la
+      // identidad canónica, conservar siempre un alias exacto por tipo + nombre + destino.
+      // No hay coincidencias aproximadas ni se relaja verified_exact.
+      mediaOficialCache.set(legacyKey,item);
       if(entityId)mediaPorEntityIdCache.set(entityId,item);
       cargadas++;
     }
