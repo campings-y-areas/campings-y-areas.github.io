@@ -11,6 +11,12 @@
   <link rel="icon" type="image/png" href="logo.png">
   <link rel="apple-touch-icon" href="logo.png">
 
+  <script>
+    if (new URLSearchParams(window.location.search).get("pruebas") === "manuel") {
+      document.documentElement.classList.add("acceso-pruebas");
+    }
+  </script>
+
   <link rel="stylesheet" href="style.css?v=2">
   <link rel="stylesheet" href="inicio.css?v=1">
 </head>
