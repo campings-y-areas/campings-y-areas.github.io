@@ -7,7 +7,17 @@
 
   <title>Áreas y Parkings | Campings & Áreas</title>
 
+  <script>
+    if (new URLSearchParams(window.location.search).get("pruebas") === "manuel") {
+      document.documentElement.classList.add("acceso-pruebas");
+    }
+  </script>
+
   <link rel="stylesheet" href="style.css?v=2">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+  <link rel="stylesheet" href="mapas.css?v=1">
 </head>
 
 <body>
@@ -262,6 +272,29 @@
     </section>
 
 
+    <section class="selector-vista-campings" aria-label="Vista de resultados">
+      <div class="selector-vista-campings__botones">
+        <button
+          type="button"
+          id="vistaListaArea"
+          class="boton-vista activo"
+          aria-pressed="true"
+        >
+          ☰ Lista
+        </button>
+
+        <button
+          type="button"
+          id="vistaMapaArea"
+          class="boton-vista"
+          aria-pressed="false"
+        >
+          🗺️ Mapa
+        </button>
+      </div>
+    </section>
+
+
     <section
       id="resultadosAreas"
       class="resultados-campings">
@@ -270,7 +303,10 @@
   </main>
 
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <script src="areas.js?v=48"></script>
+<script src="areas-mapa.js?v=1"></script>
 
 </body>
 
