@@ -8,144 +8,23 @@
   <link rel="preconnect" href="https://unpkg.com">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <link rel="stylesheet" href="demo-ruta.css?v=1">
+  <link rel="stylesheet" href="demo-ruta-mejoras.css?v=2">
 </head>
 <body>
-  <div id="bloqueoDemo" class="bloqueo-demo">
-    <div><strong>Demo privada en preparación</strong><p>Acceso de pruebas no activado.</p></div>
-  </div>
-
+  <div id="bloqueoDemo" class="bloqueo-demo"><div><strong>Demo privada en preparación</strong><p>Acceso de pruebas no activado.</p></div></div>
   <div id="demoApp" class="demo-app" hidden>
-    <header class="cabecera-demo">
-      <a class="marca" href="index.html?pruebas=manuel" aria-label="Campings & Áreas">🚐 <span>Campings & Áreas</span></a>
-      <div class="etiqueta-demo">DEMO · RUTAS IA PREMIUM</div>
-    </header>
-
+    <header class="cabecera-demo"><a class="marca" href="index.html?pruebas=manuel" aria-label="Campings & Áreas">🚐 <span>Campings & Áreas</span></a><div class="etiqueta-demo">DEMO · RUTAS IA PREMIUM</div></header>
     <main class="contenedor">
-      <section class="intro-demo">
-        <p class="kicker">Ejemplo completo · contenido congelado y revisado</p>
-        <h1>España en autocaravana · 15 días</h1>
-        <p>Barcelona → Montserrat → PortAventura → Delta del Ebro → València → Alicante → Cartagena → Granada → Málaga → Ardales → Ronda → Sevilla</p>
-        <div class="nota-dinamica">Los horarios, precios, accesos y disponibilidad pueden cambiar. Antes de viajar, consulta siempre la información actual en las webs oficiales enlazadas.</div>
-      </section>
-
+      <section class="intro-demo"><p class="kicker">Ejemplo completo · contenido congelado y revisado</p><h1>España en autocaravana · 15 días</h1><p>Barcelona → Montserrat → PortAventura → Delta del Ebro → València → Alicante → Cartagena → Granada → Málaga → Ardales → Ronda → Sevilla</p><div class="nota-dinamica">Los horarios, precios, accesos y disponibilidad pueden cambiar. Antes de viajar, consulta siempre la información actual en las webs oficiales enlazadas.</div></section>
       <section id="resultadoReal" class="resultado-real" aria-live="polite">
-        <div class="resultado-cabecera">
-          <div>
-            <h2>🧭 Tu ruta</h2>
-            <p id="estadoCalculo">Ruta de demostración preparada · 15 días / 14 noches</p>
-          </div>
-          <a class="boton-secundario" href="index.html?pruebas=manuel">← Volver al inicio</a>
-        </div>
-
-        <div id="metricasRuta" class="metricas-ruta"></div>
-        <div id="navegacionRuta" class="navegacion-ruta"></div>
-        <div id="mapaRuta" class="mapa-ruta" aria-label="Mapa general de la ruta"></div>
-        <div id="etapasRuta" class="etapas-ruta"></div>
+        <div class="resultado-cabecera"><div><h2>🧭 Tu ruta</h2><p id="estadoCalculo">Ruta de demostración preparada · 15 días / 14 noches</p></div><a class="boton-secundario" href="index.html?pruebas=manuel">← Volver al inicio</a></div>
+        <div id="metricasRuta" class="metricas-ruta"></div><div id="navegacionRuta" class="navegacion-ruta"></div><div id="mapaRuta" class="mapa-ruta" aria-label="Mapa general de la ruta"></div><div id="etapasRuta" class="etapas-ruta"></div>
       </section>
-
-      <section class="creditos-demo">
-        <h2>Sobre esta demostración</h2>
-        <p>Esta página reproduce la estructura de una guía de Rutas, pero es una muestra estática preparada manualmente. No llama a OpenAI, Worker, D1, Planner, Writer, Research ni a las cachés de producción.</p>
-        <p>Las fotografías proceden de Wikimedia Commons. Cada imagen muestra junto a ella el autor, la licencia aplicable y un enlace a su ficha original.</p>
-      </section>
+      <section class="creditos-demo"><h2>Sobre esta demostración</h2><p>Esta página reproduce la estructura de una guía de Rutas, pero es una muestra estática preparada manualmente. No llama a OpenAI, Worker, D1, Planner, Writer, Research ni a las cachés de producción.</p><p>Las fotografías proceden de Wikimedia Commons. Cada imagen muestra el acceso a su ficha de autor y licencia.</p></section>
     </main>
   </div>
-
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script src="demo-ruta.js?v=1"></script>
-  <script>
-  (() => {
-    "use strict";
-    if (new URLSearchParams(location.search).get("pruebas") !== "manuel") return;
-
-    const mapsSearch = q => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
-    const mapsDir = (origin, destination, waypoints = []) => {
-      const p = new URLSearchParams({api:"1", origin, destination, travelmode:"driving"});
-      if (waypoints.length) p.set("waypoints", waypoints.join("|"));
-      return `https://www.google.com/maps/dir/?${p}`;
-    };
-
-    // Enlaces de navegación del día: representan la etapa que encabeza cada tarjeta,
-    // no la etapa del día siguiente.
-    const dayRoutes = [
-      mapsSearch("Barcelona Spain"),
-      mapsDir("Barcelona, Spain", "Montserrat, Spain"),
-      mapsDir("Montserrat, Spain", "PortAventura World"),
-      mapsDir("PortAventura World", "Delta del Ebro, Spain"),
-      mapsDir("Delta del Ebro, Spain", "Valencia, Spain"),
-      mapsSearch("Valencia Spain"),
-      mapsDir("Valencia, Spain", "Alicante, Spain"),
-      mapsDir("Alicante, Spain", "Área Autocaravanas Cartagena", ["Cartagena, Spain", "Cabo de Palos, Spain"]),
-      mapsDir("Área Autocaravanas Cartagena", "Camping Las Lomas Güéjar Sierra"),
-      mapsDir("Camping Las Lomas Güéjar Sierra", "Camping Las Lomas Güéjar Sierra", ["Sierra Nevada, Granada"]),
-      mapsDir("Camping Las Lomas Güéjar Sierra", "Área Málaga Beach"),
-      mapsDir("Área Málaga Beach", "Camping Parque Ardales"),
-      mapsDir("Camping Parque Ardales", "Camping El Sur Ronda"),
-      mapsDir("Camping El Sur Ronda", "Camping Villsom Dos Hermanas Sevilla"),
-      mapsSearch("Sevilla Spain")
-    ];
-    document.querySelectorAll(".ruta-dia a").forEach((a, i) => { if (dayRoutes[i]) a.href = dayRoutes[i]; });
-
-    // Google Maps limita los enlaces de Directions a un máximo de 9 waypoints en
-    // plataformas no móviles (y menos en algunos navegadores móviles). Esta vista
-    // general conserva los grandes hitos; las 15 tarjetas contienen la navegación exacta.
-    const general = mapsDir("Barcelona, Spain", "Sevilla, Spain", [
-      "Montserrat, Spain", "PortAventura World", "Delta del Ebro, Spain", "Valencia, Spain",
-      "Alicante, Spain", "Cartagena, Spain", "Granada, Spain", "Malaga, Spain", "Ronda, Spain"
-    ]);
-    const generalLink = document.querySelector("#navegacionRuta a");
-    if (generalLink) {
-      generalLink.href = general;
-      generalLink.title = "Vista general. Para navegación exacta usa el botón de cada etapa.";
-    }
-
-    const photos = [
-      ["Barcelona Sagrada Familia.JPG", "Jcca76 · CC BY-SA 4.0"],
-      ["Monastery Montserrat, Catalonia - panoramio.jpg", "Eduardo Manchon · CC BY-SA 3.0"],
-      ["Shambala - Port Aventura.jpg", "Teodoromix · CC BY-SA 4.0"],
-      ["Delta del Ebro. Cultivo del arroz. Arrozal.jpg", "Juan Emilio Prades Bel · CC BY 4.0"],
-      ["Valencia - Mercat Central 1.jpg", "Zarateman · CC0 1.0"],
-      ["Ciudad de las Artes y las Ciencias de Valencia.jpg", "Gustavo86 · CC BY-SA 2.5"],
-      ["Santa Bárbara Castle, Alicante.jpg", "Emilio Gómez Fernández · CC BY-SA 4.0"],
-      ["Teatro Romano de la Ciudad de Cartagena.jpg", "Adrian23007 · CC BY-SA 4.0"],
-      ["Alhambra - Granada - 001 - Panorama.jpg", "Roland Geider (Ogre) · dominio público"],
-      ["Sierra Nevada (Spain).jpg", "Antonio Morales García · CC BY-SA 2.0"],
-      ["Alcazaba de Malaga desde Catedral.jpg", "Pedro J Pacheco · CC BY-SA 4.0"],
-      ["Caminito del Rey, Málaga, España, 2023-05-18, DD 20.jpg", "Diego Delso, delso.photo · CC BY-SA (ver ficha)"],
-      ["Panorama of Ronda.jpg", "Tesla Delacroix · CC BY-SA 4.0"],
-      ["Triana Sevilla Guadalquivir.JPG", "Gzzz · CC BY-SA 3.0"],
-      ["Plaza de Espana de Sevilla.jpg", "Gica-cobra · CC BY-SA 4.0"]
-    ];
-
-    const commonsFile = name => `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(name)}?width=1600`;
-    const commonsPage = name => `https://commons.wikimedia.org/wiki/File:${encodeURIComponent(name).replace(/%20/g, "_")}`;
-
-    photos.forEach(([name, credit], index) => {
-      const card = document.getElementById(`dia-${index + 1}`);
-      if (!card) return;
-      let figure = card.querySelector(".guia-foto");
-      if (!figure) {
-        figure = document.createElement("figure");
-        figure.className = "guia-foto";
-        const title = card.querySelector(".guia-dia-titulo");
-        title.insertAdjacentElement("afterend", figure);
-      }
-      figure.innerHTML = "";
-      const img = document.createElement("img");
-      img.loading = index < 2 ? "eager" : "lazy";
-      img.src = commonsFile(name);
-      img.alt = card.querySelector("h2")?.textContent || `Día ${index + 1}`;
-      const caption = document.createElement("figcaption");
-      caption.append(document.createTextNode(`${credit} · `));
-      const source = document.createElement("a");
-      source.href = commonsPage(name);
-      source.target = "_blank";
-      source.rel = "noopener";
-      source.textContent = "fuente/licencia";
-      caption.append(source);
-      figure.append(img, caption);
-    });
-  })();
-  </script>
+  <script src="demo-ruta-mejoras.js?v=2"></script>
 </body>
 </html>
