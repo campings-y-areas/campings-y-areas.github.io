@@ -1,117 +1,75 @@
 (() => {
-  "use strict";
-  if (new URLSearchParams(location.search).get("pruebas") !== "manuel") return;
-
-  const commonsApi = "https://commons.wikimedia.org/w/api.php";
-  const cache = new Map();
-  const strip = s => String(s || "").replace(/<[^>]*>/g, "").trim();
-  const limpiarTitulo = t => String(t || "").replace(/^⭐\s*/, "").replace(/^(Recomendado|Base recomendada)\s*·\s*/i, "").trim();
-
-  const style = document.createElement("style");
-  style.textContent = `
-    .foto-recomendacion{margin:.7rem 0 .85rem;border-radius:12px;overflow:hidden;background:#e8eeec;position:relative;aspect-ratio:16/9}
-    .foto-recomendacion img{width:100%;height:100%;object-fit:cover;display:block}
-    .foto-recomendacion figcaption{position:absolute;left:.45rem;right:.45rem;bottom:.45rem;background:rgba(0,0,0,.66);color:#fff;padding:.28rem .42rem;border-radius:7px;font-size:.64rem;line-height:1.25}
-    .foto-recomendacion figcaption a{color:#fff;text-decoration:none}
-    .boton-pdf-demo{cursor:pointer;font:inherit}
-    @media print{
-      @page{size:A4;margin:12mm}
-      body{background:#fff!important;color:#111!important}
-      .cabecera-demo,.intro-demo,.boton-secundario,.navegacion-ruta,.ruta-dia,.leaflet-control-container,.creditos-demo{display:none!important}
-      .contenedor{width:100%!important;margin:0!important;padding:0!important}
-      .resultado-real{box-shadow:none!important;border:0!important;padding:0!important}
-      .resultado-cabecera{display:block!important;margin:0 0 8mm!important}
-      .resultado-cabecera h2:after{content:" · España en autocaravana · 15 días"}
-      .mapa-ruta{height:85mm!important;break-after:page}
-      .guia-dia-editorial{break-before:page;box-shadow:none!important;border:1px solid #ccc!important}
-      .guia-recomendacion{break-inside:avoid}
-      .guia-foto{max-height:90mm}
-      .foto-recomendacion{max-height:58mm}
-      a{color:inherit!important;text-decoration:none!important}
-    }`;
-  document.head.appendChild(style);
-
-  function contextoTarjeta(card) {
-    const dia = card.closest(".guia-dia-editorial");
-    const seccion = card.closest(".guia-seccion-editorial");
-    return {
-      nombre: limpiarTitulo(card.querySelector("h4")?.textContent),
-      destino: dia?.querySelector(".guia-dia-titulo h2")?.textContent || "España",
-      tipo: seccion?.querySelector("h3")?.textContent || ""
-    };
-  }
-
-  function consultaCommons({nombre, destino, tipo}) {
-    if (/Dónde comer/i.test(tipo)) return `${nombre} ${destino} cuisine restaurant`;
-    if (/Dónde dormir|Pernocta/i.test(tipo)) return `${nombre} ${destino} camping`;
-    return `${nombre} ${destino}`;
-  }
-
-  async function buscarFoto(query) {
-    if (cache.has(query)) return cache.get(query);
-    const p = (async () => {
-      const params = new URLSearchParams({origin:"*",action:"query",format:"json",generator:"search",gsrnamespace:"6",gsrsearch:query,gsrlimit:"8",prop:"imageinfo",iiprop:"url|extmetadata",iiurlwidth:"1000"});
-      const r = await fetch(`${commonsApi}?${params}`);
-      if (!r.ok) return null;
-      const j = await r.json();
-      for (const page of Object.values(j?.query?.pages || {})) {
-        const ii = page?.imageinfo?.[0];
-        const url = ii?.thumburl || ii?.url;
-        if (!url || !/\.(jpe?g|png|webp)(\?|$)/i.test(url)) continue;
-        const meta = ii.extmetadata || {};
-        return {url,page:ii.descriptionurl || `https://commons.wikimedia.org/wiki/${encodeURIComponent(page.title)}`,author:strip(meta.Artist?.value)||"Wikimedia Commons",license:meta.LicenseShortName?.value||"ver licencia"};
-      }
-      return null;
-    })().catch(() => null);
-    cache.set(query,p);
-    return p;
-  }
-
-  function figura(foto, alt, clase) {
-    const fig=document.createElement("figure"); fig.className=clase;
-    const img=document.createElement("img"); img.loading="lazy"; img.src=foto.url; img.alt=alt;
-    const cap=document.createElement("figcaption"); const a=document.createElement("a");
-    a.href=foto.page; a.target="_blank"; a.rel="noopener"; a.textContent=`${foto.author} · ${foto.license}`;
-    cap.append(a); fig.append(img,cap); return fig;
-  }
-
-  async function completarHeroes() {
-    for (const dia of document.querySelectorAll(".guia-dia-editorial")) {
-      if (dia.querySelector(":scope > .guia-foto")) continue;
-      const titulo=dia.querySelector(".guia-dia-titulo h2")?.textContent||"España";
-      const foto=await buscarFoto(`${titulo} Spain landmark travel`);
-      if (!foto) continue;
-      const title=dia.querySelector(".guia-dia-titulo");
-      title?.insertAdjacentElement("afterend",figura(foto,titulo,"guia-foto"));
-    }
-  }
-
-  async function completarTarjetas() {
-    for (const card of document.querySelectorAll(".guia-recomendacion")) {
-      if (card.querySelector(":scope > .foto-recomendacion")) continue;
-      const ctx=contextoTarjeta(card);
-      let foto=await buscarFoto(consultaCommons(ctx));
-      if (!foto) foto=await buscarFoto(`${ctx.destino} Spain travel`);
-      if (!foto) {
-        const hero=card.closest(".guia-dia-editorial")?.querySelector(".guia-foto img");
-        const link=card.closest(".guia-dia-editorial")?.querySelector(".guia-foto figcaption a");
-        if (hero) foto={url:hero.currentSrc||hero.src,page:link?.href||"https://commons.wikimedia.org/",author:"Imagen del destino",license:"Wikimedia Commons"};
-      }
-      if (!foto) continue;
-      const h=card.querySelector("h4");
-      h?.insertAdjacentElement("afterend",figura(foto,ctx.nombre,"foto-recomendacion"));
-    }
-  }
-
-  function instalarPDF() {
-    const cabecera=document.querySelector(".resultado-cabecera");
-    if (!cabecera || document.getElementById("imprimirDemoPdf")) return;
-    const b=document.createElement("button"); b.type="button"; b.id="imprimirDemoPdf"; b.className="boton-secundario boton-pdf-demo";
-    b.textContent="🖨️ Imprimir / guardar en PDF";
-    b.addEventListener("click",()=>window.print());
-    cabecera.appendChild(b);
-  }
-
-  async function arrancar(){instalarPDF();await completarHeroes();await completarTarjetas();}
-  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",arrancar,{once:true});else arrancar();
+"use strict";
+if(new URLSearchParams(location.search).get("pruebas")!=="manuel")return;
+const commonsApi="https://commons.wikimedia.org/w/api.php",cache=new Map();
+const E={
+"Basílica de la Sagrada Família":["La basílica comenzó a construirse en 1882 y quedó ligada para siempre a Antoni Gaudí. Fachadas, torres, geometría y un interior concebido como un bosque de columnas permiten entender cómo Gaudí mezcló arquitectura, naturaleza, luz y simbolismo.","1 h 30 min–2 h"],
+"Barrio Gótico":["Es el núcleo histórico de Barcelona: una trama de calles y plazas donde conviven restos de la antigua Barcino romana, edificios medievales y la catedral. Merece recorrerlo a pie sin una ruta demasiado rígida.","1 h 30 min–2 h"],
+"Mercat de la Boqueria":["Mercado histórico de la Rambla y escaparate de producto fresco, pescado, embutidos y cocina preparada. Aquí interesa curiosear los puestos y probar pequeñas especialidades locales.","45 min–1 h"],
+"Monasterio de Montserrat":["El santuario benedictino se encuentra encajado en el singular macizo de Montserrat. La basílica, la tradición de la Moreneta y las vistas combinan patrimonio, espiritualidad y paisaje.","1 h 30 min–2 h"],
+"Camí dels Degotalls":["Paseo oficial de baja exigencia próximo al monasterio, entre vegetación y monumentos. Añade naturaleza a la jornada sin convertirla en una ruta de alta montaña.","aprox. 50 min"],
+"Montserrat · gastronomía local":["La cocina de montaña permite completar la jornada con embutidos, quesos, carnes, guisos y productos catalanes. Se recomienda la zona y el tipo de cocina para poder escoger según apertura y horario.","1–1 h 30 min"],
+"PortAventura Park":["El parque se organiza en grandes áreas tematizadas con atracciones familiares, espectáculos y montañas rusas. La clave es seleccionar prioridades y disfrutar del parque sin intentar abarcarlo todo corriendo.","media jornada–día completo"],
+"Ferrari Land":["Área temática dedicada al mundo Ferrari, con atracciones de velocidad y propuestas familiares. Funciona como complemento opcional de PortAventura Park si la entrada y el horario dejan margen.","2–4 h"],
+"Gold River Saloon":["Opción dentro del propio complejo que evita sacar la autocaravana o perder tiempo en desplazamientos. Se recomienda principalmente por logística en una jornada cargada de actividades.","según horario del parque"],
+"Parc Natural del Delta de l'Ebre":["Uno de los grandes humedales del Mediterráneo occidental. Lagunas, arrozales, canales y playas forman un paisaje excepcional para observar aves y comprender la convivencia entre agricultura y ecosistemas acuáticos.","2–4 h"],
+"Platja del Trabucador":["Estrecha barra de arena entre el Mediterráneo y la bahía dels Alfacs. Su atractivo es el paisaje abierto, el viento y el agua a ambos lados, una imagen muy característica del Delta.","1–2 h"],
+"La Salina · Alfacs":["La proximidad al mar y al Delta hace que arroces, pescado y marisco sean la elección natural. Su situación evita otro desplazamiento después de una jornada de naturaleza.","1–1 h 30 min"],
+"Mercado Central de València":["Gran edificio modernista de hierro, vidrio y cerámica que sigue funcionando como mercado. Dentro se descubre la despensa valenciana a través de producto fresco y especialidades locales.","45 min–1 h"],
+"La Lonja de la Seda":["Construida durante el apogeo comercial de la València del siglo XV, es una obra maestra del gótico civil. Su Salón Columnario recuerda la importancia mercantil de la ciudad mediterránea.","45 min–1 h"],
+"Casa Carmela":["Casa histórica junto a la Malvarrosa conocida por sus arroces tradicionales. Encaja en la ruta porque asocia València con su gastronomía más emblemática en un entorno marítimo.","1 h 30 min–2 h"],
+"Ciudad de las Artes y las Ciencias":["Conjunto contemporáneo levantado en el antiguo cauce del Turia. Arquitectura, ciencia y grandes espacios peatonales forman una de las imágenes urbanas más reconocibles de València.","2–4 h"],
+"Oceanogràfic":["Gran complejo dedicado a ecosistemas marinos, con acuarios y espacios temáticos que representan distintos mares y hábitats. Es una de las visitas familiares más fuertes de la ruta.","3–5 h"],
+"València marítima":["El frente marítimo es buen lugar para probar arroces, pescado y producto mediterráneo. Se recomienda la zona para poder elegir según presupuesto, horario y disponibilidad real.","1–1 h 30 min"],
+"Castillo de Santa Bárbara":["Fortaleza sobre el monte Benacantil, posición estratégica utilizada durante siglos para dominar la bahía. Sus recintos y miradores combinan historia defensiva con una panorámica completa de Alicante.","1 h 30 min–2 h"],
+"Explanada de España":["Paseo emblemático entre el centro y el puerto, reconocible por su pavimento ondulado y sus palmeras. Permite enlazar casco urbano, puerto y Mediterráneo a un ritmo tranquilo.","30–60 min"],
+"Nou Manolín":["Clásico alicantino conocido por barra, tapas y cocina de producto. Pescado, marisco y arroces encajan con la identidad gastronómica de la ciudad y evitan una recomendación genérica.","1 h 30 min–2 h"],
+"Teatro Romano de Cartagena":["Construido en época de Augusto y oculto durante siglos bajo edificios posteriores, hoy forma un conjunto arqueológico integrado en pleno centro. Museo y teatro muestran varias capas de la historia de Cartagena.","1 h 30 min–2 h"],
+"Cabo de Palos":["Antiguo enclave marinero presidido por su gran faro y rodeado de costa rocosa. Después del patrimonio urbano de Cartagena aporta el contraste del Mediterráneo y la tradición pesquera.","1 h 30 min–3 h"],
+"Cartagena y Cabo de Palos":["El producto del mar es el hilo conductor: caldero, pescados y cocina de la Costa Cálida. Se deja libertad para escoger restaurante según dónde termine finalmente la excursión.","1–1 h 30 min"],
+"Alhambra y Generalife":["Ciudad palatina nazarí, fortaleza y jardines forman uno de los grandes conjuntos históricos de España. Palacios, patios, agua, decoración y vistas necesitan tiempo y justifican reservar una amplia franja del día.","3–4 h"],
+"Albaicín y miradores":["El barrio conserva una trama histórica de calles estrechas en la ladera frente a la Alhambra. Sus miradores permiten contemplar el conjunto monumental con Sierra Nevada al fondo.","1 h 30 min–2 h"],
+"Bodegas Castañeda":["Taberna tradicional del centro asociada al tapeo granadino, tablas y cocina local. Tras una etapa larga encaja mejor una experiencia informal de tapas que otra actividad con horario rígido.","1–1 h 30 min"],
+"Sierra Nevada":["El macizo reúne las mayores alturas de la península ibérica y paisaje de alta montaña muy cerca de Granada. La actividad debe adaptarse a altitud, nieve, calor, meteorología y estado de senderos.","media jornada"],
+"Güéjar Sierra":["Pueblo serrano en la vertiente de Sierra Nevada, rodeado de barrancos, agua y montaña. Es un buen complemento o alternativa cuando no interesa realizar una caminata exigente.","1–2 h"],
+"Güéjar Sierra · cocina de montaña":["Tras la jornada serrana encajan platos calientes, carnes, guisos y cocina granadina de interior. Comer cerca de la base evita kilómetros innecesarios.","1–1 h 30 min"],
+"Alcazaba de Málaga":["Fortaleza palaciega andalusí sobre el centro histórico. Murallas, patios y jardines explican la Málaga islámica y ofrecen vistas sobre puerto y ciudad; junto al Teatro Romano forman un conjunto histórico excepcional.","1 h 30 min–2 h"],
+"Muelle Uno y Palmeral de las Sorpresas":["La remodelación del puerto creó un paseo abierto al Mediterráneo enlazado con el centro histórico. Es ideal para terminar el día sin otra visita cerrada ni horarios complicados.","1–2 h"],
+"El Tintero":["Restaurante popular frente al mar conocido por su ambiente informal y por una forma muy malagueña de servir pescado y marisco. Espetos y pescado frito encajan con la llegada al Mediterráneo.","1–1 h 30 min"],
+"Caminito del Rey":["Las pasarelas recorren las paredes del Desfiladero de los Gaitanes siguiendo un trazado lineal hacia El Chorro. La obra nació ligada a instalaciones hidroeléctricas y hoy permite observar desde dentro geología, ferrocarril y garganta.","3–4 h más accesos"],
+"El Chorro":["El valle a la salida del desfiladero está ligado al ferrocarril, los embalses y la escalada. Sus paredes han atraído escaladores internacionales y el paisaje también ha servido como localización cinematográfica.","1–2 h"],
+"Restaurante El Kiosko":["Su ubicación junto a los embalses y cerca del acceso norte lo convierte en una parada lógica al organizar el Caminito. Se recomienda por situación y por permitir comer cocina de la zona sin añadir desplazamientos.","1–1 h 30 min"],
+"Puente Nuevo":["El gran puente de piedra salva el Tajo de Ronda y une las dos partes históricas. Construido en el siglo XVIII, es obra de ingeniería y el mejor punto para entender la relación entre la ciudad y su barranco.","45 min–1 h"],
+"Casco histórico de Ronda":["Calles blancas, palacios, iglesias y miradores se concentran alrededor del Tajo. Merece caminar sin prisas para que Ronda no se reduzca únicamente a la fotografía del Puente Nuevo.","1 h 30 min–2 h"],
+"Pedro Romero":["Opción de cocina rondeña y andaluza que encaja con una jornada centrada en la ciudad histórica. La recomendación busca producto y recetas de la zona antes de continuar hacia Sevilla.","1–1 h 30 min"],
+"Triana":["Barrio sevillano históricamente vinculado a alfareros, ceramistas, marineros y flamenco. Cruzar el puente y recorrer mercado y calles permite conocer una Sevilla con identidad propia.","1 h 30 min–2 h"],
+"Paseo del Guadalquivir":["El río explica buena parte de la historia comercial de Sevilla. Torre del Oro, puentes y orillas forman un paseo especialmente agradable al final de la tarde.","1–1 h 30 min"],
+"Casa Morales":["Taberna histórica del centro, reconocible por sus grandes tinajas y ambiente tradicional. Es una buena introducción a la cultura de tapas sevillana mediante pequeñas raciones y especialidades locales.","1–1 h 30 min"],
+"Real Alcázar de Sevilla":["Conjunto palaciego desarrollado durante siglos, donde arquitectura islámica, mudéjar, gótica y renacentista conviven con extensos jardines. Explica la superposición histórica de Sevilla.","2–3 h"],
+"Catedral y Giralda":["La catedral ocupa el solar de la antigua mezquita almohade y la Giralda conserva el antiguo alminar transformado en campanario. El conjunto resume siglos de historia religiosa y urbana.","1 h 30 min–2 h"],
+"Plaza de España y Parque de María Luisa":["La Plaza de España fue construida para la Exposición Iberoamericana de 1929 y se abre hacia el parque de María Luisa. Cerámica, canales, galerías y jardines permiten cerrar la ruta al aire libre.","1 h 30 min–2 h"],
+"Sevilla · despedida de tapas":["El último día no necesita una reserva gastronómica rígida. La propuesta es cerrar el viaje enlazando varias tapas y escoger sobre la marcha según ambiente, especialidades y disponibilidad.","1–2 h"]};
+const B={
+"Camping Barcelona":"Camping de Mataró pensado también para visitar Barcelona sin entrar con la autocaravana. Su valor es logístico: instalarse, utilizar transporte y regresar a una base costera al terminar el día.",
+"Càmping Montserrat":"Camping a los pies del macizo y rodeado de paisaje rural. Permite dormir cerca de Montserrat y evita encadenar otro desplazamiento largo después de la visita.",
+"Parking Caravaning PortAventura World":"Área oficial del complejo para autocaravanas. Es una pernocta funcional que permite aprovechar el parque hasta el final sin buscar alojamiento alejado.",
+"Yelloh! Village Alfacs":"Camping costero en Alcanar Platja, junto a la bahía dels Alfacs. Parcelas, mar y proximidad al Delta permiten terminar la jornada de naturaleza sin volver a una gran ciudad.",
+"Valencia Camper Park":"Área camper en Bétera utilizada dos noches como base para València. Permite dejar estacionada la autocaravana y entrar en transporte público durante ambas jornadas.",
+"Camper Park Alicante":"Área en El Campello próxima al litoral. Separa la pernocta de la circulación por el centro y combina ciudad y costa desde una base cómoda para un vehículo grande.",
+"Área Autocaravanas Cartagena":"Área en Los Dolores, fuera del núcleo histórico. Su posición facilita combinar Cartagena y Cabo de Palos manteniendo una pernocta específica para vehículos vivienda.",
+"Camping Las Lomas":"Camping de Güéjar Sierra estratégicamente situado entre Granada y Sierra Nevada. Dos noches permiten dedicar un día al patrimonio y otro a la montaña sin cambiar de base.",
+"Área Málaga Beach":"Área junto al litoral oriental de Málaga con servicios para autocaravanas. Permite dejar el vehículo, entrar a Málaga en transporte y regresar a dormir junto al mar.",
+"Camping Parque Ardales":"Camping en el entorno de los embalses y del acceso norte del Caminito. Paisaje, acceso, descanso y organización de la visita quedan concentrados en la misma zona.",
+"Camping El Sur":"Camping a las afueras de Ronda, suficientemente cerca para visitar la ciudad sin atravesar el centro con la autocaravana. Tras una etapa corta permite aparcar y caminar.",
+"Camping Villsom":"Camping en Dos Hermanas utilizado como base exterior para Sevilla. Su ventaja es dejar la autocaravana y usar transporte, evitando acceso y aparcamiento en la gran ciudad."};
+function titulo(t){return String(t||"").replace(/^⭐\s*/,"").replace(/^(Recomendado|Base recomendada)\s*·\s*/i,"").trim()}
+function ctx(c){const d=c.closest(".guia-dia-editorial"),s=c.closest(".guia-seccion-editorial");return{n:titulo(c.querySelector("h4")?.textContent),d:d?.querySelector(".guia-dia-titulo h2")?.textContent||"España",t:s?.querySelector("h3")?.textContent||""}}
+function q(x){if(/Dónde comer/i.test(x.t))return`${x.n} ${x.d} food`;if(/Dónde dormir|Pernocta/i.test(x.t))return`${x.n} ${x.d} camping motorhome`;return`${x.n} ${x.d}`}
+async function foto(s){if(cache.has(s))return cache.get(s);const p=(async()=>{const u=new URLSearchParams({origin:"*",action:"query",format:"json",generator:"search",gsrnamespace:"6",gsrsearch:s,gsrlimit:"6",prop:"imageinfo",iiprop:"url|extmetadata",iiurlwidth:"900"}),r=await fetch(`${commonsApi}?${u}`);if(!r.ok)return null;const j=await r.json();for(const p of Object.values(j?.query?.pages||{})){const i=p?.imageinfo?.[0],url=i?.thumburl||i?.url;if(!url||!/\.(jpe?g|png|webp)(\?|$)/i.test(url))continue;const m=i.extmetadata||{};return{url,page:i.descriptionurl||"https://commons.wikimedia.org/",author:String(m.Artist?.value||"Wikimedia Commons").replace(/<[^>]*>/g,"").trim(),license:m.LicenseShortName?.value||"ver licencia"}}return null})().catch(()=>null);cache.set(s,p);return p}
+function fallback(c){const i=c.closest(".guia-dia-editorial")?.querySelector(".guia-foto img"),a=c.closest(".guia-dia-editorial")?.querySelector(".guia-foto figcaption a");return i?{url:i.currentSrc||i.src,page:a?.href||"https://commons.wikimedia.org/",author:"Imagen del destino",license:"Wikimedia Commons"}:null}
+function ponerFoto(c,f){if(!f||c.querySelector(":scope > .foto-recomendacion"))return;const g=document.createElement("figure"),i=document.createElement("img"),p=document.createElement("figcaption"),a=document.createElement("a");g.className="foto-recomendacion";i.loading="lazy";i.src=f.url;i.alt=titulo(c.querySelector("h4")?.textContent);a.href=f.page;a.target="_blank";a.rel="noopener";a.textContent=`${f.author||"Wikimedia Commons"} · ${f.license||"ver licencia"}`;p.append(a);g.append(i,p);c.insertBefore(g,c.querySelector("h4")?.nextSibling||c.firstChild)}
+function enriquecer(c){if(c.querySelector(":scope > .detalle-editorial"))return;const x=ctx(c),v=E[x.n]||null,text=v?.[0]||B[x.n],time=v?.[1]||"";if(!text)return;const b=document.createElement("div"),p=document.createElement("p"),s=document.createElement("strong");b.className="detalle-editorial";s.textContent=/Dónde comer/i.test(x.t)?"🍴 Qué encontrarás: ":/Dónde dormir|Pernocta/i.test(x.t)?"🚐 Cómo es esta base: ":"📖 Qué vas a descubrir: ";p.append(s,document.createTextNode(text));b.append(p);if(time){const z=document.createElement("p"),k=document.createElement("strong");z.className="tiempo-recomendado";k.textContent="⏱️ Tiempo recomendado: ";z.append(k,document.createTextNode(time));b.append(z)}c.insertBefore(b,c.querySelector(".guia-enlaces")||null)}
+async function completar(){for(const c of document.querySelectorAll(".guia-recomendacion")){enriquecer(c);const x=ctx(c);let f=await foto(q(x));if(!f)f=await foto(`${x.d} Spain travel`);if(!f)f=fallback(c);ponerFoto(c,f)}}
+function pdf(){const h=document.querySelector(".resultado-cabecera");if(!h||document.getElementById("imprimirDemoPdf"))return;const b=document.createElement("button");b.type="button";b.id="imprimirDemoPdf";b.className="boton-secundario boton-pdf-demo";b.textContent="🖨️ Imprimir / guardar en PDF";b.onclick=()=>window.print();h.appendChild(b)}
+function init(){pdf();completar()}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();
 })();
