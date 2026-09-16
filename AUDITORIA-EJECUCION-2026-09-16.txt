@@ -1,0 +1,5 @@
+Auditoría integral en curso.
+OpenAI: BLOQUEADO.
+Pruebas de pago: NO AUTORIZADAS.
+Segunda revisión externa: recibida y en contraste con código real.
+Este archivo solo activa la comprobación automática gratuita de la rama de auditoría.
