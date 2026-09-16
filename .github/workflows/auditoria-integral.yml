@@ -23,14 +23,27 @@ jobs:
       - name: Validar sintaxis, JSON, referencias y contratos Rutas
         run: node scripts/auditoria-integral.mjs
       - name: Auditar coordenadas contra países y tierra
+        id: geo_raw
+        continue-on-error: true
         run: node scripts/auditoria-coordenadas.mjs
-      - name: Guardar informe geográfico
+      - name: Clasificar anomalías por distancia y ámbito europeo
+        id: geo_class
+        continue-on-error: true
+        run: node scripts/clasificar-anomalias-geograficas.mjs
+      - name: Guardar informes geográficos
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: auditoria-coordenadas
-          path: auditoria-coordenadas-reporte.json
+          path: |
+            auditoria-coordenadas-reporte.json
+            auditoria-coordenadas-clasificada.json
           if-no-files-found: ignore
+      - name: Fallar si quedan anomalías geográficas de alta confianza
+        if: steps.geo_class.outcome == 'failure'
+        run: |
+          echo "Quedan anomalías geográficas de alta confianza. Revisar el informe antes de modificar datos."
+          exit 1
       - name: Guardar reparación validada en la rama de auditoría
         if: github.event_name == 'push'
         run: |
