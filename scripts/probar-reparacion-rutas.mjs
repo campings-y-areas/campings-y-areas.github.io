@@ -12,21 +12,11 @@ function replaceOnce(label,from,to){
 }
 
 if(!s.includes('function nombreLocalidadWorker(')){
-  replaceOnce('helper localidad',
-`function nombreLugarWorker(lugar,fallback=""){
-  const otros=lugar?.other_names||{};
-  const raw=lugar?.datasource?.raw||{};
-  return otros.name||raw.name||otros["name:en"]||raw["name:en"]||lugar?.city||lugar?.town||lugar?.village||lugar?.municipality||lugar?.name||fallback||lugar?.formatted||"";
-}`,
-`function nombreLugarWorker(lugar,fallback=""){
-  const otros=lugar?.other_names||{};
-  const raw=lugar?.datasource?.raw||{};
-  return otros.name||raw.name||otros["name:en"]||raw["name:en"]||lugar?.city||lugar?.town||lugar?.village||lugar?.municipality||lugar?.name||fallback||lugar?.formatted||"";
-}
-
-function nombreLocalidadWorker(lugar,fallback=""){
-  return String(lugar?.city||lugar?.town||lugar?.village||lugar?.municipality||lugar?.county||fallback||"").trim();
-}`);
+  const re=/function nombreLugarWorker\(lugar,fallback=""\)\{[\s\S]*?\n\}/;
+  const matches=s.match(new RegExp(re.source,'g'))||[];
+  if(matches.length!==1)throw new Error(`helper localidad: se esperaba 1 función nombreLugarWorker y hay ${matches.length}`);
+  s=s.replace(re,`${matches[0]}\n\nfunction nombreLocalidadWorker(lugar,fallback=""){\n  return String(lugar?.city||lugar?.town||lugar?.village||lugar?.municipality||lugar?.county||fallback||"").trim();\n}`);
+  changes.push('helper localidad');
 }
 if(s.includes('const place=nombreLugarWorker(rev,nombreLocalidad(rev));')){
   replaceOnce('corte tecnico localidad','const place=nombreLugarWorker(rev,nombreLocalidad(rev));','const place=nombreLocalidadWorker(rev,nombreLocalidad(rev));');
