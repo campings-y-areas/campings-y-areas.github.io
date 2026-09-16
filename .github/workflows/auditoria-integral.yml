@@ -7,7 +7,7 @@ on:
       - audit-integral-rutas-2026-09-16
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   auditoria:
@@ -18,7 +18,19 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Aplicar reparación geográfica exacta en la rama de auditoría
+        run: node scripts/probar-reparacion-rutas.mjs
       - name: Validar sintaxis, JSON, referencias y contratos Rutas
         run: node scripts/auditoria-integral.mjs
-      - name: Probar reparación geográfica de Rutas sin modificar producción
-        run: node scripts/probar-reparacion-rutas.mjs
+      - name: Guardar reparación validada en la rama de auditoría
+        if: github.event_name == 'push'
+        run: |
+          if git diff --quiet -- rutas.js; then
+            echo "Sin cambios pendientes en rutas.js"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add rutas.js
+          git commit -m "Rutas: separar localidad geográfica de pernocta"
+          git push origin HEAD:audit-integral-rutas-2026-09-16
