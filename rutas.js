@@ -1855,20 +1855,43 @@ async function elegirFinJornadaRealV3({tramoRestante,puntoInicioEtapa,requestCoo
   }
   opciones.sort((a,b)=>b.score-a.score);
   const e=opciones[0],cand=e.cand;
-  return {
-    minutes:e.idaMin,
-    km:Number(e.ida.distance||0)/1000,
-    place:nombreAlojamiento(cand),
-    country:paisCanonico(cand._countryCode,cand.pais),
+
+const coordPernocta=[Number(cand.lon),Number(cand.lat)];
+let revPernocta=null;
+try{revPernocta=await reverseLugar(coordPernocta);}catch(e){}
+
+const localidadPernocta=String(
+  nombreLugarWorker(revPernocta,localidadAlojamiento(cand))||""
+).trim();
+
+if(!localidadPernocta){
+  const err=new Error("NO_FEASIBLE_OVERNIGHT: La pernocta elegida no tiene una localidad verificable.");
+  err.code="NO_FEASIBLE_OVERNIGHT";
+  throw err;
+}
+
+const paisPernocta=paisCanonico(
+  revPernocta?.country_code||cand._countryCode,
+  revPernocta?.country||cand.pais
+);
+
+return {
+  minutes:e.idaMin,
+  km:Number(e.ida.distance||0)/1000,
+  place:localidadPernocta,
+  country:paisPernocta,
+  lat:Number(cand.lat),lon:Number(cand.lon),
+  remaining_minutes:e.restoMin,
+  overnight:{
+    id:cand.id||`overnight-${cand.tipo}-${cand.lat}-${cand.lon}`,
+    nombre:nombreAlojamiento(cand),
+    tipo:cand.tipo,
     lat:Number(cand.lat),lon:Number(cand.lon),
-    remaining_minutes:e.restoMin,
-    overnight:{
-      id:cand.id||`overnight-${cand.tipo}-${cand.lat}-${cand.lon}`,
-      nombre:nombreAlojamiento(cand),tipo:cand.tipo,
-      lat:Number(cand.lat),lon:Number(cand.lon),
-      localidad:localidadAlojamiento(cand),servicios:detallesPernocta(cand),web:cand.web||""
-    }
-  };
+    localidad:localidadPernocta,
+    servicios:detallesPernocta(cand),
+    web:cand.web||""
+  }
+};
 }
 
 async function elegirFinJornadaInteligente(params){
@@ -2039,7 +2062,6 @@ function validarLogisticaLocal(stops,vacationDays,datos){
   if(etapas.some(x=>!String(x?.place||"").trim()))return {ok:false,reason:"etapa_sin_localidad"};
   if(etapas.some(x=>Number(x?.driving_minutes)>maxMinutes+1))return {ok:false,reason:"etapa_supera_maximo"};
   if(etapas.some(x=>!x?.overnight||!String(x?.overnight_id||"").trim()))return {ok:false,reason:"pernocta_no_verificada"};
-  if(etapas.some(x=>!nombreAlojamiento(x?.overnight)))return {ok:false,reason:"pernocta_sin_nombre_humano"};
   if(etapas.some(x=>!Number.isFinite(Number(x?.lat))||!Number.isFinite(Number(x?.lon))))return {ok:false,reason:"coordenadas_etapa_invalidas"};
   if(etapas.some(x=>Math.abs(Number(x.lat)-Number(x.overnight?.lat))>1e-7||Math.abs(Number(x.lon)-Number(x.overnight?.lon))>1e-7))return {ok:false,reason:"fin_etapa_no_es_pernocta"};
   if(etapas.some(x=>x?.requested_waypoint && (!String(x?.request_point_id||"").trim()||!Number.isFinite(Number(x?.requested_lat))||!Number.isFinite(Number(x?.requested_lon)))))return {ok:false,reason:"request_point_no_preservado"};
@@ -2596,7 +2618,8 @@ function urlMapaAlojamiento(x){
 }
 function alojamientoCompatible(x,datos){
   const tipos=new Set(datos.pernocta||[]); if(!tipos.has(x.tipo))return false;
-  if(!nombreAlojamiento(x))return false;
+
+  if(!nombreAlojamiento(x)&&!String(x?.id||x?.osm_id||x?.osmId||x?.referencia||x?.reference||"").trim())return false;
   if(!Number.isFinite(Number(x.lat))||!Number.isFinite(Number(x.lon)))return false;
   if(datos.vehiculo==="caravana" && (x.tipo==="area"||x.tipo==="parking") && !valorBool(x.admite_caravanas))return false;
   if(datos.mascota && x.mascotas===false)return false;
