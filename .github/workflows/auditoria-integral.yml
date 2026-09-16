@@ -1,0 +1,22 @@
+name: Auditoría integral gratuita
+
+on:
+  pull_request:
+  push:
+    branches:
+      - audit-integral-rutas-2026-09-16
+
+permissions:
+  contents: read
+
+jobs:
+  auditoria:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar sintaxis, JSON, referencias y contratos Rutas
+        run: node scripts/auditoria-integral.mjs
