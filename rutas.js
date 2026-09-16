@@ -2618,7 +2618,8 @@ function urlMapaAlojamiento(x){
 }
 function alojamientoCompatible(x,datos){
   const tipos=new Set(datos.pernocta||[]); if(!tipos.has(x.tipo))return false;
-  
+
+  if(!nombreAlojamiento(x)&&!String(x?.id||x?.osm_id||x?.osmId||x?.referencia||x?.reference||"").trim())return false;
   if(!Number.isFinite(Number(x.lat))||!Number.isFinite(Number(x.lon)))return false;
   if(datos.vehiculo==="caravana" && (x.tipo==="area"||x.tipo==="parking") && !valorBool(x.admite_caravanas))return false;
   if(datos.mascota && x.mascotas===false)return false;
