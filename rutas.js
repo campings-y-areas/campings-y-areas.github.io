@@ -2581,7 +2581,7 @@ function esNombreAlojamientoHumano(valor){
   if(/^(?:node|way|relation)\/\d+$/i.test(n))return false;
   if(/^https?:\/\//i.test(n))return false;
   if(/^\d+$/.test(n))return false;
-  if(/^(?:camping|campsite|campground|parking|area|área|stellplatz|parkplatz|sin nombre|unnamed|unknown)$/i.test(n))return false;
+  if(/^(?:camping|campsite|campground|parking|area|área|stellplatz|parkplatz|wohnmobilstellplatz|sin nombre|unnamed|unknown)$/i.test(n))return false;
   return true;
 }
 function nombreAlojamiento(x){
