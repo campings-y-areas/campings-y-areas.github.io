@@ -20,3 +20,5 @@ jobs:
           node-version: '22'
       - name: Validar sintaxis, JSON, referencias y contratos Rutas
         run: node scripts/auditoria-integral.mjs
+      - name: Probar reparación geográfica de Rutas sin modificar producción
+        run: node scripts/probar-reparacion-rutas.mjs
