@@ -22,6 +22,15 @@ jobs:
         run: node scripts/probar-reparacion-rutas.mjs
       - name: Validar sintaxis, JSON, referencias y contratos Rutas
         run: node scripts/auditoria-integral.mjs
+      - name: Auditar coordenadas contra países y tierra
+        run: node scripts/auditoria-coordenadas.mjs
+      - name: Guardar informe geográfico
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: auditoria-coordenadas
+          path: auditoria-coordenadas-reporte.json
+          if-no-files-found: ignore
       - name: Guardar reparación validada en la rama de auditoría
         if: github.event_name == 'push'
         run: |
