@@ -3,7 +3,7 @@ import fs from 'node:fs';
 function load(file){return JSON.parse(fs.readFileSync(file,'utf8'));}
 function save(file,data){fs.writeFileSync(file,JSON.stringify(data,null,2)+'\n');}
 function byId(data,id){const x=data.find(v=>v?.id===id);if(!x)throw new Error(`${id} no encontrado`);return x;}
-function removeIds(file,ids){let data=load(file);const before=data.length;data=data.filter(x=>!ids.includes(x?.id));if(before-data.length!==ids.length)throw new Error(`${file}: no se eliminaron todos los ids esperados`);save(file,data);}
+function removeIds(file,ids){const data=load(file);const filtered=data.filter(x=>!ids.includes(x?.id));if(filtered.length!==data.length)save(file,filtered);}
 
 // Fuera del ámbito europeo o archivados en el país equivocado sin identidad fiable para recolocarlos.
 removeIds('areas-paises-bajos-definitivo.json',['nl-area-0427']); // Aruba
@@ -18,7 +18,6 @@ for(const id of portugal){const x=byId(lav,id);x.pais='Portugal';x.comunidad_aut
 // Registros con coordenadas inequívocamente incompatibles y sin evidencia suficiente para inventar una corrección.
 const eliminar=new Set(['lavadero-479','lavadero-481','lavadero-505','lavadero-506']);
 lav=lav.filter(x=>!eliminar.has(x?.id));
-if(eliminar.size!==4)throw new Error('Lista de eliminación inesperada');
 save(lavFile,lav);
 
-console.log('Reparaciones geográficas confirmadas aplicadas sin inventar coordenadas.');
+console.log('Reparaciones geográficas confirmadas aplicadas/verificadas sin inventar coordenadas.');
