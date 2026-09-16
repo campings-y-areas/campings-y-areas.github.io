@@ -653,6 +653,10 @@ function nombreLugarWorker(lugar,fallback=""){
   return otros.name||raw.name||otros["name:en"]||raw["name:en"]||lugar?.city||lugar?.town||lugar?.village||lugar?.municipality||lugar?.name||fallback||lugar?.formatted||"";
 }
 
+function nombreLocalidadWorker(lugar,fallback=""){
+  return String(lugar?.city||lugar?.town||lugar?.village||lugar?.municipality||lugar?.county||fallback||"").trim();
+}
+
 function ritmoWorker(valor){
   if(valor==="tranquilo")return "tranquilo";
   if(valor==="intenso")return "intenso";
@@ -1637,7 +1641,7 @@ async function valorarFinJornadaRuta(candidato,datos,idealMinutes,ultimoLugar=""
   const coord=candidato?.coord;
   if(!Array.isArray(coord)||coord.length<2)return null;
   const rev=await reverseLugar(coord);
-  const place=nombreLugarWorker(rev,nombreLocalidad(rev));
+  const place=nombreLocalidadWorker(rev,nombreLocalidad(rev));
   const country=paisCanonico(rev?.country_code,rev?.country);
   let pois=[];
   try{ pois=await buscarPOIs(coord,datos); }catch{}
@@ -1841,7 +1845,7 @@ async function elegirFinJornadaRealV3({tramoRestante,puntoInicioEtapa,requestCoo
         if(progreso<Math.max(20,idaMin*0.30))continue;
         const nombre=nombreAlojamiento(cand);
         let score=(Number(cand._score)||0)+Math.max(0,32-Math.abs(idaMin-corte.target)*0.20)+Math.min(25,progreso*0.05);
-        if(ultimoLugar&&normalizarClaveMedia(nombre)===normalizarClaveMedia(ultimoLugar))score-=100;
+        if(ultimoLugar&&localidadAlojamiento(cand)&&normalizarClaveMedia(localidadAlojamiento(cand))===normalizarClaveMedia(ultimoLugar))score-=100;
         opciones.push({cand,ida,idaMin,restoMin,score});
       }catch(e){}
     }
@@ -1860,9 +1864,10 @@ const coordPernocta=[Number(cand.lon),Number(cand.lat)];
 let revPernocta=null;
 try{revPernocta=await reverseLugar(coordPernocta);}catch(e){}
 
-const localidadPernocta=String(
-  nombreLugarWorker(revPernocta,localidadAlojamiento(cand))||""
-).trim();
+const localidadPernocta=nombreLocalidadWorker(
+  revPernocta,
+  localidadAlojamiento(cand)
+);
 
 if(!localidadPernocta){
   const err=new Error("NO_FEASIBLE_OVERNIGHT: La pernocta elegida no tiene una localidad verificable.");
