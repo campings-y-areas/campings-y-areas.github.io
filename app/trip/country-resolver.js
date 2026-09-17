@@ -8,20 +8,43 @@ const COUNTRY_BY_CODE = Object.freeze({
   cy: "Chipre", xk: "Kosovo"
 });
 
-function canonicalCountry(point) {
-  const byCode = COUNTRY_BY_CODE[String(point?.country_code ?? "").toLowerCase()];
-  return byCode || String(point?.country ?? "").trim() || null;
+function addUnique(list, value) {
+  if (value && !list.includes(value)) list.push(value);
 }
 
-export async function resolveKnownTripCountries({ trip }) {
-  const countries = [];
-  for (const point of trip?.waypoints ?? []) {
-    const country = canonicalCountry(point);
-    if (country && !countries.includes(country)) countries.push(country);
+function countryFromCode(code) {
+  return COUNTRY_BY_CODE[String(code ?? "").toLowerCase()] ?? null;
+}
+
+function canonicalCountry(value) {
+  if (!value) return null;
+  if (typeof value === "string") return countryFromCode(value) ?? value.trim() || null;
+  return countryFromCode(value.country_code ?? value.countryCode ?? value.iso_code ?? value.isoCode)
+    ?? String(value.country ?? value.country_name ?? value.countryName ?? "").trim()
+    ?? null;
+}
+
+function collectRouteMetadata(node, countries, seen = new Set()) {
+  if (!node || typeof node !== "object" || seen.has(node)) return;
+  seen.add(node);
+  addUnique(countries, canonicalCountry(node));
+  if (Array.isArray(node)) {
+    node.forEach(child => collectRouteMetadata(child, countries, seen));
+    return;
   }
+  for (const [key, child] of Object.entries(node)) {
+    if (key === "geometry" || key === "coordinates") continue;
+    if (child && typeof child === "object") collectRouteMetadata(child, countries, seen);
+  }
+}
+
+export async function resolveKnownTripCountries({ trip, route }) {
+  const countries = [];
+  for (const point of trip?.waypoints ?? []) addUnique(countries, canonicalCountry(point));
+  collectRouteMetadata(route?.country_metadata ?? route?.legs ?? [], countries);
   return countries;
 }
 
 export function countryNameFromCode(code) {
-  return COUNTRY_BY_CODE[String(code ?? "").toLowerCase()] ?? null;
+  return countryFromCode(code);
 }
