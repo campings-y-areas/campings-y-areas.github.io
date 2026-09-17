@@ -1,5 +1,17 @@
 import { assertRoute, assertWaypoint } from "../core/contracts.js";
 
+function legDistance(leg) {
+  return Number(leg.distance_m ?? leg.distance ?? leg.properties?.distance ?? 0);
+}
+
+function legDuration(leg) {
+  return Number(leg.duration_s ?? leg.time ?? leg.properties?.time ?? 0);
+}
+
+function legGeometry(leg) {
+  return leg.geometry ?? leg.properties?.geometry ?? null;
+}
+
 export function buildDrivingStages(routeInput, waypointInput) {
   const route = assertRoute(routeInput);
   const waypoints = waypointInput.map(assertWaypoint);
@@ -13,9 +25,9 @@ export function buildDrivingStages(routeInput, waypointInput) {
     to_point_id: waypoints[index + 1].request_point_id ?? waypoints[index + 1].id,
     from: waypoints[index],
     to: waypoints[index + 1],
-    distance_m: Number(leg.distance ?? 0),
-    duration_s: Number(leg.time ?? 0),
-    geometry: leg.geometry ?? null,
+    distance_m: legDistance(leg),
+    duration_s: legDuration(leg),
+    geometry: legGeometry(leg),
     overnight_id: null,
     base_id: null
   }));
