@@ -44,11 +44,28 @@ async function routeAndLogistics({ routing, logistics, waypoints, vehicle, trip 
   return { route, logisticsResult };
 }
 
+function drivingLimitWarnings(stages) {
+  return stages
+    .filter(stage => stage.exceeds_max_driving && Number(stage.max_driving_seconds) > 0)
+    .map(stage => {
+      const excessSeconds = Math.max(0, Number(stage.duration_s) - Number(stage.max_driving_seconds));
+      return {
+        code: "max_driving_exceeded",
+        driving_stage_id: stage.driving_stage_id,
+        duration_s: Number(stage.duration_s),
+        requested_max_s: Number(stage.max_driving_seconds),
+        excess_s: excessSeconds,
+        message: "No se ha encontrado una división logística que permita respetar exactamente el máximo de conducción. La guía continúa con la mejor pernocta compatible disponible y debe informar del exceso real de este tramo."
+      };
+    });
+}
+
 // Orquestación cerrada:
 // puntos -> routing inicial -> logística -> pernoctas de corte -> routing definitivo -> logística definitiva -> enriquecimiento -> guía.
 export async function buildTrip({ routing, logistics, enrichment, guide }) {
   const current = getState();
   const requestedWaypoints = current.trip.waypoints.map(assertWaypoint);
+  let routedWaypoints = requestedWaypoints;
   let { route, logisticsResult } = await routeAndLogistics({
     routing,
     logistics,
@@ -58,7 +75,7 @@ export async function buildTrip({ routing, logistics, enrichment, guide }) {
   });
 
   if (logisticsResult?.requiresReroute) {
-    const routedWaypoints = insertSplitTargets(requestedWaypoints, logisticsResult.stages ?? [], logisticsResult.splitTargets ?? []);
+    routedWaypoints = insertSplitTargets(requestedWaypoints, logisticsResult.stages ?? [], logisticsResult.splitTargets ?? []);
     ({ route, logisticsResult } = await routeAndLogistics({
       routing,
       logistics,
@@ -66,19 +83,14 @@ export async function buildTrip({ routing, logistics, enrichment, guide }) {
       vehicle: current.vehicle,
       trip: current.trip
     }));
-    if (logisticsResult?.requiresReroute) {
-      throw new Error("La ruta recalculada todavía supera el máximo de conducción; se requiere otra selección logística antes de cerrar el viaje");
-    }
-    setState(state => ({
-      ...state,
-      trip: { ...state.trip, waypoints: routedWaypoints }
-    }));
+    setState(state => ({ ...state, trip: { ...state.trip, waypoints: routedWaypoints } }));
   }
 
   setState(state => ({ ...state, route }));
   const stages = Array.isArray(logisticsResult?.stages) ? logisticsResult.stages : [];
   const overnights = (logisticsResult?.overnights ?? []).filter(Boolean).map(assertOvernight);
   const catalogs = logisticsResult?.catalogs ?? {};
+  const warnings = drivingLimitWarnings(stages);
 
   setState(state => ({
     ...state,
@@ -87,7 +99,9 @@ export async function buildTrip({ routing, logistics, enrichment, guide }) {
       ...state.logistics,
       overnights,
       countries: logisticsResult?.countries ?? [],
-      catalogs
+      catalogs,
+      warnings,
+      maxDrivingLimitSatisfied: warnings.length === 0
     }
   }));
 
