@@ -30,6 +30,8 @@ export async function geocodeText(text, { kind = "point", index = 0 } = {}) {
     requested_lat: lat,
     requested_lon: lon,
     label: item.formatted || requestedText,
+    country: item.country || null,
+    country_code: item.country_code ? String(item.country_code).toLowerCase() : null,
     lat,
     lon
   };
