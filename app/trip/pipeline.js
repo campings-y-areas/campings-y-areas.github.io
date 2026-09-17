@@ -1,6 +1,8 @@
 import { getState, setState } from "../core/store.js";
 import { assertOvernight, assertRoute, assertWaypoint } from "../core/contracts.js";
 
+const MAX_LOGISTICS_REROUTES = 4;
+
 function overnightWaypoint(target) {
   const overnight = assertOvernight(target.overnight);
   const stageId = String(target.driving_stage_id ?? "stage");
@@ -19,28 +21,34 @@ function overnightWaypoint(target) {
   });
 }
 
-function insertSplitTargets(originalWaypoints, stages, splitTargets) {
-  if (!splitTargets.length) return originalWaypoints;
+function insertSplitTargets(routeWaypoints, stages, splitTargets) {
+  if (!splitTargets.length) return { waypoints: routeWaypoints, inserted: 0 };
   const targetsByStage = new Map(stages.map(stage => [stage.driving_stage_id, []]));
   for (const target of splitTargets) {
     if (targetsByStage.has(target.driving_stage_id)) targetsByStage.get(target.driving_stage_id).push(target);
   }
+
+  const existingOvernights = new Set(routeWaypoints
+    .filter(point => point?.logistics_overnight_id)
+    .map(point => String(point.logistics_overnight_id)));
   const result = [];
-  const inserted = new Set();
+  let inserted = 0;
+
   stages.forEach((stage, stageIndex) => {
-    if (stageIndex === 0) result.push(originalWaypoints[0]);
+    if (stageIndex === 0) result.push(routeWaypoints[0]);
     const targets = targetsByStage.get(stage.driving_stage_id) ?? [];
     for (const target of targets) {
       const point = overnightWaypoint(target);
-      const key = `${point.logistics_stage_id}:${point.logistics_overnight_id}`;
-      if (!inserted.has(key)) {
-        inserted.add(key);
+      const overnightKey = String(point.logistics_overnight_id);
+      if (!existingOvernights.has(overnightKey)) {
+        existingOvernights.add(overnightKey);
         result.push(point);
+        inserted += 1;
       }
     }
-    result.push(originalWaypoints[stageIndex + 1]);
+    result.push(routeWaypoints[stageIndex + 1]);
   });
-  return result;
+  return { waypoints: result.filter(Boolean), inserted };
 }
 
 async function routeAndLogistics({ routing, logistics, waypoints, vehicle, trip, includeCountryDetails = false, knownCountries = null }) {
@@ -49,23 +57,30 @@ async function routeAndLogistics({ routing, logistics, waypoints, vehicle, trip,
   return { route, logisticsResult };
 }
 
-function drivingLimitWarnings(stages, unresolvedSplitPoints = []) {
+function drivingLimitWarnings(stages, unresolvedSplitPoints = [], stopReason = null) {
   const unresolvedStages = new Set(unresolvedSplitPoints.map(item => item.driving_stage_id));
   return stages
     .filter(stage => stage.exceeds_max_driving && Number(stage.max_driving_seconds) > 0)
     .map(stage => {
       const excessSeconds = Math.max(0, Number(stage.duration_s) - Number(stage.max_driving_seconds));
       const noCompatibleStop = unresolvedStages.has(stage.driving_stage_id);
+      const rerouteLimitReached = stopReason === "reroute_limit_reached" && !noCompatibleStop;
       return {
-        code: noCompatibleStop ? "max_driving_exceeded_no_compatible_overnight" : "max_driving_exceeded",
+        code: noCompatibleStop
+          ? "max_driving_exceeded_no_compatible_overnight"
+          : rerouteLimitReached ? "max_driving_exceeded_reroute_limit" : "max_driving_exceeded",
         driving_stage_id: stage.driving_stage_id,
         duration_s: Number(stage.duration_s),
         requested_max_s: Number(stage.max_driving_seconds),
         excess_s: excessSeconds,
-        reason: noCompatibleStop ? "no_compatible_overnight_available" : "route_after_logistics_still_exceeds_limit",
+        reason: noCompatibleStop
+          ? "no_compatible_overnight_available"
+          : rerouteLimitReached ? "reroute_limit_reached" : "route_after_logistics_still_exceeds_limit",
         message: noCompatibleStop
           ? "No existe una pernocta compatible disponible en la zona necesaria para respetar el máximo de conducción. La guía continúa y debe informar del exceso real de este tramo."
-          : "La ruta logística recalculada todavía supera el máximo solicitado. La guía continúa y debe informar del exceso real de este tramo."
+          : rerouteLimitReached
+            ? "Tras varios recálculos logísticos acotados, la ruta todavía supera el máximo solicitado. La guía continúa y debe informar del exceso real sin atribuirlo falsamente a falta de pernoctas."
+            : "La ruta logística recalculada todavía supera el máximo solicitado. La guía continúa y debe informar del exceso real de este tramo."
       };
     });
 }
@@ -73,19 +88,28 @@ function drivingLimitWarnings(stages, unresolvedSplitPoints = []) {
 export async function buildTrip({ routing, logistics, enrichment, guide }) {
   const current = getState();
   const requestedWaypoints = current.trip.waypoints.map(assertWaypoint);
-  let routedWaypoints = requestedWaypoints;
+  let routedWaypoints = [...requestedWaypoints];
   let { route, logisticsResult } = await routeAndLogistics({
-    routing, logistics, waypoints: requestedWaypoints, vehicle: current.vehicle, trip: current.trip, includeCountryDetails: true
+    routing, logistics, waypoints: routedWaypoints, vehicle: current.vehicle, trip: current.trip, includeCountryDetails: true
   });
   const initialCountries = logisticsResult?.countries ?? [];
+  let rerouteCount = 0;
+  let stopReason = null;
 
-  if (logisticsResult?.requiresReroute) {
-    routedWaypoints = insertSplitTargets(requestedWaypoints, logisticsResult.stages ?? [], logisticsResult.splitTargets ?? []);
+  while (logisticsResult?.requiresReroute && rerouteCount < MAX_LOGISTICS_REROUTES) {
+    const insertion = insertSplitTargets(routedWaypoints, logisticsResult.stages ?? [], logisticsResult.splitTargets ?? []);
+    if (insertion.inserted === 0) {
+      stopReason = "no_new_compatible_overnight";
+      break;
+    }
+    routedWaypoints = insertion.waypoints;
+    rerouteCount += 1;
     ({ route, logisticsResult } = await routeAndLogistics({
       routing, logistics, waypoints: routedWaypoints, vehicle: current.vehicle, trip: current.trip,
       includeCountryDetails: false, knownCountries: initialCountries
     }));
   }
+  if (logisticsResult?.requiresReroute && rerouteCount >= MAX_LOGISTICS_REROUTES) stopReason = "reroute_limit_reached";
 
   setState(state => ({
     ...state,
@@ -96,7 +120,7 @@ export async function buildTrip({ routing, logistics, enrichment, guide }) {
   const overnights = (logisticsResult?.overnights ?? []).filter(Boolean).map(assertOvernight);
   const catalogs = logisticsResult?.catalogs ?? {};
   const unresolvedSplitPoints = logisticsResult?.unresolvedSplitPoints ?? [];
-  const warnings = drivingLimitWarnings(stages, unresolvedSplitPoints);
+  const warnings = drivingLimitWarnings(stages, unresolvedSplitPoints, stopReason);
 
   setState(state => ({
     ...state,
@@ -108,7 +132,9 @@ export async function buildTrip({ routing, logistics, enrichment, guide }) {
       catalogs,
       unresolvedSplitPoints,
       warnings,
-      maxDrivingLimitSatisfied: warnings.length === 0
+      maxDrivingLimitSatisfied: warnings.length === 0,
+      rerouteCount,
+      rerouteStopReason: stopReason
     }
   }));
 
