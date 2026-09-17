@@ -1,4 +1,5 @@
 import { assertRoute, assertWaypoint } from "../core/contracts.js";
+import { pointAtGeometryFraction, splitFractionsForDuration } from "./route-geometry.js";
 
 function legDistance(leg) {
   return Number(leg.distance_m ?? leg.distance ?? leg.properties?.distance ?? 0);
@@ -21,6 +22,15 @@ export function buildDrivingStages(routeInput, waypointInput, { maxDrivingHours 
   const maxDrivingSeconds = Number(maxDrivingHours) > 0 ? Number(maxDrivingHours) * 3600 : null;
   return route.legs.map((leg, index) => {
     const duration_s = legDuration(leg);
+    const geometry = legGeometry(leg);
+    const splitFractions = maxDrivingSeconds ? splitFractionsForDuration(duration_s, maxDrivingSeconds) : [];
+    const splitPoints = splitFractions.map((fraction, splitIndex) => ({
+      id: `stage-${index + 1}-split-${splitIndex + 1}`,
+      request_point_id: `stage-${index + 1}-split-${splitIndex + 1}`,
+      requested_text: null,
+      ...pointAtGeometryFraction(geometry, fraction),
+      synthetic_route_point: true
+    }));
     return {
       driving_stage_id: `stage-${index + 1}`,
       index,
@@ -30,9 +40,10 @@ export function buildDrivingStages(routeInput, waypointInput, { maxDrivingHours 
       to: waypoints[index + 1],
       distance_m: legDistance(leg),
       duration_s,
-      geometry: legGeometry(leg),
-      exceeds_max_driving: maxDrivingSeconds != null && duration_s > maxDrivingSeconds,
+      geometry,
+      exceeds_max_driving: splitPoints.length > 0,
       max_driving_seconds: maxDrivingSeconds,
+      split_points: splitPoints,
       overnight_id: null,
       base_id: null
     };
