@@ -1,6 +1,7 @@
 function collectExpected(stages) {
   return stages.map(stage => ({
     driving_stage_id: stage.driving_stage_id,
+    route_stage_key: stage.route_stage_key ?? null,
     from_point_id: stage.from_point_id,
     to_point_id: stage.to_point_id,
     overnight_id: stage.overnight_id ?? null,
@@ -19,6 +20,7 @@ function authoritativeWarnings(state) {
   return (state.logistics?.warnings ?? []).map(warning => ({
     code: warning.code,
     driving_stage_id: warning.driving_stage_id,
+    route_stage_key: warning.route_stage_key ?? null,
     duration_s: Number(warning.duration_s),
     requested_max_s: Number(warning.requested_max_s),
     excess_s: Number(warning.excess_s),
@@ -30,6 +32,7 @@ function authoritativeWarnings(state) {
 function sameWarningFacts(actual, expected) {
   return actual?.code === expected.code
     && actual?.driving_stage_id === expected.driving_stage_id
+    && (actual?.route_stage_key ?? null) === expected.route_stage_key
     && sameNumber(actual?.duration_s, expected.duration_s)
     && sameNumber(actual?.requested_max_s, expected.requested_max_s)
     && sameNumber(actual?.excess_s, expected.excess_s)
@@ -102,6 +105,7 @@ export function validateGuideAgainstTrip(guide, state) {
     const day = byStage.get(item.driving_stage_id);
     if (!day) throw new Error(`La guía omitió el tramo de conducción ${item.driving_stage_id}`);
 
+    if (day.route_stage_key != null && day.route_stage_key !== item.route_stage_key) throw new Error(`La guía intentó cambiar la identidad física de ${item.driving_stage_id}`);
     if (day.from_point_id != null && day.from_point_id !== item.from_point_id) throw new Error(`La guía intentó cambiar el origen de ${item.driving_stage_id}`);
     if (day.to_point_id != null && day.to_point_id !== item.to_point_id) throw new Error(`La guía intentó cambiar el destino de ${item.driving_stage_id}`);
     if (!sameNullableId(day.overnight_id, item.overnight_id)) throw new Error(`La guía intentó cambiar la pernocta de ${item.driving_stage_id}`);
@@ -112,6 +116,7 @@ export function validateGuideAgainstTrip(guide, state) {
       throw new Error(`La guía intentó cambiar la compatibilidad de pernocta de ${item.driving_stage_id}`);
     }
 
+    day.route_stage_key = item.route_stage_key;
     day.from_point_id = item.from_point_id;
     day.to_point_id = item.to_point_id;
     day.overnight_id = item.overnight_id;
