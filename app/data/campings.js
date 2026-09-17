@@ -5,22 +5,38 @@ function token(value) {
   return String(value ?? "").trim().toLowerCase().replace(/[^a-z0-9áéíóúüñ.-]+/gi, "-").replace(/^-|-$/g, "");
 }
 
-function stableCampingId(camping, country) {
+function campingPrefix(country) {
+  return `camping:${token(country)}:`;
+}
+
+function sourceCampingId(camping, country) {
+  const prefix = campingPrefix(country);
   const existing = camping.overnight_id ?? camping.id ?? camping.camping_id;
-  if (existing != null && String(existing).trim()) return `camping:${token(country)}:${String(existing).trim()}`;
+  if (existing == null || !String(existing).trim()) return null;
+  const value = String(existing).trim();
+  return value.startsWith(prefix) ? value.slice(prefix.length) : value;
+}
+
+function stableCampingId(camping, country) {
+  const prefix = campingPrefix(country);
+  const existing = camping.overnight_id ?? camping.id ?? camping.camping_id;
+  if (existing != null && String(existing).trim()) {
+    const value = String(existing).trim();
+    return value.startsWith(prefix) ? value : `${prefix}${value}`;
+  }
   const name = token(camping.nombre ?? camping.name ?? "camping") || "sin-nombre";
   const locality = token(camping.localidad ?? camping.ciudad ?? camping.city ?? camping.municipio);
   const lat = Number(camping.lat);
   const lon = Number(camping.lon);
   const coords = Number.isFinite(lat) && Number.isFinite(lon) ? `${lat.toFixed(5)}:${lon.toFixed(5)}` : "sin-coordenadas";
-  return `camping:${token(country)}:${locality || "sin-localidad"}:${name}:${coords}`;
+  return `${prefix}${locality || "sin-localidad"}:${name}:${coords}`;
 }
 
 function normalizeCamping(camping, country) {
   const id = stableCampingId(camping, country);
   return {
     ...camping,
-    source_id: camping.source_id ?? camping.overnight_id ?? camping.id ?? camping.camping_id ?? null,
+    source_id: camping.source_id ?? sourceCampingId(camping, country),
     id,
     overnight_id: id,
     tipo: camping.tipo || "camping",
