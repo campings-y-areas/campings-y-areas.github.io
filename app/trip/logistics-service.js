@@ -45,14 +45,17 @@ export function createLogisticsService({ loadCatalogs, resolveCountries }) {
         max_driving_seconds: stage.max_driving_seconds
       }))
     );
-    const overnights = uniqueOvernights([
-      ...stagesWithOvernights.map(stage => stage.overnight).filter(Boolean),
-      ...splitTargets.map(target => target.overnight).filter(Boolean)
-    ]);
+    const overnights = uniqueOvernights(
+      stagesWithOvernights.map(stage => stage.overnight).filter(Boolean)
+    );
+    const proposedOvernights = uniqueOvernights(
+      splitTargets.map(target => target.overnight).filter(Boolean)
+    );
 
     return {
       stages: stagesWithOvernights,
       overnights,
+      proposedOvernights,
       splitTargets,
       unresolvedSplitPoints,
       requiresReroute: splitTargets.length > 0,
