@@ -10,8 +10,8 @@ function distanceKm(a, b) {
   return earth * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1 - x));
 }
 
-export function selectStageOvernights({ stages, candidates, vehicle, preferences }) {
-  const available = candidates.filter(item => isOvernightCompatible(item, { vehicle, preferences }));
+export function selectStageOvernights({ stages, candidates, vehicle, preferences, travellers }) {
+  const available = candidates.filter(item => isOvernightCompatible(item, { vehicle, preferences, travellers }));
   return stages.map((stage, index) => {
     if (index === stages.length - 1) return { ...stage, overnight_id: null, overnight: null };
     const ranked = available
