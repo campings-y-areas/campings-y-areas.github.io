@@ -1,0 +1,14 @@
+WORKER — controles obligatorios antes de despliegue
+
+[ ] OPENAI_SPEND_ENABLED falla cerrado.
+[ ] Pipeline, multimedia y test tienen permisos separados.
+[ ] Endpoints con gasto requieren autorización real, no solo CORS.
+[ ] research-destination no obliga a que una parada logística sea un destino turístico.
+[ ] La pernocta seleccionada por la ruta se reutiliza y no se duplica como requisito de investigación.
+[ ] Un rechazo de investigación no impide diagnosticar/procesar el resto de destinos.
+[ ] Fases D1 ya pagadas se reutilizan sin refresh automático.
+[ ] Metadata de search_context_size coincide con la llamada real.
+[ ] /cost-status no expone información interna en producción sin autorización.
+[ ] /routes escritura/lectura queda protegida para producción.
+[ ] Planner/Writer rechazan entidades no verificadas sin provocar bucles de gasto.
+[ ] Multimedia falla de forma degradada y nunca bloquea la guía textual válida.

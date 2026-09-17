@@ -827,97 +827,105 @@ document.addEventListener(
 
 
     // ======================================
-    // CARGAR LAS TRES BASES
+    // CARGAR LAS TRES BASES DE FORMA INDEPENDIENTE
     // ======================================
 
-    try {
+    const fuentes = [
+      ["playasCaninas", "playas-caninas-espana-v2.json?v=2"],
+      ["pozas", "pozas-piscinas-naturales-espana-v1.json?v=2"],
+      ["zonasMarinas", "zonas-buceo-snorkel-espana-v2.json?v=2"]
+    ];
 
-      const [
-        playasCaninas,
-        pozas,
-        zonasMarinas
-      ] = await Promise.all([
+    const cargas = await Promise.allSettled(
+      fuentes.map(([, archivo]) => cargarJSON(archivo))
+    );
 
-        cargarJSON(
-          "playas-caninas-espana-v2.json?v=2"
-        ),
+    const datos = {};
+    const fallos = [];
 
-        cargarJSON(
-          "pozas-piscinas-naturales-espana-v1.json?v=2"
-        ),
+    cargas.forEach((resultado, indice) => {
+      const [nombre, archivo] = fuentes[indice];
 
-        cargarJSON(
-          "zonas-buceo-snorkel-espana-v2.json?v=2"
-        )
+      if (resultado.status === "fulfilled") {
+        datos[nombre] = resultado.value;
+      }
+      else {
+        datos[nombre] = [];
+        fallos.push(archivo);
+        console.error(
+          `ERROR CARGANDO LUGARES ${archivo}:`,
+          resultado.reason
+        );
+      }
+    });
 
-      ]);
-
-
-      lugares = [
-        ...playasCaninas,
-        ...pozas,
-        ...zonasMarinas
-      ];
-
-
-      console.log(
-        "🐕 Playas caninas:",
-        playasCaninas.length
-      );
-
-      console.log(
-        "💧 Pozas y piscinas naturales:",
-        pozas.length
-      );
-
-      console.log(
-        "🤿 Buceo:",
-        zonasMarinas.filter(
-          lugar =>
-            lugar.buceo === true
-        ).length
-      );
-
-      console.log(
-        "🥽 Snorkel y apnea:",
-        zonasMarinas.filter(
-          lugar =>
-            lugar.snorkel === true ||
-            lugar.apnea === true
-        ).length
-      );
-
-      console.log(
-        "📍 Total lugares cargados:",
-        lugares.length
-      );
-
-
-      cargarComunidades();
-      buscarLugares();
-
-    }
-
-    catch (error) {
-
-      console.error(
-        "ERROR CARGANDO LUGARES:",
-        error
-      );
-
+    if (fallos.length === fuentes.length) {
       const resultados =
         document.getElementById(
           "resultadosLugares"
         );
 
       if (resultados) {
-
         resultados.innerHTML =
           '<p class="sin-resultados">' +
           '⚠️ No se pudieron cargar los datos de Lugares.' +
           '</p>';
       }
+
+      return;
     }
+
+    const playasCaninas = datos.playasCaninas;
+    const pozas = datos.pozas;
+    const zonasMarinas = datos.zonasMarinas;
+
+    lugares = [
+      ...playasCaninas,
+      ...pozas,
+      ...zonasMarinas
+    ];
+
+    console.log(
+      "🐕 Playas caninas:",
+      playasCaninas.length
+    );
+
+    console.log(
+      "💧 Pozas y piscinas naturales:",
+      pozas.length
+    );
+
+    console.log(
+      "🤿 Buceo:",
+      zonasMarinas.filter(
+        lugar =>
+          lugar.buceo === true
+      ).length
+    );
+
+    console.log(
+      "🥽 Snorkel y apnea:",
+      zonasMarinas.filter(
+        lugar =>
+          lugar.snorkel === true ||
+          lugar.apnea === true
+      ).length
+    );
+
+    console.log(
+      "📍 Total lugares cargados:",
+      lugares.length
+    );
+
+    if (fallos.length > 0) {
+      console.warn(
+        "⚠️ Lugares cargados parcialmente. Bases no disponibles:",
+        fallos
+      );
+    }
+
+    cargarComunidades();
+    buscarLugares();
 
   }
 );

@@ -1099,154 +1099,144 @@ document.addEventListener(
 
 
     // ======================================
-    // CARGAR LAS 6 BASES
+    // CARGAR LAS 6 BASES DE FORMA INDEPENDIENTE
     // ======================================
 
-    try {
+    const fuentes = [
+      ["restaurantes", "restaurantes-espana-v2.json?v=3"],
+      ["duchas", "duchas-europa-v1.json?v=2"],
+      ["lavaderos", "lavaderos-autocaravanas-v1.json?v=2"],
+      ["lavanderias", "lavanderias-espana-v1.json?v=2"],
+      ["vaciadoAguas", "vaciado-aguas-espana-v1.json?v=2"],
+      ["guarderias", "guarderias-vehiculos-camping-espana-v1.json?v=3"]
+    ];
 
-      const [
+    const cargas = await Promise.allSettled(
+      fuentes.map(([, archivo]) => cargarJSON(archivo))
+    );
 
-        restaurantes,
-        duchas,
-        lavaderos,
-        lavanderias,
-        vaciadoAguas,
-        guarderiasOriginales
+    const datos = {};
+    const fallos = [];
 
-      ] = await Promise.all([
+    cargas.forEach((resultado, indice) => {
+      const [nombre, archivo] = fuentes[indice];
 
-
-        cargarJSON(
-          "restaurantes-espana-v2.json?v=3"
-        ),
-
-
-        cargarJSON(
-          "duchas-europa-v1.json?v=2"
-        ),
-        cargarJSON(
-          "lavaderos-autocaravanas-v1.json?v=2"
-        ),
-
-
-        cargarJSON(
-          "lavanderias-espana-v1.json?v=2"
-        ),
-
-
-        cargarJSON(
-          "vaciado-aguas-espana-v1.json?v=2"
-        ),
-
-
-        cargarJSON(
-          "guarderias-vehiculos-camping-espana-v1.json?v=3"
-        )
-
-      ]);
-
-
-      // ====================================
-      // NORMALIZAR GUARDERÍAS
-      //
-      // LOS 43 PUNTOS DE ESTE MAPA SON
-      // PARKINGS/GUARDERÍAS PARA VEHÍCULOS
-      // DE CAMPING.
-      // ====================================
-
-      const guarderias =
-        guarderiasOriginales.map(
-          servicio => ({
-
-            ...servicio,
-
-            tipo:
-              "guarderia_vehiculos_camping",
-
-            guarderia_vehiculos_camping:
-              true
-
-          })
+      if (resultado.status === "fulfilled") {
+        datos[nombre] = resultado.value;
+      }
+      else {
+        datos[nombre] = [];
+        fallos.push(archivo);
+        console.error(
+          `ERROR CARGANDO SERVICIO ${archivo}:`,
+          resultado.reason
         );
+      }
+    });
 
-
-      // ====================================
-      // UNIR TODAS LAS BASES
-      // ====================================
-
-      servicios = [
-
-        ...restaurantes,
-        ...duchas,
-...lavaderos,
-        ...lavanderias,
-        ...vaciadoAguas,
-        ...guarderias
-
-      ];
-
-
-      console.log(
-        "🍽️ Restaurantes:",
-        restaurantes.length
-      );
-
-      console.log(
-        "🚿 Duchas:",
-        duchas.length
-      );
-console.log(
-        "🧽 Lavaderos:",
-        lavaderos.length
-      );
-
-      console.log(
-        "🧺 Lavanderías:",
-        lavanderias.length
-      );
-
-      console.log(
-        "🚰 Vaciado de aguas:",
-        vaciadoAguas.length
-      );
-
-      console.log(
-        "🏠 Guarderías de vehículos:",
-        guarderias.length
-      );
-
-      console.log(
-        "🔧 Servicios totales:",
-        servicios.length
-      );
-
-
-      cargarComunidades();
-
-      buscarServicios();
-
-    }
-
-    catch (error) {
-
-      console.error(
-        "ERROR CARGANDO SERVICIOS:",
-        error
-      );
-
+    if (fallos.length === fuentes.length) {
       const resultados =
         document.getElementById(
           "resultadosServicios"
         );
 
       if (resultados) {
-
         resultados.innerHTML =
           '<p class="sin-resultados">' +
           '⚠️ No se pudieron cargar los servicios.' +
           '</p>';
       }
+
+      return;
     }
+
+    const restaurantes = datos.restaurantes;
+    const duchas = datos.duchas;
+    const lavaderos = datos.lavaderos;
+    const lavanderias = datos.lavanderias;
+    const vaciadoAguas = datos.vaciadoAguas;
+
+    // ====================================
+    // NORMALIZAR GUARDERÍAS
+    // ====================================
+
+    const guarderias =
+      datos.guarderias.map(
+        servicio => ({
+
+          ...servicio,
+
+          tipo:
+            "guarderia_vehiculos_camping",
+
+          guarderia_vehiculos_camping:
+            true
+
+        })
+      );
+
+
+    // ====================================
+    // UNIR TODAS LAS BASES DISPONIBLES
+    // ====================================
+
+    servicios = [
+
+      ...restaurantes,
+      ...duchas,
+      ...lavaderos,
+      ...lavanderias,
+      ...vaciadoAguas,
+      ...guarderias
+
+    ];
+
+
+    console.log(
+      "🍽️ Restaurantes:",
+      restaurantes.length
+    );
+
+    console.log(
+      "🚿 Duchas:",
+      duchas.length
+    );
+
+    console.log(
+      "🧽 Lavaderos:",
+      lavaderos.length
+    );
+
+    console.log(
+      "🧺 Lavanderías:",
+      lavanderias.length
+    );
+
+    console.log(
+      "🚰 Vaciado de aguas:",
+      vaciadoAguas.length
+    );
+
+    console.log(
+      "🏠 Guarderías de vehículos:",
+      guarderias.length
+    );
+
+    console.log(
+      "🔧 Servicios totales:",
+      servicios.length
+    );
+
+    if (fallos.length > 0) {
+      console.warn(
+        "⚠️ Servicios cargados parcialmente. Bases no disponibles:",
+        fallos
+      );
+    }
+
+    cargarComunidades();
+
+    buscarServicios();
 
   }
 );
