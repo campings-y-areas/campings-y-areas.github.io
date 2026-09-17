@@ -27,7 +27,9 @@ const initialState = Object.freeze({
     catalogs: {},
     unresolvedSplitPoints: [],
     warnings: [],
-    maxDrivingLimitSatisfied: true
+    maxDrivingLimitSatisfied: true,
+    rerouteCount: 0,
+    rerouteStopReason: null
   },
   enrichment: {
     places: [],
