@@ -40,6 +40,7 @@ export function createLogisticsService({ loadCatalogs, resolveCountries }) {
     const unresolvedSplitPoints = stagesWithOvernights.flatMap(stage =>
       (stage.unresolved_split_points ?? []).map(point => ({
         driving_stage_id: stage.driving_stage_id,
+        route_stage_key: stage.route_stage_key ?? null,
         route_point: point,
         duration_s: stage.duration_s,
         max_driving_seconds: stage.max_driving_seconds
