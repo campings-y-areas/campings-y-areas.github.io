@@ -35,7 +35,21 @@ function workerPoint(point, index, total) {
   };
 }
 
+function assertWorkerStageIdentity(stage) {
+  const fromId = stage?.from_point_id;
+  const toId = stage?.to_point_id;
+  const routeKey = stage?.route_stage_key;
+  if (fromId == null || !String(fromId).trim() || toId == null || !String(toId).trim()) {
+    throw new Error(`La etapa ${stage?.driving_stage_id ?? "sin-id"} no tiene extremos autoritativos para el Worker`);
+  }
+  const expected = `${fromId}=>${toId}`;
+  if (routeKey == null || String(routeKey) !== expected) {
+    throw new Error(`La etapa ${stage?.driving_stage_id ?? "sin-id"} no tiene una identidad física válida para el Worker`);
+  }
+}
+
 function workerStage(stage, index, total, requestedIds) {
+  assertWorkerStageIdentity(stage);
   const final = index === total - 1;
   const toId = String(stage.to_point_id ?? "");
   const requestedWaypoint = requestedIds.has(toId);
@@ -43,7 +57,7 @@ function workerStage(stage, index, total, requestedIds) {
   const baseId = stage.base_id ?? overnightId ?? null;
   return {
     driving_stage_id: stage.driving_stage_id,
-    route_stage_key: stage.route_stage_key ?? null,
+    route_stage_key: stage.route_stage_key,
     from_point_id: stage.from_point_id,
     to_point_id: stage.to_point_id,
     base_id: baseId,
