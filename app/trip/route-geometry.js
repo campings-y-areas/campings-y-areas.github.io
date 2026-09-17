@@ -46,10 +46,45 @@ export function pointAtGeometryFraction(geometry, fraction) {
   return { lat: Number(coords.at(-1)[1]), lon: Number(coords.at(-1)[0]), route_fraction: 1 };
 }
 
-export function splitFractionsForDuration(durationSeconds, maxDrivingSeconds) {
+function stepDuration(step) {
+  return Number(step?.time ?? step?.duration_s ?? step?.properties?.time ?? 0);
+}
+
+function stepGeometry(step) {
+  return step?.geometry ?? step?.properties?.geometry ?? null;
+}
+
+export function splitPointsForDuration({ geometry, steps = [], durationSeconds, maxDrivingSeconds }) {
   const duration = Number(durationSeconds);
   const max = Number(maxDrivingSeconds);
   if (!(duration > 0) || !(max > 0) || duration <= max) return [];
-  const parts = Math.ceil(duration / max);
-  return Array.from({ length: parts - 1 }, (_, index) => (index + 1) / parts);
+  const targets = [];
+  for (let seconds = max; seconds < duration; seconds += max) targets.push(seconds);
+
+  const timedSteps = (Array.isArray(steps) ? steps : [])
+    .map(step => ({ step, duration: stepDuration(step), geometry: stepGeometry(step) }))
+    .filter(item => item.duration > 0 && item.geometry);
+  const timedTotal = timedSteps.reduce((sum, item) => sum + item.duration, 0);
+
+  if (timedSteps.length && timedTotal > 0) {
+    return targets.map(targetSeconds => {
+      const scaledTarget = Math.min(timedTotal, targetSeconds * timedTotal / duration);
+      let elapsed = 0;
+      for (const item of timedSteps) {
+        const next = elapsed + item.duration;
+        if (scaledTarget <= next) {
+          const fraction = item.duration > 0 ? (scaledTarget - elapsed) / item.duration : 0;
+          return { ...pointAtGeometryFraction(item.geometry, fraction), driving_seconds: targetSeconds, split_basis: "step_time" };
+        }
+        elapsed = next;
+      }
+      return { ...pointAtGeometryFraction(timedSteps.at(-1).geometry, 1), driving_seconds: targetSeconds, split_basis: "step_time" };
+    });
+  }
+
+  return targets.map(targetSeconds => ({
+    ...pointAtGeometryFraction(geometry, targetSeconds / duration),
+    driving_seconds: targetSeconds,
+    split_basis: "geometry_fallback"
+  }));
 }
