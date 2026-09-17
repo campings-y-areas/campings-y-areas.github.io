@@ -2,7 +2,7 @@ function bool(value) {
   return value === true || value === 1 || String(value).toLowerCase() === "si" || String(value).toLowerCase() === "sí";
 }
 
-export function isOvernightCompatible(place, { vehicle, preferences } = {}) {
+export function isOvernightCompatible(place, { vehicle, preferences, travellers } = {}) {
   if (!place) return false;
   const allowed = new Set(preferences?.overnightTypes ?? ["camping", "area"]);
   const type = String(place.tipo ?? place.type ?? "").toLowerCase();
@@ -15,6 +15,10 @@ export function isOvernightCompatible(place, { vehicle, preferences } = {}) {
     const explicit = place.admite_caravanas ?? place.caravanas ?? place.admiteCaravanas;
     if (explicit !== undefined && !bool(explicit)) return false;
   }
-  if (preferences?.pet && place.mascotas === false) return false;
+
+  if (travellers?.pet) {
+    const pets = place.mascotas ?? place.admite_mascotas ?? place.admiteMascotas;
+    if (pets !== undefined && !bool(pets)) return false;
+  }
   return true;
 }
