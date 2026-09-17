@@ -5,6 +5,7 @@ import { buildTrip } from "./pipeline.js";
 import { routingService, logisticsService, enrichmentService, disabledGuideService } from "./runtime-services.js";
 import { activateDemo, deactivateDemo } from "../demo/demo-mode.js";
 import { createGuideService } from "../services/guide-service.js";
+import { createWorkerGuideGenerator } from "../services/worker-guide.js";
 
 function pipelineGuideAdapter(service, { demo = false, demoGuide = null } = {}) {
   return async ({ trip, route, logistics, enrichment, vehicle }) => service.generate({
@@ -15,6 +16,11 @@ function pipelineGuideAdapter(service, { demo = false, demoGuide = null } = {}) 
     vehicle,
     demoGuide
   }, { demo });
+}
+
+export function createProductionGuideAdapter({ request, path } = {}) {
+  const remoteGenerate = createWorkerGuideGenerator({ request, path });
+  return pipelineGuideAdapter(createGuideService({ remoteGenerate }));
 }
 
 export async function prepareTripFromCurrentForm({ guide = disabledGuideService } = {}) {
