@@ -76,6 +76,39 @@ for(const f of files.filter(f=>f.endsWith('.html'))){
   }
 }
 
+// Navegación pública: las secciones principales deben exponer Rutas de forma coherente.
+const navPages=['index.html','campings.html','areas.html','acampadas.html','lugares.html','talleres.html','servicios.html','normativas.html','rutas.html'];
+for(const page of navPages){
+  const f=path.join(root,page);
+  if(!fs.existsSync(f)){errors.push(`Página principal ausente: ${page}`);continue;}
+  const text=fs.readFileSync(f,'utf8');
+  if(!/href=["']rutas\.html["']/.test(text))errors.push(`Navegación incompleta: ${page} no enlaza Rutas.`);
+}
+
+// Módulos con varias fuentes independientes: un fallo parcial no debe derribar toda la sección.
+for(const name of ['lugares.js','servicios.js']){
+  const f=path.join(root,name);
+  if(fs.existsSync(f)){
+    const s=fs.readFileSync(f,'utf8');
+    if(!s.includes('Promise.allSettled'))errors.push(`Resiliencia ausente: ${name} debe tolerar fallos parciales con Promise.allSettled.`);
+  }
+}
+
+// Campings y Áreas siguen pendientes de migrar desde carga masiva a carga por país/cache.
+for(const name of ['campings.js','areas.js']){
+  const f=path.join(root,name);
+  if(fs.existsSync(f)){
+    const s=fs.readFileSync(f,'utf8');
+    if(s.includes('await Promise.all(['))warnings.push(`${name}: pendiente sustituir carga masiva all-or-nothing por carga por país/cache y carga global tolerante a fallos.`);
+  }
+}
+
+const normativas=path.join(root,'normativas.js');
+if(fs.existsSync(normativas)){
+  const s=fs.readFileSync(normativas,'utf8');
+  if(/🇪🇸\s*\$\{normativa\.pais\}/.test(s))errors.push('Regresión Normativas: bandera de España hardcodeada para todos los países.');
+}
+
 const rutas=path.join(root,'rutas.js');
 if(fs.existsSync(rutas)){
   const s=fs.readFileSync(rutas,'utf8');
