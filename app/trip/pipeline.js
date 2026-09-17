@@ -93,6 +93,13 @@ function drivingLimitWarnings(stages, unresolvedSplitPoints = [], stopReason = n
     });
 }
 
+function assertNoUncommittedOvernights(logisticsResult, stopReason) {
+  const proposed = Array.isArray(logisticsResult?.proposedOvernights) ? logisticsResult.proposedOvernights : [];
+  if (!proposed.length) return;
+  const ids = proposed.map(item => item?.overnight_id).filter(Boolean).join(", ");
+  throw new Error(`La logística terminó con pernoctas propuestas sin confirmar en la ruta${ids ? `: ${ids}` : ""}. Motivo: ${stopReason ?? "desconocido"}`);
+}
+
 export async function buildTrip({ routing, logistics, enrichment, guide }) {
   const current = getState();
   const requestedWaypoints = current.trip.waypoints.map(assertWaypoint);
@@ -119,6 +126,7 @@ export async function buildTrip({ routing, logistics, enrichment, guide }) {
     }));
   }
   if (logisticsResult?.requiresReroute && rerouteCount >= MAX_LOGISTICS_REROUTES) stopReason = "reroute_limit_reached";
+  assertNoUncommittedOvernights(logisticsResult, stopReason);
 
   setState(state => ({
     ...state,
