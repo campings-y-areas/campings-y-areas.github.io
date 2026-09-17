@@ -23,17 +23,25 @@ export async function buildTrip({ routing, logistics, enrichment, guide }) {
   const overnights = (logisticsResult?.overnights ?? [])
     .filter(Boolean)
     .map(assertOvernight);
+  const catalogs = logisticsResult?.catalogs ?? {};
 
   setState(state => ({
     ...state,
     trip: { ...state.trip, stages },
-    logistics: { ...state.logistics, overnights }
+    logistics: {
+      ...state.logistics,
+      overnights,
+      countries: logisticsResult?.countries ?? [],
+      catalogs
+    }
   }));
 
   const enriched = await enrichment({
     trip: getState().trip,
     route,
     overnights,
+    catalogs,
+    countries: logisticsResult?.countries ?? [],
     vehicle: getState().vehicle
   });
 
@@ -41,12 +49,12 @@ export async function buildTrip({ routing, logistics, enrichment, guide }) {
     setState(state => ({
       ...state,
       trip: { ...state.trip, stages: enriched.stages },
-      enrichment: { ...state.enrichment, ...(enriched.catalogs ?? {}) }
+      enrichment: { ...state.enrichment, ...(enriched.catalogs ?? catalogs) }
     }));
   } else {
     setState(state => ({
       ...state,
-      enrichment: { ...state.enrichment, ...(enriched ?? {}) }
+      enrichment: { ...state.enrichment, ...catalogs, ...(enriched ?? {}) }
     }));
   }
 
