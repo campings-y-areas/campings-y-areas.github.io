@@ -1,12 +1,10 @@
 import { getState, setState } from "../core/store.js";
 import { commitCurrentTripForm } from "./form-adapter.js";
 import { resolveTripPoints } from "./geocoding.js";
-import { calculateRoute } from "../services/routing.js";
-import { geoapifyRoute } from "../services/geoapify-client.js";
+import { buildTrip } from "./pipeline.js";
+import { routingService, logisticsService, enrichmentService, disabledGuideService } from "./runtime-services.js";
 
-const routingProvider = Object.freeze({ route: geoapifyRoute });
-
-export async function prepareTripFromCurrentForm() {
+export async function prepareTripFromCurrentForm({ guide = disabledGuideService } = {}) {
   commitCurrentTripForm();
   const state = getState();
   const points = await resolveTripPoints({
@@ -20,12 +18,10 @@ export async function prepareTripFromCurrentForm() {
     trip: { ...current.trip, waypoints: points }
   }));
 
-  const route = await calculateRoute({
-    waypoints: points,
-    vehicle: getState().vehicle,
-    provider: routingProvider
+  return buildTrip({
+    routing: routingService,
+    logistics: logisticsService,
+    enrichment: enrichmentService,
+    guide
   });
-
-  setState(current => ({ ...current, route }));
-  return getState();
 }
