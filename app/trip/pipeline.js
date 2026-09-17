@@ -65,22 +65,29 @@ function drivingLimitWarnings(stages, unresolvedSplitPoints = [], stopReason = n
       const excessSeconds = Math.max(0, Number(stage.duration_s) - Number(stage.max_driving_seconds));
       const noCompatibleStop = unresolvedStages.has(stage.driving_stage_id);
       const rerouteLimitReached = stopReason === "reroute_limit_reached" && !noCompatibleStop;
+      const convergedWithoutNewStop = stopReason === "no_new_compatible_overnight" && !noCompatibleStop;
       return {
         code: noCompatibleStop
           ? "max_driving_exceeded_no_compatible_overnight"
-          : rerouteLimitReached ? "max_driving_exceeded_reroute_limit" : "max_driving_exceeded",
+          : rerouteLimitReached
+            ? "max_driving_exceeded_reroute_limit"
+            : convergedWithoutNewStop ? "max_driving_exceeded_logistics_converged" : "max_driving_exceeded",
         driving_stage_id: stage.driving_stage_id,
         duration_s: Number(stage.duration_s),
         requested_max_s: Number(stage.max_driving_seconds),
         excess_s: excessSeconds,
         reason: noCompatibleStop
           ? "no_compatible_overnight_available"
-          : rerouteLimitReached ? "reroute_limit_reached" : "route_after_logistics_still_exceeds_limit",
+          : rerouteLimitReached
+            ? "reroute_limit_reached"
+            : convergedWithoutNewStop ? "logistics_converged_without_new_stop" : "route_after_logistics_still_exceeds_limit",
         message: noCompatibleStop
           ? "No existe una pernocta compatible disponible en la zona necesaria para respetar el máximo de conducción. La guía continúa y debe informar del exceso real de este tramo."
           : rerouteLimitReached
             ? "Tras varios recálculos logísticos acotados, la ruta todavía supera el máximo solicitado. La guía continúa y debe informar del exceso real sin atribuirlo falsamente a falta de pernoctas."
-            : "La ruta logística recalculada todavía supera el máximo solicitado. La guía continúa y debe informar del exceso real de este tramo."
+            : convergedWithoutNewStop
+              ? "La logística ha convergido sin poder insertar una pernocta compatible distinta adicional. La guía continúa y debe informar del exceso real sin afirmar que no existen establecimientos compatibles."
+              : "La ruta logística recalculada todavía supera el máximo solicitado. La guía continúa y debe informar del exceso real de este tramo."
       };
     });
 }
@@ -93,6 +100,7 @@ export async function buildTrip({ routing, logistics, enrichment, guide }) {
     routing, logistics, waypoints: routedWaypoints, vehicle: current.vehicle, trip: current.trip, includeCountryDetails: true
   });
   const initialCountries = logisticsResult?.countries ?? [];
+  const initialCountryMetadata = route?.country_metadata ?? null;
   let rerouteCount = 0;
   let stopReason = null;
 
@@ -113,7 +121,11 @@ export async function buildTrip({ routing, logistics, enrichment, guide }) {
 
   setState(state => ({
     ...state,
-    route: { ...route, waypoints: routedWaypoints },
+    route: {
+      ...route,
+      country_metadata: route?.country_metadata ?? initialCountryMetadata,
+      waypoints: routedWaypoints
+    },
     trip: { ...state.trip, waypoints: requestedWaypoints }
   }));
   const stages = Array.isArray(logisticsResult?.stages) ? logisticsResult.stages : [];
