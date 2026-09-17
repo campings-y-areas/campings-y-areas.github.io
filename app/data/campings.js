@@ -1,0 +1,37 @@
+import { CAMPING_SOURCES } from "../config/camping-sources.js";
+import { registerDataset, loadDataset, loadAvailable } from "../services/data-registry.js";
+
+function normalizeCamping(camping, country) {
+  return {
+    ...camping,
+    tipo: camping.tipo || "camping",
+    pais: camping.pais || country,
+    region: camping.region || camping.comunidad_autonoma || null,
+    lat: camping.lat == null ? null : Number(camping.lat),
+    lon: camping.lon == null ? null : Number(camping.lon)
+  };
+}
+
+const keys = [];
+for (const [country, url] of Object.entries(CAMPING_SOURCES)) {
+  const key = `campings:${country}`;
+  keys.push(key);
+  registerDataset(key, { url, normalize: item => normalizeCamping(item, country), domain: "campings", country });
+}
+
+export function campingCountries() {
+  return Object.keys(CAMPING_SOURCES);
+}
+
+export function loadCampingsByCountry(country, options) {
+  if (!CAMPING_SOURCES[country]) throw new Error(`País de campings no registrado: ${country}`);
+  return loadDataset(`campings:${country}`, options);
+}
+
+export async function loadAllCampingsAvailable() {
+  const result = await loadAvailable(keys);
+  return {
+    campings: [...result.data.values()].flat(),
+    errors: result.errors
+  };
+}
