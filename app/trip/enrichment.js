@@ -1,15 +1,25 @@
-function distanceSq(a, b) {
-  const lat = Number(a.lat) - Number(b.lat);
-  const lon = Number(a.lon) - Number(b.lon);
-  return lat * lat + lon * lon;
+function radians(value) { return value * Math.PI / 180; }
+
+function distanceKm(a, b) {
+  const latA = Number(a?.lat);
+  const lonA = Number(a?.lon ?? a?.lng);
+  const latB = Number(b?.lat);
+  const lonB = Number(b?.lon ?? b?.lng);
+  if (![latA, lonA, latB, lonB].every(Number.isFinite)) return Infinity;
+  const earth = 6371;
+  const dLat = radians(latB - latA);
+  const dLon = radians(lonB - lonA);
+  const x = Math.sin(dLat / 2) ** 2 + Math.cos(radians(latA)) * Math.cos(radians(latB)) * Math.sin(dLon / 2) ** 2;
+  return earth * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1 - x));
 }
 
 function nearest(items, point, limit) {
   return items
-    .filter(item => Number.isFinite(Number(item.lat)) && Number.isFinite(Number(item.lon ?? item.lng)))
-    .map(item => ({ ...item, lon: Number(item.lon ?? item.lng) }))
-    .sort((a, b) => distanceSq(a, point) - distanceSq(b, point))
-    .slice(0, limit);
+    .map(item => ({ item: { ...item, lon: Number(item.lon ?? item.lng) }, km: distanceKm(item, point) }))
+    .filter(entry => Number.isFinite(entry.km))
+    .sort((a, b) => a.km - b.km)
+    .slice(0, limit)
+    .map(entry => ({ ...entry.item, distance_km: entry.km }));
 }
 
 export function enrichStages({ stages, catalogs = {}, limits = {} }) {
