@@ -29,31 +29,37 @@ function authoritativeOvernightForPoint(point, available) {
   return { overnight: assertOvernight(entry.item), distance_km: 0, compatibility: entry.assessment };
 }
 
+function targetForStage(stage, values) {
+  return {
+    driving_stage_id: stage.driving_stage_id,
+    route_stage_key: stage.route_stage_key ?? null,
+    ...values
+  };
+}
+
 function buildSplitTargets(stage, available, excludedOvernightIds = new Set()) {
   const used = new Set(excludedOvernightIds);
   const splitTargets = (stage.split_points ?? []).map(point => {
     const selected = nearestCompatible(point, available, used);
     if (!selected) {
-      return {
-        driving_stage_id: stage.driving_stage_id,
+      return targetForStage(stage, {
         route_point: point,
         overnight_id: null,
         overnight: null,
         overnight_distance_km: null,
         overnight_compatibility: null,
         unavailable: true
-      };
+      });
     }
     used.add(String(selected.overnight.overnight_id));
-    return {
-      driving_stage_id: stage.driving_stage_id,
+    return targetForStage(stage, {
       route_point: point,
       overnight_id: selected.overnight.overnight_id,
       overnight: selected.overnight,
       overnight_distance_km: selected.distance_km,
       overnight_compatibility: selected.compatibility,
       unavailable: false
-    };
+    });
   });
   return {
     usable: splitTargets.filter(target => target.overnight),
@@ -135,8 +141,7 @@ export function selectStageOvernights({ stages, candidates, vehicle, preferences
       overnight_candidate: selected.overnight,
       overnight_candidate_distance_km: selected.distance_km,
       overnight_candidate_compatibility: selected.compatibility,
-      split_targets: [{
-        driving_stage_id: stage.driving_stage_id,
+      split_targets: [targetForStage(stage, {
         route_point: stage.to,
         overnight_id: selected.overnight.overnight_id,
         overnight: selected.overnight,
@@ -144,7 +149,7 @@ export function selectStageOvernights({ stages, candidates, vehicle, preferences
         overnight_compatibility: selected.compatibility,
         unavailable: false,
         insertion_reason: "stage_overnight"
-      }],
+      })],
       requires_stage_split: true
     });
   });
