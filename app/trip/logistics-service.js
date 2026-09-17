@@ -5,12 +5,14 @@ export function createLogisticsService({ loadCatalogs, resolveCountries }) {
   if (typeof loadCatalogs !== "function") throw new TypeError("Cargador de catálogos no configurado");
   if (typeof resolveCountries !== "function") throw new TypeError("Resolución de países no configurada");
 
-  return async function logistics({ trip, route, vehicle }) {
+  return async function logistics({ trip, route, vehicle, knownCountries = null }) {
     const stages = buildDrivingStages(route, trip.waypoints ?? [], {
       maxDrivingHours: trip.preferences?.maxDrivingHours
     });
-    const countries = await resolveCountries({ trip, route, stages });
-    if (!Array.isArray(countries) || !countries.length) {
+    const countries = Array.isArray(knownCountries) && knownCountries.length
+      ? [...new Set(knownCountries)]
+      : await resolveCountries({ trip, route, stages });
+    if (!countries.length) {
       throw new Error("No se pudo determinar ningún país para cargar la logística del viaje");
     }
     const catalogs = await loadCatalogs({
