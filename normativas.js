@@ -226,7 +226,7 @@ function mostrarNormativa(normativa) {
     document.createElement("h2");
 
   titulo.textContent =
-    `🇪🇸 ${normativa.pais}`;
+    `${normativa.pais}`;
 
   cabecera.appendChild(titulo);
 
