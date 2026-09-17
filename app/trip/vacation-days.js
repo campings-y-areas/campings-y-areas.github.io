@@ -70,11 +70,10 @@ function assertStageIdentity(stage, index) {
   }
 }
 
-function dayBase(stage, stageIndex, requested, type, extra = 0) {
+function dayBase(stage, stageIndex, requested, type, extra = 0, final = false) {
   const overnightId = stage.overnight_id ?? null;
   const baseId = authoritativeBase(stage);
   const requestedWaypoint = requested.has(String(stage.to_point_id));
-  const final = Boolean(stage.is_final) || false;
   return {
     logistics_id: type === "drive" ? `drive:${stage.driving_stage_id}` : `stay:${baseId ?? stage.driving_stage_id}:${extra + 1}`,
     driving_stage_id: type === "drive" ? stage.driving_stage_id : null,
@@ -108,14 +107,13 @@ export function buildVacationDays(trip) {
 
   stages.forEach((stage, stageIndex) => {
     const final = stageIndex === stages.length - 1;
-    stage.is_final = final;
     const driveDayNumber = days.length + 1;
     days.push({
       vacation_day_id: `vday-${driveDayNumber}`,
       day: driveDayNumber,
       travel_date: addDays(trip.departureDate, driveDayNumber - 1),
       day_type: "conduccion_y_visita",
-      ...dayBase(stage, stageIndex, requested, "drive"),
+      ...dayBase(stage, stageIndex, requested, "drive", 0, final),
       driving_km: Math.round(Number(stage.distance_m ?? 0) / 1000),
       driving_minutes: Math.round(Number(stage.duration_s ?? 0) / 60)
     });
@@ -127,7 +125,7 @@ export function buildVacationDays(trip) {
         day: stayDayNumber,
         travel_date: addDays(trip.departureDate, stayDayNumber - 1),
         day_type: "estancia",
-        ...dayBase(stage, stageIndex, requested, "stay", extra),
+        ...dayBase(stage, stageIndex, requested, "stay", extra, final),
         driving_km: 0,
         driving_minutes: 0
       });
