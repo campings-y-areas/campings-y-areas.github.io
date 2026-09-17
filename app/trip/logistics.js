@@ -16,7 +16,20 @@ export function selectStageOvernights({ stages, candidates, vehicle, preferences
     .filter(entry => entry.assessment.eligible);
 
   return stages.map((stage, index) => {
-    if (index === stages.length - 1) return { ...stage, overnight_id: null, overnight: null, overnight_compatibility: null };
+    if (stage.exceeds_max_driving) {
+      return {
+        ...stage,
+        overnight_id: null,
+        base_id: null,
+        overnight: null,
+        overnight_distance_km: null,
+        overnight_compatibility: null,
+        requires_stage_split: true
+      };
+    }
+    if (index === stages.length - 1) {
+      return { ...stage, overnight_id: null, overnight: null, overnight_compatibility: null, requires_stage_split: false };
+    }
     const ranked = available
       .map(entry => ({ ...entry, km: distanceKm(stage.to, entry.item) }))
       .filter(entry => Number.isFinite(entry.km))
@@ -30,7 +43,8 @@ export function selectStageOvernights({ stages, candidates, vehicle, preferences
       base_id: overnight.overnight_id,
       overnight,
       overnight_distance_km: selected.km,
-      overnight_compatibility: selected.assessment
+      overnight_compatibility: selected.assessment,
+      requires_stage_split: false
     };
   });
 }
