@@ -6,7 +6,9 @@ export function createLogisticsService({ loadCatalogs, resolveCountries }) {
   if (typeof resolveCountries !== "function") throw new TypeError("Resolución de países no configurada");
 
   return async function logistics({ trip, route, vehicle }) {
-    const stages = buildDrivingStages(route, trip.waypoints ?? []);
+    const stages = buildDrivingStages(route, trip.waypoints ?? [], {
+      maxDrivingHours: trip.preferences?.maxDrivingHours
+    });
     const countries = await resolveCountries({ trip, route, stages });
     if (!Array.isArray(countries) || !countries.length) {
       throw new Error("No se pudo determinar ningún país para cargar la logística del viaje");
