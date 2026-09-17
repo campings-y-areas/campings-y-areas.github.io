@@ -25,6 +25,14 @@ export function buildGuideContext(state) {
         lat: point.lat,
         lon: point.lon
       })),
+      routeWaypoints: (state.route.waypoints ?? []).map(point => ({
+        id: point.id,
+        label: point.label,
+        lat: point.lat,
+        lon: point.lon,
+        synthetic_route_point: Boolean(point.synthetic_route_point),
+        logistics_overnight_id: point.logistics_overnight_id ?? null
+      })),
       stages: state.trip.stages.map(stage => ({
         driving_stage_id: stage.driving_stage_id,
         from_point_id: stage.from_point_id,
@@ -36,7 +44,9 @@ export function buildGuideContext(state) {
         overnight_id: stage.overnight_id,
         base_id: stage.base_id ?? stage.overnight_id ?? null,
         overnight: stage.overnight ?? null,
-        overnight_compatibility: stage.overnight_compatibility ?? null
+        overnight_compatibility: stage.overnight_compatibility ?? null,
+        compatibility_warnings: stage.overnight_compatibility?.warnings ?? [],
+        compatibility_constraints: stage.overnight_compatibility?.constraints ?? {}
       })),
       maxDrivingLimitSatisfied: state.logistics?.maxDrivingLimitSatisfied !== false,
       drivingWarnings: drivingWarnings.map(warning => ({
@@ -45,6 +55,7 @@ export function buildGuideContext(state) {
         duration_s: warning.duration_s,
         requested_max_s: warning.requested_max_s,
         excess_s: warning.excess_s,
+        reason: warning.reason ?? null,
         message: warning.message
       }))
     },
@@ -67,8 +78,13 @@ export function buildGuideContext(state) {
       ],
       logisticsWarnings: {
         maximum_length_unknown_confirm_with_venue: "La longitud máxima admitida no está verificada. Indicar al viajero que confirme con el camping o área que admite la longitud total de su vehículo o conjunto antes de acudir. No afirmar compatibilidad por dimensiones.",
-        max_driving_exceeded: "La guía debe seguir generándose. Indicar claramente en el día afectado el tiempo real de conducción, el máximo solicitado y el exceso exacto. Explicar que no ha sido posible ajustar mejor ese tramo con las pernoctas compatibles disponibles; no ocultar el exceso ni inventar una pernocta."
+        caravan_acceptance_unknown_confirm_with_venue: "No existe confirmación explícita en nuestros datos de que el establecimiento admita caravanas. Presentarlo como información no verificada y recomendar confirmarlo antes de acudir; nunca convertir la ausencia de datos en una aceptación.",
+        pets_acceptance_unknown_confirm_with_venue: "No existe confirmación explícita en nuestros datos sobre admisión de mascotas. Indicar que debe confirmarse antes de acudir; no afirmar que admite mascotas.",
+        max_driving_exceeded_no_compatible_overnight: "La guía debe seguir generándose. Indicar el tiempo real, máximo solicitado y exceso exacto, explicando que no se encontró una pernocta compatible disponible en la zona necesaria.",
+        max_driving_exceeded_reroute_limit: "La guía debe seguir generándose. Indicar el tiempo real, máximo solicitado y exceso exacto. Explicar que tras varios recálculos logísticos acotados no se consiguió reducir más el tramo; no afirmar que faltaban campings o áreas si ese no fue el motivo.",
+        max_driving_exceeded: "La guía debe seguir generándose. Indicar claramente en el día afectado el tiempo real de conducción, el máximo solicitado y el exceso exacto. No ocultar el exceso ni inventar una pernocta."
       },
+      compatibilityRule: "Una pernocta con estado unknown sigue siendo candidata si no existe incompatibilidad explícita, pero la guía debe identificar qué condición no está verificada y pedir confirmación. Solo status confirmed permite describir como confirmadas todas las restricciones aplicables evaluadas.",
       immutableFacts: [
         "request_point_id",
         "requested_lat",
@@ -80,7 +96,8 @@ export function buildGuideContext(state) {
         "duration_s",
         "max_driving_seconds",
         "excess_s",
-        "overnight_compatibility"
+        "overnight_compatibility",
+        "compatibility_constraints"
       ]
     }
   };
