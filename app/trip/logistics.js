@@ -17,11 +17,7 @@ function nearestCompatible(point, available) {
     .sort((a, b) => a.km - b.km);
   if (!ranked.length) return null;
   const selected = ranked[0];
-  return {
-    overnight: assertOvernight(selected.item),
-    distance_km: selected.km,
-    compatibility: selected.assessment
-  };
+  return { overnight: assertOvernight(selected.item), distance_km: selected.km, compatibility: selected.assessment };
 }
 
 function authoritativeOvernightForPoint(point, available) {
@@ -29,11 +25,7 @@ function authoritativeOvernightForPoint(point, available) {
   if (!overnightId) return null;
   const entry = available.find(candidate => String(candidate.item?.overnight_id) === String(overnightId));
   if (!entry) throw new Error(`La pernocta logística ${overnightId} ya no está disponible en los catálogos cargados`);
-  return {
-    overnight: assertOvernight(entry.item),
-    distance_km: 0,
-    compatibility: entry.assessment
-  };
+  return { overnight: assertOvernight(entry.item), distance_km: 0, compatibility: entry.assessment };
 }
 
 export function selectStageOvernights({ stages, candidates, vehicle, preferences, travellers }) {
@@ -62,6 +54,7 @@ export function selectStageOvernights({ stages, candidates, vehicle, preferences
         const selected = nearestCompatible(point, available);
         if (!selected) {
           return {
+            driving_stage_id: stage.driving_stage_id,
             route_point: point,
             overnight_id: null,
             overnight: null,
@@ -71,6 +64,7 @@ export function selectStageOvernights({ stages, candidates, vehicle, preferences
           };
         }
         return {
+          driving_stage_id: stage.driving_stage_id,
           route_point: point,
           overnight_id: selected.overnight.overnight_id,
           overnight: selected.overnight,
