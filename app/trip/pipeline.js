@@ -12,18 +12,21 @@ export async function buildTrip({ routing, logistics, enrichment, guide }) {
     waypoints,
     vehicle: current.vehicle
   }));
-
   setState(state => ({ ...state, route }));
 
-  const overnightsRaw = await logistics({
+  const logisticsResult = await logistics({
     trip: getState().trip,
     route,
     vehicle: getState().vehicle
   });
-  const overnights = (overnightsRaw ?? []).map(assertOvernight);
+  const stages = Array.isArray(logisticsResult?.stages) ? logisticsResult.stages : [];
+  const overnights = (logisticsResult?.overnights ?? [])
+    .filter(Boolean)
+    .map(assertOvernight);
 
   setState(state => ({
     ...state,
+    trip: { ...state.trip, stages },
     logistics: { ...state.logistics, overnights }
   }));
 
@@ -34,10 +37,18 @@ export async function buildTrip({ routing, logistics, enrichment, guide }) {
     vehicle: getState().vehicle
   });
 
-  setState(state => ({
-    ...state,
-    enrichment: { ...state.enrichment, ...(enriched ?? {}) }
-  }));
+  if (Array.isArray(enriched?.stages)) {
+    setState(state => ({
+      ...state,
+      trip: { ...state.trip, stages: enriched.stages },
+      enrichment: { ...state.enrichment, ...(enriched.catalogs ?? {}) }
+    }));
+  } else {
+    setState(state => ({
+      ...state,
+      enrichment: { ...state.enrichment, ...(enriched ?? {}) }
+    }));
+  }
 
   const finalGuide = await guide({
     trip: getState().trip,
