@@ -7,8 +7,8 @@ import { enrichStages } from "./enrichment.js";
 
 const routingProvider = Object.freeze({ route: geoapifyRoute });
 
-export async function routingService({ waypoints, vehicle }) {
-  return calculateRoute({ waypoints, vehicle, provider: routingProvider });
+export async function routingService({ waypoints, vehicle, includeCountryDetails = false }) {
+  return calculateRoute({ waypoints, vehicle, provider: routingProvider, includeCountryDetails });
 }
 
 export const logisticsService = createLogisticsService({
