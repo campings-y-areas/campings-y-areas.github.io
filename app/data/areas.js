@@ -1,16 +1,24 @@
 import { AREA_SOURCES } from "../config/area-sources.js";
 import { registerDataset, loadDataset, loadAvailable } from "../services/data-registry.js";
 
-function stablePointId(point, country, index) {
-  const existing = point.overnight_id ?? point.id ?? point.area_id ?? point.parking_id;
-  if (existing != null && String(existing).trim()) return String(existing).trim();
-  const type = String(point.tipo ?? "area").trim().toLowerCase() || "area";
-  const name = String(point.nombre ?? point.name ?? type).trim().toLowerCase().replace(/[^a-z0-9áéíóúüñ]+/gi, "-").replace(/^-|-$/g, "");
-  return `${type}:${country}:${index}:${name || "sin-nombre"}`;
+function token(value) {
+  return String(value ?? "").trim().toLowerCase().replace(/[^a-z0-9áéíóúüñ.-]+/gi, "-").replace(/^-|-$/g, "");
 }
 
-function normalizePoint(point, country, index) {
-  const id = stablePointId(point, country, index);
+function stablePointId(point, country) {
+  const existing = point.overnight_id ?? point.id ?? point.area_id ?? point.parking_id;
+  if (existing != null && String(existing).trim()) return String(existing).trim();
+  const type = token(point.tipo ?? "area") || "area";
+  const name = token(point.nombre ?? point.name ?? type) || "sin-nombre";
+  const locality = token(point.localidad ?? point.ciudad ?? point.city ?? point.municipio);
+  const lat = Number(point.lat);
+  const lon = Number(point.lon);
+  const coords = Number.isFinite(lat) && Number.isFinite(lon) ? `${lat.toFixed(5)}:${lon.toFixed(5)}` : "sin-coordenadas";
+  return `${type}:${token(country)}:${locality || "sin-localidad"}:${name}:${coords}`;
+}
+
+function normalizePoint(point, country) {
+  const id = stablePointId(point, country);
   return {
     ...point,
     id: point.id ?? id,
@@ -26,7 +34,7 @@ const keys = [];
 for (const [country, url] of Object.entries(AREA_SOURCES)) {
   const key = `areas:${country}`;
   keys.push(key);
-  registerDataset(key, { url, normalize: (item, index) => normalizePoint(item, country, index), domain: "areas", country });
+  registerDataset(key, { url, normalize: item => normalizePoint(item, country), domain: "areas", country });
 }
 
 export function areaCountries() {
