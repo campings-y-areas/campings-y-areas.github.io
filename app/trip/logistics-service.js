@@ -1,6 +1,16 @@
 import { buildDrivingStages } from "./stages.js";
 import { selectStageOvernights } from "./logistics.js";
 
+function uniqueOvernights(items) {
+  const byId = new Map();
+  for (const item of items) {
+    if (!item?.overnight_id) continue;
+    const id = String(item.overnight_id);
+    if (!byId.has(id)) byId.set(id, item);
+  }
+  return [...byId.values()];
+}
+
 export function createLogisticsService({ loadCatalogs, resolveCountries }) {
   if (typeof loadCatalogs !== "function") throw new TypeError("Cargador de catálogos no configurado");
   if (typeof resolveCountries !== "function") throw new TypeError("Resolución de países no configurada");
@@ -35,13 +45,14 @@ export function createLogisticsService({ loadCatalogs, resolveCountries }) {
         max_driving_seconds: stage.max_driving_seconds
       }))
     );
+    const overnights = uniqueOvernights([
+      ...stagesWithOvernights.map(stage => stage.overnight).filter(Boolean),
+      ...splitTargets.map(target => target.overnight).filter(Boolean)
+    ]);
 
     return {
       stages: stagesWithOvernights,
-      overnights: [
-        ...stagesWithOvernights.map(stage => stage.overnight).filter(Boolean),
-        ...splitTargets.map(target => target.overnight).filter(Boolean)
-      ],
+      overnights,
       splitTargets,
       unresolvedSplitPoints,
       requiresReroute: splitTargets.length > 0,
