@@ -11,12 +11,47 @@ function collectExpected(stages) {
   }));
 }
 
-function sameNumber(a, b) {
-  return Number(a) === Number(b);
+function sameNumber(a, b) { return Number(a) === Number(b); }
+function sameCompatibility(a, b) { return JSON.stringify(a ?? null) === JSON.stringify(b ?? null); }
+
+function authoritativeWarnings(state) {
+  return (state.logistics?.warnings ?? []).map(warning => ({
+    code: warning.code,
+    driving_stage_id: warning.driving_stage_id,
+    duration_s: Number(warning.duration_s),
+    requested_max_s: Number(warning.requested_max_s),
+    excess_s: Number(warning.excess_s),
+    reason: warning.reason ?? null,
+    message: warning.message ?? null
+  }));
 }
 
-function sameCompatibility(a, b) {
-  return JSON.stringify(a ?? null) === JSON.stringify(b ?? null);
+function sameWarningFacts(actual, expected) {
+  return actual?.code === expected.code
+    && actual?.driving_stage_id === expected.driving_stage_id
+    && sameNumber(actual?.duration_s, expected.duration_s)
+    && sameNumber(actual?.requested_max_s, expected.requested_max_s)
+    && sameNumber(actual?.excess_s, expected.excess_s)
+    && (actual?.reason ?? null) === expected.reason;
+}
+
+function enforceWarnings(guide, state) {
+  const expectedWarnings = authoritativeWarnings(state);
+  const supplied = Array.isArray(guide.logistics_warnings) ? guide.logistics_warnings : [];
+  const suppliedByStage = new Map(supplied.filter(item => item?.driving_stage_id).map(item => [item.driving_stage_id, item]));
+
+  for (const expected of expectedWarnings) {
+    const actual = suppliedByStage.get(expected.driving_stage_id);
+    if (actual && !sameWarningFacts(actual, expected)) {
+      throw new Error(`La guía intentó cambiar el aviso logístico de ${expected.driving_stage_id}`);
+    }
+  }
+
+  // Los avisos logísticos son hechos de la ruta, no contenido editorial: se reinsertan
+  // siempre desde el estado autoritativo aunque el redactor los haya omitido.
+  guide.logistics_warnings = expectedWarnings;
+  guide.max_driving_limit_satisfied = state.logistics?.maxDrivingLimitSatisfied !== false;
+  return guide;
 }
 
 export function validateGuideAgainstTrip(guide, state) {
@@ -29,24 +64,12 @@ export function validateGuideAgainstTrip(guide, state) {
     const day = byStage.get(item.driving_stage_id);
     if (!day) continue;
 
-    if (day.from_point_id && day.from_point_id !== item.from_point_id) {
-      throw new Error(`La guía intentó cambiar el origen de ${item.driving_stage_id}`);
-    }
-    if (day.to_point_id && day.to_point_id !== item.to_point_id) {
-      throw new Error(`La guía intentó cambiar el destino de ${item.driving_stage_id}`);
-    }
-    if (day.overnight_id && day.overnight_id !== item.overnight_id) {
-      throw new Error(`La guía intentó cambiar la pernocta de ${item.driving_stage_id}`);
-    }
-    if (day.base_id && day.base_id !== item.base_id) {
-      throw new Error(`La guía intentó cambiar la base de ${item.driving_stage_id}`);
-    }
-    if (day.distance_m != null && !sameNumber(day.distance_m, item.distance_m)) {
-      throw new Error(`La guía intentó cambiar la distancia de ${item.driving_stage_id}`);
-    }
-    if (day.duration_s != null && !sameNumber(day.duration_s, item.duration_s)) {
-      throw new Error(`La guía intentó cambiar la duración de ${item.driving_stage_id}`);
-    }
+    if (day.from_point_id && day.from_point_id !== item.from_point_id) throw new Error(`La guía intentó cambiar el origen de ${item.driving_stage_id}`);
+    if (day.to_point_id && day.to_point_id !== item.to_point_id) throw new Error(`La guía intentó cambiar el destino de ${item.driving_stage_id}`);
+    if (day.overnight_id && day.overnight_id !== item.overnight_id) throw new Error(`La guía intentó cambiar la pernocta de ${item.driving_stage_id}`);
+    if (day.base_id && day.base_id !== item.base_id) throw new Error(`La guía intentó cambiar la base de ${item.driving_stage_id}`);
+    if (day.distance_m != null && !sameNumber(day.distance_m, item.distance_m)) throw new Error(`La guía intentó cambiar la distancia de ${item.driving_stage_id}`);
+    if (day.duration_s != null && !sameNumber(day.duration_s, item.duration_s)) throw new Error(`La guía intentó cambiar la duración de ${item.driving_stage_id}`);
     if (day.overnight_compatibility != null && !sameCompatibility(day.overnight_compatibility, item.overnight_compatibility)) {
       throw new Error(`La guía intentó cambiar la compatibilidad de pernocta de ${item.driving_stage_id}`);
     }
@@ -59,5 +82,5 @@ export function validateGuideAgainstTrip(guide, state) {
     if (item.overnight_id) day.overnight_id = item.overnight_id;
     if (item.base_id) day.base_id = item.base_id;
   }
-  return guide;
+  return enforceWarnings(guide, state);
 }
