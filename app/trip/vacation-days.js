@@ -11,7 +11,12 @@ function pointId(point) {
 }
 
 function requestedPointIds(trip) {
-  return new Set((trip.waypoints ?? []).map(point => String(pointId(point))).filter(Boolean));
+  const ids = new Set();
+  for (const point of trip.waypoints ?? []) {
+    const id = pointId(point);
+    if (id != null && String(id).trim()) ids.add(String(id));
+  }
+  return ids;
 }
 
 function contentScore(stage) {
