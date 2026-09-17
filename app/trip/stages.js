@@ -17,6 +17,16 @@ function legSteps(leg) {
   return leg.steps ?? leg.properties?.steps ?? [];
 }
 
+function pointIdentity(point) {
+  const id = point?.request_point_id ?? point?.id ?? null;
+  if (id == null || !String(id).trim()) throw new Error("Punto de ruta sin identidad estable");
+  return String(id);
+}
+
+function stageRouteKey(fromPoint, toPoint) {
+  return `${pointIdentity(fromPoint)}=>${pointIdentity(toPoint)}`;
+}
+
 export function buildDrivingStages(routeInput, waypointInput, { maxDrivingHours = null } = {}) {
   const route = assertRoute(routeInput);
   const waypoints = waypointInput.map(assertWaypoint);
@@ -25,6 +35,11 @@ export function buildDrivingStages(routeInput, waypointInput, { maxDrivingHours 
   }
   const maxDrivingSeconds = Number(maxDrivingHours) > 0 ? Number(maxDrivingHours) * 3600 : null;
   return route.legs.map((leg, index) => {
+    const from = waypoints[index];
+    const to = waypoints[index + 1];
+    const fromPointId = pointIdentity(from);
+    const toPointId = pointIdentity(to);
+    const routeKey = stageRouteKey(from, to);
     const duration_s = legDuration(leg);
     const geometry = legGeometry(leg);
     const rawSplitPoints = maxDrivingSeconds ? splitPointsForDuration({
@@ -34,19 +49,23 @@ export function buildDrivingStages(routeInput, waypointInput, { maxDrivingHours 
       maxDrivingSeconds
     }) : [];
     const splitPoints = rawSplitPoints.map((point, splitIndex) => ({
-      id: `stage-${index + 1}-split-${splitIndex + 1}`,
-      request_point_id: `stage-${index + 1}-split-${splitIndex + 1}`,
+      id: `route-split:${routeKey}:${splitIndex + 1}`,
       requested_text: null,
       ...point,
-      synthetic_route_point: true
+      synthetic_route_point: true,
+      generated_by: "max_driving_split",
+      parent_route_key: routeKey
     }));
     return {
+      // driving_stage_id conserva el formato route-contract-v3; route_stage_key es la
+      // identidad interna estable para relacionar el tramo con sus extremos reales.
       driving_stage_id: `stage-${index + 1}`,
+      route_stage_key: routeKey,
       index,
-      from_point_id: waypoints[index].request_point_id ?? waypoints[index].id,
-      to_point_id: waypoints[index + 1].request_point_id ?? waypoints[index + 1].id,
-      from: waypoints[index],
-      to: waypoints[index + 1],
+      from_point_id: fromPointId,
+      to_point_id: toPointId,
+      from,
+      to,
       distance_m: legDistance(leg),
       duration_s,
       geometry,
