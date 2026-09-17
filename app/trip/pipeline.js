@@ -6,7 +6,8 @@ const MAX_LOGISTICS_REROUTES = 4;
 function overnightWaypoint(target) {
   const overnight = assertOvernight(target.overnight);
   const stageId = String(target.driving_stage_id ?? "stage");
-  const id = `logistics:${stageId}:${overnight.overnight_id}`;
+  const overnightId = String(overnight.overnight_id);
+  const id = `logistics:overnight:${overnightId}`;
   return assertWaypoint({
     id,
     label: overnight.nombre ?? overnight.name ?? "Pernocta logística",
@@ -16,7 +17,7 @@ function overnightWaypoint(target) {
     lon: Number(overnight.lon),
     synthetic_route_point: true,
     generated_by: "logistics",
-    logistics_overnight_id: overnight.overnight_id,
+    logistics_overnight_id: overnightId,
     logistics_stage_id: stageId
   });
 }
