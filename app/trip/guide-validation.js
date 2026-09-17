@@ -47,22 +47,36 @@ function enforceWarnings(guide, state) {
     }
   }
 
-  // Los avisos logísticos son hechos de la ruta, no contenido editorial: se reinsertan
-  // siempre desde el estado autoritativo aunque el redactor los haya omitido.
   guide.logistics_warnings = expectedWarnings;
   guide.max_driving_limit_satisfied = state.logistics?.maxDrivingLimitSatisfied !== false;
   return guide;
+}
+
+function indexGuideDays(days) {
+  const byStage = new Map();
+  for (const day of days) {
+    const stageId = day?.driving_stage_id;
+    if (!stageId) continue; // Días de estancia sin conducción pueden no tener driving_stage_id.
+    if (byStage.has(stageId)) throw new Error(`La guía duplicó el tramo de conducción ${stageId}`);
+    byStage.set(stageId, day);
+  }
+  return byStage;
 }
 
 export function validateGuideAgainstTrip(guide, state) {
   if (!guide || typeof guide !== "object") throw new TypeError("Guía inválida");
   const expected = collectExpected(state.trip?.stages ?? []);
   const days = Array.isArray(guide.days) ? guide.days : [];
-  const byStage = new Map(days.filter(day => day?.driving_stage_id).map(day => [day.driving_stage_id, day]));
+  const byStage = indexGuideDays(days);
+  const expectedStageIds = new Set(expected.map(item => item.driving_stage_id));
+
+  for (const stageId of byStage.keys()) {
+    if (!expectedStageIds.has(stageId)) throw new Error(`La guía inventó el tramo de conducción ${stageId}`);
+  }
 
   for (const item of expected) {
     const day = byStage.get(item.driving_stage_id);
-    if (!day) continue;
+    if (!day) throw new Error(`La guía omitió el tramo de conducción ${item.driving_stage_id}`);
 
     if (day.from_point_id && day.from_point_id !== item.from_point_id) throw new Error(`La guía intentó cambiar el origen de ${item.driving_stage_id}`);
     if (day.to_point_id && day.to_point_id !== item.to_point_id) throw new Error(`La guía intentó cambiar el destino de ${item.driving_stage_id}`);
