@@ -23,6 +23,7 @@ const initialState = Object.freeze({
   },
   logistics: {
     overnights: [],
+    proposedOvernights: [],
     countries: [],
     catalogs: {},
     unresolvedSplitPoints: [],
