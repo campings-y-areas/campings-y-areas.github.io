@@ -24,6 +24,11 @@ export function createLogisticsService({ loadCatalogs, resolveCountries }) {
       preferences: trip.preferences,
       travellers: trip.travellers
     });
+    const pendingSplits = stagesWithOvernights.filter(stage => stage.requires_stage_split);
+    if (pendingSplits.length) {
+      const ids = pendingSplits.map(stage => stage.driving_stage_id).join(", ");
+      throw new Error(`Hay tramos que superan la conducción máxima y deben dividirse sobre la ruta real antes de elegir pernocta: ${ids}`);
+    }
 
     return {
       stages: stagesWithOvernights,
