@@ -1,9 +1,19 @@
 import { CAMPING_SOURCES } from "../config/camping-sources.js";
 import { registerDataset, loadDataset, loadAvailable } from "../services/data-registry.js";
 
-function normalizeCamping(camping, country) {
+function stableCampingId(camping, country, index) {
+  const existing = camping.overnight_id ?? camping.id ?? camping.camping_id;
+  if (existing != null && String(existing).trim()) return String(existing).trim();
+  const name = String(camping.nombre ?? camping.name ?? "camping").trim().toLowerCase().replace(/[^a-z0-9áéíóúüñ]+/gi, "-").replace(/^-|-$/g, "");
+  return `camping:${country}:${index}:${name || "sin-nombre"}`;
+}
+
+function normalizeCamping(camping, country, index) {
+  const id = stableCampingId(camping, country, index);
   return {
     ...camping,
+    id: camping.id ?? id,
+    overnight_id: id,
     tipo: camping.tipo || "camping",
     pais: camping.pais || country,
     region: camping.region || camping.comunidad_autonoma || null,
@@ -16,7 +26,7 @@ const keys = [];
 for (const [country, url] of Object.entries(CAMPING_SOURCES)) {
   const key = `campings:${country}`;
   keys.push(key);
-  registerDataset(key, { url, normalize: item => normalizeCamping(item, country), domain: "campings", country });
+  registerDataset(key, { url, normalize: (item, index) => normalizeCamping(item, country, index), domain: "campings", country });
 }
 
 export function campingCountries() {
