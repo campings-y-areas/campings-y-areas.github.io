@@ -27,6 +27,14 @@ export function createLogisticsService({ loadCatalogs, resolveCountries }) {
       travellers: trip.travellers
     });
     const splitTargets = stagesWithOvernights.flatMap(stage => stage.split_targets ?? []);
+    const unresolvedSplitPoints = stagesWithOvernights.flatMap(stage =>
+      (stage.unresolved_split_points ?? []).map(point => ({
+        driving_stage_id: stage.driving_stage_id,
+        route_point: point,
+        duration_s: stage.duration_s,
+        max_driving_seconds: stage.max_driving_seconds
+      }))
+    );
 
     return {
       stages: stagesWithOvernights,
@@ -35,6 +43,7 @@ export function createLogisticsService({ loadCatalogs, resolveCountries }) {
         ...splitTargets.map(target => target.overnight).filter(Boolean)
       ],
       splitTargets,
+      unresolvedSplitPoints,
       requiresReroute: splitTargets.length > 0,
       catalogs,
       countries
