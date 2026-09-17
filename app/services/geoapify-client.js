@@ -17,6 +17,29 @@ function routeCountries(legs) {
   return result;
 }
 
+function featureLegCoordinates(geometry, legIndex) {
+  if (!geometry || !Array.isArray(geometry.coordinates)) return null;
+  if (geometry.type === "MultiLineString") {
+    const coordinates = geometry.coordinates[legIndex];
+    return Array.isArray(coordinates) && coordinates.length ? coordinates : null;
+  }
+  if (geometry.type === "LineString" && legIndex === 0) {
+    return geometry.coordinates.length ? geometry.coordinates : null;
+  }
+  return null;
+}
+
+function normalizeLegs(rawLegs, geometry) {
+  return rawLegs.map((leg, legIndex) => {
+    const coordinates = featureLegCoordinates(geometry, legIndex);
+    return {
+      ...leg,
+      geometry: coordinates ? { type: "LineString", coordinates } : null,
+      steps: Array.isArray(leg?.steps) ? leg.steps : []
+    };
+  });
+}
+
 export async function geoapifyRoute({ points, vehicle, includeCountryDetails = false }) {
   const key = getRuntimeConfig().geoapifyKey;
   if (!key) throw new Error("Geoapify no configurado");
@@ -29,7 +52,8 @@ export async function geoapifyRoute({ points, vehicle, includeCountryDetails = f
   const payload = await response.json();
   const feature = payload?.features?.[0];
   if (!feature?.geometry || !feature?.properties) throw new Error("Geoapify devolvió una ruta vacía");
-  const legs = Array.isArray(feature.properties.legs) ? feature.properties.legs : [];
+  const rawLegs = Array.isArray(feature.properties.legs) ? feature.properties.legs : [];
+  const legs = normalizeLegs(rawLegs, feature.geometry);
   return {
     geometry: feature.geometry,
     distance_m: Number(feature.properties.distance ?? 0),
