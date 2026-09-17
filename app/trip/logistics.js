@@ -61,6 +61,19 @@ function buildSplitTargets(stage, available, excludedOvernightIds = new Set()) {
   };
 }
 
+function withoutCommittedOvernight(stage, extra = {}) {
+  return {
+    ...stage,
+    overnight_id: null,
+    base_id: null,
+    overnight: null,
+    overnight_distance_km: null,
+    overnight_compatibility: null,
+    authoritative_logistics_stop: false,
+    ...extra
+  };
+}
+
 export function selectStageOvernights({ stages, candidates, vehicle, preferences, travellers }) {
   const available = candidates
     .map(item => ({ item, assessment: assessOvernightCompatibility(item, { vehicle, preferences, travellers }) }))
@@ -74,7 +87,7 @@ export function selectStageOvernights({ stages, candidates, vehicle, preferences
       if (authoritative?.overnight?.overnight_id) excluded.add(String(authoritative.overnight.overnight_id));
       const split = buildSplitTargets(stage, available, excluded);
       return {
-        ...stage,
+        ...(authoritative ? stage : withoutCommittedOvernight(stage)),
         overnight_id: authoritative?.overnight?.overnight_id ?? null,
         base_id: authoritative?.overnight?.overnight_id ?? null,
         overnight: authoritative?.overnight ?? null,
@@ -102,29 +115,37 @@ export function selectStageOvernights({ stages, candidates, vehicle, preferences
     }
 
     if (index === stages.length - 1) {
-      return { ...stage, overnight_id: null, overnight: null, overnight_compatibility: null, requires_stage_split: false };
+      return withoutCommittedOvernight(stage, {
+        split_targets: [],
+        requires_stage_split: false
+      });
     }
+
     const selected = nearestCompatible(stage.to, available);
     if (!selected) {
-      return {
-        ...stage,
-        overnight_id: null,
-        base_id: null,
-        overnight: null,
-        overnight_distance_km: null,
-        overnight_compatibility: null,
+      return withoutCommittedOvernight(stage, {
         overnight_unavailable: true,
+        split_targets: [],
         requires_stage_split: false
-      };
+      });
     }
-    return {
-      ...stage,
-      overnight_id: selected.overnight.overnight_id,
-      base_id: selected.overnight.overnight_id,
-      overnight: selected.overnight,
-      overnight_distance_km: selected.distance_km,
-      overnight_compatibility: selected.compatibility,
-      requires_stage_split: false
-    };
+
+    return withoutCommittedOvernight(stage, {
+      overnight_candidate_id: selected.overnight.overnight_id,
+      overnight_candidate: selected.overnight,
+      overnight_candidate_distance_km: selected.distance_km,
+      overnight_candidate_compatibility: selected.compatibility,
+      split_targets: [{
+        driving_stage_id: stage.driving_stage_id,
+        route_point: stage.to,
+        overnight_id: selected.overnight.overnight_id,
+        overnight: selected.overnight,
+        overnight_distance_km: selected.distance_km,
+        overnight_compatibility: selected.compatibility,
+        unavailable: false,
+        insertion_reason: "stage_overnight"
+      }],
+      requires_stage_split: true
+    });
   });
 }
