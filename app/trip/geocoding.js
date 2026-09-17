@@ -6,21 +6,32 @@ function stableId(kind, index, text) {
 }
 
 export async function geocodeText(text, { kind = "point", index = 0 } = {}) {
+  const requestedText = String(text ?? "").trim();
+  if (!requestedText) throw new TypeError(`Falta ${kind === "origin" ? "el origen" : kind === "destination" ? "el destino" : "un punto intermedio"}`);
+
   const key = getRuntimeConfig().geoapifyKey;
   if (!key) throw new Error("Geoapify no configurado");
-  const params = new URLSearchParams({ text, format: "json", limit: "1", apiKey: key });
+  const params = new URLSearchParams({ text: requestedText, format: "json", limit: "1", apiKey: key });
   const response = await fetch(`https://api.geoapify.com/v1/geocode/search?${params.toString()}`);
   if (!response.ok) throw new Error(`Geocodificación: ${response.status}`);
   const payload = await response.json();
   const item = payload?.results?.[0];
-  if (!item) throw new Error(`No se encontró: ${text}`);
+  if (!item) throw new Error(`No se encontró: ${requestedText}`);
+
+  const lat = Number(item.lat);
+  const lon = Number(item.lon);
+  if (!Number.isFinite(lat) || !Number.isFinite(lon)) throw new Error(`Geocodificación sin coordenadas válidas: ${requestedText}`);
+  const id = stableId(kind, index, requestedText);
+
   return {
-    id: stableId(kind, index, text),
-    request_point_id: stableId(kind, index, text),
-    requested_text: text,
-    label: item.formatted || text,
-    lat: Number(item.lat),
-    lon: Number(item.lon)
+    id,
+    request_point_id: id,
+    requested_text: requestedText,
+    requested_lat: lat,
+    requested_lon: lon,
+    label: item.formatted || requestedText,
+    lat,
+    lon
   };
 }
 
