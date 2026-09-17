@@ -39,10 +39,12 @@ export function buildGuideContext(state) {
         lat: point.lat,
         lon: point.lon,
         synthetic_route_point: Boolean(point.synthetic_route_point),
-        logistics_overnight_id: point.logistics_overnight_id ?? null
+        logistics_overnight_id: point.logistics_overnight_id ?? null,
+        logistics_stage_key: point.logistics_stage_key ?? null
       })),
       stages: state.trip.stages.map(stage => ({
         driving_stage_id: stage.driving_stage_id,
+        route_stage_key: stage.route_stage_key ?? null,
         from_point_id: stage.from_point_id,
         to_point_id: stage.to_point_id,
         distance_m: stage.distance_m,
@@ -62,6 +64,7 @@ export function buildGuideContext(state) {
       drivingWarnings: drivingWarnings.map(warning => ({
         code: warning.code,
         driving_stage_id: warning.driving_stage_id,
+        route_stage_key: warning.route_stage_key ?? null,
         duration_s: warning.duration_s,
         requested_max_s: warning.requested_max_s,
         excess_s: warning.excess_s,
@@ -73,6 +76,7 @@ export function buildGuideContext(state) {
     preferences: state.trip.preferences ?? {},
     editorialMaterial: state.trip.stages.map(stage => ({
       driving_stage_id: stage.driving_stage_id,
+      route_stage_key: stage.route_stage_key ?? null,
       content: stage.content ?? {}
     })),
     editorialBrief: {
@@ -102,6 +106,7 @@ export function buildGuideContext(state) {
         "requested_lat",
         "requested_lon",
         "driving_stage_id",
+        "route_stage_key",
         "overnight_id",
         "base_id",
         "distance_m",
