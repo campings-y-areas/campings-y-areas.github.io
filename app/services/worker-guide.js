@@ -3,8 +3,17 @@ import { buildGuideContext } from "../trip/guide-context.js";
 import { validateGuideAgainstTrip } from "../trip/guide-validation.js";
 import { buildVacationDays } from "../trip/vacation-days.js";
 
+function finiteNumber(value) {
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
+}
+
+function pointIdentity(point) {
+  return point?.request_point_id ?? point?.id ?? null;
+}
+
 function workerPoint(point, index, total) {
-  const requestPointId = point.request_point_id ?? point.id ?? `req-${index + 1}`;
+  const requestPointId = pointIdentity(point) ?? `req-${index + 1}`;
   return {
     request_point_id: String(requestPointId),
     role: index === 0 ? "origin" : index === total - 1 ? "final_destination" : "user_via",
@@ -12,32 +21,39 @@ function workerPoint(point, index, total) {
     name: point.label ?? point.requested_text ?? "",
     place: point.label ?? point.requested_text ?? "",
     country: point.country ?? "",
-    lat: Number.isFinite(Number(point.lat)) ? Number(point.lat) : null,
-    lon: Number.isFinite(Number(point.lon)) ? Number(point.lon) : null
+    lat: finiteNumber(point.lat),
+    lon: finiteNumber(point.lon)
   };
 }
 
-function workerStage(stage, index) {
+function workerStage(stage, index, total, requestedIds) {
+  const final = index === total - 1;
+  const toId = String(stage.to_point_id ?? "");
+  const requestedWaypoint = requestedIds.has(toId);
+  const overnightId = stage.overnight_id ?? null;
+  const baseId = stage.base_id ?? overnightId ?? null;
   return {
     driving_stage_id: stage.driving_stage_id,
-    base_id: stage.base_id ?? stage.overnight_id ?? `base-${index + 1}`,
-    overnight_id: stage.overnight_id ?? null,
+    from_point_id: stage.from_point_id,
+    to_point_id: stage.to_point_id,
+    base_id: baseId,
+    overnight_id: overnightId,
     day: index + 1,
     place: stage.to?.label ?? stage.overnight?.nombre ?? stage.overnight?.name ?? "Etapa",
     country: stage.to?.country ?? stage.overnight?.pais ?? "",
-    lat: Number.isFinite(Number(stage.to?.lat)) ? Number(stage.to.lat) : Number(stage.overnight?.lat),
-    lon: Number.isFinite(Number(stage.to?.lon)) ? Number(stage.to.lon) : Number(stage.overnight?.lon),
+    lat: finiteNumber(stage.to?.lat) ?? finiteNumber(stage.overnight?.lat),
+    lon: finiteNumber(stage.to?.lon) ?? finiteNumber(stage.overnight?.lon),
     driving_km: Math.round(Number(stage.distance_m ?? 0) / 1000),
     driving_minutes: Math.round(Number(stage.duration_s ?? 0) / 60),
-    start_lat: Number.isFinite(Number(stage.from?.lat)) ? Number(stage.from.lat) : null,
-    start_lon: Number.isFinite(Number(stage.from?.lon)) ? Number(stage.from.lon) : null,
-    request_point_id: stage.to?.request_point_id ?? null,
-    requested_role: stage.to?.request_point_id ? (index === 0 ? "origin" : "user_via") : null,
-    requested_lat: Number.isFinite(Number(stage.to?.requested_lat)) ? Number(stage.to.requested_lat) : null,
-    requested_lon: Number.isFinite(Number(stage.to?.requested_lon)) ? Number(stage.to.requested_lon) : null,
-    is_final: false,
-    requested_waypoint: Boolean(stage.to?.request_point_id),
-    stay_eligible: Boolean(stage.to?.request_point_id),
+    start_lat: finiteNumber(stage.from?.lat),
+    start_lon: finiteNumber(stage.from?.lon),
+    request_point_id: requestedWaypoint ? toId : null,
+    requested_role: requestedWaypoint ? (final ? "final_destination" : "user_via") : null,
+    requested_lat: requestedWaypoint ? finiteNumber(stage.to?.requested_lat ?? stage.to?.lat) : null,
+    requested_lon: requestedWaypoint ? finiteNumber(stage.to?.requested_lon ?? stage.to?.lon) : null,
+    is_final: final,
+    requested_waypoint: requestedWaypoint,
+    stay_eligible: requestedWaypoint || final,
     overnight: stage.overnight ?? null
   };
 }
@@ -45,12 +61,9 @@ function workerStage(stage, index) {
 function buildWorkerProfile(state) {
   const trip = state.trip ?? {};
   const points = Array.isArray(trip.waypoints) ? trip.waypoints : [];
-  const stages = (trip.stages ?? []).map(workerStage);
-  if (stages.length) {
-    stages.at(-1).is_final = true;
-    stages.at(-1).stay_eligible = true;
-    if (stages.at(-1).request_point_id) stages.at(-1).requested_role = "final_destination";
-  }
+  const requestedIds = new Set(points.map(point => String(pointIdentity(point))).filter(Boolean));
+  const sourceStages = Array.isArray(trip.stages) ? trip.stages : [];
+  const stages = sourceStages.map((stage, index) => workerStage(stage, index, sourceStages.length, requestedIds));
   const vacationDays = buildVacationDays(trip);
   const travellers = trip.travellers ?? {};
   const preferences = trip.preferences ?? {};
