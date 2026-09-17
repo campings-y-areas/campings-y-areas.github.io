@@ -3,6 +3,7 @@
 
 const registry = new Map();
 const cache = new Map();
+const pending = new Map();
 
 export function registerDataset(key, descriptor) {
   if (!key || !descriptor?.url) throw new TypeError("Dataset inválido");
@@ -17,28 +18,45 @@ export async function loadDataset(key, { force = false } = {}) {
   const descriptor = registry.get(key);
   if (!descriptor) throw new Error(`Dataset no registrado: ${key}`);
   if (!force && cache.has(key)) return cache.get(key);
+  if (!force && pending.has(key)) return pending.get(key);
 
-  const response = await fetch(descriptor.url);
-  if (!response.ok) throw new Error(`No se pudo cargar ${descriptor.url}`);
-  const data = await response.json();
-  if (!Array.isArray(data)) throw new Error(`Dataset no válido: ${key}`);
+  const request = (async () => {
+    const response = await fetch(descriptor.url);
+    if (!response.ok) throw new Error(`No se pudo cargar ${descriptor.url}`);
+    const data = await response.json();
+    if (!Array.isArray(data)) throw new Error(`Dataset no válido: ${key}`);
 
-  const normalized = descriptor.normalize ? data.map(descriptor.normalize) : data;
-  cache.set(key, normalized);
-  return normalized;
+    const normalized = descriptor.normalize ? data.map(descriptor.normalize) : data;
+    cache.set(key, normalized);
+    return normalized;
+  })();
+
+  pending.set(key, request);
+  try {
+    return await request;
+  } finally {
+    if (pending.get(key) === request) pending.delete(key);
+  }
 }
 
 export async function loadAvailable(keys) {
-  const settled = await Promise.allSettled(keys.map(loadDataset));
+  const uniqueKeys = [...new Set(keys)];
+  const settled = await Promise.allSettled(uniqueKeys.map(key => loadDataset(key)));
   const data = new Map();
   const errors = new Map();
   settled.forEach((result, index) => {
-    if (result.status === "fulfilled") data.set(keys[index], result.value);
-    else errors.set(keys[index], result.reason);
+    if (result.status === "fulfilled") data.set(uniqueKeys[index], result.value);
+    else errors.set(uniqueKeys[index], result.reason);
   });
   return { data, errors };
 }
 
 export function clearDatasetCache(key) {
-  if (key) cache.delete(key); else cache.clear();
+  if (key) {
+    cache.delete(key);
+    pending.delete(key);
+  } else {
+    cache.clear();
+    pending.clear();
+  }
 }
