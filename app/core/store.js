@@ -17,14 +17,22 @@ const initialState = Object.freeze({
     geometry: null,
     distance_m: null,
     duration_s: null,
-    legs: []
+    legs: [],
+    waypoints: [],
+    country_metadata: null
   },
   logistics: {
-    overnights: []
+    overnights: [],
+    countries: [],
+    catalogs: {},
+    unresolvedSplitPoints: [],
+    warnings: [],
+    maxDrivingLimitSatisfied: true
   },
   enrichment: {
     places: [],
     services: [],
+    restaurants: [],
     workshops: [],
     regulations: []
   },
@@ -63,6 +71,7 @@ export function resetState() {
 }
 
 export function subscribe(listener) {
+  if (typeof listener !== "function") throw new TypeError("Suscriptor de estado inválido");
   listeners.add(listener);
   return () => listeners.delete(listener);
 }
