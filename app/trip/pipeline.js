@@ -3,9 +3,17 @@ import { assertOvernight, assertRoute, assertWaypoint } from "../core/contracts.
 
 const MAX_LOGISTICS_REROUTES = 4;
 
+function stageIdentity(stage) {
+  return String(stage?.route_stage_key ?? stage?.driving_stage_id ?? "");
+}
+
+function targetStageIdentity(target) {
+  return String(target?.route_stage_key ?? target?.driving_stage_id ?? "");
+}
+
 function overnightWaypoint(target) {
   const overnight = assertOvernight(target.overnight);
-  const stageId = String(target.driving_stage_id ?? "stage");
+  const stageKey = targetStageIdentity(target) || "stage";
   const overnightId = String(overnight.overnight_id);
   const id = `logistics:overnight:${overnightId}`;
   return assertWaypoint({
@@ -18,15 +26,17 @@ function overnightWaypoint(target) {
     synthetic_route_point: true,
     generated_by: "logistics",
     logistics_overnight_id: overnightId,
-    logistics_stage_id: stageId
+    logistics_stage_key: stageKey,
+    logistics_stage_id: target.driving_stage_id ?? null
   });
 }
 
 function insertSplitTargets(routeWaypoints, stages, splitTargets) {
   if (!splitTargets.length) return { waypoints: routeWaypoints, inserted: 0 };
-  const targetsByStage = new Map(stages.map(stage => [stage.driving_stage_id, []]));
+  const targetsByStage = new Map(stages.map(stage => [stageIdentity(stage), []]));
   for (const target of splitTargets) {
-    if (targetsByStage.has(target.driving_stage_id)) targetsByStage.get(target.driving_stage_id).push(target);
+    const key = targetStageIdentity(target);
+    if (targetsByStage.has(key)) targetsByStage.get(key).push(target);
   }
 
   const existingOvernights = new Set(routeWaypoints
@@ -37,7 +47,7 @@ function insertSplitTargets(routeWaypoints, stages, splitTargets) {
 
   stages.forEach((stage, stageIndex) => {
     if (stageIndex === 0) result.push(routeWaypoints[0]);
-    const targets = targetsByStage.get(stage.driving_stage_id) ?? [];
+    const targets = targetsByStage.get(stageIdentity(stage)) ?? [];
     for (const target of targets) {
       const point = overnightWaypoint(target);
       const overnightKey = String(point.logistics_overnight_id);
@@ -59,12 +69,12 @@ async function routeAndLogistics({ routing, logistics, waypoints, vehicle, trip,
 }
 
 function drivingLimitWarnings(stages, unresolvedSplitPoints = [], stopReason = null) {
-  const unresolvedStages = new Set(unresolvedSplitPoints.map(item => item.driving_stage_id));
+  const unresolvedStages = new Set(unresolvedSplitPoints.map(item => item.route_stage_key ?? item.driving_stage_id));
   return stages
     .filter(stage => stage.exceeds_max_driving && Number(stage.max_driving_seconds) > 0)
     .map(stage => {
       const excessSeconds = Math.max(0, Number(stage.duration_s) - Number(stage.max_driving_seconds));
-      const noCompatibleStop = unresolvedStages.has(stage.driving_stage_id);
+      const noCompatibleStop = unresolvedStages.has(stage.route_stage_key ?? stage.driving_stage_id);
       const rerouteLimitReached = stopReason === "reroute_limit_reached" && !noCompatibleStop;
       const convergedWithoutNewStop = stopReason === "no_new_compatible_overnight" && !noCompatibleStop;
       return {
@@ -74,6 +84,7 @@ function drivingLimitWarnings(stages, unresolvedSplitPoints = [], stopReason = n
             ? "max_driving_exceeded_reroute_limit"
             : convergedWithoutNewStop ? "max_driving_exceeded_logistics_converged" : "max_driving_exceeded",
         driving_stage_id: stage.driving_stage_id,
+        route_stage_key: stage.route_stage_key ?? null,
         duration_s: Number(stage.duration_s),
         requested_max_s: Number(stage.max_driving_seconds),
         excess_s: excessSeconds,
