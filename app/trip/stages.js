@@ -1,5 +1,5 @@
 import { assertRoute, assertWaypoint } from "../core/contracts.js";
-import { pointAtGeometryFraction, splitFractionsForDuration } from "./route-geometry.js";
+import { splitPointsForDuration } from "./route-geometry.js";
 
 function legDistance(leg) {
   return Number(leg.distance_m ?? leg.distance ?? leg.properties?.distance ?? 0);
@@ -13,6 +13,10 @@ function legGeometry(leg) {
   return leg.geometry ?? leg.properties?.geometry ?? null;
 }
 
+function legSteps(leg) {
+  return leg.steps ?? leg.properties?.steps ?? [];
+}
+
 export function buildDrivingStages(routeInput, waypointInput, { maxDrivingHours = null } = {}) {
   const route = assertRoute(routeInput);
   const waypoints = waypointInput.map(assertWaypoint);
@@ -23,12 +27,17 @@ export function buildDrivingStages(routeInput, waypointInput, { maxDrivingHours 
   return route.legs.map((leg, index) => {
     const duration_s = legDuration(leg);
     const geometry = legGeometry(leg);
-    const splitFractions = maxDrivingSeconds ? splitFractionsForDuration(duration_s, maxDrivingSeconds) : [];
-    const splitPoints = splitFractions.map((fraction, splitIndex) => ({
+    const rawSplitPoints = maxDrivingSeconds ? splitPointsForDuration({
+      geometry,
+      steps: legSteps(leg),
+      durationSeconds: duration_s,
+      maxDrivingSeconds
+    }) : [];
+    const splitPoints = rawSplitPoints.map((point, splitIndex) => ({
       id: `stage-${index + 1}-split-${splitIndex + 1}`,
       request_point_id: `stage-${index + 1}-split-${splitIndex + 1}`,
       requested_text: null,
-      ...pointAtGeometryFraction(geometry, fraction),
+      ...point,
       synthetic_route_point: true
     }));
     return {
