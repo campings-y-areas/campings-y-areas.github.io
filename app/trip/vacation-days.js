@@ -63,12 +63,17 @@ function authoritativeBase(stage) {
 
 function assertStageIdentity(stage, index) {
   if (!stage?.driving_stage_id) throw new Error(`La etapa ${index + 1} no tiene driving_stage_id`);
+  if (!stage?.route_stage_key) throw new Error(`La etapa ${stage.driving_stage_id} no tiene route_stage_key estable`);
   if (!stage?.from_point_id || !stage?.to_point_id) throw new Error(`La etapa ${stage.driving_stage_id} no tiene extremos autoritativos`);
   if (pointId(stage.from) && String(pointId(stage.from)) !== String(stage.from_point_id)) {
     throw new Error(`El origen de ${stage.driving_stage_id} no coincide con su identidad autoritativa`);
   }
   if (pointId(stage.to) && String(pointId(stage.to)) !== String(stage.to_point_id)) {
     throw new Error(`El destino de ${stage.driving_stage_id} no coincide con su identidad autoritativa`);
+  }
+  const expectedRouteKey = `${stage.from_point_id}=>${stage.to_point_id}`;
+  if (String(stage.route_stage_key) !== expectedRouteKey) {
+    throw new Error(`La identidad física de ${stage.driving_stage_id} no coincide con sus extremos autoritativos`);
   }
   if (stage.overnight_id && stage.overnight?.overnight_id && String(stage.overnight_id) !== String(stage.overnight.overnight_id)) {
     throw new Error(`La pernocta de ${stage.driving_stage_id} no coincide con su overnight_id autoritativo`);
@@ -80,8 +85,9 @@ function dayBase(stage, stageIndex, requested, type, extra = 0, final = false) {
   const baseId = authoritativeBase(stage);
   const requestedWaypoint = requested.has(String(stage.to_point_id));
   return {
-    logistics_id: type === "drive" ? `drive:${stage.driving_stage_id}` : `stay:${baseId ?? stage.driving_stage_id}:${extra + 1}`,
+    logistics_id: type === "drive" ? `drive:${stage.route_stage_key}` : `stay:${baseId ?? stage.route_stage_key}:${extra + 1}`,
     driving_stage_id: type === "drive" ? stage.driving_stage_id : null,
+    route_stage_key: stage.route_stage_key,
     driving_stage_index: type === "drive" ? stageIndex + 1 : 0,
     base_stop_index: stageIndex + 1,
     base_id: baseId,
