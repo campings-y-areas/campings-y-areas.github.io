@@ -17,16 +17,13 @@ function routeCountries(legs) {
   return result;
 }
 
-export async function geoapifyRoute({ points, vehicle }) {
+export async function geoapifyRoute({ points, vehicle, includeCountryDetails = false }) {
   const key = getRuntimeConfig().geoapifyKey;
   if (!key) throw new Error("Geoapify no configurado");
   const waypoints = points.map(point => `${point.lat},${point.lon}`).join("|");
-  const query = new URLSearchParams({
-    waypoints,
-    mode: vehicleMode(vehicle),
-    details: "route_details",
-    apiKey: key
-  });
+  const query = new URLSearchParams({ waypoints, mode: vehicleMode(vehicle), apiKey: key });
+  if (includeCountryDetails) query.set("details", "route_details");
+
   const response = await fetch(`https://api.geoapify.com/v1/routing?${query.toString()}`);
   if (!response.ok) throw new Error(`Geoapify: ${response.status}`);
   const payload = await response.json();
@@ -38,7 +35,8 @@ export async function geoapifyRoute({ points, vehicle }) {
     distance_m: Number(feature.properties.distance ?? 0),
     duration_s: Number(feature.properties.time ?? 0),
     legs,
-    country_metadata: routeCountries(legs).map(country_code => ({ country_code })),
+    country_metadata: includeCountryDetails ? routeCountries(legs).map(country_code => ({ country_code })) : [],
+    country_details_loaded: includeCountryDetails,
     provider: "geoapify"
   };
 }
