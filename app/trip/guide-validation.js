@@ -80,8 +80,15 @@ function indexGuideDays(days) {
   return byStage;
 }
 
+function sameNullableId(actual, expected) {
+  return (actual ?? null) === (expected ?? null);
+}
+
 export function validateGuideAgainstTrip(guide, state) {
   if (!guide || typeof guide !== "object") throw new TypeError("Guía inválida");
+  if (Array.isArray(state.logistics?.proposedOvernights) && state.logistics.proposedOvernights.length) {
+    throw new Error("No se puede validar una guía con pernoctas logísticas pendientes de confirmar");
+  }
   const expected = collectExpected(state.trip?.stages ?? []);
   const days = Array.isArray(guide.days) ? guide.days : [];
   const byStage = indexGuideDays(days);
@@ -95,10 +102,10 @@ export function validateGuideAgainstTrip(guide, state) {
     const day = byStage.get(item.driving_stage_id);
     if (!day) throw new Error(`La guía omitió el tramo de conducción ${item.driving_stage_id}`);
 
-    if (day.from_point_id && day.from_point_id !== item.from_point_id) throw new Error(`La guía intentó cambiar el origen de ${item.driving_stage_id}`);
-    if (day.to_point_id && day.to_point_id !== item.to_point_id) throw new Error(`La guía intentó cambiar el destino de ${item.driving_stage_id}`);
-    if (day.overnight_id && day.overnight_id !== item.overnight_id) throw new Error(`La guía intentó cambiar la pernocta de ${item.driving_stage_id}`);
-    if (day.base_id && day.base_id !== item.base_id) throw new Error(`La guía intentó cambiar la base de ${item.driving_stage_id}`);
+    if (day.from_point_id != null && day.from_point_id !== item.from_point_id) throw new Error(`La guía intentó cambiar el origen de ${item.driving_stage_id}`);
+    if (day.to_point_id != null && day.to_point_id !== item.to_point_id) throw new Error(`La guía intentó cambiar el destino de ${item.driving_stage_id}`);
+    if (!sameNullableId(day.overnight_id, item.overnight_id)) throw new Error(`La guía intentó cambiar la pernocta de ${item.driving_stage_id}`);
+    if (!sameNullableId(day.base_id, item.base_id)) throw new Error(`La guía intentó cambiar la base de ${item.driving_stage_id}`);
     if (day.distance_m != null && !sameNumber(day.distance_m, item.distance_m)) throw new Error(`La guía intentó cambiar la distancia de ${item.driving_stage_id}`);
     if (day.duration_s != null && !sameNumber(day.duration_s, item.duration_s)) throw new Error(`La guía intentó cambiar la duración de ${item.driving_stage_id}`);
     if (day.overnight_compatibility != null && !sameCompatibility(day.overnight_compatibility, item.overnight_compatibility)) {
@@ -107,11 +114,11 @@ export function validateGuideAgainstTrip(guide, state) {
 
     day.from_point_id = item.from_point_id;
     day.to_point_id = item.to_point_id;
+    day.overnight_id = item.overnight_id;
+    day.base_id = item.base_id;
     day.distance_m = item.distance_m;
     day.duration_s = item.duration_s;
     day.overnight_compatibility = item.overnight_compatibility;
-    if (item.overnight_id) day.overnight_id = item.overnight_id;
-    if (item.base_id) day.base_id = item.base_id;
   }
   enforceRouteCountries(guide, state);
   return enforceWarnings(guide, state);
