@@ -13,6 +13,7 @@ function collectExpected(stages) {
 
 function sameNumber(a, b) { return Number(a) === Number(b); }
 function sameCompatibility(a, b) { return JSON.stringify(a ?? null) === JSON.stringify(b ?? null); }
+function sameJson(a, b) { return JSON.stringify(a ?? null) === JSON.stringify(b ?? null); }
 
 function authoritativeWarnings(state) {
   return (state.logistics?.warnings ?? []).map(warning => ({
@@ -52,11 +53,27 @@ function enforceWarnings(guide, state) {
   return guide;
 }
 
+function enforceRouteCountries(guide, state) {
+  const expectedCountries = Array.isArray(state.logistics?.countries) ? [...state.logistics.countries] : [];
+  const expectedMetadata = state.route?.country_metadata ?? null;
+
+  if (guide.route_countries != null && !sameJson(guide.route_countries, expectedCountries)) {
+    throw new Error("La guía intentó cambiar los países autoritativos de la ruta");
+  }
+  if (guide.country_metadata != null && !sameJson(guide.country_metadata, expectedMetadata)) {
+    throw new Error("La guía intentó cambiar los metadatos autoritativos de países");
+  }
+
+  guide.route_countries = expectedCountries;
+  guide.country_metadata = expectedMetadata;
+  return guide;
+}
+
 function indexGuideDays(days) {
   const byStage = new Map();
   for (const day of days) {
     const stageId = day?.driving_stage_id;
-    if (!stageId) continue; // Días de estancia sin conducción pueden no tener driving_stage_id.
+    if (!stageId) continue;
     if (byStage.has(stageId)) throw new Error(`La guía duplicó el tramo de conducción ${stageId}`);
     byStage.set(stageId, day);
   }
@@ -96,5 +113,6 @@ export function validateGuideAgainstTrip(guide, state) {
     if (item.overnight_id) day.overnight_id = item.overnight_id;
     if (item.base_id) day.base_id = item.base_id;
   }
+  enforceRouteCountries(guide, state);
   return enforceWarnings(guide, state);
 }
