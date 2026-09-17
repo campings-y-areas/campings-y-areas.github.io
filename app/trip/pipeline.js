@@ -1,38 +1,43 @@
 import { getState, setState } from "../core/store.js";
 import { assertOvernight, assertRoute, assertWaypoint } from "../core/contracts.js";
 
-function overnightWaypoint(target, index) {
+function overnightWaypoint(target) {
   const overnight = assertOvernight(target.overnight);
-  const id = `logistics-overnight-${index + 1}-${overnight.overnight_id}`;
+  const stageId = String(target.driving_stage_id ?? "stage");
+  const id = `logistics:${stageId}:${overnight.overnight_id}`;
   return assertWaypoint({
     id,
-    request_point_id: id,
-    requested_text: overnight.nombre ?? overnight.name ?? null,
-    requested_lat: Number(overnight.lat),
-    requested_lon: Number(overnight.lon),
     label: overnight.nombre ?? overnight.name ?? "Pernocta logística",
     country: overnight.pais ?? null,
     country_code: overnight.country_code ?? null,
     lat: Number(overnight.lat),
     lon: Number(overnight.lon),
     synthetic_route_point: true,
-    logistics_overnight_id: overnight.overnight_id
+    generated_by: "logistics",
+    logistics_overnight_id: overnight.overnight_id,
+    logistics_stage_id: stageId
   });
 }
 
 function insertSplitTargets(originalWaypoints, stages, splitTargets) {
   if (!splitTargets.length) return originalWaypoints;
-  const targetsByStage = new Map();
-  for (const stage of stages) targetsByStage.set(stage.driving_stage_id, []);
+  const targetsByStage = new Map(stages.map(stage => [stage.driving_stage_id, []]));
   for (const target of splitTargets) {
-    const stage = stages.find(item => (item.split_targets ?? []).includes(target));
-    if (stage) targetsByStage.get(stage.driving_stage_id).push(target);
+    if (targetsByStage.has(target.driving_stage_id)) targetsByStage.get(target.driving_stage_id).push(target);
   }
   const result = [];
+  const inserted = new Set();
   stages.forEach((stage, stageIndex) => {
     if (stageIndex === 0) result.push(originalWaypoints[0]);
     const targets = targetsByStage.get(stage.driving_stage_id) ?? [];
-    targets.forEach((target, index) => result.push(overnightWaypoint(target, index)));
+    for (const target of targets) {
+      const point = overnightWaypoint(target);
+      const key = `${point.logistics_stage_id}:${point.logistics_overnight_id}`;
+      if (!inserted.has(key)) {
+        inserted.add(key);
+        result.push(point);
+      }
+    }
     result.push(originalWaypoints[stageIndex + 1]);
   });
   return result;
@@ -80,10 +85,13 @@ export async function buildTrip({ routing, logistics, enrichment, guide }) {
       routing, logistics, waypoints: routedWaypoints, vehicle: current.vehicle, trip: current.trip,
       includeCountryDetails: false, knownCountries: initialCountries
     }));
-    setState(state => ({ ...state, trip: { ...state.trip, waypoints: routedWaypoints } }));
   }
 
-  setState(state => ({ ...state, route }));
+  setState(state => ({
+    ...state,
+    route: { ...route, waypoints: routedWaypoints },
+    trip: { ...state.trip, waypoints: requestedWaypoints }
+  }));
   const stages = Array.isArray(logisticsResult?.stages) ? logisticsResult.stages : [];
   const overnights = (logisticsResult?.overnights ?? []).filter(Boolean).map(assertOvernight);
   const catalogs = logisticsResult?.catalogs ?? {};
@@ -105,7 +113,7 @@ export async function buildTrip({ routing, logistics, enrichment, guide }) {
   }));
 
   const enriched = await enrichment({
-    trip: getState().trip, route, overnights, catalogs,
+    trip: getState().trip, route: getState().route, overnights, catalogs,
     countries: logisticsResult?.countries ?? initialCountries, vehicle: getState().vehicle
   });
   if (Array.isArray(enriched?.stages)) {
