@@ -1,15 +1,23 @@
 import { CAMPING_SOURCES } from "../config/camping-sources.js";
 import { registerDataset, loadDataset, loadAvailable } from "../services/data-registry.js";
 
-function stableCampingId(camping, country, index) {
-  const existing = camping.overnight_id ?? camping.id ?? camping.camping_id;
-  if (existing != null && String(existing).trim()) return String(existing).trim();
-  const name = String(camping.nombre ?? camping.name ?? "camping").trim().toLowerCase().replace(/[^a-z0-9áéíóúüñ]+/gi, "-").replace(/^-|-$/g, "");
-  return `camping:${country}:${index}:${name || "sin-nombre"}`;
+function token(value) {
+  return String(value ?? "").trim().toLowerCase().replace(/[^a-z0-9áéíóúüñ.-]+/gi, "-").replace(/^-|-$/g, "");
 }
 
-function normalizeCamping(camping, country, index) {
-  const id = stableCampingId(camping, country, index);
+function stableCampingId(camping, country) {
+  const existing = camping.overnight_id ?? camping.id ?? camping.camping_id;
+  if (existing != null && String(existing).trim()) return String(existing).trim();
+  const name = token(camping.nombre ?? camping.name ?? "camping") || "sin-nombre";
+  const locality = token(camping.localidad ?? camping.ciudad ?? camping.city ?? camping.municipio);
+  const lat = Number(camping.lat);
+  const lon = Number(camping.lon);
+  const coords = Number.isFinite(lat) && Number.isFinite(lon) ? `${lat.toFixed(5)}:${lon.toFixed(5)}` : "sin-coordenadas";
+  return `camping:${token(country)}:${locality || "sin-localidad"}:${name}:${coords}`;
+}
+
+function normalizeCamping(camping, country) {
+  const id = stableCampingId(camping, country);
   return {
     ...camping,
     id: camping.id ?? id,
@@ -26,7 +34,7 @@ const keys = [];
 for (const [country, url] of Object.entries(CAMPING_SOURCES)) {
   const key = `campings:${country}`;
   keys.push(key);
-  registerDataset(key, { url, normalize: (item, index) => normalizeCamping(item, country, index), domain: "campings", country });
+  registerDataset(key, { url, normalize: item => normalizeCamping(item, country), domain: "campings", country });
 }
 
 export function campingCountries() {
