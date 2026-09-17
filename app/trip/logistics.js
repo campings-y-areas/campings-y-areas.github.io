@@ -1,5 +1,5 @@
 import { assertOvernight } from "../core/contracts.js";
-import { isOvernightCompatible } from "./overnight-policy.js";
+import { assessOvernightCompatibility } from "./overnight-policy.js";
 
 function radians(value) { return value * Math.PI / 180; }
 function distanceKm(a, b) {
@@ -11,21 +11,26 @@ function distanceKm(a, b) {
 }
 
 export function selectStageOvernights({ stages, candidates, vehicle, preferences, travellers }) {
-  const available = candidates.filter(item => isOvernightCompatible(item, { vehicle, preferences, travellers }));
+  const available = candidates
+    .map(item => ({ item, assessment: assessOvernightCompatibility(item, { vehicle, preferences, travellers }) }))
+    .filter(entry => entry.assessment.eligible);
+
   return stages.map((stage, index) => {
-    if (index === stages.length - 1) return { ...stage, overnight_id: null, overnight: null };
+    if (index === stages.length - 1) return { ...stage, overnight_id: null, overnight: null, overnight_compatibility: null };
     const ranked = available
-      .map(item => ({ item, km: distanceKm(stage.to, item) }))
+      .map(entry => ({ ...entry, km: distanceKm(stage.to, entry.item) }))
       .filter(entry => Number.isFinite(entry.km))
       .sort((a, b) => a.km - b.km);
     if (!ranked.length) throw new Error(`No hay pernocta compatible para ${stage.driving_stage_id}`);
-    const overnight = assertOvernight(ranked[0].item);
+    const selected = ranked[0];
+    const overnight = assertOvernight(selected.item);
     return {
       ...stage,
       overnight_id: overnight.overnight_id,
       base_id: overnight.overnight_id,
       overnight,
-      overnight_distance_km: ranked[0].km
+      overnight_distance_km: selected.km,
+      overnight_compatibility: selected.assessment
     };
   });
 }
