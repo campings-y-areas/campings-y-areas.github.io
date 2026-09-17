@@ -10,8 +10,9 @@ function distanceKm(a, b) {
   return earth * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1 - x));
 }
 
-function nearestCompatible(point, available) {
+function nearestCompatible(point, available, excludedOvernightIds = new Set()) {
   const ranked = available
+    .filter(entry => !excludedOvernightIds.has(String(entry.item?.overnight_id)))
     .map(entry => ({ ...entry, km: distanceKm(point, entry.item) }))
     .filter(entry => Number.isFinite(entry.km))
     .sort((a, b) => a.km - b.km);
@@ -28,6 +29,36 @@ function authoritativeOvernightForPoint(point, available) {
   return { overnight: assertOvernight(entry.item), distance_km: 0, compatibility: entry.assessment };
 }
 
+function buildSplitTargets(stage, available, excludedOvernightIds = new Set()) {
+  const splitTargets = (stage.split_points ?? []).map(point => {
+    const selected = nearestCompatible(point, available, excludedOvernightIds);
+    if (!selected) {
+      return {
+        driving_stage_id: stage.driving_stage_id,
+        route_point: point,
+        overnight_id: null,
+        overnight: null,
+        overnight_distance_km: null,
+        overnight_compatibility: null,
+        unavailable: true
+      };
+    }
+    return {
+      driving_stage_id: stage.driving_stage_id,
+      route_point: point,
+      overnight_id: selected.overnight.overnight_id,
+      overnight: selected.overnight,
+      overnight_distance_km: selected.distance_km,
+      overnight_compatibility: selected.compatibility,
+      unavailable: false
+    };
+  });
+  return {
+    usable: splitTargets.filter(target => target.overnight),
+    unresolved: splitTargets.filter(target => target.unavailable).map(target => target.route_point)
+  };
+}
+
 export function selectStageOvernights({ stages, candidates, vehicle, preferences, travellers }) {
   const available = candidates
     .map(item => ({ item, assessment: assessOvernightCompatibility(item, { vehicle, preferences, travellers }) }))
@@ -35,6 +66,28 @@ export function selectStageOvernights({ stages, candidates, vehicle, preferences
 
   return stages.map((stage, index) => {
     const authoritative = authoritativeOvernightForPoint(stage.to, available);
+
+    // Una pernocta ya insertada sigue siendo el destino autoritativo del tramo,
+    // pero si el nuevo tramo hasta ella aún excede el máximo de conducción hay
+    // que poder insertar otra pernocta antes. No se sustituye el destino final.
+    if (stage.exceeds_max_driving) {
+      const excluded = new Set();
+      if (authoritative?.overnight?.overnight_id) excluded.add(String(authoritative.overnight.overnight_id));
+      const split = buildSplitTargets(stage, available, excluded);
+      return {
+        ...stage,
+        overnight_id: authoritative?.overnight?.overnight_id ?? null,
+        base_id: authoritative?.overnight?.overnight_id ?? null,
+        overnight: authoritative?.overnight ?? null,
+        overnight_distance_km: authoritative ? 0 : null,
+        overnight_compatibility: authoritative?.compatibility ?? null,
+        split_targets: split.usable,
+        unresolved_split_points: split.unresolved,
+        requires_stage_split: split.usable.length > 0,
+        authoritative_logistics_stop: Boolean(authoritative)
+      };
+    }
+
     if (authoritative) {
       return {
         ...stage,
@@ -46,44 +99,6 @@ export function selectStageOvernights({ stages, candidates, vehicle, preferences
         split_targets: [],
         requires_stage_split: false,
         authoritative_logistics_stop: true
-      };
-    }
-
-    if (stage.exceeds_max_driving) {
-      const splitTargets = (stage.split_points ?? []).map(point => {
-        const selected = nearestCompatible(point, available);
-        if (!selected) {
-          return {
-            driving_stage_id: stage.driving_stage_id,
-            route_point: point,
-            overnight_id: null,
-            overnight: null,
-            overnight_distance_km: null,
-            overnight_compatibility: null,
-            unavailable: true
-          };
-        }
-        return {
-          driving_stage_id: stage.driving_stage_id,
-          route_point: point,
-          overnight_id: selected.overnight.overnight_id,
-          overnight: selected.overnight,
-          overnight_distance_km: selected.distance_km,
-          overnight_compatibility: selected.compatibility,
-          unavailable: false
-        };
-      });
-      const usableTargets = splitTargets.filter(target => target.overnight);
-      return {
-        ...stage,
-        overnight_id: null,
-        base_id: null,
-        overnight: null,
-        overnight_distance_km: null,
-        overnight_compatibility: null,
-        split_targets: usableTargets,
-        unresolved_split_points: splitTargets.filter(target => target.unavailable).map(target => target.route_point),
-        requires_stage_split: usableTargets.length > 0
       };
     }
 
