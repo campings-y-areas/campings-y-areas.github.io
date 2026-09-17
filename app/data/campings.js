@@ -7,7 +7,7 @@ function token(value) {
 
 function stableCampingId(camping, country) {
   const existing = camping.overnight_id ?? camping.id ?? camping.camping_id;
-  if (existing != null && String(existing).trim()) return String(existing).trim();
+  if (existing != null && String(existing).trim()) return `camping:${token(country)}:${String(existing).trim()}`;
   const name = token(camping.nombre ?? camping.name ?? "camping") || "sin-nombre";
   const locality = token(camping.localidad ?? camping.ciudad ?? camping.city ?? camping.municipio);
   const lat = Number(camping.lat);
@@ -20,7 +20,8 @@ function normalizeCamping(camping, country) {
   const id = stableCampingId(camping, country);
   return {
     ...camping,
-    id: camping.id ?? id,
+    source_id: camping.source_id ?? camping.overnight_id ?? camping.id ?? camping.camping_id ?? null,
+    id,
     overnight_id: id,
     tipo: camping.tipo || "camping",
     pais: camping.pais || country,
