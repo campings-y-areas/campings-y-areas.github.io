@@ -30,8 +30,9 @@ function authoritativeOvernightForPoint(point, available) {
 }
 
 function buildSplitTargets(stage, available, excludedOvernightIds = new Set()) {
+  const used = new Set(excludedOvernightIds);
   const splitTargets = (stage.split_points ?? []).map(point => {
-    const selected = nearestCompatible(point, available, excludedOvernightIds);
+    const selected = nearestCompatible(point, available, used);
     if (!selected) {
       return {
         driving_stage_id: stage.driving_stage_id,
@@ -43,6 +44,7 @@ function buildSplitTargets(stage, available, excludedOvernightIds = new Set()) {
         unavailable: true
       };
     }
+    used.add(String(selected.overnight.overnight_id));
     return {
       driving_stage_id: stage.driving_stage_id,
       route_point: point,
@@ -67,9 +69,6 @@ export function selectStageOvernights({ stages, candidates, vehicle, preferences
   return stages.map((stage, index) => {
     const authoritative = authoritativeOvernightForPoint(stage.to, available);
 
-    // Una pernocta ya insertada sigue siendo el destino autoritativo del tramo,
-    // pero si el nuevo tramo hasta ella aún excede el máximo de conducción hay
-    // que poder insertar otra pernocta antes. No se sustituye el destino final.
     if (stage.exceeds_max_driving) {
       const excluded = new Set();
       if (authoritative?.overnight?.overnight_id) excluded.add(String(authoritative.overnight.overnight_id));
