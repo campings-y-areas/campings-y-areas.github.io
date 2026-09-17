@@ -5,23 +5,40 @@ function token(value) {
   return String(value ?? "").trim().toLowerCase().replace(/[^a-z0-9áéíóúüñ.-]+/gi, "-").replace(/^-|-$/g, "");
 }
 
-function stablePointId(point, country) {
-  const existing = point.overnight_id ?? point.id ?? point.area_id ?? point.parking_id;
+function pointPrefix(point, country) {
   const type = token(point.tipo ?? "area") || "area";
-  if (existing != null && String(existing).trim()) return `${type}:${token(country)}:${String(existing).trim()}`;
+  return `${type}:${token(country)}:`;
+}
+
+function sourcePointId(point, country) {
+  const prefix = pointPrefix(point, country);
+  const existing = point.overnight_id ?? point.id ?? point.area_id ?? point.parking_id;
+  if (existing == null || !String(existing).trim()) return null;
+  const value = String(existing).trim();
+  return value.startsWith(prefix) ? value.slice(prefix.length) : value;
+}
+
+function stablePointId(point, country) {
+  const prefix = pointPrefix(point, country);
+  const existing = point.overnight_id ?? point.id ?? point.area_id ?? point.parking_id;
+  if (existing != null && String(existing).trim()) {
+    const value = String(existing).trim();
+    return value.startsWith(prefix) ? value : `${prefix}${value}`;
+  }
+  const type = token(point.tipo ?? "area") || "area";
   const name = token(point.nombre ?? point.name ?? type) || "sin-nombre";
   const locality = token(point.localidad ?? point.ciudad ?? point.city ?? point.municipio);
   const lat = Number(point.lat);
   const lon = Number(point.lon);
   const coords = Number.isFinite(lat) && Number.isFinite(lon) ? `${lat.toFixed(5)}:${lon.toFixed(5)}` : "sin-coordenadas";
-  return `${type}:${token(country)}:${locality || "sin-localidad"}:${name}:${coords}`;
+  return `${prefix}${locality || "sin-localidad"}:${name}:${coords}`;
 }
 
 function normalizePoint(point, country) {
   const id = stablePointId(point, country);
   return {
     ...point,
-    source_id: point.source_id ?? point.overnight_id ?? point.id ?? point.area_id ?? point.parking_id ?? null,
+    source_id: point.source_id ?? sourcePointId(point, country),
     id,
     overnight_id: id,
     pais: point.pais || country,
