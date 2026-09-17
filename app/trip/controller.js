@@ -18,8 +18,8 @@ function pipelineGuideAdapter(service, { demo = false, demoGuide = null } = {}) 
   }, { demo });
 }
 
-export function createProductionGuideAdapter({ request, path } = {}) {
-  const remoteGenerate = createWorkerGuideGenerator({ request, path });
+export function createProductionGuideAdapter({ request, planPath = "/plan-route", writePath = "/write-route" } = {}) {
+  const remoteGenerate = createWorkerGuideGenerator({ request, planPath, writePath });
   return pipelineGuideAdapter(createGuideService({ remoteGenerate }));
 }
 
