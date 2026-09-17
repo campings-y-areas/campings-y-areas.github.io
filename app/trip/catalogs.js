@@ -1,5 +1,5 @@
 import { loadCampingsByCountry } from "../data/campings.js";
-import { loadAreasByCountry } from "../data/areas.js";
+import { loadOvernightCandidates } from "../data/areas.js";
 import { loadPlacesAvailable } from "../data/places.js";
 import { loadServicesAvailable } from "../data/services.js";
 import { loadWorkshopsByCountry } from "../data/workshops.js";
@@ -29,7 +29,7 @@ export async function loadTripCatalogs({ countries = [], includeParkings = false
   await Promise.all(uniqueCountries.map(async country => {
     const [campingResult, areaResult, workshopResult, regulationResult] = await Promise.all([
       settled(() => loadCampingsByCountry(country)),
-      settled(() => loadAreasByCountry(country)),
+      settled(() => loadOvernightCandidates(country, { includeParkings })),
       settled(() => loadWorkshopsByCountry(country)),
       settled(() => loadRegulationsByCountry(country))
     ]);
@@ -38,10 +38,7 @@ export async function loadTripCatalogs({ countries = [], includeParkings = false
     else campings.push(...campingResult.data);
 
     if (areaResult.error) errors.set(`areas:${country}`, areaResult.error);
-    else areas.push(...areaResult.data.filter(point => {
-      const type = String(point.tipo ?? "area").toLowerCase();
-      return !type.includes("parking") || includeParkings;
-    }));
+    else areas.push(...areaResult.data);
 
     if (workshopResult.error) errors.set(`workshops:${country}`, workshopResult.error);
     else workshops.push(...workshopResult.data);
