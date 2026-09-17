@@ -40,27 +40,27 @@ function insertSplitTargets(originalWaypoints, stages, splitTargets) {
 
 async function routeAndLogistics({ routing, logistics, waypoints, vehicle, trip, includeCountryDetails = false, knownCountries = null }) {
   const route = assertRoute(await routing({ waypoints, vehicle, includeCountryDetails }));
-  const logisticsResult = await logistics({
-    trip: { ...trip, waypoints },
-    route,
-    vehicle,
-    knownCountries
-  });
+  const logisticsResult = await logistics({ trip: { ...trip, waypoints }, route, vehicle, knownCountries });
   return { route, logisticsResult };
 }
 
-function drivingLimitWarnings(stages) {
+function drivingLimitWarnings(stages, unresolvedSplitPoints = []) {
+  const unresolvedStages = new Set(unresolvedSplitPoints.map(item => item.driving_stage_id));
   return stages
     .filter(stage => stage.exceeds_max_driving && Number(stage.max_driving_seconds) > 0)
     .map(stage => {
       const excessSeconds = Math.max(0, Number(stage.duration_s) - Number(stage.max_driving_seconds));
+      const noCompatibleStop = unresolvedStages.has(stage.driving_stage_id);
       return {
-        code: "max_driving_exceeded",
+        code: noCompatibleStop ? "max_driving_exceeded_no_compatible_overnight" : "max_driving_exceeded",
         driving_stage_id: stage.driving_stage_id,
         duration_s: Number(stage.duration_s),
         requested_max_s: Number(stage.max_driving_seconds),
         excess_s: excessSeconds,
-        message: "No se ha encontrado una división logística que permita respetar exactamente el máximo de conducción. La guía continúa con la mejor pernocta compatible disponible y debe informar del exceso real de este tramo."
+        reason: noCompatibleStop ? "no_compatible_overnight_available" : "route_after_logistics_still_exceeds_limit",
+        message: noCompatibleStop
+          ? "No existe una pernocta compatible disponible en la zona necesaria para respetar el máximo de conducción. La guía continúa y debe informar del exceso real de este tramo."
+          : "La ruta logística recalculada todavía supera el máximo solicitado. La guía continúa y debe informar del exceso real de este tramo."
       };
     });
 }
@@ -70,25 +70,15 @@ export async function buildTrip({ routing, logistics, enrichment, guide }) {
   const requestedWaypoints = current.trip.waypoints.map(assertWaypoint);
   let routedWaypoints = requestedWaypoints;
   let { route, logisticsResult } = await routeAndLogistics({
-    routing,
-    logistics,
-    waypoints: requestedWaypoints,
-    vehicle: current.vehicle,
-    trip: current.trip,
-    includeCountryDetails: true
+    routing, logistics, waypoints: requestedWaypoints, vehicle: current.vehicle, trip: current.trip, includeCountryDetails: true
   });
   const initialCountries = logisticsResult?.countries ?? [];
 
   if (logisticsResult?.requiresReroute) {
     routedWaypoints = insertSplitTargets(requestedWaypoints, logisticsResult.stages ?? [], logisticsResult.splitTargets ?? []);
     ({ route, logisticsResult } = await routeAndLogistics({
-      routing,
-      logistics,
-      waypoints: routedWaypoints,
-      vehicle: current.vehicle,
-      trip: current.trip,
-      includeCountryDetails: false,
-      knownCountries: initialCountries
+      routing, logistics, waypoints: routedWaypoints, vehicle: current.vehicle, trip: current.trip,
+      includeCountryDetails: false, knownCountries: initialCountries
     }));
     setState(state => ({ ...state, trip: { ...state.trip, waypoints: routedWaypoints } }));
   }
@@ -97,7 +87,8 @@ export async function buildTrip({ routing, logistics, enrichment, guide }) {
   const stages = Array.isArray(logisticsResult?.stages) ? logisticsResult.stages : [];
   const overnights = (logisticsResult?.overnights ?? []).filter(Boolean).map(assertOvernight);
   const catalogs = logisticsResult?.catalogs ?? {};
-  const warnings = drivingLimitWarnings(stages);
+  const unresolvedSplitPoints = logisticsResult?.unresolvedSplitPoints ?? [];
+  const warnings = drivingLimitWarnings(stages, unresolvedSplitPoints);
 
   setState(state => ({
     ...state,
@@ -107,18 +98,15 @@ export async function buildTrip({ routing, logistics, enrichment, guide }) {
       overnights,
       countries: logisticsResult?.countries ?? initialCountries,
       catalogs,
+      unresolvedSplitPoints,
       warnings,
       maxDrivingLimitSatisfied: warnings.length === 0
     }
   }));
 
   const enriched = await enrichment({
-    trip: getState().trip,
-    route,
-    overnights,
-    catalogs,
-    countries: logisticsResult?.countries ?? initialCountries,
-    vehicle: getState().vehicle
+    trip: getState().trip, route, overnights, catalogs,
+    countries: logisticsResult?.countries ?? initialCountries, vehicle: getState().vehicle
   });
   if (Array.isArray(enriched?.stages)) {
     setState(state => ({
