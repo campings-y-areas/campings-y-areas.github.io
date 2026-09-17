@@ -7,8 +7,8 @@ function token(value) {
 
 function stablePointId(point, country) {
   const existing = point.overnight_id ?? point.id ?? point.area_id ?? point.parking_id;
-  if (existing != null && String(existing).trim()) return String(existing).trim();
   const type = token(point.tipo ?? "area") || "area";
+  if (existing != null && String(existing).trim()) return `${type}:${token(country)}:${String(existing).trim()}`;
   const name = token(point.nombre ?? point.name ?? type) || "sin-nombre";
   const locality = token(point.localidad ?? point.ciudad ?? point.city ?? point.municipio);
   const lat = Number(point.lat);
@@ -21,7 +21,8 @@ function normalizePoint(point, country) {
   const id = stablePointId(point, country);
   return {
     ...point,
-    id: point.id ?? id,
+    source_id: point.source_id ?? point.overnight_id ?? point.id ?? point.area_id ?? point.parking_id ?? null,
+    id,
     overnight_id: id,
     pais: point.pais || country,
     region: point.region || point.comunidad_autonoma || null,
