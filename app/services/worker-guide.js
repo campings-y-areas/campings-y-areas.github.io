@@ -43,6 +43,7 @@ function workerStage(stage, index, total, requestedIds) {
   const baseId = stage.base_id ?? overnightId ?? null;
   return {
     driving_stage_id: stage.driving_stage_id,
+    route_stage_key: stage.route_stage_key ?? null,
     from_point_id: stage.from_point_id,
     to_point_id: stage.to_point_id,
     base_id: baseId,
@@ -63,11 +64,13 @@ function workerStage(stage, index, total, requestedIds) {
     is_final: final,
     requested_waypoint: requestedWaypoint,
     stay_eligible: requestedWaypoint || final,
-    overnight: stage.overnight ?? null
+    overnight: stage.overnight ?? null,
+    overnight_compatibility: stage.overnight_compatibility ?? null,
+    content: stage.content ?? {}
   };
 }
 
-function buildWorkerProfile(state) {
+function buildWorkerProfile(state, guideContext) {
   const trip = state.trip ?? {};
   const points = Array.isArray(trip.waypoints) ? trip.waypoints : [];
   const requestedIds = requestedPointIds(points);
@@ -103,7 +106,10 @@ function buildWorkerProfile(state) {
     request_points: points.map((point, index) => workerPoint(point, index, points.length)),
     stages,
     vacation_days: vacationDays,
-    stops: stages
+    stops: stages,
+    route_facts: guideContext.routeFacts,
+    editorial_material: guideContext.editorialMaterial,
+    editorial_brief: guideContext.editorialBrief
   };
 }
 
@@ -129,8 +135,8 @@ export function createWorkerGuideGenerator({ request = backendRequest, planPath 
       enrichment: payload.enrichment,
       vehicle: payload.vehicle
     };
-    buildGuideContext(state);
-    const profile = buildWorkerProfile(state);
+    const guideContext = buildGuideContext(state);
+    const profile = buildWorkerProfile(state, guideContext);
     const planned = assertWorkerResult(
       await request(planPath, { method: "POST", body: profile }),
       "planned",
