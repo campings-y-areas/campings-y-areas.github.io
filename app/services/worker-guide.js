@@ -12,6 +12,15 @@ function pointIdentity(point) {
   return point?.request_point_id ?? point?.id ?? null;
 }
 
+function requestedPointIds(points) {
+  const ids = new Set();
+  for (const point of points) {
+    const id = pointIdentity(point);
+    if (id != null && String(id).trim()) ids.add(String(id));
+  }
+  return ids;
+}
+
 function workerPoint(point, index, total) {
   const requestPointId = pointIdentity(point) ?? `req-${index + 1}`;
   return {
@@ -61,7 +70,7 @@ function workerStage(stage, index, total, requestedIds) {
 function buildWorkerProfile(state) {
   const trip = state.trip ?? {};
   const points = Array.isArray(trip.waypoints) ? trip.waypoints : [];
-  const requestedIds = new Set(points.map(point => String(pointIdentity(point))).filter(Boolean));
+  const requestedIds = requestedPointIds(points);
   const sourceStages = Array.isArray(trip.stages) ? trip.stages : [];
   const stages = sourceStages.map((stage, index) => workerStage(stage, index, sourceStages.length, requestedIds));
   const vacationDays = buildVacationDays(trip);
