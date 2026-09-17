@@ -9,6 +9,9 @@ export function buildGuideContext(state) {
   if (!state?.route?.geometry || !Array.isArray(state.trip?.stages) || !state.trip.stages.length) {
     throw new Error("El viaje debe estar cerrado antes de redactar la guía");
   }
+  if (Array.isArray(state.logistics?.proposedOvernights) && state.logistics.proposedOvernights.length) {
+    throw new Error("La guía no puede generarse mientras existan pernoctas logísticas propuestas sin confirmar");
+  }
   const drivingWarnings = Array.isArray(state.logistics?.warnings) ? state.logistics.warnings : [];
   const countries = Array.isArray(state.logistics?.countries) ? [...state.logistics.countries] : [];
   const context = {
