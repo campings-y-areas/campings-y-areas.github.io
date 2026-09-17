@@ -19,6 +19,8 @@ export function buildGuideContext(state) {
         requested_lat: point.requested_lat ?? point.lat,
         requested_lon: point.requested_lon ?? point.lon,
         label: point.label,
+        country: point.country ?? null,
+        country_code: point.country_code ?? null,
         lat: point.lat,
         lon: point.lon
       })),
@@ -30,7 +32,8 @@ export function buildGuideContext(state) {
         duration_s: stage.duration_s,
         overnight_id: stage.overnight_id,
         base_id: stage.base_id ?? stage.overnight_id ?? null,
-        overnight: stage.overnight ?? null
+        overnight: stage.overnight ?? null,
+        overnight_compatibility: stage.overnight_compatibility ?? null
       }))
     },
     travellers: state.trip.travellers ?? {},
@@ -50,6 +53,9 @@ export function buildGuideContext(state) {
         "información práctica",
         "fotografías verificadas y pertinentes cuando estén disponibles"
       ],
+      logisticsWarnings: {
+        maximum_length_unknown_confirm_with_venue: "La longitud máxima admitida no está verificada. Indicar al viajero que confirme con el camping o área que admite la longitud total de su vehículo o conjunto antes de acudir. No afirmar compatibilidad por dimensiones."
+      },
       immutableFacts: [
         "request_point_id",
         "requested_lat",
@@ -58,7 +64,8 @@ export function buildGuideContext(state) {
         "overnight_id",
         "base_id",
         "distance_m",
-        "duration_s"
+        "duration_s",
+        "overnight_compatibility"
       ]
     }
   };
