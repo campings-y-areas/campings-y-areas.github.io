@@ -50,8 +50,22 @@ function stepDuration(step) {
   return Number(step?.time ?? step?.duration_s ?? step?.properties?.time ?? 0);
 }
 
-function stepGeometry(step) {
-  return step?.geometry ?? step?.properties?.geometry ?? null;
+function stepIndexes(step) {
+  const from = Number(step?.from_index ?? step?.properties?.from_index);
+  const to = Number(step?.to_index ?? step?.properties?.to_index);
+  return Number.isInteger(from) && Number.isInteger(to) && from >= 0 && to >= from ? { from, to } : null;
+}
+
+function geometryFromCoords(coords) {
+  return { type: "LineString", coordinates: coords };
+}
+
+function stepGeometryFromLeg(legGeometry, indexes) {
+  const coords = coordsFromGeometry(legGeometry);
+  if (!indexes || coords.length < 2 || indexes.from >= coords.length) return null;
+  const to = Math.min(indexes.to, coords.length - 1);
+  const slice = coords.slice(indexes.from, to + 1);
+  return slice.length >= 2 ? geometryFromCoords(slice) : null;
 }
 
 export function splitPointsForDuration({ geometry, steps = [], durationSeconds, maxDrivingSeconds }) {
@@ -62,7 +76,11 @@ export function splitPointsForDuration({ geometry, steps = [], durationSeconds, 
   for (let seconds = max; seconds < duration; seconds += max) targets.push(seconds);
 
   const timedSteps = (Array.isArray(steps) ? steps : [])
-    .map(step => ({ step, duration: stepDuration(step), geometry: stepGeometry(step) }))
+    .map(step => {
+      const duration = stepDuration(step);
+      const indexes = stepIndexes(step);
+      return { duration, geometry: stepGeometryFromLeg(geometry, indexes) };
+    })
     .filter(item => item.duration > 0 && item.geometry);
   const timedTotal = timedSteps.reduce((sum, item) => sum + item.duration, 0);
 
@@ -74,11 +92,11 @@ export function splitPointsForDuration({ geometry, steps = [], durationSeconds, 
         const next = elapsed + item.duration;
         if (scaledTarget <= next) {
           const fraction = item.duration > 0 ? (scaledTarget - elapsed) / item.duration : 0;
-          return { ...pointAtGeometryFraction(item.geometry, fraction), driving_seconds: targetSeconds, split_basis: "step_time" };
+          return { ...pointAtGeometryFraction(item.geometry, fraction), driving_seconds: targetSeconds, split_basis: "geoapify_step_time" };
         }
         elapsed = next;
       }
-      return { ...pointAtGeometryFraction(timedSteps.at(-1).geometry, 1), driving_seconds: targetSeconds, split_basis: "step_time" };
+      return { ...pointAtGeometryFraction(timedSteps.at(-1).geometry, 1), driving_seconds: targetSeconds, split_basis: "geoapify_step_time" };
     });
   }
 
