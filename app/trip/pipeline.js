@@ -38,9 +38,14 @@ function insertSplitTargets(originalWaypoints, stages, splitTargets) {
   return result;
 }
 
-async function routeAndLogistics({ routing, logistics, waypoints, vehicle, trip }) {
-  const route = assertRoute(await routing({ waypoints, vehicle }));
-  const logisticsResult = await logistics({ trip: { ...trip, waypoints }, route, vehicle });
+async function routeAndLogistics({ routing, logistics, waypoints, vehicle, trip, includeCountryDetails = false, knownCountries = null }) {
+  const route = assertRoute(await routing({ waypoints, vehicle, includeCountryDetails }));
+  const logisticsResult = await logistics({
+    trip: { ...trip, waypoints },
+    route,
+    vehicle,
+    knownCountries
+  });
   return { route, logisticsResult };
 }
 
@@ -60,8 +65,6 @@ function drivingLimitWarnings(stages) {
     });
 }
 
-// Orquestación cerrada:
-// puntos -> routing inicial -> logística -> pernoctas de corte -> routing definitivo -> logística definitiva -> enriquecimiento -> guía.
 export async function buildTrip({ routing, logistics, enrichment, guide }) {
   const current = getState();
   const requestedWaypoints = current.trip.waypoints.map(assertWaypoint);
@@ -71,8 +74,10 @@ export async function buildTrip({ routing, logistics, enrichment, guide }) {
     logistics,
     waypoints: requestedWaypoints,
     vehicle: current.vehicle,
-    trip: current.trip
+    trip: current.trip,
+    includeCountryDetails: true
   });
+  const initialCountries = logisticsResult?.countries ?? [];
 
   if (logisticsResult?.requiresReroute) {
     routedWaypoints = insertSplitTargets(requestedWaypoints, logisticsResult.stages ?? [], logisticsResult.splitTargets ?? []);
@@ -81,7 +86,9 @@ export async function buildTrip({ routing, logistics, enrichment, guide }) {
       logistics,
       waypoints: routedWaypoints,
       vehicle: current.vehicle,
-      trip: current.trip
+      trip: current.trip,
+      includeCountryDetails: false,
+      knownCountries: initialCountries
     }));
     setState(state => ({ ...state, trip: { ...state.trip, waypoints: routedWaypoints } }));
   }
@@ -98,7 +105,7 @@ export async function buildTrip({ routing, logistics, enrichment, guide }) {
     logistics: {
       ...state.logistics,
       overnights,
-      countries: logisticsResult?.countries ?? [],
+      countries: logisticsResult?.countries ?? initialCountries,
       catalogs,
       warnings,
       maxDrivingLimitSatisfied: warnings.length === 0
@@ -110,7 +117,7 @@ export async function buildTrip({ routing, logistics, enrichment, guide }) {
     route,
     overnights,
     catalogs,
-    countries: logisticsResult?.countries ?? [],
+    countries: logisticsResult?.countries ?? initialCountries,
     vehicle: getState().vehicle
   });
   if (Array.isArray(enriched?.stages)) {
