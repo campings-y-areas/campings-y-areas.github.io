@@ -42,12 +42,25 @@ function normalizeLegs(rawLegs, geometry) {
   });
 }
 
-export async function geoapifyRoute({ points, vehicle, includeCountryDetails = false }) {
+function routingOptions(preferences = {}) {
+  const avoid = new Set(Array.isArray(preferences?.avoid) ? preferences.avoid : []);
+  const options = [];
+  if (avoid.has("peajes")) options.push("avoid=tolls");
+  if (avoid.has("autopistas")) options.push("avoid=highways");
+  if (avoid.has("ferris")) options.push("avoid=ferries");
+  if (avoid.has("carreteras-complicadas")) options.push("less_maneuvers");
+  return options;
+}
+
+export async function geoapifyRoute({ points, vehicle, preferences = {}, includeCountryDetails = false }) {
   const key = getRuntimeConfig().geoapifyKey;
   if (!key) throw new Error("Geoapify no configurado");
   const waypoints = points.map(point => `${point.lat},${point.lon}`).join("|");
   const query = new URLSearchParams({ waypoints, mode: vehicleMode(vehicle), apiKey: key });
-  if (includeCountryDetails) query.set("details", "route_details");
+  const options = routingOptions(preferences);
+  if (options.length) query.set("avoid", options.filter(option => option.startsWith("avoid=")).map(option => option.slice(6)).join(","));
+  if (options.includes("less_maneuvers")) query.set("details", includeCountryDetails ? "route_details,instruction_details" : "instruction_details");
+  else if (includeCountryDetails) query.set("details", "route_details");
 
   const response = await fetch(`https://api.geoapify.com/v1/routing?${query.toString()}`);
   if (!response.ok) throw new Error(`Geoapify: ${response.status}`);
