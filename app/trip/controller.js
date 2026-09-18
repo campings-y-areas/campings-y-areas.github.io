@@ -55,11 +55,14 @@ export async function prepareDemoTrip(seed, {
   if (!seed?.guide) throw new TypeError("Demo sin guía predefinida");
 
   activateDemo(seed);
-  const closedSeed = Boolean(seed.route?.geometry && seed.trip?.stages?.length);
+  const closedEditorialSeed = seed.demo_closed === true;
+  const closedRoutedSeed = Boolean(seed.route?.geometry && seed.trip?.stages?.length);
   const hasInjectedServices = [routing, logistics, enrichment].every(service => typeof service === "function");
 
-  // Una demo cerrada puede mostrarse sin tocar servicios externos.
-  if (closedSeed && !hasInjectedServices) return getState();
+  // La demo editorial congelada comparte estado/controlador/presentación, pero no
+  // finge geometría vial ni etapas de routing que nunca fueron calculadas.
+  // Al estar marcada explícitamente como cerrada, no toca servicios externos.
+  if ((closedEditorialSeed || closedRoutedSeed) && !hasInjectedServices) return getState();
 
   // Recalcular una demo exige adaptadores explícitos: nunca cae por defecto
   // en Geoapify, catálogos/enrichment de producción ni Worker/OpenAI.
