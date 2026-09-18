@@ -18,7 +18,9 @@ function assertStage(stage, index) {
   if (!nonEmpty(stage.from_point_id) || !nonEmpty(stage.to_point_id)) throw new Error(`${stage.driving_stage_id} sin extremos autoritativos`);
   const expected = `${stage.from_point_id}=>${stage.to_point_id}`;
   if (stage.route_stage_key !== expected) throw new Error(`${stage.driving_stage_id} tiene route_stage_key inválido`);
-  if (!finite(stage.driving_km) || !finite(stage.driving_minutes)) throw new Error(`${stage.driving_stage_id} sin datos de conducción válidos`);
+  if (!finite(stage.distance_m) || Number(stage.distance_m) < 0 || !finite(stage.duration_s) || Number(stage.duration_s) < 0) {
+    throw new Error(`${stage.driving_stage_id} sin hechos exactos de conducción válidos`);
+  }
 }
 
 export function assertPlanRequest(body) {
