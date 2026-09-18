@@ -187,10 +187,12 @@ export async function buildTrip({ routing, logistics, enrichment, guide }) {
     }
   }));
 
-  const enriched = await enrichment({
-    trip: getState().trip, route: getState().route, overnights, catalogs,
-    countries: logisticsResult?.countries ?? initialCountries, vehicle: getState().vehicle
-  });
+  const enriched = typeof enrichment === "function"
+    ? await enrichment({
+        trip: getState().trip, route: getState().route, overnights, catalogs,
+        countries: logisticsResult?.countries ?? initialCountries, vehicle: getState().vehicle
+      })
+    : { stages: getState().trip.stages, catalogs };
   if (Array.isArray(enriched?.stages)) {
     setState(state => ({
       ...state,
