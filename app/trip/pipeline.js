@@ -200,13 +200,17 @@ export async function buildTrip({ routing, logistics, enrichment, guide }) {
     setState(state => ({ ...state, enrichment: { ...state.enrichment, ...catalogs, ...(enriched ?? {}) } }));
   }
 
-  const finalGuide = await guide({
-    trip: getState().trip,
-    route: getState().route,
-    logistics: getState().logistics,
-    enrichment: getState().enrichment,
-    vehicle: getState().vehicle
-  });
-  setState(state => ({ ...state, guide: finalGuide }));
+  if (typeof guide === "function") {
+    const finalGuide = await guide({
+      trip: getState().trip,
+      route: getState().route,
+      logistics: getState().logistics,
+      enrichment: getState().enrichment,
+      vehicle: getState().vehicle
+    });
+    setState(state => ({ ...state, guide: finalGuide }));
+  } else {
+    setState(state => ({ ...state, guide: null }));
+  }
   return getState();
 }
