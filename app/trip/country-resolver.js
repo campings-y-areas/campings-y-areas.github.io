@@ -18,7 +18,7 @@ function countryFromCode(code) {
 
 function canonicalCountry(value) {
   if (!value) return null;
-  if (typeof value === "string") return countryFromCode(value) ?? value.trim() || null;
+  if (typeof value === "string") return countryFromCode(value) ?? (value.trim() || null);
   return countryFromCode(value.country_code ?? value.countryCode ?? value.iso_code ?? value.isoCode)
     ?? String(value.country ?? value.country_name ?? value.countryName ?? "").trim()
     ?? null;
