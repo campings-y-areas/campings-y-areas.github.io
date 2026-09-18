@@ -2,6 +2,7 @@ import { DEMO_DAYS } from "./demo-spain-15-data.js";
 import { DEMO_EDITORIAL_DETAILS, DEMO_BASE_DETAILS } from "./demo-spain-15-details.js";
 import { renderRouteMap } from "../ui/route-map.js";
 import { renderLongFormGuide } from "../ui/route-guide.js";
+import { renderRouteActions } from "../ui/route-actions.js";
 import { prepareDemoTrip } from "../trip/controller.js";
 
 const params = new URLSearchParams(location.search);
@@ -9,11 +10,6 @@ const acceso = params.get("pruebas") === "manuel";
 const app = document.getElementById("demoApp");
 const bloqueo = document.getElementById("bloqueoDemo");
 
-function mapsDir(origin, destination, waypoints = []) {
-  const params = new URLSearchParams({ api: "1", origin, destination, travelmode: "driving" });
-  if (waypoints.length) params.set("waypoints", waypoints.join("|"));
-  return `https://www.google.com/maps/dir/?${params}`;
-}
 function mapsSearch(query) {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
 }
@@ -87,13 +83,7 @@ if (acceso) {
 
   renderRouteMap(demoState.route);
 
-  const wholeRoute = mapsDir("Barcelona, Spain", "Sevilla, Spain", ["Montserrat, Spain", "PortAventura World", "Delta del Ebro", "Valencia, Spain", "Alicante, Spain", "Cartagena, Spain", "Granada, Spain", "Malaga, Spain", "Ardales, Spain", "Ronda, Spain"]);
-  const navigation = document.getElementById("navegacionRuta");
-  if (navigation) {
-    const a = document.createElement("a");
-    a.href = wholeRoute; a.target = "_blank"; a.rel = "noopener noreferrer"; a.textContent = "🧭 Navegar esta ruta con Google Maps";
-    navigation.replaceChildren(a);
-  }
+  renderRouteActions(demoState);
 
   const enrichItem = item => {
     const detail = DEMO_EDITORIAL_DETAILS[item?.name];
@@ -124,7 +114,7 @@ if (acceso) {
       restaurants: day.food.map(enrichItem),
       overnight: day.base ? [enrichItem(day.base)] : [],
       overnight_intro: day.sameBase && day.base ? `Se mantiene la misma base: ${day.base.name}, evitando mover innecesariamente la autocaravana.` : "",
-      practical_advice: day.warning,
+      practical_advice: null,
       maps_url: day.stay || !DEMO_DAYS[index + 1] ? mapsSearch(day.place) : mapsDir(day.place, DEMO_DAYS[index + 1].place),
       final_recommendation: day.stay
         ? "Aprovecha que hoy no hay un gran traslado: deja margen para descansar y adapta las visitas al ritmo real del grupo."
@@ -137,14 +127,4 @@ if (acceso) {
   };
   if (etapas) renderLongFormGuide(guide, etapas);
 
-  const header = document.querySelector(".resultado-cabecera");
-  if (header && !document.getElementById("imprimirDemoPdf")) {
-    const pdf = document.createElement("button");
-    pdf.type = "button";
-    pdf.id = "imprimirDemoPdf";
-    pdf.className = "boton-secundario boton-pdf-demo";
-    pdf.textContent = "🖨️ Imprimir / guardar en PDF";
-    pdf.addEventListener("click", () => window.print());
-    header.append(pdf);
-  }
 }
