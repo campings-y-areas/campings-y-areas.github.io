@@ -4,7 +4,6 @@
 
 const initialState = Object.freeze({
   mode: "explore",
-  demo: false,
   vehicle: null,
   trip: {
     origin: null,
