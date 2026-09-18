@@ -130,7 +130,15 @@ function buildWorkerProfile(state, guideContext) {
 function assertWorkerResult(response, expectedStatus, phase) {
   if (!response || typeof response !== "object") throw new Error(`Respuesta inválida del Worker durante ${phase}`);
   if (response.ok !== true || response.status !== expectedStatus) {
-    const error = new Error(response.message ?? response.error ?? `El Worker no completó ${phase}: ${response.status ?? "estado desconocido"}`);
+    const status = response.status ?? "estado desconocido";
+    const messages = {
+      research_required: "La ruta necesita investigación verificada antes de poder preparar la guía Premium.",
+      media_research_required: "La guía necesita completar la investigación de fotografías verificadas.",
+      cost_guard_active: "La generación Premium está temporalmente desactivada.",
+      invalid_route_contract: "La ruta no ha superado la validación de datos y no se generará una guía incorrecta.",
+      invalid_verified_content: "El contenido verificado no ha superado la validación y no se generará una guía incorrecta."
+    };
+    const error = new Error(response.message ?? response.error ?? messages[status] ?? `El Worker no completó ${phase}: ${status}`);
     error.workerResponse = response;
     throw error;
   }
