@@ -89,6 +89,12 @@ if (acceso) {
       overnight: day.base ? [enrichItem(day.base)] : [],
       overnight_intro: day.sameBase && day.base ? `Se mantiene la misma base: ${day.base.name}, evitando mover innecesariamente la autocaravana.` : "",
       practical_advice: null,
+      verified_media: day.photo ? {
+        image_url: day.photo,
+        source_page: day.photoSource || "",
+        credit: day.photoCredit || "",
+        verified_exact: true
+      } : null,
       maps_url: day.stay || !DEMO_DAYS[index + 1] ? mapsSearch(day.place) : mapsDir(day.place, DEMO_DAYS[index + 1].place),
       final_recommendation: day.stay
         ? "Aprovecha que hoy no hay un gran traslado: deja margen para descansar y adapta las visitas al ritmo real del grupo."
