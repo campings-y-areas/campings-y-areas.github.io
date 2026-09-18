@@ -1,3 +1,5 @@
+import { buildVacationDays } from "./vacation-days.js";
+
 function collectExpected(stages) {
   return stages.map(stage => ({
     driving_stage_id: stage.driving_stage_id,
@@ -101,6 +103,25 @@ export function validateGuideAgainstTrip(guide, state) {
   }
   const expected = collectExpected(state.trip?.stages ?? []);
   const days = Array.isArray(guide.days) ? guide.days : [];
+  const expectedVacationDays = buildVacationDays(state.trip ?? {});
+  if (days.length !== expectedVacationDays.length) {
+    throw new Error(`La guía debe contener exactamente ${expectedVacationDays.length} días`);
+  }
+  const vacationIds = new Set();
+  days.forEach((day, index) => {
+    const expectedDay = expectedVacationDays[index];
+    if (day?.vacation_day_id !== expectedDay.vacation_day_id) throw new Error(`La guía cambió la identidad del día ${index + 1}`);
+    if (vacationIds.has(day.vacation_day_id)) throw new Error(`La guía duplicó el día ${day.vacation_day_id}`);
+    vacationIds.add(day.vacation_day_id);
+    for (const field of ["day", "travel_date", "day_type", "driving_stage_id", "route_stage_key", "base_id", "overnight_id", "request_point_id"]) {
+      if ((day?.[field] ?? null) !== (expectedDay?.[field] ?? null)) throw new Error(`La guía intentó cambiar ${field} de ${expectedDay.vacation_day_id}`);
+    }
+    if (expectedDay.day_type === "estancia") {
+      if (Number(day.driving_km ?? 0) !== 0 || Number(day.driving_minutes ?? 0) !== 0) {
+        throw new Error(`La guía añadió conducción al día de estancia ${expectedDay.vacation_day_id}`);
+      }
+    }
+  });
   const byStage = indexGuideDays(days);
   const expectedStageIds = new Set(expected.map(item => item.driving_stage_id));
 
