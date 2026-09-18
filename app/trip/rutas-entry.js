@@ -101,7 +101,7 @@ function renderClosedTrip(state) {
 
 function productionGuide() {
   const config = globalThis.RUTAS_CONFIG ?? {};
-  if (!config.openaiRoutePipelineEnabled || !config.openaiSpendEnabled) return undefined;
+  if (config.OPENAI_ROUTE_PIPELINE_ENABLED !== true || config.OPENAI_SPEND_ENABLED !== true) return undefined;
   return createProductionGuideAdapter();
 }
 
