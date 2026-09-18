@@ -12,17 +12,22 @@ function all(selector) { return [...document.querySelectorAll(selector)]; }
 function showStep(step) {
   currentStep = Math.max(1, Math.min(4, step));
   all("[data-paso]").forEach(section => section.classList.toggle("activo", Number(section.dataset.paso) === currentStep));
-  all("[data-paso-indicador]").forEach(indicator => indicator.classList.toggle("activo", Number(indicator.dataset.pasoIndicador) <= currentStep));
+  all("[data-paso-indicador]").forEach(indicator => {
+    const number = Number(indicator.dataset.pasoIndicador);
+    indicator.classList.toggle("activo", number === currentStep);
+    indicator.classList.toggle("completado", number < currentStep);
+  });
   const previous = byId("anteriorPaso");
   const next = byId("siguientePaso");
   const submit = byId("crearRuta");
   if (previous) previous.disabled = currentStep === 1;
   next?.classList.toggle("oculto", currentStep === 4);
   submit?.classList.toggle("oculto", currentStep !== 4);
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 function syncChildAges() {
-  const count = Math.max(0, Number(byId("ninos")?.value) || 0);
+  const count = Math.max(0, Math.min(10, Number(byId("ninos")?.value) || 0));
   const container = byId("edadesNinos");
   if (!container || count === childAgeCount) return;
   const previous = all("#edadesNinos input").map(input => input.value);
@@ -35,7 +40,8 @@ function syncChildAges() {
     input.type = "number";
     input.min = "0";
     input.max = "17";
-    input.required = true;
+    input.className = "edadNino";
+    input.placeholder = "Edad";
     input.value = previous[index] ?? "";
     label.append(span, input);
     container.append(label);
@@ -61,6 +67,11 @@ function addViaField(value = "") {
   container.append(row);
 }
 
+function syncRouteMode() {
+  const mode = document.querySelector('input[name="modoRuta"]:checked')?.value;
+  byId("zonaDestinos")?.classList.toggle("oculto", mode === "propuesta");
+}
+
 function validateCurrentStep() {
   const section = document.querySelector(`[data-paso="${currentStep}"]`);
   if (!section) return true;
@@ -68,6 +79,16 @@ function validateCurrentStep() {
   for (const field of fields) {
     if (!field.checkValidity()) {
       field.reportValidity();
+      return false;
+    }
+  }
+  if (currentStep === 1) {
+    const mode = document.querySelector('input[name="modoRuta"]:checked')?.value;
+    const destination = byId("destinoPrincipal");
+    if (mode === "destino" && destination && !destination.value.trim()) {
+      destination.setCustomValidity("Indica al menos un destino.");
+      destination.reportValidity();
+      destination.setCustomValidity("");
       return false;
     }
   }
@@ -129,7 +150,9 @@ async function submitTrip(event) {
 function init() {
   showStep(1);
   syncChildAges();
+  syncRouteMode();
   byId("ninos")?.addEventListener("input", syncChildAges);
+  all('input[name="modoRuta"]').forEach(input => input.addEventListener("change", syncRouteMode));
   byId("anadirDestino")?.addEventListener("click", () => addViaField());
   byId("anteriorPaso")?.addEventListener("click", () => showStep(currentStep - 1));
   byId("siguientePaso")?.addEventListener("click", () => { if (validateCurrentStep()) showStep(currentStep + 1); });
