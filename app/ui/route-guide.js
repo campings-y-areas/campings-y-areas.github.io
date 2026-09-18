@@ -133,6 +133,7 @@ export function renderLongFormGuide(guide, container) {
     if (day?.request_point_id) daySection.dataset.requestPointId = text(day.request_point_id);
     const title = node("div", "guia-dia-titulo");
     title.append(node("span", "", `DÍA ${text(day?.day)}${day?.travel_date ? " · " + text(day.travel_date) : ""}`));
+    if (day?.day_type === "estancia") title.append(node("span", "badge-estancia", "🏡 Día de estancia y visitas"));
     title.append(node("h2", "", text(day?.heading || "Etapa")));
     paragraph(title, day?.driving, "🚐 ");
     daySection.append(title);
@@ -147,17 +148,17 @@ export function renderLongFormGuide(guide, container) {
     if (day?.visit_story) { const s = section("📍 Qué visitar y cómo organizarlo"); paragraph(s, day.visit_story); daySection.append(s); }
     const highlights = Array.isArray(day?.highlights) ? day.highlights : day?.visits;
     if (Array.isArray(highlights) && highlights.length) {
-      const s = section("🏛️ Visitas recomendadas"); highlights.forEach(item => s.append(recommendation(item))); daySection.append(s);
+      const s = section("🏛️ Visitas recomendadas"); const list = node("div", "guia-recomendaciones"); highlights.forEach((item, i) => { const card = recommendation(item, { prefix: i === 0 ? "⭐ " : "" }); if (i === 0) card.classList.add("principal"); list.append(card); }); s.append(list); daySection.append(s);
     }
     if (day?.gastronomy_intro) { const s = section("🍽️ Gastronomía"); paragraph(s, day.gastronomy_intro); daySection.append(s); }
     const restaurants = Array.isArray(day?.restaurants) ? day.restaurants : day?.food;
     if (Array.isArray(restaurants) && restaurants.length) {
-      const s = section("🍴 Dónde comer"); restaurants.forEach((item, i) => s.append(recommendation(item, { prefix: i === 0 ? "⭐ Recomendado · " : "" }))); daySection.append(s);
+      const s = section("🍴 Dónde comer"); const list = node("div", "guia-recomendaciones"); restaurants.forEach((item, i) => { const card = recommendation(item, { prefix: i === 0 ? "⭐ " : "" }); if (i === 0) card.classList.add("principal"); list.append(card); }); s.append(list); daySection.append(s);
     }
     if (day?.overnight_intro) { const s = section("🌙 Pernocta"); paragraph(s, day.overnight_intro); daySection.append(s); }
     const overnight = Array.isArray(day?.overnight) ? day.overnight : day?.base ? [day.base] : [];
     if (Array.isArray(overnight) && overnight.length) {
-      const s = section("🚐 Dónde dormir"); overnight.forEach((item, i) => s.append(recommendation(item, { prefix: i === 0 ? "⭐ Recomendado · " : "" }))); daySection.append(s);
+      const s = section("🚐 Dónde dormir"); const list = node("div", "guia-recomendaciones"); overnight.forEach((item, i) => { const card = recommendation(item, { prefix: i === 0 ? "⭐ " : "" }); if (i === 0) card.classList.add("principal"); list.append(card); }); s.append(list); daySection.append(s);
     }
     if (day?.warning) {
       const s = section("⚠️ Conviene comprobar antes de ir");
