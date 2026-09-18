@@ -1,4 +1,5 @@
 import { DEMO_DAYS } from "./demo-spain-15-data.js";
+import { DEMO_EDITORIAL_DETAILS, DEMO_BASE_DETAILS } from "./demo-spain-15-details.js";
 import { renderRouteMap } from "../ui/route-map.js";
 import { renderLongFormGuide } from "../ui/route-guide.js";
 import { resetState, setState } from "../core/store.js";
@@ -95,6 +96,15 @@ if (acceso) {
     navigation.replaceChildren(a);
   }
 
+  const enrichItem = item => {
+    const detail = DEMO_EDITORIAL_DETAILS[item?.name];
+    const baseDetail = DEMO_BASE_DETAILS[item?.name];
+    return {
+      ...item,
+      description: detail?.[0] || baseDetail || item?.description || "",
+      recommended_visit_time: detail?.[1] || item?.recommended_visit_time || ""
+    };
+  };
   const etapas = document.getElementById("etapasRuta");
   const guide = {
     title: "España en autocaravana · 15 días",
@@ -111,9 +121,9 @@ if (acceso) {
       driving: day.drive,
       day_type: day.stay ? "estancia" : "conduccion_y_visita",
       opening_narrative: day.plan,
-      highlights: day.visits,
-      restaurants: day.food,
-      overnight: day.base ? [day.base] : [],
+      highlights: day.visits.map(enrichItem),
+      restaurants: day.food.map(enrichItem),
+      overnight: day.base ? [enrichItem(day.base)] : [],
       overnight_intro: day.sameBase && day.base ? `Se mantiene la misma base: ${day.base.name}, evitando mover innecesariamente la autocaravana.` : "",
       practical_advice: day.warning,
       maps_url: day.stay || !DEMO_DAYS[index + 1] ? mapsSearch(day.place) : mapsDir(day.place, DEMO_DAYS[index + 1].place)
