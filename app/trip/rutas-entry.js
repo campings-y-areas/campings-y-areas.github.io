@@ -97,12 +97,15 @@ function validateCurrentStep() {
   return true;
 }
 
+let renderingClosedTrip = false;
+
 function renderClosedTrip(state) {
   const result = byId("resultadoReal");
   const status = byId("estadoCalculo");
   const metrics = byId("metricasRuta");
   const stages = byId("etapasRuta");
-  if (!result) return;
+  if (!result || renderingClosedTrip) return;
+  renderingClosedTrip = true;
   result.classList.remove("oculto");
   if (status) status.textContent = state.guide ? "Ruta y guía preparadas." : "Ruta logística preparada.";
   if (metrics) {
@@ -112,19 +115,20 @@ function renderClosedTrip(state) {
   }
   renderRouteMap(state.route);
   renderRouteActions(state);
-  if (stages && state.guide && renderLongFormGuide(state.guide, stages)) return;
-  if (stages) {
+  const guideRendered = Boolean(stages && state.guide && renderLongFormGuide(state.guide, stages));
+  if (!guideRendered && stages) {
     stages.replaceChildren();
     for (const stage of state.trip?.stages ?? []) {
       const article = document.createElement("article");
       const title = document.createElement("h3");
       const detail = document.createElement("p");
-      title.textContent = stage.to?.label ?? stage.overnight?.nombre ?? stage.overnight?.name ?? stage.driving_stage_id;
+      title.textContent = stage.overnight?.nombre ?? stage.overnight?.name ?? stage.to?.label ?? stage.driving_stage_id;
       detail.textContent = `${Math.round(Number(stage.distance_m ?? 0) / 1000)} km · ${Math.round(Number(stage.duration_s ?? 0) / 60)} min${stage.overnight ? ` · Pernocta: ${stage.overnight.nombre ?? stage.overnight.name ?? stage.overnight_id}` : ""}`;
       article.append(title, detail);
       stages.append(article);
     }
   }
+  renderingClosedTrip = false;
 }
 
 function productionGuide() {
@@ -144,7 +148,6 @@ async function submitTrip(event) {
   try {
     const guide = productionGuide();
     await prepareTripFromCurrentForm(guide ? { guide } : {});
-    renderClosedTrip(getState());
   } catch (error) {
     if (status) status.textContent = error?.message ?? "No se pudo preparar la ruta.";
   } finally {
