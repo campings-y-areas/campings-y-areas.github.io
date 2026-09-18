@@ -196,8 +196,20 @@ function init() {
   showStep(1);
   syncChildAges();
   syncRouteMode();
+
+  const syncVehicleDimensions = () => {
+    const tipo = document.querySelector('input[name="vehiculo"]:checked')?.value ?? "autocaravana";
+    const aplica = ["autocaravana", "camper", "caravana"].includes(tipo);
+    const dimensiones = byId("dimensionesVehiculo");
+    const longitud = byId("longitudVehiculo");
+    if (dimensiones) dimensiones.hidden = !aplica;
+    if (!aplica && longitud) longitud.value = "";
+  };
+  syncVehicleDimensions();
+
   byId("ninos")?.addEventListener("input", syncChildAges);
   all('input[name="modoRuta"]').forEach(input => input.addEventListener("change", syncRouteMode));
+  all('input[name="vehiculo"]').forEach(input => input.addEventListener("change", syncVehicleDimensions));
   byId("anadirDestino")?.addEventListener("click", () => addViaField());
   byId("anteriorPaso")?.addEventListener("click", () => showStep(currentStep - 1));
   byId("siguientePaso")?.addEventListener("click", () => { if (validateCurrentStep()) showStep(currentStep + 1); });
