@@ -34,7 +34,7 @@ async function writeRoute(request, env) {
 
 function errorStatus(error) {
   const message = String(error?.message || "");
-  if (message.startsWith("OpenAI ")) return { http: 502, status: "generation_failed" };
+  if (message.startsWith("OpenAI")) return { http: 502, status: "generation_failed" };
   if (message === "OPENAI_API_KEY no configurada") return { http: 503, status: "generation_unavailable" };
   return { http: 400, status: "invalid_route_contract" };
 }
