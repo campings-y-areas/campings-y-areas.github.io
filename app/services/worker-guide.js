@@ -63,8 +63,15 @@ function workerStage(stage, index, total, requestedIds) {
     base_id: baseId,
     overnight_id: overnightId,
     day: index + 1,
-    place: stage.overnight?.nombre ?? stage.overnight?.name ?? stage.to?.label ?? "Etapa",
-    country: stage.overnight?.pais ?? stage.overnight?.country ?? stage.to?.country ?? "",
+    // Un destino pedido por el usuario conserva su identidad turística.
+    // La pernocta es logística autoritativa, pero no sustituye a la ciudad/lugar
+    // que Planner/Writer deben investigar y narrar.
+    place: requestedWaypoint
+      ? (stage.to?.label ?? stage.to?.requested_text ?? "Destino")
+      : (stage.overnight?.nombre ?? stage.overnight?.name ?? stage.to?.label ?? "Etapa"),
+    country: requestedWaypoint
+      ? (stage.to?.country ?? stage.overnight?.pais ?? stage.overnight?.country ?? "")
+      : (stage.overnight?.pais ?? stage.overnight?.country ?? stage.to?.country ?? ""),
     lat: finiteNumber(stage.overnight?.lat) ?? finiteNumber(stage.to?.lat),
     lon: finiteNumber(stage.overnight?.lon ?? stage.overnight?.lng) ?? finiteNumber(stage.to?.lon ?? stage.to?.lng),
     driving_km: Math.round(Number(stage.distance_m ?? 0) / 1000),
