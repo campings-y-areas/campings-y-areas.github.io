@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import worker from "../src/index.js";
 import { validateGeneratedGuide } from "../src/guide-validation.js";
+import { reportError } from "../src/report-error.js";
 
 const origin = "https://campings-y-areas.github.io";
 
@@ -41,7 +42,8 @@ function profile() {
         overnight_compatibility: { status: "confirmed" }
       }]
     },
-    editorial_material: []
+    editorial_material: [],
+    vacation_days: [{ vacation_day_id: "day-1", day: 1, travel_date: null, day_type: "conduccion_y_visita", driving_stage_id: "stage-1", route_stage_key: "a=>b", request_point_id: "b", requested_waypoint: true, is_final: true, stay_eligible: true, base_id: "camp-1", overnight_id: "camp-1" }]
   };
 }
 
@@ -82,7 +84,7 @@ test("contrato inválido se rechaza antes de generación", async () => {
 
 test("la validación restaura hechos exactos de route_facts", () => {
   const p = profile();
-  const guide = { days: [{ driving_stage_id: "stage-1", heading: "Día 1" }] };
+  const guide = { days: [{ vacation_day_id: "day-1", driving_stage_id: "stage-1", heading: "Día 1" }] };
   const checked = validateGeneratedGuide(guide, p);
   assert.equal(checked.days[0].distance_m, 400123);
   assert.equal(checked.days[0].duration_s, 15017);
@@ -91,7 +93,7 @@ test("la validación restaura hechos exactos de route_facts", () => {
 
 test("la validación rechaza cambios de pernocta", () => {
   const p = profile();
-  const guide = { days: [{ driving_stage_id: "stage-1", overnight_id: "inventada" }] };
+  const guide = { days: [{ vacation_day_id: "day-1", driving_stage_id: "stage-1", overnight_id: "inventada" }] };
   assert.throws(() => validateGeneratedGuide(guide, p), /overnight_id/);
 });
 
@@ -162,4 +164,33 @@ test("JSON inválido de OpenAI se clasifica como fallo de generación", async ()
   } finally {
     globalThis.fetch = originalFetch;
   }
+});
+
+
+test("informe voluntario exige descripción y no expone destinatario al cliente", async () => {
+  const sent = [];
+  const env = {
+    REPORT_TO_EMAIL: "propietario@example.test",
+    REPORT_FROM_EMAIL: "web@example.test",
+    REPORT_EMAIL: { send: async message => sent.push(message) }
+  };
+  const response = await worker.fetch(new Request("https://worker.test/report-error", {
+    method: "POST",
+    headers: { origin, "content-type": "application/json" },
+    body: JSON.stringify({ type: "Enlace roto", description: "La web oficial no abre", url: "https://campings-y-areas.github.io/campings.html" })
+  }), env);
+  assert.equal(response.status, 200);
+  assert.equal((await response.json()).status, "reported");
+  assert.equal(sent.length, 1);
+  assert.equal(sent[0].to, env.REPORT_TO_EMAIL);
+});
+
+test("honeypot del informe descarta spam sin enviar correo", async () => {
+  let sent = false;
+  const result = await reportError(new Request("https://worker.test/report-error", {
+    method: "POST", headers: { "content-type": "application/json" },
+    body: JSON.stringify({ website: "spam.example", type: "Otro", description: "spam" })
+  }), { REPORT_EMAIL: { send: async () => { sent = true; } } });
+  assert.equal(result.status, "reported");
+  assert.equal(sent, false);
 });
