@@ -60,10 +60,12 @@ if (acceso) {
     route: {
       ...state.route,
       waypoints,
-      geometry: {
+      geometry: null,
+      display_geometry: {
         type: "LineString",
         coordinates: routePoints.map(([lat, lon]) => [lon, lat])
-      }
+      },
+      geometry_source: "demo-display-polyline"
     },
     logistics: {
       ...state.logistics,
@@ -86,7 +88,7 @@ if (acceso) {
     }));
   }
 
-  renderRouteMap({ geometry: { type: "LineString", coordinates: routePoints.map(([lat, lon]) => [lon, lat]) }, waypoints });
+  renderRouteMap({ display_geometry: { type: "LineString", coordinates: routePoints.map(([lat, lon]) => [lon, lat]) }, geometry_source: "demo-display-polyline", waypoints });
 
   const wholeRoute = mapsDir("Barcelona, Spain", "Sevilla, Spain", ["Montserrat, Spain", "PortAventura World", "Delta del Ebro", "Valencia, Spain", "Alicante, Spain", "Cartagena, Spain", "Granada, Spain", "Malaga, Spain", "Ardales, Spain", "Ronda, Spain"]);
   const navigation = document.getElementById("navegacionRuta");
