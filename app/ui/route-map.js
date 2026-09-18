@@ -34,12 +34,13 @@ function ensureMap() {
 
 export function renderRouteMap(route) {
   const activeMap = ensureMap();
-  if (!activeMap || !route?.geometry) return;
+  const geometry = route?.geometry ?? route?.display_geometry;
+  if (!activeMap || !geometry) return;
   if (routeLayer) activeMap.removeLayer(routeLayer);
   markers.forEach(marker => activeMap.removeLayer(marker));
   markers = [];
 
-  routeLayer = L.geoJSON({ type: "Feature", properties: {}, geometry: route.geometry }, {
+  routeLayer = L.geoJSON({ type: "Feature", properties: {}, geometry }, {
     style: { weight: 5, opacity: 0.8 }
   }).addTo(activeMap);
 
