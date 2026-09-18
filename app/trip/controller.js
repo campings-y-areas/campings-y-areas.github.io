@@ -2,7 +2,7 @@ import { getState, setState } from "../core/store.js";
 import { commitCurrentTripForm } from "./form-adapter.js";
 import { resolveTripPoints } from "./geocoding.js";
 import { buildTrip } from "./pipeline.js";
-import { routingService, logisticsService, enrichmentService, disabledGuideService } from "./runtime-services.js";
+import { routingService, logisticsService, enrichmentService } from "./runtime-services.js";
 import { activateDemo, deactivateDemo } from "../demo/demo-mode.js";
 import { createGuideService } from "../services/guide-service.js";
 import { createWorkerGuideGenerator } from "../services/worker-guide.js";
@@ -23,7 +23,7 @@ export function createProductionGuideAdapter({ request, planPath = "/plan-route"
   return pipelineGuideAdapter(createGuideService({ remoteGenerate }));
 }
 
-export async function prepareTripFromCurrentForm({ guide = disabledGuideService } = {}) {
+export async function prepareTripFromCurrentForm({ guide = null } = {}) {
   commitCurrentTripForm();
   const state = getState();
   const points = await resolveTripPoints({
