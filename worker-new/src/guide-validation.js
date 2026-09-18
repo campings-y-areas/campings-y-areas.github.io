@@ -20,6 +20,11 @@ function expectedStages(profile) {
   }));
 }
 
+function expectedVacationDays(profile) {
+  const days = Array.isArray(profile.vacation_days) ? profile.vacation_days : [];
+  return new Map(days.map(day => [String(day.vacation_day_id), day]));
+}
+
 function copyAuthoritative(day, expected) {
   day.driving_stage_id = expected.driving_stage_id;
   day.route_stage_key = expected.route_stage_key;
@@ -32,8 +37,35 @@ function copyAuthoritative(day, expected) {
   day.overnight_compatibility = expected.overnight_compatibility;
 }
 
+function enforceVacationDays(guide, profile) {
+  const expected = expectedVacationDays(profile);
+  if (!expected.size) return;
+  if (guide.days.length !== expected.size) throw new Error("La guía no coincide con el número de días del viaje");
+  const seen = new Set();
+  guide.days.forEach((day, index) => {
+    const fallback = profile.vacation_days[index];
+    const id = String(day?.vacation_day_id ?? fallback?.vacation_day_id ?? "");
+    const facts = expected.get(id);
+    if (!facts || seen.has(id)) throw new Error(`La guía alteró la identidad del día ${index + 1}`);
+    seen.add(id);
+    for (const field of ["day", "travel_date", "day_type", "request_point_id", "requested_waypoint", "is_final", "stay_eligible", "base_id", "overnight_id"]) {
+      if (day[field] != null && !same(day[field], facts[field])) throw new Error(`La guía intentó cambiar ${field} de ${id}`);
+      day[field] = facts[field] ?? null;
+    }
+    day.vacation_day_id = id;
+    if (facts.day_type === "estancia") {
+      day.driving_stage_id = null;
+      day.route_stage_key = facts.route_stage_key ?? null;
+      day.driving_km = 0;
+      day.driving_minutes = 0;
+    }
+  });
+  if (seen.size !== expected.size) throw new Error("La guía omitió días del viaje");
+}
+
 export function validateGeneratedGuide(guide, profile) {
   if (!guide || typeof guide !== "object" || !Array.isArray(guide.days)) throw new Error("Guía generada inválida");
+  enforceVacationDays(guide, profile);
   const expected = expectedStages(profile);
   const seen = new Set();
 
