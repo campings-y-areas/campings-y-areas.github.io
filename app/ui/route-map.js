@@ -12,15 +12,23 @@ function ensureMap() {
   if (map) return map;
   const config = globalThis.RUTAS_CONFIG ?? {};
   map = L.map(element).setView([48.5, 9], 5);
-  const retina = L.Browser.retina;
-  const style = config.MAP_STYLE || "osm-bright";
-  const base = `https://maps.geoapify.com/v1/tile/${style}/{z}/{x}/{y}.png?apiKey={apiKey}`;
-  const hi = `https://maps.geoapify.com/v1/tile/${style}/{z}/{x}/{y}@2x.png?apiKey={apiKey}`;
-  L.tileLayer(retina ? hi : base, {
-    apiKey: config.GEOAPIFY_API_KEY,
-    maxZoom: 20,
-    attribution: 'Powered by <a href="https://www.geoapify.com/" target="_blank">Geoapify</a> | <a href="https://openmaptiles.org/" target="_blank">© OpenMapTiles</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap</a> contributors'
-  }).addTo(map);
+  const geoapifyKey = String(config.GEOAPIFY_API_KEY ?? "").trim();
+  if (geoapifyKey) {
+    const retina = L.Browser.retina;
+    const style = config.MAP_STYLE || "osm-bright";
+    const base = `https://maps.geoapify.com/v1/tile/${style}/{z}/{x}/{y}.png?apiKey={apiKey}`;
+    const hi = `https://maps.geoapify.com/v1/tile/${style}/{z}/{x}/{y}@2x.png?apiKey={apiKey}`;
+    L.tileLayer(retina ? hi : base, {
+      apiKey: geoapifyKey,
+      maxZoom: 20,
+      attribution: 'Powered by <a href="https://www.geoapify.com/" target="_blank">Geoapify</a> | <a href="https://openmaptiles.org/" target="_blank">© OpenMapTiles</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap</a> contributors'
+    }).addTo(map);
+  } else {
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: '<a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap</a> contributors'
+    }).addTo(map);
+  }
   return map;
 }
 
