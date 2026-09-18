@@ -1,5 +1,3 @@
-import { backendRequest } from "./services/backend-client.js";
-
 const REPORT_LINK = 'a[href*="informar-error.html"]';
 
 function field(form, name) {
@@ -45,12 +43,27 @@ function createModal() {
     status.classList.remove("es-error", "es-correcto");
     submit.disabled = true;
     try {
-      await backendRequest("/report-error", { body: {
-        type: field(form, "type"), description: field(form, "description"), correction: field(form, "correction"),
-        name: field(form, "name"), email: field(form, "email"), website: field(form, "website"),
-        page: field(form, "page"), item_type: field(form, "item_type"), item_id: field(form, "item_id"),
-        item_name: field(form, "item_name"), url: location.href
-      }});
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({
+          access_key: "07bc74fd-a27b-4fb9-b5cd-e6de8052e476",
+          subject: "Campings & Áreas · Nuevo reporte de información",
+          tipo_problema: field(form, "type"),
+          message: field(form, "description"),
+          correccion_propuesta: field(form, "correction"),
+          name: field(form, "name"),
+          email: field(form, "email"),
+          botcheck: field(form, "website"),
+          pagina: field(form, "page"),
+          tipo_ficha: field(form, "item_type"),
+          id_ficha: field(form, "item_id"),
+          nombre_ficha: field(form, "item_name"),
+          url: location.href
+        })
+      });
+      const result = await response.json().catch(() => null);
+      if (!response.ok || !result?.success) throw new Error(result?.message || `Web3Forms: ${response.status}`);
       status.textContent = "Gracias. El informe se ha enviado correctamente.";
       status.classList.add("es-correcto");
       form.reset();
