@@ -158,18 +158,33 @@ async function submitTrip(event) {
     await prepareTripFromCurrentForm(guide ? { guide } : {});
   } catch (error) {
     console.error("Rutas Campings & Áreas", error);
-    if (status) status.textContent = "No se pudo crear la ruta";
-    const stages = byId("etapasRuta");
-    if (stages) {
-      stages.replaceChildren();
-      const box = document.createElement("div");
-      box.className = "error-ruta";
+    const state = getState();
+    const routeReady = state.route?.distance_m != null && state.trip?.stages?.length;
+    if (routeReady) {
+      renderClosedTrip(state);
+      if (status) status.textContent = "Ruta preparada. La guía Premium no se pudo completar.";
+      const notice = document.createElement("div");
+      notice.className = "error-ruta";
       const strong = document.createElement("strong");
       const detail = document.createElement("p");
-      strong.textContent = `⚠️ ${error?.message ?? "Se produjo un error al preparar la ruta."}`;
-      detail.textContent = "No se ha generado una guía automática de sustitución.";
-      box.append(strong, detail);
-      stages.append(box);
+      strong.textContent = "⚠️ La ruta y las pernoctas están preparadas.";
+      detail.textContent = "La guía Premium no se ha podido completar. Puedes revisar la ruta o modificar el viaje e intentarlo de nuevo.";
+      notice.append(strong, detail);
+      byId("etapasRuta")?.prepend(notice);
+    } else {
+      if (status) status.textContent = "No se pudo crear la ruta";
+      const stages = byId("etapasRuta");
+      if (stages) {
+        stages.replaceChildren();
+        const box = document.createElement("div");
+        box.className = "error-ruta";
+        const strong = document.createElement("strong");
+        const detail = document.createElement("p");
+        strong.textContent = "⚠️ No se pudo preparar esta ruta.";
+        detail.textContent = "Revisa los datos del viaje e inténtalo de nuevo.";
+        box.append(strong, detail);
+        stages.append(box);
+      }
     }
   } finally {
     result?.classList.remove("cargando-ruta");
