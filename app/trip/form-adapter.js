@@ -25,6 +25,7 @@ export function readCurrentTripForm() {
     travellers: {
       adults: number("adultos", 2),
       children: number("ninos", 0),
+      childAges: [...document.querySelectorAll("#edadesNinos input")].map(el => Number(el.value)).filter(age => Number.isFinite(age) && age >= 0 && age <= 17),
       pet: Boolean(document.getElementById("mascota")?.checked),
       childRecommendations: Boolean(document.getElementById("recomendacionesNinos")?.checked)
     },
