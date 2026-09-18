@@ -47,10 +47,16 @@ export async function loadTripCatalogs({ countries = [], includeParkings = false
     else regulations.push(...regulationResult.data);
   }));
 
+  const overnightCandidates = [...campings, ...areas];
+  if (uniqueCountries.length && overnightCandidates.length === 0) {
+    const detail = [...errors.keys()].filter(key => key.startsWith("campings:") || key.startsWith("areas:")).join(", ");
+    throw new Error(`No se pudieron cargar campings ni áreas para la ruta${detail ? ` (${detail})` : ""}`);
+  }
+
   return {
     campings,
     areas,
-    overnightCandidates: [...campings, ...areas],
+    overnightCandidates,
     places: placesResult.places,
     services: servicesResult.services,
     restaurants: servicesResult.restaurants,
