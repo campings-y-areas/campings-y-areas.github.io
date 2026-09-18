@@ -6,15 +6,14 @@ import { routingService, logisticsService, enrichmentService } from "./runtime-s
 import { createGuideService } from "../services/guide-service.js";
 import { createWorkerGuideGenerator } from "../services/worker-guide.js";
 
-function pipelineGuideAdapter(service, { demo = false, demoGuide = null } = {}) {
+function pipelineGuideAdapter(service) {
   return async ({ trip, route, logistics, enrichment, vehicle }) => service.generate({
     trip,
     route,
     logistics,
     enrichment,
-    vehicle,
-    demoGuide
-  }, { demo });
+    vehicle
+  });
 }
 
 export function createProductionGuideAdapter({ request, planPath = "/plan-route", writePath = "/write-route" } = {}) {
@@ -33,7 +32,6 @@ export async function prepareTripFromCurrentForm({ guide = null } = {}) {
 
   setState(current => ({
     ...current,
-    demo: false,
     trip: { ...current.trip, waypoints: points }
   }));
 
