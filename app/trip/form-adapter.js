@@ -29,7 +29,10 @@ export function readCurrentTripForm() {
       pet: Boolean(document.getElementById("mascota")?.checked),
       childRecommendations: Boolean(document.getElementById("recomendacionesNinos")?.checked)
     },
-    vehicle: { tipo: radio("vehiculo") || "autocaravana" },
+    vehicle: {
+      tipo: radio("vehiculo") || "autocaravana",
+      longitud_total_m: number("longitudVehiculo", 0) > 0 ? number("longitudVehiculo", 0) : null
+    },
     preferences: {
       maxDrivingHours: number("maxConduccion", 3),
       pace: value("ritmo") || "normal",
