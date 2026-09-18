@@ -8,23 +8,39 @@
   <link rel="preconnect" href="https://unpkg.com">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <link rel="stylesheet" href="demo-ruta.css?v=1">
-  <link rel="stylesheet" href="demo-ruta-mejoras.css?v=2">
+  <link rel="stylesheet" href="demo-ruta-mejoras.css?v=11">
 </head>
 <body>
   <div id="bloqueoDemo" class="bloqueo-demo"><div><strong>Demo privada en preparación</strong><p>Acceso de pruebas no activado.</p></div></div>
   <div id="demoApp" class="demo-app" hidden>
     <header class="cabecera-demo"><a class="marca" href="index.html?pruebas=manuel" aria-label="Campings & Áreas">🚐 <span>Campings & Áreas</span></a><div class="etiqueta-demo">DEMO · RUTAS IA PREMIUM</div></header>
     <main class="contenedor">
-      <section class="intro-demo"><p class="kicker">Ejemplo completo · contenido congelado y revisado</p><h1>España en autocaravana · 15 días</h1><p>Barcelona → Montserrat → PortAventura → Delta del Ebro → València → Alicante → Cartagena → Granada → Málaga → Ardales → Ronda → Sevilla</p><div class="nota-dinamica">Los horarios, precios, accesos y disponibilidad pueden cambiar. Antes de viajar, consulta siempre la información actual en las webs oficiales enlazadas.</div></section>
+      <section class="intro-demo portada-rutas-demo">
+        <p class="kicker">EJEMPLO COMPLETO · GUÍA DE VIAJE PREMIUM</p>
+        <h1>España en autocaravana · 15 días</h1>
+        <p class="ruta-portada-demo">Barcelona → Montserrat → PortAventura → Delta del Ebro → València → Alicante → Cartagena → Granada → Málaga → Ardales → Ronda → Sevilla</p>
+        <div class="resumen-portada-demo"><span><strong>15 días</strong> de viaje</span><span><strong>14 noches</strong> planificadas</span><span><strong>≈ 1.500 km</strong> de recorrido</span><span><strong>12 bases</strong> para dormir</span></div>
+        <div class="promesa-rutas-demo"><strong>Tu viaje, organizado día a día.</strong><span>Rutas prepara una guía pensada para viajar en autocaravana o camper: qué visitar, dónde comer, dónde dormir y cómo aprovechar cada jornada sin tener que organizarlo todo por separado.</span></div>
+        <div class="nota-dinamica">Los horarios, precios, accesos y disponibilidad pueden cambiar. Antes de viajar, consulta siempre la información actual en las webs oficiales enlazadas.</div>
+      </section>
+      <section class="como-funciona-demo" aria-labelledby="comoFuncionaRutas">
+        <div class="como-funciona-cabecera"><p class="kicker-oscuro">RUTAS · ASÍ DE FÁCIL</p><h2 id="comoFuncionaRutas">Tú eliges el viaje. Rutas te prepara la guía.</h2><p>No necesitas saber planificar rutas ni buscar cada parada por tu cuenta. Indicas los datos básicos de tu viaje y recibes una guía organizada para seguirla desde el móvil o guardarla en PDF.</p></div>
+        <div class="pasos-rutas-demo"><article><span>1</span><h3>Indica tu viaje</h3><p>Origen, destino, días disponibles y el tipo de viaje que quieres hacer.</p></article><article><span>2</span><h3>Rutas organiza las etapas</h3><p>Distribuye el recorrido y prepara visitas, gastronomía y lugares adecuados para pernoctar.</p></article><article><span>3</span><h3>Viaja con tu guía</h3><p>Consulta cada día, abre los lugares en Google Maps, visita las webs oficiales y guarda la guía en PDF.</p></article></div>
+        <div class="incluye-rutas-demo"><h3>¿Qué encontrarás cada día?</h3><div><span>🧭 Trayecto y plan del día</span><span>⭐ Visitas recomendadas</span><span>📖 Explicaciones y consejos</span><span>🍴 Gastronomía</span><span>🚐 Dónde dormir</span><span>📍 Google Maps y webs oficiales</span></div></div>
+        <p class="aclaracion-rutas-demo"><strong>Importante:</strong> Rutas es una guía para ayudarte a preparar y disfrutar el viaje. No realiza reservas por ti y los datos que pueden cambiar deben comprobarse antes de viajar.</p>
+      </section>
       <section id="resultadoReal" class="resultado-real" aria-live="polite">
         <div class="resultado-cabecera"><div><h2>🧭 Tu ruta</h2><p id="estadoCalculo">Ruta de demostración preparada · 15 días / 14 noches</p></div><a class="boton-secundario" href="index.html?pruebas=manuel">← Volver al inicio</a></div>
         <div id="metricasRuta" class="metricas-ruta"></div><div id="navegacionRuta" class="navegacion-ruta"></div><div id="mapaRuta" class="mapa-ruta" aria-label="Mapa general de la ruta"></div><div id="etapasRuta" class="etapas-ruta"></div>
       </section>
-      <section class="creditos-demo"><h2>Sobre esta demostración</h2><p>Esta página reproduce la estructura de una guía de Rutas, pero es una muestra estática preparada manualmente. No llama a OpenAI, Worker, D1, Planner, Writer, Research ni a las cachés de producción.</p><p>Las fotografías proceden de Wikimedia Commons. Cada imagen muestra el acceso a su ficha de autor y licencia.</p></section>
+      <div class="acciones-reporte-demo"><a class="boton-reporte-demo" href="reportar-error.html?origen=Demo%20Rutas%20Espa%C3%B1a%2015%20d%C3%ADas">⚠️ Informar de un error</a><p>¿Has visto un dato incorrecto, un lugar cerrado o información que ha cambiado? Avísanos y lo revisaremos.</p></div>
+      <section class="creditos-demo"><h2>Sobre esta demostración</h2><p>Esta página reproduce la estructura de una guía de Rutas, pero es una muestra estática preparada manualmente. No llama a OpenAI, Worker, D1, Planner, Writer, Research ni a las cachés de producción.</p><p>Las fotografías son asignaciones fijas y revisadas. Las imágenes de Wikimedia Commons enlazan a su ficha de autor y licencia; las fotografías de establecimientos proceden de las fuentes oficiales indicadas o de la fuente contextual acreditada.</p></section>
     </main>
   </div>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script src="demo-ruta.js?v=1"></script>
+  <script src="demo-ruta-fotos-fijas.js?v=8"></script>
+  <script src="demo-ruta-guia-premium.js?v=1"></script>
   <script src="demo-ruta-mejoras.js?v=2"></script>
 </body>
 </html>
