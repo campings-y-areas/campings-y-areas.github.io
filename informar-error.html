@@ -1,48 +1,27 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex,nofollow"><title>Informar de un error · Campings & Áreas</title>
-<link rel="stylesheet" href="reportar-error.css?v=1">
-</head><body>
-<header class="top"><a href="index.html?pruebas=manuel">🚐 <strong>Campings & Áreas</strong></a><span>AYÚDANOS A MEJORAR</span></header>
-<main class="wrap">
-<section class="hero"><p class="kicker">¿HAS VISTO ALGO QUE NO CUADRA?</p><h1>Cuéntanos qué debemos revisar</h1><p>Si un camping ha cerrado, un área ha cambiado sus servicios, un restaurante ya no existe, un enlace falla, una fotografía no corresponde o falta información importante, puedes avisarnos aquí.</p><div class="notice"><strong>No necesitas saber cómo explicarlo técnicamente.</strong> Dinos simplemente qué has visto y dónde. Nosotros nos encargamos de revisarlo.</div></section>
-<section class="card">
-<div class="steps"><div><b>1</b><span>Indica dónde está el problema</span></div><div><b>2</b><span>Cuéntanos qué ocurre</span></div><div><b>3</b><span>Lo revisaremos antes de cambiarlo</span></div></div>
-<form id="reportForm" novalidate>
-<input type="hidden" name="access_key" id="accessKey" value="">
-<input type="hidden" name="subject" value="Campings & Áreas · Nuevo reporte de información">
-<input type="hidden" name="origen_pagina" id="origenPagina">
-<input type="checkbox" name="botcheck" class="botcheck" tabindex="-1" autocomplete="off">
-<fieldset><legend>¿Qué tipo de información debemos revisar? <span>*</span></legend>
-<div class="types">
-<label><input type="radio" name="tipo_problema" value="Dato incorrecto" required><span>❌ <b>Dato incorrecto</b><small>Algo que publicamos no es correcto.</small></span></label>
-<label><input type="radio" name="tipo_problema" value="Lugar cerrado o ya no existe"><span>🚫 <b>Lugar cerrado</b><small>El sitio ha cerrado o ya no existe.</small></span></label>
-<label><input type="radio" name="tipo_problema" value="Servicios cambiados"><span>🚐 <b>Servicios cambiados</b><small>Camping, área, parking o servicio ha cambiado.</small></span></label>
-<label><input type="radio" name="tipo_problema" value="Horario precio acceso o reserva"><span>🕒 <b>Horario, precio o acceso</b><small>Ha cambiado cómo, cuándo o por cuánto se accede.</small></span></label>
-<label><input type="radio" name="tipo_problema" value="Enlace roto"><span>🔗 <b>Enlace roto</b><small>Una web, mapa o botón no funciona.</small></span></label>
-<label><input type="radio" name="tipo_problema" value="Fotografia incorrecta"><span>📷 <b>Fotografía incorrecta</b><small>La imagen no corresponde o tiene un problema.</small></span></label>
-<label><input type="radio" name="tipo_problema" value="Falta informacion"><span>➕ <b>Falta información</b><small>Hay algo importante que deberíamos añadir.</small></span></label>
-<label><input type="radio" name="tipo_problema" value="Otro"><span>💬 <b>Otro problema</b><small>No encaja en las opciones anteriores.</small></span></label>
-</div></fieldset>
-<div class="grid">
-<label>¿Dónde lo has visto? <span>*</span><input name="lugar" required maxlength="140" placeholder="Ej.: Camping Las Lomas, Día 10 de la ruta, Área de Málaga..."><small>Escribe el nombre del lugar o la parte de la web donde aparece.</small></label>
-<label>País o localidad <input name="localidad" maxlength="100" placeholder="Ej.: Granada, España"><small>Déjalo vacío si no lo sabes.</small></label>
-</div>
-<label>Explícanos qué está mal o qué falta <span>*</span><textarea name="mensaje" required minlength="10" maxlength="3000" rows="7" placeholder="Ej.: He estado allí esta semana y ya no permiten caravanas. En vuestra web aparece que sí."></textarea><small>No hace falta escribir mucho. Con que podamos entender qué debemos comprobar es suficiente.</small></label>
-<label>¿Tienes una página donde podamos comprobarlo? <input name="fuente" type="url" maxlength="500" placeholder="https://..."><small>Opcional. Puede ser la web oficial del lugar, ayuntamiento, turismo, etc.</small></label>
-<div class="grid">
-<label>Tu nombre <input name="nombre" maxlength="100" autocomplete="name" placeholder="Opcional"></label>
-<label>Tu correo electrónico <input name="email" type="email" maxlength="160" autocomplete="email" placeholder="Opcional"><small>Solo si quieres que podamos preguntarte algo sobre el aviso.</small></label>
-</div>
-<label class="check"><input type="checkbox" required name="confirmacion" value="si"><span>Confirmo que envío esta información de buena fe para ayudar a corregir o mejorar Campings & Áreas. <b>*</b></span></label>
-<div class="privacy">Tu aviso se utilizará únicamente para revisar la información comunicada. No publicaremos tu nombre ni tu correo. Este formulario no sirve para reservar, cancelar reservas ni contactar con los establecimientos.</div>
-<button id="sendBtn" type="submit">Enviar aviso para revisión</button>
-<p id="formStatus" class="status" role="status" aria-live="polite"></p>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Informar de un error | Campings & Áreas</title>
+<link rel="icon" type="image/png" href="logo.png"><link rel="stylesheet" href="style.css?v=3"><link rel="stylesheet" href="informar-error.css?v=1">
+<script src="app/private-access.js?v=1" defer></script>
+<script>if(new URLSearchParams(location.search).get("pruebas")==="manuel")document.documentElement.classList.add("acceso-pruebas")</script>
+</head>
+<body>
+<header><h1><img src="logo.png" alt="Campings & Áreas" class="logo">Campings & Áreas</h1></header>
+<nav class="menu"><a href="index.html">🏠 Inicio</a><a href="campings.html">🏕️ Campings</a><a href="areas.html?tipo=area">🚐 Áreas</a><a href="areas.html?tipo=parking">🅿️ Parkings</a><a href="rutas.html">🗺️ Rutas</a><a href="informar-error.html" aria-current="page">⚠️ Informar de un error</a></nav>
+<main class="informe-pagina"><section class="informe-tarjeta">
+<div class="informe-cabecera"><span aria-hidden="true">⚠️</span><div><p class="informe-kicker">Ayúdanos a mantener la información al día</p><h2>Informar de un error</h2><p>Cuéntanos qué dato debemos revisar. También puedes usar este formulario si algo de la web no funciona correctamente.</p></div></div>
+<form id="errorReportForm" class="informe-formulario">
+<label><span>Tipo de problema <b>*</b></span><select id="reportType" required><option value="">Selecciona una opción</option><option>Información incorrecta</option><option>Lugar cerrado</option><option>Ubicación o servicios incorrectos</option><option>Enlace roto</option><option>Funcionamiento de la web</option><option>Otro</option></select></label>
+<label class="informe-ancho"><span>¿Qué ocurre? <b>*</b></span><textarea id="reportDescription" rows="6" maxlength="4000" required placeholder="Describe el error con el mayor detalle posible"></textarea></label>
+<label class="informe-ancho"><span>Dato correcto propuesto <small>(opcional)</small></span><textarea id="reportCorrection" rows="4" maxlength="2000" placeholder="Si conoces la información correcta, escríbela aquí"></textarea></label>
+<label><span>Tu nombre <small>(opcional)</small></span><input id="reportName" maxlength="120" autocomplete="name"></label>
+<label><span>Tu email <small>(opcional)</small></span><input id="reportEmail" type="email" maxlength="254" autocomplete="email" placeholder="Para poder responderte"></label>
+<input id="reportWebsite" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
+<div class="informe-acciones informe-ancho"><button type="submit" id="reportSubmit">Enviar informe</button><a href="index.html">Cancelar y volver</a></div>
+<p id="reportStatus" role="status" aria-live="polite"></p>
 </form>
-</section>
-<section class="after"><h2>¿Qué ocurre después?</h2><p><strong>No cambiamos un dato automáticamente porque alguien lo comunique.</strong> Primero comprobamos el aviso con fuentes fiables y, cuando sea posible, con la información oficial del establecimiento o destino. Si confirmamos el cambio, actualizamos la información.</p><p>Así evitamos que un error comunicado por una persona se convierta en otro error para todos los demás viajeros.</p></section>
-</main><footer>Campings & Áreas · Información para viajeros</footer>
-<script src="reportar-error.js?v=2"></script>
+</section></main>
+<script src="rutas-config.js?v=7"></script><script type="module" src="app/report-error.js?v=3"></script>
 </body></html>
