@@ -2,17 +2,22 @@ function same(a, b) { return JSON.stringify(a ?? null) === JSON.stringify(b ?? n
 function number(value) { const n = Number(value); return Number.isFinite(n) ? n : 0; }
 
 function expectedStages(profile) {
-  return new Map(profile.stages.map(stage => [stage.driving_stage_id, {
-    driving_stage_id: stage.driving_stage_id,
-    route_stage_key: stage.route_stage_key,
-    from_point_id: stage.from_point_id,
-    to_point_id: stage.to_point_id,
-    overnight_id: stage.overnight_id ?? null,
-    base_id: stage.base_id ?? stage.overnight_id ?? null,
-    distance_m: number(stage.distance_m),
-    duration_s: number(stage.duration_s),
-    overnight_compatibility: stage.overnight_compatibility ?? null
-  }]));
+  const exactById = new Map((profile.route_facts?.stages ?? []).map(stage => [stage.driving_stage_id, stage]));
+  return new Map(profile.stages.map(stage => {
+    const exact = exactById.get(stage.driving_stage_id);
+    if (!exact) throw new Error(`Faltan hechos autoritativos de ${stage.driving_stage_id}`);
+    return [stage.driving_stage_id, {
+      driving_stage_id: stage.driving_stage_id,
+      route_stage_key: exact.route_stage_key,
+      from_point_id: exact.from_point_id,
+      to_point_id: exact.to_point_id,
+      overnight_id: exact.overnight_id ?? null,
+      base_id: exact.base_id ?? exact.overnight_id ?? null,
+      distance_m: number(exact.distance_m),
+      duration_s: number(exact.duration_s),
+      overnight_compatibility: exact.overnight_compatibility ?? null
+    }];
+  }));
 }
 
 function copyAuthoritative(day, expected) {
@@ -33,20 +38,12 @@ export function validateGeneratedGuide(guide, profile) {
   const seen = new Set();
 
   for (const day of guide.days) {
-    if (!day?.driving_stage_id) continue; // día de estancia: no crea un tramo físico.
+    if (!day?.driving_stage_id) continue;
     const facts = expected.get(day.driving_stage_id);
     if (!facts) throw new Error(`La guía inventó el tramo ${day.driving_stage_id}`);
     if (seen.has(day.driving_stage_id)) throw new Error(`La guía duplicó el tramo ${day.driving_stage_id}`);
     seen.add(day.driving_stage_id);
-
-    const checks = [
-      ["route_stage_key", facts.route_stage_key],
-      ["from_point_id", facts.from_point_id],
-      ["to_point_id", facts.to_point_id],
-      ["overnight_id", facts.overnight_id],
-      ["base_id", facts.base_id]
-    ];
-    for (const [field, value] of checks) {
+    for (const [field, value] of [["route_stage_key", facts.route_stage_key],["from_point_id", facts.from_point_id],["to_point_id", facts.to_point_id],["overnight_id", facts.overnight_id],["base_id", facts.base_id]]) {
       if (day[field] != null && !same(day[field], value)) throw new Error(`La guía intentó cambiar ${field} de ${day.driving_stage_id}`);
     }
     if (day.distance_m != null && number(day.distance_m) !== facts.distance_m) throw new Error(`La guía intentó cambiar la distancia de ${day.driving_stage_id}`);
