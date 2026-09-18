@@ -26,9 +26,9 @@ function listSection(title, items) {
   element.append(ul);
   return element;
 }
-function recommendation(item, { prefix = "" } = {}) {
+function safeUrl(value) {\n  const raw = text(value);\n  if (!raw) return "";\n  try {\n    const parsed = new URL(raw, location.href);\n    return ["http:", "https:"].includes(parsed.protocol) ? parsed.href : "";\n  } catch { return ""; }\n}\nfunction verifiedFigure(item) {\n  const media = item?.verified_media ?? item?.media ?? null;\n  const imageUrl = safeUrl(media?.image_url);\n  if (!imageUrl || media?.verified_exact !== true) return null;\n  const figure = node("figure", "guia-foto");\n  const img = document.createElement("img");\n  img.src = imageUrl; img.alt = text(item?.name); img.loading = "lazy"; img.referrerPolicy = "no-referrer";\n  img.addEventListener("error", () => figure.remove(), { once: true });\n  figure.append(img);\n  const caption = node("figcaption", "", text(item?.name));\n  const source = safeUrl(media?.source_page);\n  if (media?.credit) caption.append(document.createTextNode(` · ${text(media.credit)}`));\n  if (source) { const a = node("a", "", "Fuente de la imagen"); a.href = source; a.target = "_blank"; a.rel = "noopener noreferrer"; caption.append(document.createTextNode(" · "), a); }\n  figure.append(caption);\n  return figure;\n}\nfunction recommendation(item, { prefix = "" } = {}) {
   const box = node("div", "guia-recomendacion");
-  box.append(node("h4", "", prefix + text(item?.name || "Recomendación")));
+  box.append(node("h4", "", prefix + text(item?.name || "Recomendación")));\n  const figure = verifiedFigure(item);\n  if (figure) box.append(figure);
   paragraph(box, item?.description);
   paragraph(box, item?.why);
   paragraph(box, item?.specialty, "Qué probar: ");
