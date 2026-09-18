@@ -164,6 +164,13 @@
               <label><input type="radio" name="vehiculo" value="coche"><span>🚗 Coche</span></label>
               <label><input type="radio" name="vehiculo" value="moto"><span>🏍️ Moto</span></label>
             </div>
+            <div id="dimensionesVehiculo" class="dimensiones-vehiculo">
+              <p class="ayuda-campo">Opcional. Para autocaravana, camper o caravana, la longitud real permite descartar pernoctas con un límite conocido inferior. Si no la indicas, ese dato se tratará como desconocido.</p>
+              <label>
+                <span>📏 Longitud total del conjunto (m)</span>
+                <input type="number" id="longitudVehiculo" min="2" max="25" step="0.1" inputmode="decimal" placeholder="Ej. 7,4">
+              </label>
+            </div>
           </div>
         </section>
 
