@@ -23,6 +23,3 @@ export async function enrichmentService({ trip, catalogs }) {
   };
 }
 
-export async function disabledGuideService() {
-  throw new Error("Generación IA desactivada durante la reconstrucción");
-}
