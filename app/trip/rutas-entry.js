@@ -3,6 +3,7 @@ import { prepareTripFromCurrentForm, createProductionGuideAdapter } from "./cont
 import { renderRouteMap } from "../ui/route-map.js";
 import { renderLongFormGuide } from "../ui/route-guide.js";
 import { renderRouteActions } from "../ui/route-actions.js";
+import { backendRequest } from "../services/backend-client.js";
 
 let currentStep = 1;
 let childAgeCount = 0;
@@ -129,7 +130,7 @@ function renderClosedTrip(state) {
 function productionGuide() {
   const config = globalThis.RUTAS_CONFIG ?? {};
   if (config.OPENAI_ROUTE_PIPELINE_ENABLED !== true || config.OPENAI_SPEND_ENABLED !== true) return undefined;
-  return createProductionGuideAdapter();
+  return createProductionGuideAdapter({ request: backendRequest });
 }
 
 async function submitTrip(event) {
