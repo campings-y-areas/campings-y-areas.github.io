@@ -65,10 +65,8 @@ if (acceso) {
     logistics: {
       warnings: ["Demo editorial congelada: horarios, precios, accesos y disponibilidad deben comprobarse antes de viajar."]
     },
-    guide: { status: "frozen-demo-guide" }
+    guide: { status: "pending-frozen-demo-guide" }
   };
-
-  const demoState = await prepareDemoTrip(demoSeed);
 
   const metricas = document.getElementById("metricasRuta");
   if (metricas) {
@@ -84,10 +82,6 @@ if (acceso) {
       return box;
     }));
   }
-
-  renderRouteMap(demoState.route);
-
-  renderRouteActions(demoState);
 
   const enrichItem = item => {
     const detail = DEMO_EDITORIAL_DETAILS[item?.name];
@@ -129,6 +123,10 @@ if (acceso) {
       "Horarios, precios, reservas, accesos y disponibilidad deben comprobarse de nuevo antes del viaje."
     ]
   };
-  if (etapas) renderLongFormGuide(guide, etapas);
+  demoSeed.guide = guide;
+  const demoState = await prepareDemoTrip(demoSeed);
+  renderRouteMap(demoState.route);
+  renderRouteActions(demoState);
+  if (etapas) renderLongFormGuide(demoState.guide, etapas);
 
 }
