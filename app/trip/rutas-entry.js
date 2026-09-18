@@ -109,7 +109,10 @@ function renderClosedTrip(state) {
     const minutes = Math.round(Number(state.route?.duration_s ?? 0) / 60);
     metrics.textContent = `${km} km · ${Math.floor(minutes / 60)} h ${minutes % 60} min · ${state.trip?.stages?.length ?? 0} etapas`;
   }
-  renderRouteMap(state.route);\n  if (stages) {
+  renderRouteMap(state.route);
+  renderRouteActions(state);
+  if (stages && state.guide && renderLongFormGuide(state.guide, stages)) return;
+  if (stages) {
     stages.replaceChildren();
     for (const stage of state.trip?.stages ?? []) {
       const article = document.createElement("article");
