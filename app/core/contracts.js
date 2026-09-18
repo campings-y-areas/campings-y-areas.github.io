@@ -18,8 +18,13 @@ export function assertWaypoint(point) {
 
 export function assertRoute(route) {
   if (!route || typeof route !== "object") throw new TypeError("ruta inválida");
-  if (!Array.isArray(route.legs)) throw new TypeError("ruta sin tramos");
-  return route;
+  if (!Array.isArray(route.legs) || route.legs.length === 0) throw new TypeError("ruta sin tramos");
+  const distance_m = Number(route.distance_m);
+  const duration_s = Number(route.duration_s);
+  if (!Number.isFinite(distance_m) || distance_m < 0) throw new TypeError("ruta sin distancia válida");
+  if (!Number.isFinite(duration_s) || duration_s < 0) throw new TypeError("ruta sin duración válida");
+  if (!route.geometry || !Array.isArray(route.geometry.coordinates)) throw new TypeError("ruta sin geometría válida");
+  return { ...route, distance_m, duration_s };
 }
 
 export function assertOvernight(overnight) {
