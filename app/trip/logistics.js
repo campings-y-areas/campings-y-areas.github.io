@@ -3,10 +3,15 @@ import { assessOvernightCompatibility } from "./overnight-policy.js";
 
 function radians(value) { return value * Math.PI / 180; }
 function distanceKm(a, b) {
+  const latA = Number(a?.lat);
+  const lonA = Number(a?.lon ?? a?.lng);
+  const latB = Number(b?.lat);
+  const lonB = Number(b?.lon ?? b?.lng);
+  if (![latA, lonA, latB, lonB].every(Number.isFinite)) return Infinity;
   const earth = 6371;
-  const dLat = radians(Number(b.lat) - Number(a.lat));
-  const dLon = radians(Number(b.lon) - Number(a.lon));
-  const x = Math.sin(dLat / 2) ** 2 + Math.cos(radians(Number(a.lat))) * Math.cos(radians(Number(b.lat))) * Math.sin(dLon / 2) ** 2;
+  const dLat = radians(latB - latA);
+  const dLon = radians(lonB - lonA);
+  const x = Math.sin(dLat / 2) ** 2 + Math.cos(radians(latA)) * Math.cos(radians(latB)) * Math.sin(dLon / 2) ** 2;
   return earth * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1 - x));
 }
 
