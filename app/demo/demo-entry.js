@@ -8,6 +8,15 @@ const acceso = params.get("pruebas") === "manuel";
 const app = document.getElementById("demoApp");
 const bloqueo = document.getElementById("bloqueoDemo");
 
+function mapsDir(origin, destination, waypoints = []) {
+  const params = new URLSearchParams({ api: "1", origin, destination, travelmode: "driving" });
+  if (waypoints.length) params.set("waypoints", waypoints.join("|"));
+  return `https://www.google.com/maps/dir/?${params}`;
+}
+function mapsSearch(query) {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+}
+
 if (acceso) {
   bloqueo.hidden = true;
   app.hidden = false;
@@ -78,6 +87,14 @@ if (acceso) {
 
   renderRouteMap({ geometry: { type: "LineString", coordinates: routePoints.map(([lat, lon]) => [lon, lat]) }, waypoints });
 
+  const wholeRoute = mapsDir("Barcelona, Spain", "Sevilla, Spain", ["Montserrat, Spain", "PortAventura World", "Delta del Ebro", "Valencia, Spain", "Alicante, Spain", "Cartagena, Spain", "Granada, Spain", "Malaga, Spain", "Ardales, Spain", "Ronda, Spain"]);
+  const navigation = document.getElementById("navegacionRuta");
+  if (navigation) {
+    const a = document.createElement("a");
+    a.href = wholeRoute; a.target = "_blank"; a.rel = "noopener noreferrer"; a.textContent = "🧭 Navegar esta ruta con Google Maps";
+    navigation.replaceChildren(a);
+  }
+
   const etapas = document.getElementById("etapasRuta");
   const guide = {
     title: "España en autocaravana · 15 días",
@@ -88,7 +105,7 @@ if (acceso) {
       travel_style: "Autocaravana · patrimonio, naturaleza, familia y gastronomía",
       key_advice: "Dejar la autocaravana en las bases indicadas cuando la visita urbana o el acceso aconsejen utilizar transporte público."
     },
-    days: DEMO_DAYS.map(day => ({
+    days: DEMO_DAYS.map((day, index) => ({
       ...day,
       heading: day.title,
       driving: day.drive,
@@ -98,7 +115,8 @@ if (acceso) {
       restaurants: day.food,
       overnight: day.base ? [day.base] : [],
       overnight_intro: day.sameBase && day.base ? `Se mantiene la misma base: ${day.base.name}, evitando mover innecesariamente la autocaravana.` : "",
-      practical_advice: day.warning
+      practical_advice: day.warning,
+      maps_url: day.stay || !DEMO_DAYS[index + 1] ? mapsSearch(day.place) : mapsDir(day.place, DEMO_DAYS[index + 1].place)
     })),
     final_notes: [
       "La ruta termina en Sevilla después del día 15; no se añade una noche 15 ficticia.",
