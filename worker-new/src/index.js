@@ -4,6 +4,7 @@ import { generateJson } from "./openai.js";
 import { buildVerifiedEditorialMaterial } from "./research.js";
 import { validateGeneratedGuide } from "./guide-validation.js";
 import { jsonReply, preflight } from "./http.js";
+import { reportError } from "./report-error.js";
 
 async function readJson(request) {
   const type = request.headers.get("content-type") || "";
@@ -45,6 +46,7 @@ export default {
     try {
       if (request.method === "POST" && url.pathname === "/plan-route") return await planRoute(request, env);
       if (request.method === "POST" && url.pathname === "/write-route") return await writeRoute(request, env);
+      if (request.method === "POST" && url.pathname === "/report-error") return jsonReply(request, env, 200, await reportError(request, env));
       if (request.method === "GET" && url.pathname === "/health") {
         return jsonReply(request, env, 200, { ok: true, service: "campings-areas-route-guide", contract: "route-contract-v3" });
       }
