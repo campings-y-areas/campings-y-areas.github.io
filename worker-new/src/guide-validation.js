@@ -48,14 +48,12 @@ function enforceVacationDays(guide, profile) {
     const facts = expected.get(id);
     if (!facts || seen.has(id)) throw new Error(`La guía alteró la identidad del día ${index + 1}`);
     seen.add(id);
-    for (const field of ["day", "travel_date", "day_type", "request_point_id", "requested_waypoint", "is_final", "stay_eligible", "base_id", "overnight_id"]) {
+    for (const field of ["day", "travel_date", "day_type", "driving_stage_id", "route_stage_key", "request_point_id", "requested_waypoint", "is_final", "stay_eligible", "base_id", "overnight_id"]) {
       if (day[field] != null && !same(day[field], facts[field])) throw new Error(`La guía intentó cambiar ${field} de ${id}`);
       day[field] = facts[field] ?? null;
     }
     day.vacation_day_id = id;
     if (facts.day_type === "estancia") {
-      day.driving_stage_id = null;
-      day.route_stage_key = facts.route_stage_key ?? null;
       day.driving_km = 0;
       day.driving_minutes = 0;
     }
