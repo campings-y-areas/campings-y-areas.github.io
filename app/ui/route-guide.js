@@ -57,11 +57,13 @@ function recommendation(item, { prefix = "" } = {}) {
   if (figure) box.append(figure);
   paragraph(box, item?.description);
   paragraph(box, item?.why);
+  paragraph(box, item?.category, "Qué vas a visitar: ");
+  paragraph(box, item?.address, "Dirección: ");
   paragraph(box, item?.specialty, "Qué probar: ");
   paragraph(box, item?.type, "Tipo: ");
   paragraph(box, item?.services, "Servicios: ");
   paragraph(box, item?.practical_note || item?.practical_info, "Información práctica: ");
-  const url = text(item?.url || item?.website);
+  const url = text(item?.url || item?.website || item?.web);
   if (url) {
     try {
       const parsed = new URL(url, location.href);
@@ -74,7 +76,28 @@ function recommendation(item, { prefix = "" } = {}) {
       }
     } catch {}
   }
+  const maps = safeUrl(item?.maps);
+  if (maps) {
+    const a = node("a", "", "Abrir en Google Maps");
+    a.href = maps; a.target = "_blank"; a.rel = "noopener noreferrer";
+    box.append(a);
+  }
   return box;
+}
+
+function dayFigure(day) {
+  const imageUrl = safeUrl(day?.photo);
+  if (!imageUrl) return null;
+  const figure = node("figure", "guia-foto");
+  const img = document.createElement("img");
+  img.src = imageUrl; img.alt = text(day?.heading || day?.title || "Fotografía del día"); img.loading = "lazy";
+  img.addEventListener("error", () => figure.remove(), { once: true });
+  figure.append(img);
+  const caption = node("figcaption", "", text(day?.photoCredit || "Imagen"));
+  const source = safeUrl(day?.photoSource);
+  if (source) { const a = node("a", "", "fuente/licencia"); a.href = source; a.target = "_blank"; a.rel = "noopener noreferrer"; caption.append(document.createTextNode(" · "), a); }
+  figure.append(caption);
+  return figure;
 }
 
 export function renderLongFormGuide(guide, container) {
@@ -112,23 +135,30 @@ export function renderLongFormGuide(guide, container) {
     title.append(node("h2", "", text(day?.heading || "Etapa")));
     paragraph(title, day?.driving, "🚐 ");
     daySection.append(title);
-    paragraph(daySection, day?.opening_narrative);
+    const figure = dayFigure(day); if (figure) daySection.append(figure);
+    paragraph(daySection, day?.opening_narrative || day?.plan);
     paragraph(daySection, day?.arrival_strategy, "Al llegar: ");
     paragraph(daySection, day?.recommended_visit_time, "Tiempo recomendado: ");
     paragraph(daySection, day?.pace_advice, "Ritmo: ");
 
+    if (day?.curiosity) { const s = section("🎬 Curiosidad del lugar"); paragraph(s, day.curiosity); daySection.append(s); }
+
     if (day?.visit_story) { const s = section("📍 Qué visitar y cómo organizarlo"); paragraph(s, day.visit_story); daySection.append(s); }
-    if (Array.isArray(day?.highlights) && day.highlights.length) {
-      const s = section("🏛️ Visitas recomendadas"); day.highlights.forEach(item => s.append(recommendation(item))); daySection.append(s);
+    const highlights = Array.isArray(day?.highlights) ? day.highlights : day?.visits;
+    if (Array.isArray(highlights) && highlights.length) {
+      const s = section("🏛️ Visitas recomendadas"); highlights.forEach(item => s.append(recommendation(item))); daySection.append(s);
     }
     if (day?.gastronomy_intro) { const s = section("🍽️ Gastronomía"); paragraph(s, day.gastronomy_intro); daySection.append(s); }
-    if (Array.isArray(day?.restaurants) && day.restaurants.length) {
-      const s = section("🍴 Dónde comer"); day.restaurants.forEach((item, i) => s.append(recommendation(item, { prefix: i === 0 ? "⭐ Recomendado · " : "" }))); daySection.append(s);
+    const restaurants = Array.isArray(day?.restaurants) ? day.restaurants : day?.food;
+    if (Array.isArray(restaurants) && restaurants.length) {
+      const s = section("🍴 Dónde comer"); restaurants.forEach((item, i) => s.append(recommendation(item, { prefix: i === 0 ? "⭐ Recomendado · " : "" }))); daySection.append(s);
     }
     if (day?.overnight_intro) { const s = section("🌙 Pernocta"); paragraph(s, day.overnight_intro); daySection.append(s); }
-    if (Array.isArray(day?.overnight) && day.overnight.length) {
-      const s = section("🚐 Dónde dormir"); day.overnight.forEach((item, i) => s.append(recommendation(item, { prefix: i === 0 ? "⭐ Recomendado · " : "" }))); daySection.append(s);
+    const overnight = Array.isArray(day?.overnight) ? day.overnight : day?.base ? [day.base] : [];
+    if (Array.isArray(overnight) && overnight.length) {
+      const s = section("🚐 Dónde dormir"); overnight.forEach((item, i) => s.append(recommendation(item, { prefix: i === 0 ? "⭐ Recomendado · " : "" }))); daySection.append(s);
     }
+    if (day?.warning) { const s = section("⚠️ Conviene comprobar antes de ir"); paragraph(s, day.warning); daySection.append(s); }
     const advice = Array.isArray(day?.practical_advice)
       ? listSection("💡 Consejo del día", day.practical_advice)
       : day?.practical_advice ? (() => { const s = section("💡 Consejo del día"); paragraph(s, day.practical_advice); return s; })() : null;
