@@ -74,8 +74,6 @@ function workerStage(stage, index, total, requestedIds) {
       : (stage.overnight?.pais ?? stage.overnight?.country ?? stage.to?.country ?? ""),
     lat: finiteNumber(stage.overnight?.lat) ?? finiteNumber(stage.to?.lat),
     lon: finiteNumber(stage.overnight?.lon ?? stage.overnight?.lng) ?? finiteNumber(stage.to?.lon ?? stage.to?.lng),
-    distance_m: Number(stage.distance_m ?? 0),
-    duration_s: Number(stage.duration_s ?? 0),
     driving_km: Math.round(Number(stage.distance_m ?? 0) / 1000),
     driving_minutes: Math.round(Number(stage.duration_s ?? 0) / 60),
     start_lat: finiteNumber(stage.from?.lat),
