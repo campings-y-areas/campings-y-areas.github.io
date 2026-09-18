@@ -3,24 +3,23 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Informar de un error | Campings & Áreas</title>
-<link rel="icon" type="image/png" href="logo.png"><link rel="stylesheet" href="style.css?v=2">
+<link rel="icon" type="image/png" href="logo.png"><link rel="stylesheet" href="style.css?v=3"><link rel="stylesheet" href="informar-error.css?v=1">
 <script src="app/private-access.js?v=1" defer></script>
 <script>if(new URLSearchParams(location.search).get("pruebas")==="manuel")document.documentElement.classList.add("acceso-pruebas")</script>
 </head>
 <body>
 <header><h1><img src="logo.png" alt="Campings & Áreas" class="logo">Campings & Áreas</h1></header>
 <nav class="menu"><a href="index.html">🏠 Inicio</a><a href="campings.html">🏕️ Campings</a><a href="areas.html?tipo=area">🚐 Áreas</a><a href="areas.html?tipo=parking">🅿️ Parkings</a><a href="rutas.html">🗺️ Rutas</a><a href="informar-error.html" aria-current="page">⚠️ Informar de un error</a></nav>
-<main><section>
-<h2>Informar de un error</h2>
-<p>Utiliza este formulario solo si has encontrado información incorrecta o un problema en la web.</p>
-<form id="errorReportForm">
-<label>Tipo de problema<select id="reportType" required><option value="">Selecciona</option><option>Información incorrecta</option><option>Lugar cerrado</option><option>Ubicación o servicios incorrectos</option><option>Enlace roto</option><option>Funcionamiento de la web</option><option>Otro</option></select></label>
-<label>Descripción<textarea id="reportDescription" rows="6" maxlength="4000" required></textarea></label>
-<label>Dato correcto propuesto (opcional)<textarea id="reportCorrection" rows="4" maxlength="2000"></textarea></label>
-<label>Tu nombre (opcional)<input id="reportName" maxlength="120"></label>
-<label>Tu email (opcional)<input id="reportEmail" type="email" maxlength="254"></label>
+<main class="informe-pagina"><section class="informe-tarjeta">
+<div class="informe-cabecera"><span aria-hidden="true">⚠️</span><div><p class="informe-kicker">Ayúdanos a mantener la información al día</p><h2>Informar de un error</h2><p>Cuéntanos qué dato debemos revisar. También puedes usar este formulario si algo de la web no funciona correctamente.</p></div></div>
+<form id="errorReportForm" class="informe-formulario">
+<label><span>Tipo de problema <b>*</b></span><select id="reportType" required><option value="">Selecciona una opción</option><option>Información incorrecta</option><option>Lugar cerrado</option><option>Ubicación o servicios incorrectos</option><option>Enlace roto</option><option>Funcionamiento de la web</option><option>Otro</option></select></label>
+<label class="informe-ancho"><span>¿Qué ocurre? <b>*</b></span><textarea id="reportDescription" rows="6" maxlength="4000" required placeholder="Describe el error con el mayor detalle posible"></textarea></label>
+<label class="informe-ancho"><span>Dato correcto propuesto <small>(opcional)</small></span><textarea id="reportCorrection" rows="4" maxlength="2000" placeholder="Si conoces la información correcta, escríbela aquí"></textarea></label>
+<label><span>Tu nombre <small>(opcional)</small></span><input id="reportName" maxlength="120" autocomplete="name"></label>
+<label><span>Tu email <small>(opcional)</small></span><input id="reportEmail" type="email" maxlength="254" autocomplete="email" placeholder="Para poder responderte"></label>
 <input id="reportWebsite" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
-<button type="submit" id="reportSubmit">Enviar informe</button>
+<div class="informe-acciones informe-ancho"><button type="submit" id="reportSubmit">Enviar informe</button><a href="index.html">Cancelar y volver</a></div>
 <p id="reportStatus" role="status" aria-live="polite"></p>
 </form>
 </section></main>
