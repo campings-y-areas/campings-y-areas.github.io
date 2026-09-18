@@ -1,0 +1,10 @@
+name = "campings-areas-route-guide-new"
+main = "src/index.js"
+compatibility_date = "2026-09-18"
+
+[vars]
+OPENAI_ROUTE_PIPELINE_ENABLED = "false"
+OPENAI_SPEND_ENABLED = "false"
+
+[[send_email]]
+name = "REPORT_EMAIL"

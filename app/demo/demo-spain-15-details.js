@@ -1,8 +1,6 @@
-(() => {
-"use strict";
-if(new URLSearchParams(location.search).get("pruebas")!=="manuel")return;
-const commonsApi="https://commons.wikimedia.org/w/api.php",cache=new Map();
-const E={
+// Detalles editoriales congelados de la demo aprobada.
+// No realiza búsquedas ni llamadas de red.
+export const DEMO_EDITORIAL_DETAILS={
 "Basílica de la Sagrada Família":["La basílica comenzó a construirse en 1882 y quedó ligada para siempre a Antoni Gaudí. Fachadas, torres, geometría y un interior concebido como un bosque de columnas permiten entender cómo Gaudí mezcló arquitectura, naturaleza, luz y simbolismo.","1 h 30 min–2 h"],
 "Barrio Gótico":["Es el núcleo histórico de Barcelona: una trama de calles y plazas donde conviven restos de la antigua Barcino romana, edificios medievales y la catedral. Merece recorrerlo a pie sin una ruta demasiado rígida.","1 h 30 min–2 h"],
 "Mercat de la Boqueria":["Mercado histórico de la Rambla y escaparate de producto fresco, pescado, embutidos y cocina preparada. Aquí interesa curiosear los puestos y probar pequeñas especialidades locales.","45 min–1 h"],
@@ -49,7 +47,7 @@ const E={
 "Catedral y Giralda":["La catedral ocupa el solar de la antigua mezquita almohade y la Giralda conserva el antiguo alminar transformado en campanario. El conjunto resume siglos de historia religiosa y urbana.","1 h 30 min–2 h"],
 "Plaza de España y Parque de María Luisa":["La Plaza de España fue construida para la Exposición Iberoamericana de 1929 y se abre hacia el parque de María Luisa. Cerámica, canales, galerías y jardines permiten cerrar la ruta al aire libre.","1 h 30 min–2 h"],
 "Sevilla · despedida de tapas":["El último día no necesita una reserva gastronómica rígida. La propuesta es cerrar el viaje enlazando varias tapas y escoger sobre la marcha según ambiente, especialidades y disponibilidad.","1–2 h"]};
-const B={
+export const DEMO_BASE_DETAILS={
 "Camping Barcelona":"Camping de Mataró pensado también para visitar Barcelona sin entrar con la autocaravana. Su valor es logístico: instalarse, utilizar transporte y regresar a una base costera al terminar el día.",
 "Càmping Montserrat":"Camping a los pies del macizo y rodeado de paisaje rural. Permite dormir cerca de Montserrat y evita encadenar otro desplazamiento largo después de la visita.",
 "Parking Caravaning PortAventura World":"Área oficial del complejo para autocaravanas. Es una pernocta funcional que permite aprovechar el parque hasta el final sin buscar alojamiento alejado.",
@@ -62,14 +60,3 @@ const B={
 "Camping Parque Ardales":"Camping en el entorno de los embalses y del acceso norte del Caminito. Paisaje, acceso, descanso y organización de la visita quedan concentrados en la misma zona.",
 "Camping El Sur":"Camping a las afueras de Ronda, suficientemente cerca para visitar la ciudad sin atravesar el centro con la autocaravana. Tras una etapa corta permite aparcar y caminar.",
 "Camping Villsom":"Camping en Dos Hermanas utilizado como base exterior para Sevilla. Su ventaja es dejar la autocaravana y usar transporte, evitando acceso y aparcamiento en la gran ciudad."};
-function titulo(t){return String(t||"").replace(/^⭐\s*/,"").replace(/^(Recomendado|Base recomendada)\s*·\s*/i,"").trim()}
-function ctx(c){const d=c.closest(".guia-dia-editorial"),s=c.closest(".guia-seccion-editorial");return{n:titulo(c.querySelector("h4")?.textContent),d:d?.querySelector(".guia-dia-titulo h2")?.textContent||"España",t:s?.querySelector("h3")?.textContent||""}}
-function q(x){if(/Dónde comer/i.test(x.t))return`${x.n} ${x.d} food`;if(/Dónde dormir|Pernocta/i.test(x.t))return`${x.n} ${x.d} camping motorhome`;return`${x.n} ${x.d}`}
-async function foto(s){if(cache.has(s))return cache.get(s);const p=(async()=>{const u=new URLSearchParams({origin:"*",action:"query",format:"json",generator:"search",gsrnamespace:"6",gsrsearch:s,gsrlimit:"6",prop:"imageinfo",iiprop:"url|extmetadata",iiurlwidth:"900"}),r=await fetch(`${commonsApi}?${u}`);if(!r.ok)return null;const j=await r.json();for(const p of Object.values(j?.query?.pages||{})){const i=p?.imageinfo?.[0],url=i?.thumburl||i?.url;if(!url||!/\.(jpe?g|png|webp)(\?|$)/i.test(url))continue;const m=i.extmetadata||{};return{url,page:i.descriptionurl||"https://commons.wikimedia.org/",author:String(m.Artist?.value||"Wikimedia Commons").replace(/<[^>]*>/g,"").trim(),license:m.LicenseShortName?.value||"ver licencia"}}return null})().catch(()=>null);cache.set(s,p);return p}
-function fallback(c){const i=c.closest(".guia-dia-editorial")?.querySelector(".guia-foto img"),a=c.closest(".guia-dia-editorial")?.querySelector(".guia-foto figcaption a");return i?{url:i.currentSrc||i.src,page:a?.href||"https://commons.wikimedia.org/",author:"Imagen del destino",license:"Wikimedia Commons"}:null}
-function ponerFoto(c,f){if(!f||c.querySelector(":scope > .foto-recomendacion"))return;const g=document.createElement("figure"),i=document.createElement("img"),p=document.createElement("figcaption"),a=document.createElement("a");g.className="foto-recomendacion";i.loading="lazy";i.src=f.url;i.alt=titulo(c.querySelector("h4")?.textContent);a.href=f.page;a.target="_blank";a.rel="noopener";a.textContent=`${f.author||"Wikimedia Commons"} · ${f.license||"ver licencia"}`;p.append(a);g.append(i,p);c.insertBefore(g,c.querySelector("h4")?.nextSibling||c.firstChild)}
-function enriquecer(c){if(c.querySelector(":scope > .detalle-editorial"))return;const x=ctx(c),v=E[x.n]||null,text=v?.[0]||B[x.n],time=v?.[1]||"";if(!text)return;const b=document.createElement("div"),p=document.createElement("p"),s=document.createElement("strong");b.className="detalle-editorial";s.textContent=/Dónde comer/i.test(x.t)?"🍴 Qué encontrarás: ":/Dónde dormir|Pernocta/i.test(x.t)?"🚐 Cómo es esta base: ":"📖 Qué vas a descubrir: ";p.append(s,document.createTextNode(text));b.append(p);if(time){const z=document.createElement("p"),k=document.createElement("strong");z.className="tiempo-recomendado";k.textContent="⏱️ Tiempo recomendado: ";z.append(k,document.createTextNode(time));b.append(z)}c.insertBefore(b,c.querySelector(".guia-enlaces")||null)}
-async function completar(){for(const c of document.querySelectorAll(".guia-recomendacion")){enriquecer(c);const x=ctx(c);let f=await foto(q(x));if(!f)f=await foto(`${x.d} Spain travel`);if(!f)f=fallback(c);ponerFoto(c,f)}}
-function pdf(){const h=document.querySelector(".resultado-cabecera");if(!h||document.getElementById("imprimirDemoPdf"))return;const b=document.createElement("button");b.type="button";b.id="imprimirDemoPdf";b.className="boton-secundario boton-pdf-demo";b.textContent="🖨️ Imprimir / guardar en PDF";b.onclick=()=>window.print();h.appendChild(b)}
-function init(){pdf();completar()}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();
-})();

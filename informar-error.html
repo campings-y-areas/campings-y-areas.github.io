@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Informar de un error | Campings & Áreas</title>
+<link rel="icon" type="image/png" href="logo.png"><link rel="stylesheet" href="style.css?v=2">
+<script src="app/private-access.js?v=1" defer></script>
+<script>if(new URLSearchParams(location.search).get("pruebas")==="manuel")document.documentElement.classList.add("acceso-pruebas")</script>
+</head>
+<body>
+<header><h1><img src="logo.png" alt="Campings & Áreas" class="logo">Campings & Áreas</h1></header>
+<nav class="menu"><a href="index.html">🏠 Inicio</a><a href="campings.html">🏕️ Campings</a><a href="areas.html?tipo=area">🚐 Áreas</a><a href="areas.html?tipo=parking">🅿️ Parkings</a><a href="rutas.html">🗺️ Rutas</a><a href="informar-error.html" aria-current="page">⚠️ Informar de un error</a></nav>
+<main><section>
+<h2>Informar de un error</h2>
+<p>Utiliza este formulario solo si has encontrado información incorrecta o un problema en la web.</p>
+<form id="errorReportForm">
+<label>Tipo de problema<select id="reportType" required><option value="">Selecciona</option><option>Información incorrecta</option><option>Lugar cerrado</option><option>Ubicación o servicios incorrectos</option><option>Enlace roto</option><option>Funcionamiento de la web</option><option>Otro</option></select></label>
+<label>Descripción<textarea id="reportDescription" rows="6" maxlength="4000" required></textarea></label>
+<label>Dato correcto propuesto (opcional)<textarea id="reportCorrection" rows="4" maxlength="2000"></textarea></label>
+<label>Tu nombre (opcional)<input id="reportName" maxlength="120"></label>
+<label>Tu email (opcional)<input id="reportEmail" type="email" maxlength="254"></label>
+<input id="reportWebsite" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
+<button type="submit" id="reportSubmit">Enviar informe</button>
+<p id="reportStatus" role="status" aria-live="polite"></p>
+</form>
+</section></main>
+<script src="rutas-config.js?v=7"></script><script type="module" src="app/report-error.js?v=1"></script>
+</body></html>

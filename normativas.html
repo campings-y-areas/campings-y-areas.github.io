@@ -10,7 +10,14 @@
   <link rel="icon" type="image/png" href="logo.png">
   <link rel="apple-touch-icon" href="logo.png">
 
+  <script>
+    if (new URLSearchParams(window.location.search).get("pruebas") === "manuel") {
+      document.documentElement.classList.add("acceso-pruebas");
+    }
+  </script>
+
   <link rel="stylesheet" href="style.css?v=2">
+  <script src="app/private-access.js?v=1" defer></script>
 
   <style>
     .selector-normativas {
@@ -71,6 +78,8 @@
     <a href="talleres.html">🛠️ Talleres</a>
     <a href="servicios.html">🔧 Servicios</a>
     <a href="normativas.html">📘 Normativas</a>
+    <a href="rutas.html">🗺️ Rutas</a>
+    <a href="informar-error.html">⚠️ Informar de un error</a>
 
   </nav>
 

@@ -1,0 +1,8 @@
+{
+  "name": "campings-areas-worker-new",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}
