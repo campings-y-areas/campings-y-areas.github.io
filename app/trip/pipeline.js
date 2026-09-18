@@ -47,7 +47,8 @@ function insertSplitTargets(routeWaypoints, stages, splitTargets) {
 
   stages.forEach((stage, stageIndex) => {
     if (stageIndex === 0) result.push(routeWaypoints[0]);
-    const targets = targetsByStage.get(stageIdentity(stage)) ?? [];
+    const targets = [...(targetsByStage.get(stageIdentity(stage)) ?? [])]
+      .sort((a, b) => Number(a?.route_point?.driving_seconds ?? 0) - Number(b?.route_point?.driving_seconds ?? 0));
     for (const target of targets) {
       const point = overnightWaypoint(target);
       const overnightKey = `${String(point.logistics_stage_key ?? "")}::${String(point.logistics_overnight_id)}`;
