@@ -1,4 +1,5 @@
 import { DEMO_DAYS } from "./demo-spain-15-data.js";
+import { renderRouteMap } from "../ui/route-map.js";
 import { resetState, setState } from "../core/store.js";
 
 const params = new URLSearchParams(location.search);
@@ -74,26 +75,7 @@ if (acceso) {
     }));
   }
 
-  if (globalThis.L && document.getElementById("mapaRuta")) {
-    const map = L.map("mapaRuta", { scrollWheelZoom: false }).setView([39.3, -1.2], 6);
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      maxZoom: 18,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(map);
-    const latlngs = routePoints.map(([lat, lon]) => [lat, lon]);
-    L.polyline(latlngs, { weight: 5, opacity: 0.78 }).addTo(map);
-    routePoints.forEach(([lat, lon, label], index) => {
-      const icon = L.divIcon({
-        className: "leaflet-div-icon",
-        html: `<div class="marker-num">${index + 1}</div>`,
-        iconSize: [32, 32],
-        iconAnchor: [16, 16]
-      });
-      L.marker([lat, lon], { icon }).addTo(map).bindPopup(`<strong>${index + 1}. ${label}</strong>`);
-    });
-    map.fitBounds(latlngs, { padding: [25, 25] });
-    setTimeout(() => map.invalidateSize(), 50);
-  }
+  renderRouteMap({ geometry: { type: "LineString", coordinates: routePoints.map(([lat, lon]) => [lon, lat]) }, waypoints });
 
   const etapas = document.getElementById("etapasRuta");
   if (etapas) {
