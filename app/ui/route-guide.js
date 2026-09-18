@@ -158,7 +158,18 @@ export function renderLongFormGuide(guide, container) {
     if (Array.isArray(overnight) && overnight.length) {
       const s = section("🚐 Dónde dormir"); overnight.forEach((item, i) => s.append(recommendation(item, { prefix: i === 0 ? "⭐ Recomendado · " : "" }))); daySection.append(s);
     }
-    if (day?.warning) { const s = section("⚠️ Conviene comprobar antes de ir"); paragraph(s, day.warning); daySection.append(s); }
+    if (day?.warning) {
+      const s = section("⚠️ Conviene comprobar antes de ir");
+      paragraph(s, day.warning);
+      const mapsUrl = safeUrl(day?.maps_url);
+      if (mapsUrl) {
+        const route = node("div", "ruta-dia");
+        const a = node("a", "", "🧭 Abrir etapa del día en Google Maps");
+        a.href = mapsUrl; a.target = "_blank"; a.rel = "noopener noreferrer";
+        route.append(a); s.append(route);
+      }
+      daySection.append(s);
+    }
     const advice = Array.isArray(day?.practical_advice)
       ? listSection("💡 Consejo del día", day.practical_advice)
       : day?.practical_advice ? (() => { const s = section("💡 Consejo del día"); paragraph(s, day.practical_advice); return s; })() : null;
