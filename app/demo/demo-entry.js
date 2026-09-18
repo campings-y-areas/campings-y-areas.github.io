@@ -2,7 +2,7 @@ import { DEMO_DAYS } from "./demo-spain-15-data.js";
 import { DEMO_EDITORIAL_DETAILS, DEMO_BASE_DETAILS } from "./demo-spain-15-details.js";
 import { renderRouteMap } from "../ui/route-map.js";
 import { renderLongFormGuide } from "../ui/route-guide.js";
-import { resetState, setState } from "../core/store.js";
+import { prepareDemoTrip } from "../trip/controller.js";
 
 const params = new URLSearchParams(location.search);
 const acceso = params.get("pruebas") === "manuel";
@@ -21,7 +21,6 @@ function mapsSearch(query) {
 if (acceso) {
   bloqueo.hidden = true;
   app.hidden = false;
-  resetState();
 
   const routePoints = [
     [41.3874, 2.1686, "Barcelona"],
@@ -46,19 +45,15 @@ if (acceso) {
     lon
   }));
 
-  setState(state => ({
-    ...state,
-    demo: true,
-    mode: "route",
+  const demoSeed = {
+    demo_closed: true,
     vehicle: { tipo: "autocaravana" },
     trip: {
-      ...state.trip,
       days: 15,
       waypoints,
       stages: []
     },
     route: {
-      ...state.route,
       waypoints,
       geometry: null,
       display_geometry: {
@@ -68,10 +63,12 @@ if (acceso) {
       geometry_source: "demo-display-polyline"
     },
     logistics: {
-      ...state.logistics,
       warnings: ["Demo editorial congelada: horarios, precios, accesos y disponibilidad deben comprobarse antes de viajar."]
-    }
-  }));
+    },
+    guide: { status: "frozen-demo-guide" }
+  };
+
+  const demoState = await prepareDemoTrip(demoSeed);
 
   const metricas = document.getElementById("metricasRuta");
   if (metricas) {
@@ -88,7 +85,7 @@ if (acceso) {
     }));
   }
 
-  renderRouteMap({ display_geometry: { type: "LineString", coordinates: routePoints.map(([lat, lon]) => [lon, lat]) }, geometry_source: "demo-display-polyline", waypoints });
+  renderRouteMap(demoState.route);
 
   const wholeRoute = mapsDir("Barcelona, Spain", "Sevilla, Spain", ["Montserrat, Spain", "PortAventura World", "Delta del Ebro", "Valencia, Spain", "Alicante, Spain", "Cartagena, Spain", "Granada, Spain", "Malaga, Spain", "Ardales, Spain", "Ronda, Spain"]);
   const navigation = document.getElementById("navegacionRuta");
