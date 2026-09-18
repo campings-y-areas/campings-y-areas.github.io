@@ -9,8 +9,8 @@ function expectedStages(profile) {
     to_point_id: stage.to_point_id,
     overnight_id: stage.overnight_id ?? null,
     base_id: stage.base_id ?? stage.overnight_id ?? null,
-    distance_m: number(stage.driving_km) * 1000,
-    duration_s: number(stage.driving_minutes) * 60,
+    distance_m: number(stage.distance_m),
+    duration_s: number(stage.duration_s),
     overnight_compatibility: stage.overnight_compatibility ?? null
   }]));
 }
