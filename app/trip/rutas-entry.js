@@ -2,6 +2,7 @@ import { getState, subscribe } from "../core/store.js";
 import { prepareTripFromCurrentForm, createProductionGuideAdapter } from "./controller.js";
 import { renderRouteMap } from "../ui/route-map.js";
 import { renderLongFormGuide } from "../ui/route-guide.js";
+import { renderRouteActions } from "../ui/route-actions.js";
 
 let currentStep = 1;
 let childAgeCount = 0;
