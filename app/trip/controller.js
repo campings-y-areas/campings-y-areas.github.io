@@ -47,14 +47,27 @@ export async function prepareTripFromCurrentForm({ guide = null } = {}) {
 }
 
 export async function prepareDemoTrip(seed, {
-  routing = routingService,
-  logistics = logisticsService,
-  enrichment = enrichmentService
+  routing = null,
+  logistics = null,
+  enrichment = null
 } = {}) {
   if (!seed?.trip?.waypoints?.length) throw new TypeError("Demo sin puntos de ruta");
   if (!seed?.guide) throw new TypeError("Demo sin guía predefinida");
 
   activateDemo(seed);
+  const closedSeed = Boolean(seed.route?.geometry && seed.trip?.stages?.length);
+  const hasInjectedServices = [routing, logistics, enrichment].every(service => typeof service === "function");
+
+  // Una demo cerrada puede mostrarse sin tocar servicios externos.
+  if (closedSeed && !hasInjectedServices) return getState();
+
+  // Recalcular una demo exige adaptadores explícitos: nunca cae por defecto
+  // en Geoapify, catálogos/enrichment de producción ni Worker/OpenAI.
+  if (!hasInjectedServices) {
+    deactivateDemo();
+    throw new TypeError("La demo recalculada necesita servicios inyectados explícitamente");
+  }
+
   const guideService = createGuideService();
   const guide = pipelineGuideAdapter(guideService, { demo: true, demoGuide: seed.guide });
 
