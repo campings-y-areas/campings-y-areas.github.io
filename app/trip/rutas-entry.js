@@ -3,7 +3,6 @@ import { prepareTripFromCurrentForm, createProductionGuideAdapter } from "./cont
 import { renderRouteMap } from "../ui/route-map.js";
 import { renderLongFormGuide } from "../ui/route-guide.js";
 import { renderRouteActions } from "../ui/route-actions.js";
-import { renderRouteActions } from "../ui/route-actions.js";
 
 let currentStep = 1;
 let childAgeCount = 0;
