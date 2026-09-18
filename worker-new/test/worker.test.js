@@ -211,3 +211,10 @@ test("error HTTP de OpenAI se clasifica como fallo de generación", async () => 
     globalThis.fetch = originalFetch;
   }
 });
+
+
+test("la validación rechaza cambiar la etapa asignada a un día", () => {
+  const p = profile();
+  const guide = { days: [{ vacation_day_id: "day-1", driving_stage_id: "stage-inventada", route_stage_key: "x=>y" }] };
+  assert.throws(() => validateGeneratedGuide(guide, p), /driving_stage_id/);
+});
