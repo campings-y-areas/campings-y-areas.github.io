@@ -2,8 +2,7 @@ import { DEMO_DAYS } from "./demo-spain-15-data.js";
 import { DEMO_EDITORIAL_DETAILS, DEMO_BASE_DETAILS } from "./demo-spain-15-details.js";
 import { renderRouteMap } from "../ui/route-map.js";
 import { renderLongFormGuide } from "../ui/route-guide.js";
-import { renderRouteActions } from "../ui/route-actions.js";
-import { prepareDemoTrip } from "../trip/controller.js";
+
 
 const params = new URLSearchParams(location.search);
 const acceso = params.get("pruebas") === "manuel";
@@ -44,29 +43,6 @@ if (acceso) {
     lat,
     lon
   }));
-
-  const demoSeed = {
-    demo_closed: true,
-    vehicle: { tipo: "autocaravana" },
-    trip: {
-      days: 15,
-      waypoints,
-      stages: []
-    },
-    route: {
-      waypoints,
-      geometry: null,
-      display_geometry: {
-        type: "LineString",
-        coordinates: routePoints.map(([lat, lon]) => [lon, lat])
-      },
-      geometry_source: "demo-display-polyline"
-    },
-    logistics: {
-      warnings: ["Demo editorial congelada: horarios, precios, accesos y disponibilidad deben comprobarse antes de viajar."]
-    },
-    guide: { status: "pending-frozen-demo-guide" }
-  };
 
   const metricas = document.getElementById("metricasRuta");
   if (metricas) {
@@ -123,10 +99,15 @@ if (acceso) {
       "Horarios, precios, reservas, accesos y disponibilidad deben comprobarse de nuevo antes del viaje."
     ]
   };
-  demoSeed.guide = guide;
-  const demoState = await prepareDemoTrip(demoSeed);
-  renderRouteMap(demoState.route);
-  renderRouteActions(demoState);
-  if (etapas) renderLongFormGuide(demoState.guide, etapas);
+  renderRouteMap({
+    geometry: null,
+    display_geometry: {
+      type: "LineString",
+      coordinates: routePoints.map(([lat, lon]) => [lon, lat])
+    },
+    geometry_source: "demo-display-polyline",
+    waypoints
+  });
+  if (etapas) renderLongFormGuide(guide, etapas);
 
 }
