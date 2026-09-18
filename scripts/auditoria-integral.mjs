@@ -76,13 +76,15 @@ for(const f of files.filter(f=>f.endsWith('.html'))){
   }
 }
 
-// Navegación pública: las secciones principales deben exponer Rutas de forma coherente.
+// Navegación: las secciones principales deben exponer Rutas, informes y conservar el acceso privado.
 const navPages=['index.html','campings.html','areas.html','acampadas.html','lugares.html','talleres.html','servicios.html','normativas.html','rutas.html'];
 for(const page of navPages){
   const f=path.join(root,page);
   if(!fs.existsSync(f)){errors.push(`Página principal ausente: ${page}`);continue;}
   const text=fs.readFileSync(f,'utf8');
   if(!/href=["']rutas\.html["']/.test(text))errors.push(`Navegación incompleta: ${page} no enlaza Rutas.`);
+  if(!/href=["']informar-error\.html["']/.test(text))errors.push(`Navegación incompleta: ${page} no enlaza Informar de un error.`);
+  if(!text.includes('app/private-access.js'))errors.push(`Acceso privado inconsistente: ${page} no conserva pruebas=manuel al navegar.`);
 }
 
 // Módulos con varias fuentes independientes: un fallo parcial no debe derribar toda la sección.
@@ -94,30 +96,29 @@ for(const name of ['lugares.js','servicios.js']){
   }
 }
 
-// Campings y Áreas siguen pendientes de migrar desde carga masiva a carga por país/cache.
-for(const name of ['campings.js','areas.js']){
-  const f=path.join(root,name);
-  if(fs.existsSync(f)){
-    const s=fs.readFileSync(f,'utf8');
-    if(s.includes('await Promise.all(['))warnings.push(`${name}: pendiente sustituir carga masiva all-or-nothing por carga por país/cache y carga global tolerante a fallos.`);
-  }
-}
-
 const normativas=path.join(root,'normativas.js');
 if(fs.existsSync(normativas)){
   const s=fs.readFileSync(normativas,'utf8');
   if(/🇪🇸\s*\$\{normativa\.pais\}/.test(s))errors.push('Regresión Normativas: bandera de España hardcodeada para todos los países.');
 }
 
-const rutas=path.join(root,'rutas.js');
-if(fs.existsSync(rutas)){
-  const s=fs.readFileSync(rutas,'utf8');
-  const required=['elegirFinJornadaRealV3','completarInvestigacionesPendientesIA','validarLogisticaLocal','alojamientoCompatible','consultarPlanificadorIA','consultarRedactorIA'];
-  for(const name of required)if(!s.includes(name))errors.push(`Contrato Rutas ausente: ${name}`);
-  if(/place\s*:\s*nombreAlojamiento\s*\(\s*cand\s*\)/.test(s))errors.push('Regresión Rutas: una pernocta vuelve a usarse como place de etapa.');
-  if(/const\s+localidadPernocta\s*=\s*String\(\s*nombreLugarWorker\s*\(/s.test(s))errors.push('Regresión Rutas: la localidad de la pernocta aún puede tomar el nombre comercial del POI.');
-  if(/const\s+place\s*=\s*nombreLugarWorker\(rev,nombreLocalidad\(rev\)\)/.test(s))errors.push('Regresión Rutas: el corte técnico aún puede usar nombre de POI como localidad.');
-  if(/normalizarClaveMedia\(nombre\)===normalizarClaveMedia\(ultimoLugar\)/.test(s))warnings.push('Rutas: la penalización de duplicados compara nombre de alojamiento con localidad; debe compararse localidad con localidad.');
+const rutasHtml=fs.readFileSync(path.join(root,'rutas.html'),'utf8');
+if(/(?:src|href)=["']rutas\.js/.test(rutasHtml))errors.push('Rutas carga el script monolítico antiguo.');
+for(const required of ['app/trip/rutas-entry.js','app/trip/pipeline.js','app/trip/vacation-days.js','app/services/data-registry.js']){
+  if(!fs.existsSync(path.join(root,required)))errors.push(`Arquitectura de Rutas incompleta: falta ${required}`);
+}
+
+const demoHtml=fs.readFileSync(path.join(root,'demo-ruta.html'),'utf8');
+if(!demoHtml.includes('app/demo/demo-entry.js'))errors.push('Demo: no carga la entrada aislada.');
+if(/rutas-config|worker-new|rutas\.js/.test(demoHtml))errors.push('Demo: contiene una dependencia prohibida de Rutas, Worker o configuración.');
+const demoData=fs.readFileSync(path.join(root,'app/demo/demo-spain-15-data.js'),'utf8');
+const demoDays=(demoData.match(/\{day:\d+,title:/g)||[]).length;
+const demoBases=(demoData.match(/^\s{2}[a-z]+:\{name:/gm)||[]).length;
+if(demoDays!==15)errors.push(`Demo: se esperaban 15 días y se encontraron ${demoDays}.`);
+if(demoBases!==12)errors.push(`Demo: se esperaban 12 bases y se encontraron ${demoBases}.`);
+
+for(const obsolete of ['rutas.js','demo-ruta.js','demo-ruta-mejoras.js']){
+  if(fs.existsSync(path.join(root,obsolete)))errors.push(`Código obsoleto todavía presente: ${obsolete}`);
 }
 
 console.log(`Archivos revisados: ${files.length}`);

@@ -43,8 +43,11 @@ function enforceVacationDays(guide, profile) {
   if (guide.days.length !== expected.size) throw new Error("La guía no coincide con el número de días del viaje");
   const seen = new Set();
   guide.days.forEach((day, index) => {
-    const fallback = profile.vacation_days[index];
-    const id = String(day?.vacation_day_id ?? fallback?.vacation_day_id ?? "");
+    const expectedAtIndex = profile.vacation_days[index];
+    const id = String(day?.vacation_day_id ?? "");
+    if (!id || id !== String(expectedAtIndex?.vacation_day_id ?? "")) {
+      throw new Error(`La guía alteró el orden o la identidad del día ${index + 1}`);
+    }
     const facts = expected.get(id);
     if (!facts || seen.has(id)) throw new Error(`La guía alteró la identidad del día ${index + 1}`);
     seen.add(id);

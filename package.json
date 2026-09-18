@@ -1,0 +1,9 @@
+{
+  "name": "campings-y-areas-web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/*.test.js && npm --prefix worker-new test",
+    "audit": "node scripts/auditoria-integral.mjs"
+  }
+}

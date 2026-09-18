@@ -4,7 +4,7 @@ import { generateJson } from "./openai.js";
 import { buildVerifiedEditorialMaterial } from "./research.js";
 import { validateGeneratedGuide } from "./guide-validation.js";
 import { jsonReply, preflight } from "./http.js";
-import { reportError } from "./report-error.js";
+import { reportError, ReportError } from "./report-error.js";
 
 async function readJson(request) {
   const type = request.headers.get("content-type") || "";
@@ -52,6 +52,11 @@ export default {
       }
       return jsonReply(request, env, 404, { ok: false, status: "not_found" });
     } catch (error) {
+      if (url.pathname === "/report-error") {
+        const http = error instanceof ReportError ? error.httpStatus : 500;
+        const status = error instanceof ReportError ? error.status : "report_failed";
+        return jsonReply(request, env, http, { ok: false, status, message: error?.message || "No se pudo enviar el informe" });
+      }
       const failure = errorStatus(error);
       return jsonReply(request, env, failure.http, { ok: false, status: failure.status, message: error?.message || "Solicitud inválida" });
     }

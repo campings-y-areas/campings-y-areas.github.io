@@ -5,16 +5,26 @@ function vehicleMode(vehicle) {
   return type.includes("moto") ? "motorcycle" : "drive";
 }
 
-function routeCountries(legs) {
-  const result = [];
-  for (const leg of legs) {
-    const codes = Array.isArray(leg?.country_code) ? leg.country_code : (leg?.country_code ? [leg.country_code] : []);
-    for (const code of codes) {
-      const normalized = String(code ?? "").toLowerCase().trim();
-      if (normalized && !result.includes(normalized)) result.push(normalized);
+export function routeCountryMetadata(properties = {}) {
+  const metadata = [];
+  const byCode = new Map();
+  const add = value => {
+    const countryCode = String(value?.country_code ?? value ?? "").toLowerCase().trim();
+    if (!countryCode) return;
+    if (!byCode.has(countryCode)) {
+      const item = typeof value === "object" ? {
+        country_code: countryCode,
+        country: value.country_text ?? value.country ?? null,
+        state_code: value.state_code ?? null,
+        state: value.state_text ?? value.state ?? null
+      } : { country_code: countryCode, country: null, state_code: null, state: null };
+      byCode.set(countryCode, item);
+      metadata.push(item);
     }
-  }
-  return result;
+  };
+  for (const area of properties.admin_areas ?? []) add(area);
+  for (const code of properties.country_code ?? []) add(code);
+  return metadata;
 }
 
 function featureLegCoordinates(geometry, legIndex) {
@@ -69,7 +79,10 @@ export async function geoapifyRoute({ points, vehicle, preferences = {}, include
   const options = routingOptions(preferences);
   if (options.avoid.length) query.set("avoid", options.avoid.join("|"));
   if (options.type) query.set("type", options.type);
-  if (includeCountryDetails) query.set("details", "route_details");
+  // Geoapify expone los países atravesados en properties.country_code y los
+  // nombres administrativos mediante details=admin_areas. route_details son
+  // atributos viarios y tienen un coste adicional, por lo que no se solicitan.
+  if (includeCountryDetails) query.set("details", "admin_areas");
 
   const response = await fetch(`https://api.geoapify.com/v1/routing?${query.toString()}`);
   if (!response.ok) throw new Error(`Geoapify: ${response.status}`);
@@ -83,7 +96,7 @@ export async function geoapifyRoute({ points, vehicle, preferences = {}, include
     distance_m: Number(feature.properties.distance ?? 0),
     duration_s: Number(feature.properties.time ?? 0),
     legs,
-    country_metadata: includeCountryDetails ? routeCountries(legs).map(country_code => ({ country_code })) : [],
+    country_metadata: includeCountryDetails ? routeCountryMetadata(feature.properties) : [],
     country_details_loaded: includeCountryDetails,
     provider: "geoapify"
   };

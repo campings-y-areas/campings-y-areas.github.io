@@ -218,3 +218,57 @@ test("la validación rechaza cambiar la etapa asignada a un día", () => {
   const guide = { days: [{ vacation_day_id: "day-1", driving_stage_id: "stage-inventada", route_stage_key: "x=>y" }] };
   assert.throws(() => validateGeneratedGuide(guide, p), /driving_stage_id/);
 });
+
+test("la validación rechaza intercambiar días y etapas aunque ambas existan", () => {
+  const p = profile();
+  p.stages.push({
+    driving_stage_id: "stage-2", route_stage_key: "b=>c", from_point_id: "b", to_point_id: "c",
+    driving_km: 100, driving_minutes: 60, overnight_id: null, base_id: null
+  });
+  p.route_facts.stages.push({
+    driving_stage_id: "stage-2", route_stage_key: "b=>c", from_point_id: "b", to_point_id: "c",
+    distance_m: 100000, duration_s: 3600, overnight_id: null, base_id: null, overnight_compatibility: null
+  });
+  p.vacation_days.push({
+    vacation_day_id: "day-2", day: 2, travel_date: null, day_type: "conduccion_y_visita",
+    driving_stage_id: "stage-2", route_stage_key: "b=>c", request_point_id: "c",
+    requested_waypoint: true, is_final: true, stay_eligible: true, base_id: null, overnight_id: null
+  });
+  const guide = { days: [
+    { ...p.vacation_days[1] },
+    { ...p.vacation_days[0] }
+  ] };
+  assert.throws(() => validateGeneratedGuide(guide, p), /orden o la identidad/);
+});
+
+test("los errores del formulario no se clasifican como contrato de ruta", async () => {
+  const response = await worker.fetch(new Request("https://worker.test/report-error", {
+    method: "POST",
+    headers: { origin, "content-type": "application/json" },
+    body: JSON.stringify({ type: "Enlace roto", description: "" })
+  }), {});
+  assert.equal(response.status, 400);
+  assert.equal((await response.json()).status, "invalid_report");
+});
+
+test("un fallo del servicio de correo devuelve estado propio", async () => {
+  const response = await worker.fetch(new Request("https://worker.test/report-error", {
+    method: "POST",
+    headers: { origin, "content-type": "application/json" },
+    body: JSON.stringify({ type: "Enlace roto", description: "No funciona" })
+  }), { REPORT_TO_EMAIL: "to@example.test", REPORT_FROM_EMAIL: "from@example.test", REPORT_EMAIL: { send: async () => { throw new Error("mail down"); } } });
+  assert.equal(response.status, 502);
+  assert.equal((await response.json()).status, "report_delivery_failed");
+});
+
+test("el contrato rechaza vacation_days asociados a otra etapa", async () => {
+  const broken = profile();
+  broken.vacation_days[0].route_stage_key = "otra=>etapa";
+  const response = await worker.fetch(new Request("https://worker.test/plan-route", {
+    method: "POST",
+    headers: { origin, "content-type": "application/json" },
+    body: JSON.stringify(broken)
+  }), { OPENAI_ROUTE_PIPELINE_ENABLED: "false", OPENAI_SPEND_ENABLED: "false" });
+  assert.equal(response.status, 400);
+  assert.equal((await response.json()).status, "invalid_route_contract");
+});
