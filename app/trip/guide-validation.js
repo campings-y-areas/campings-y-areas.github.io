@@ -32,7 +32,7 @@ function authoritativeWarnings(state) {
 function sameWarningFacts(actual, expected) {
   return actual?.code === expected.code
     && actual?.driving_stage_id === expected.driving_stage_id
-    && (actual?.route_stage_key ?? null) === expected.route_stage_key
+    && (actual?.route_stage_key == null || actual.route_stage_key === expected.route_stage_key)
     && sameNumber(actual?.duration_s, expected.duration_s)
     && sameNumber(actual?.requested_max_s, expected.requested_max_s)
     && sameNumber(actual?.excess_s, expected.excess_s)
