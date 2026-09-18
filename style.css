@@ -87,6 +87,36 @@ footer {
     font-size: 0.9rem;
 }
 
+/* Formulario de errores en panel superpuesto */
+.reporte-modal { width: min(720px, calc(100% - 28px)); max-height: min(88vh, 820px); padding: 0; border: 0; border-radius: 20px; color: #1f2933; box-shadow: 0 24px 80px rgba(11, 50, 68, .32); }
+.reporte-modal::backdrop { background: rgba(7, 32, 44, .7); backdrop-filter: blur(3px); }
+.reporte-modal-cabecera { display: flex; justify-content: space-between; gap: 18px; align-items: start; padding: 24px 26px 16px; background: linear-gradient(135deg, #0f7eac, #159bd7); color: #fff; }
+.reporte-modal-cabecera p { margin: 0 0 4px; font-size: .72rem; font-weight: 900; letter-spacing: .1em; }
+.reporte-modal-cabecera h2 { margin: 0; color: #fff; }
+.reporte-modal-cerrar { min-width: 42px; padding: 3px 12px; border-radius: 10px; background: rgba(255,255,255,.18); font-size: 1.8rem; line-height: 1.2; }
+.reporte-modal-intro { margin: 0; padding: 18px 26px 0; color: #5d6d75; }
+.reporte-modal-formulario { display: grid; gap: 16px; padding: 20px 26px 26px; }
+.reporte-modal-formulario label > span { display: block; margin-bottom: 6px; font-weight: 800; }
+.reporte-modal-formulario small { color: #6a7a82; font-weight: 500; }
+.reporte-modal-formulario input,
+.reporte-modal-formulario select,
+.reporte-modal-formulario textarea { width: 100%; padding: 11px 13px; border: 1px solid #bdccd3; border-radius: 9px; font: inherit; }
+.reporte-modal-formulario textarea { resize: vertical; }
+.reporte-modal-doble { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.reporte-modal-acciones { display: flex; justify-content: flex-end; gap: 10px; }
+.reporte-modal-cancelar { background: #e9eef0; color: #2f424c; }
+.reporte-modal-estado { min-height: 24px; margin: 0; font-weight: 800; }
+.reporte-modal-estado.es-correcto { color: #167348; }
+.reporte-modal-estado.es-error { color: #b42318; }
+.reporte-trampa { position: absolute; left: -9999px; }
+@media (max-width: 600px) {
+    .reporte-modal { max-height: 94vh; }
+    .reporte-modal-cabecera, .reporte-modal-formulario { padding-left: 18px; padding-right: 18px; }
+    .reporte-modal-intro { padding-left: 18px; padding-right: 18px; }
+    .reporte-modal-doble { grid-template-columns: 1fr; }
+    .reporte-modal-acciones button { flex: 1; }
+}
+
 /* Adaptación para móviles */
 
 @media (max-width: 600px) {
