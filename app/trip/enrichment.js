@@ -50,7 +50,8 @@ function regulationsForStage(regulations, stage) {
 
 export function enrichStages({ stages, catalogs = {}, limits = {} }) {
   return stages.map(stage => {
-    const anchor = stage.overnight ?? stage.to;
+    // El contenido turístico pertenece al destino solicitado. La pernocta es un hecho logístico separado.
+    const anchor = stage.to ?? stage.overnight;
     return {
       ...stage,
       content: {
