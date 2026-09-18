@@ -1,6 +1,8 @@
 import { assertPlanRequest, assertWriteRequest } from "./contracts.js";
 import { plannerPrompt, writerPrompt } from "./prompts.js";
 import { generateJson } from "./openai.js";
+import { buildVerifiedEditorialMaterial } from "./research.js";
+import { validateGeneratedGuide } from "./guide-validation.js";
 
 const JSON_HEADERS = { "content-type": "application/json; charset=utf-8" };
 
@@ -21,14 +23,16 @@ function generationEnabled(env) {
 async function planRoute(request, env) {
   const profile = assertPlanRequest(await readJson(request));
   if (!generationEnabled(env)) return reply(503, { ok: false, status: "cost_guard_active", message: "Generación Premium desactivada" });
-  const plan = await generateJson(env, plannerPrompt(profile));
+  const verifiedProfile = { ...profile, editorial_material: buildVerifiedEditorialMaterial(profile) };
+  const plan = await generateJson(env, plannerPrompt(verifiedProfile));
   return reply(200, { ok: true, status: "planned", plan });
 }
 
 async function writeRoute(request, env) {
   const profile = assertWriteRequest(await readJson(request));
   if (!generationEnabled(env)) return reply(503, { ok: false, status: "cost_guard_active", message: "Generación Premium desactivada" });
-  const guide = await generateJson(env, writerPrompt(profile));
+  const verifiedProfile = { ...profile, editorial_material: buildVerifiedEditorialMaterial(profile) };
+  const guide = validateGeneratedGuide(await generateJson(env, writerPrompt(verifiedProfile)), verifiedProfile);
   return reply(200, { ok: true, status: "written", guide });
 }
 
