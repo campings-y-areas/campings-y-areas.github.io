@@ -12,7 +12,13 @@ export async function backendRequest(path, { method = "POST", body, headers = {}
     headers: { "content-type": "application/json", ...headers },
     body: body === undefined ? undefined : JSON.stringify(body)
   });
-  if (!response.ok) throw new Error(`Backend ${path}: ${response.status}`);
   if (response.status === 204) return null;
-  return response.json();
+  const payload = await response.json().catch(() => null);
+  if (!response.ok) {
+    const error = new Error(payload?.message ?? payload?.error ?? `Backend ${path}: ${response.status}`);
+    error.status = response.status;
+    error.payload = payload;
+    throw error;
+  }
+  return payload;
 }
