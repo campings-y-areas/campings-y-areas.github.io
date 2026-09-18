@@ -89,6 +89,9 @@ export function selectStageOvernights({ stages, candidates, vehicle, preferences
     const authoritative = authoritativeOvernightForPoint(stage.to, available);
 
     if (stage.exceeds_max_driving) {
+      // Si el extremo de esta etapa ya es una pernocta logística confirmada,
+      // el tramo sigue siendo demasiado largo y necesita nuevos cortes antes de
+      // llegar a ella. La pernocta final no debe volver a proponerse.
       const excluded = new Set();
       if (authoritative?.overnight?.overnight_id) excluded.add(String(authoritative.overnight.overnight_id));
       const split = buildSplitTargets(stage, available, excluded);
