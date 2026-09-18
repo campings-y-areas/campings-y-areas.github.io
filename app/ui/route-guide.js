@@ -87,15 +87,16 @@ function recommendation(item, { prefix = "" } = {}) {
 }
 
 function dayFigure(day) {
-  const imageUrl = safeUrl(day?.photo);
-  if (!imageUrl) return null;
+  const media = day?.verified_media ?? day?.media ?? null;
+  const imageUrl = safeUrl(media?.image_url);
+  if (!imageUrl || media?.verified_exact !== true) return null;
   const figure = node("figure", "guia-foto");
   const img = document.createElement("img");
   img.src = imageUrl; img.alt = text(day?.heading || day?.title || "Fotografía del día"); img.loading = "lazy";
   img.addEventListener("error", () => figure.remove(), { once: true });
   figure.append(img);
-  const caption = node("figcaption", "", text(day?.photoCredit || "Imagen"));
-  const source = safeUrl(day?.photoSource);
+  const caption = node("figcaption", "", text(media?.credit || day?.heading || day?.title || "Imagen"));
+  const source = safeUrl(media?.source_page);
   if (source) { const a = node("a", "", "fuente/licencia"); a.href = source; a.target = "_blank"; a.rel = "noopener noreferrer"; caption.append(document.createTextNode(" · "), a); }
   figure.append(caption);
   return figure;
