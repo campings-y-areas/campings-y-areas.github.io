@@ -15,6 +15,8 @@ const initialState = Object.freeze({
   },
   route: {
     geometry: null,
+    display_geometry: null,
+    geometry_source: null,
     distance_m: null,
     duration_s: null,
     legs: [],
