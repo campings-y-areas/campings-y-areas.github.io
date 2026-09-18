@@ -15,9 +15,10 @@ export function requestedRouteMapsUrl(state) {
 }
 export function renderRouteActions(state) {
   document.getElementById("accionesRutaNueva")?.remove();
-  const metrics = document.getElementById("metricasRuta");
+  const mapElement = document.getElementById("mapaRuta");
   const stages = document.getElementById("etapasRuta");
-  if (!metrics || !stages) return;
+  if (!mapElement || !stages) return;
+
   const actions = document.createElement("div");
   actions.id = "accionesRutaNueva";
   actions.style.cssText = "display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:18px 0 28px";
@@ -29,8 +30,7 @@ export function renderRouteActions(state) {
     link.style.cssText = "display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 20px;border-radius:999px;background:#087d91;color:#fff;text-decoration:none;font-weight:900;box-shadow:0 7px 18px rgba(8,125,145,.18)";
     actions.append(link);
   }
-  const mapElement = document.getElementById("mapaRuta");
-  (mapElement ?? metrics).insertAdjacentElement("afterend", actions);
+  if (actions.childElementCount) mapElement.insertAdjacentElement("afterend", actions);
 
   document.getElementById("descargarGuiaPdfNueva")?.remove();
   if (state?.guide) {
