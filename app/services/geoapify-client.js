@@ -34,6 +34,8 @@ function normalizeLegs(rawLegs, geometry) {
     const coordinates = featureLegCoordinates(geometry, legIndex);
     return {
       ...leg,
+      distance_m: Number(leg?.distance ?? leg?.distance_m ?? 0),
+      duration_s: Number(leg?.time ?? leg?.duration_s ?? 0),
       geometry: coordinates ? { type: "LineString", coordinates } : null,
       steps: Array.isArray(leg?.steps) ? leg.steps : []
     };
