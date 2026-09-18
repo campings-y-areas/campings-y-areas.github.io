@@ -1,5 +1,6 @@
 import { DEMO_DAYS } from "./demo-spain-15-data.js";
 import { renderRouteMap } from "../ui/route-map.js";
+import { renderLongFormGuide } from "../ui/route-guide.js";
 import { resetState, setState } from "../core/store.js";
 
 const params = new URLSearchParams(location.search);
@@ -78,96 +79,31 @@ if (acceso) {
   renderRouteMap({ geometry: { type: "LineString", coordinates: routePoints.map(([lat, lon]) => [lon, lat]) }, waypoints });
 
   const etapas = document.getElementById("etapasRuta");
-  if (etapas) {
-    etapas.replaceChildren(...DEMO_DAYS.map(day => {
-      const article = document.createElement("section");
-      article.className = `guia-dia-editorial ${day.stay ? "dia-estancia" : "dia-conduccion"}`;
-      article.id = `dia-${day.day}`;
-
-      const head = document.createElement("div");
-      head.className = "guia-dia-titulo";
-      const number = document.createElement("span");
-      number.textContent = `DÍA ${day.day}`;
-      const title = document.createElement("h2");
-      title.textContent = day.title;
-      const drive = document.createElement("p");
-      drive.textContent = day.drive;
-      head.append(number, title, drive);
-      article.append(head);
-
-      const plan = document.createElement("div");
-      plan.className = "guia-narrativa";
-      const strong = document.createElement("strong");
-      strong.textContent = "Plan del día. ";
-      plan.append(strong, document.createTextNode(day.plan));
-      article.append(plan);
-
-      const addRecommendations = (heading, items, food = false) => {
-        if (!items?.length) return;
-        const section = document.createElement("section");
-        section.className = "guia-seccion-editorial";
-        const h3 = document.createElement("h3");
-        h3.textContent = heading;
-        const list = document.createElement("div");
-        list.className = "guia-recomendaciones";
-        items.forEach((item, index) => {
-          const box = document.createElement("div");
-          box.className = `guia-recomendacion ${index === 0 ? "principal" : ""}`;
-          const h4 = document.createElement("h4");
-          h4.textContent = `${index === 0 ? "⭐ " : ""}${item.name}`;
-          const why = document.createElement("p");
-          why.textContent = `${food ? "Por qué lo recomendamos" : "Por qué merece la pena"}: ${item.why}`;
-          box.append(h4, why);
-          if (item.category || item.specialty) {
-            const detail = document.createElement("p");
-            detail.textContent = item.category ? `Qué vas a visitar: ${item.category}` : `Qué probar: ${item.specialty}`;
-            box.append(detail);
-          }
-          const links = document.createElement("div");
-          links.className = "guia-enlaces";
-          for (const [label, href] of [["📍 Abrir en Google Maps", item.maps], ["🌐 Web oficial", item.web]]) {
-            if (!href) continue;
-            const a = document.createElement("a");
-            a.href = href; a.target = "_blank"; a.rel = "noopener noreferrer"; a.textContent = label;
-            links.append(a);
-          }
-          if (links.childNodes.length) box.append(links);
-          list.append(box);
-        });
-        section.append(h3, list);
-        article.append(section);
-      };
-
-      addRecommendations("🏛️ Visitas recomendadas", day.visits);
-      addRecommendations("🍴 Dónde comer", day.food, true);
-
-      if (day.curiosity) {
-        const section = document.createElement("section");
-        section.className = "guia-seccion-editorial";
-        const h3 = document.createElement("h3"); h3.textContent = "🎬 Curiosidad del lugar";
-        const body = document.createElement("div"); body.className = "curiosidad"; body.textContent = day.curiosity;
-        section.append(h3, body); article.append(section);
-      }
-
-      if (day.base) addRecommendations(day.sameBase ? "🌙 Pernocta · misma base" : "🚐 Dónde dormir", [day.base]);
-
-      const warning = document.createElement("section");
-      warning.className = "guia-seccion-editorial";
-      const wh = document.createElement("h3"); wh.textContent = "⚠️ Conviene comprobar antes de ir";
-      const wb = document.createElement("div"); wb.className = "aviso"; wb.textContent = day.warning;
-      warning.append(wh, wb); article.append(warning);
-
-      if (day.photo) {
-        const figure = document.createElement("figure"); figure.className = "guia-foto";
-        const img = document.createElement("img"); img.loading = "lazy"; img.src = day.photo; img.alt = day.title;
-        const caption = document.createElement("figcaption"); caption.textContent = day.photoCredit || "Wikimedia Commons";
-        if (day.photoSource) {
-          const a = document.createElement("a"); a.href = day.photoSource; a.target = "_blank"; a.rel = "noopener noreferrer"; a.textContent = "fuente/licencia";
-          caption.append(document.createTextNode(" · "), a);
-        }
-        figure.append(img, caption); article.insertBefore(figure, plan);
-      }
-      return article;
-    }));
-  }
+  const guide = {
+    title: "España en autocaravana · 15 días",
+    subtitle: "Barcelona → Montserrat → PortAventura → Delta del Ebro → València → Alicante → Cartagena → Granada → Málaga → Ardales → Ronda → Sevilla",
+    introduction: "Ejemplo completo con contenido congelado y revisado. Los horarios, precios, accesos y disponibilidad pueden cambiar; antes de viajar deben consultarse las fuentes oficiales enlazadas.",
+    trip_summary: {
+      route: "Barcelona → Sevilla, con 12 bases y 14 noches",
+      travel_style: "Autocaravana · patrimonio, naturaleza, familia y gastronomía",
+      key_advice: "Dejar la autocaravana en las bases indicadas cuando la visita urbana o el acceso aconsejen utilizar transporte público."
+    },
+    days: DEMO_DAYS.map(day => ({
+      ...day,
+      heading: day.title,
+      driving: day.drive,
+      day_type: day.stay ? "estancia" : "conduccion_y_visita",
+      opening_narrative: day.plan,
+      highlights: day.visits,
+      restaurants: day.food,
+      overnight: day.base ? [day.base] : [],
+      overnight_intro: day.sameBase && day.base ? `Se mantiene la misma base: ${day.base.name}, evitando mover innecesariamente la autocaravana.` : "",
+      practical_advice: day.warning
+    })),
+    final_notes: [
+      "La ruta termina en Sevilla después del día 15; no se añade una noche 15 ficticia.",
+      "Horarios, precios, reservas, accesos y disponibilidad deben comprobarse de nuevo antes del viaje."
+    ]
+  };
+  if (etapas) renderLongFormGuide(guide, etapas);
 }
