@@ -194,3 +194,20 @@ test("honeypot del informe descarta spam sin enviar correo", async () => {
   assert.equal(result.status, "reported");
   assert.equal(sent, false);
 });
+
+
+test("error HTTP de OpenAI se clasifica como fallo de generación", async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () => new Response(JSON.stringify({ error: { message: "upstream failure" } }), { status: 500, headers: { "content-type": "application/json" } });
+  try {
+    const response = await worker.fetch(new Request("https://worker.test/plan-route", {
+      method: "POST",
+      headers: { origin, "content-type": "application/json" },
+      body: JSON.stringify(profile())
+    }), { OPENAI_ROUTE_PIPELINE_ENABLED: "true", OPENAI_SPEND_ENABLED: "true", OPENAI_API_KEY: "test-key" });
+    assert.equal(response.status, 502);
+    assert.equal((await response.json()).status, "generation_failed");
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
