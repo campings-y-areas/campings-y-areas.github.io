@@ -15,7 +15,7 @@ function overnightWaypoint(target) {
   const overnight = assertOvernight(target.overnight);
   const stageKey = targetStageIdentity(target) || "stage";
   const overnightId = String(overnight.overnight_id);
-  const id = `logistics:overnight:${overnightId}`;
+  const id = `logistics:overnight:${encodeURIComponent(stageKey)}:${encodeURIComponent(overnightId)}`;
   return assertWaypoint({
     id,
     label: overnight.nombre ?? overnight.name ?? "Pernocta logística",
