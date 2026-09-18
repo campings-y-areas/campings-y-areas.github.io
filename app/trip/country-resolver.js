@@ -3,7 +3,7 @@ const COUNTRY_BY_CODE = Object.freeze({
   be: "Bélgica", nl: "Países Bajos", lu: "Luxemburgo", ad: "Andorra", it: "Italia", si: "Eslovenia",
   hr: "Croacia", me: "Montenegro", ba: "Bosnia y Herzegovina", dk: "Dinamarca", se: "Suecia", no: "Noruega",
   fi: "Finlandia", is: "Islandia", ie: "Irlanda", gb: "Reino Unido", pl: "Polonia", cz: "República Checa",
-  sk: "Eslovaquia", cz: "Chequia", hu: "Hungría", ro: "Rumanía", bg: "Bulgaria", rs: "Serbia", mk: "Macedonia del Norte",
+  sk: "Eslovaquia", hu: "Hungría", ro: "Rumanía", bg: "Bulgaria", rs: "Serbia", mk: "Macedonia del Norte",
   al: "Albania", gr: "Grecia", ee: "Estonia", lv: "Letonia", lt: "Lituania", md: "Moldavia", ua: "Ucrania",
   cy: "Chipre", xk: "Kosovo"
 });
