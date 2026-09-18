@@ -64,7 +64,7 @@ function insertSplitTargets(routeWaypoints, stages, splitTargets) {
 }
 
 async function routeAndLogistics({ routing, logistics, waypoints, vehicle, trip, includeCountryDetails = false, knownCountries = null }) {
-  const route = assertRoute(await routing({ waypoints, vehicle, includeCountryDetails }));
+  const route = assertRoute(await routing({ waypoints, vehicle, preferences: trip?.preferences ?? {}, includeCountryDetails }));
   const logisticsResult = await logistics({ trip: { ...trip, waypoints }, route, vehicle, knownCountries });
   return { route, logisticsResult };
 }
