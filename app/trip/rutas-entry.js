@@ -107,6 +107,7 @@ function renderClosedTrip(state) {
   if (!result || renderingClosedTrip) return;
   renderingClosedTrip = true;
   result.classList.remove("oculto");
+  document.querySelector(".rutas-panel")?.classList.add("oculto");
   if (status) status.textContent = state.guide ? "Ruta y guía preparadas." : "Ruta logística preparada.";
   if (metrics) {
     const km = Math.round(Number(state.route?.distance_m ?? 0) / 1000);
@@ -143,14 +144,32 @@ async function submitTrip(event) {
   const button = byId("crearRuta");
   const status = byId("estadoCalculo");
   button && (button.disabled = true);
-  byId("resultadoReal")?.classList.remove("oculto");
+  const result = byId("resultadoReal");
+  result?.classList.remove("oculto");
+  result?.classList.add("cargando-ruta");
+  byId("metricasRuta")?.replaceChildren();
+  byId("etapasRuta")?.replaceChildren();
   if (status) status.textContent = "Calculando recorrido…";
   try {
     const guide = productionGuide();
     await prepareTripFromCurrentForm(guide ? { guide } : {});
   } catch (error) {
-    if (status) status.textContent = error?.message ?? "No se pudo preparar la ruta.";
+    console.error("Rutas Campings & Áreas", error);
+    if (status) status.textContent = "No se pudo crear la ruta";
+    const stages = byId("etapasRuta");
+    if (stages) {
+      stages.replaceChildren();
+      const box = document.createElement("div");
+      box.className = "error-ruta";
+      const strong = document.createElement("strong");
+      const detail = document.createElement("p");
+      strong.textContent = `⚠️ ${error?.message ?? "Se produjo un error al preparar la ruta."}`;
+      detail.textContent = "No se ha generado una guía automática de sustitución.";
+      box.append(strong, detail);
+      stages.append(box);
+    }
   } finally {
+    result?.classList.remove("cargando-ruta");
     button && (button.disabled = false);
   }
 }
@@ -167,6 +186,7 @@ function init() {
   byId("formRuta")?.addEventListener("submit", submitTrip);
   byId("volverEditar")?.addEventListener("click", () => {
     byId("resultadoReal")?.classList.add("oculto");
+    document.querySelector(".rutas-panel")?.classList.remove("oculto");
     showStep(1);
   });
   subscribe(state => {
