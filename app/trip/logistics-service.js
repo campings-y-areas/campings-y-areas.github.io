@@ -49,9 +49,14 @@ export function createLogisticsService({ loadCatalogs, resolveCountries }) {
     const overnights = uniqueOvernights(
       stagesWithOvernights.map(stage => stage.overnight).filter(Boolean)
     );
-    const proposedOvernights = uniqueOvernights(
-      splitTargets.map(target => target.overnight).filter(Boolean)
-    );
+    const proposedOvernights = splitTargets
+      .filter(target => target?.overnight)
+      .map(target => ({
+        ...target.overnight,
+        proposed_for_driving_stage_id: target.driving_stage_id,
+        proposed_for_route_stage_key: target.route_stage_key ?? null,
+        proposed_at_driving_seconds: Number(target.route_point?.driving_seconds ?? 0)
+      }));
 
     return {
       stages: stagesWithOvernights,
