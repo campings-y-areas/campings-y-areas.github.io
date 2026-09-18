@@ -3,5 +3,5 @@
 window.RUTAS_CONFIG = Object.freeze({
   GEOAPIFY_API_KEY: "036221e273c047bda13cbe55fac245c2",
   MAP_STYLE: "osm-bright",
-  WORKER_BASE_URL: "https://rutas-campings-areas.manuel-lopez-molina.workers.dev"
+  WORKER_BASE_URL: "https://rutas-campings-areas-nuevo.manuel-lopez-molina.workers.dev"
 });
