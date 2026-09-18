@@ -106,30 +106,33 @@ function renderClosedTrip(state) {
   const stages = byId("etapasRuta");
   if (!result || renderingClosedTrip) return;
   renderingClosedTrip = true;
-  result.classList.remove("oculto");
-  document.querySelector(".rutas-panel")?.classList.add("oculto");
-  if (status) status.textContent = state.guide ? "Ruta y guía preparadas." : "Ruta logística preparada.";
-  if (metrics) {
-    const km = Math.round(Number(state.route?.distance_m ?? 0) / 1000);
-    const minutes = Math.round(Number(state.route?.duration_s ?? 0) / 60);
-    metrics.textContent = `${km} km · ${Math.floor(minutes / 60)} h ${minutes % 60} min · ${state.trip?.stages?.length ?? 0} etapas`;
-  }
-  renderRouteMap(state.route);
-  renderRouteActions(state);
-  const guideRendered = Boolean(stages && state.guide && renderLongFormGuide(state.guide, stages));
-  if (!guideRendered && stages) {
-    stages.replaceChildren();
-    for (const stage of state.trip?.stages ?? []) {
-      const article = document.createElement("article");
-      const title = document.createElement("h3");
-      const detail = document.createElement("p");
-      title.textContent = stage.overnight?.nombre ?? stage.overnight?.name ?? stage.to?.label ?? stage.driving_stage_id;
-      detail.textContent = `${Math.round(Number(stage.distance_m ?? 0) / 1000)} km · ${Math.round(Number(stage.duration_s ?? 0) / 60)} min${stage.overnight ? ` · Pernocta: ${stage.overnight.nombre ?? stage.overnight.name ?? stage.overnight_id}` : ""}`;
-      article.append(title, detail);
-      stages.append(article);
+  try {
+    result.classList.remove("oculto");
+    document.querySelector(".rutas-panel")?.classList.add("oculto");
+    if (status) status.textContent = state.guide ? "Ruta y guía preparadas." : "Ruta logística preparada.";
+    if (metrics) {
+      const km = Math.round(Number(state.route?.distance_m ?? 0) / 1000);
+      const minutes = Math.round(Number(state.route?.duration_s ?? 0) / 60);
+      metrics.textContent = `${km} km · ${Math.floor(minutes / 60)} h ${minutes % 60} min · ${state.trip?.stages?.length ?? 0} etapas`;
     }
+    renderRouteMap(state.route);
+    renderRouteActions(state);
+    const guideRendered = Boolean(stages && state.guide && renderLongFormGuide(state.guide, stages));
+    if (!guideRendered && stages) {
+      stages.replaceChildren();
+      for (const stage of state.trip?.stages ?? []) {
+        const article = document.createElement("article");
+        const title = document.createElement("h3");
+        const detail = document.createElement("p");
+        title.textContent = stage.overnight?.nombre ?? stage.overnight?.name ?? stage.to?.label ?? stage.driving_stage_id;
+        detail.textContent = `${Math.round(Number(stage.distance_m ?? 0) / 1000)} km · ${Math.round(Number(stage.duration_s ?? 0) / 60)} min${stage.overnight ? ` · Pernocta: ${stage.overnight.nombre ?? stage.overnight.name ?? stage.overnight_id}` : ""}`;
+        article.append(title, detail);
+        stages.append(article);
+      }
+    }
+  } finally {
+    renderingClosedTrip = false;
   }
-  renderingClosedTrip = false;
 }
 
 function productionGuide() {
