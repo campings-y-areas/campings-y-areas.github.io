@@ -87,6 +87,13 @@ function sameNullableId(actual, expected) {
   return (actual ?? null) === (expected ?? null);
 }
 
+function assertOptionalAuthoritativeId(day, field, expected, stageId, label) {
+  if (day?.[field] == null) return;
+  if (!sameNullableId(day[field], expected)) {
+    throw new Error(`La guía intentó cambiar ${label} de ${stageId}`);
+  }
+}
+
 export function validateGuideAgainstTrip(guide, state) {
   if (!guide || typeof guide !== "object") throw new TypeError("Guía inválida");
   if (Array.isArray(state.logistics?.proposedOvernights) && state.logistics.proposedOvernights.length) {
@@ -108,8 +115,8 @@ export function validateGuideAgainstTrip(guide, state) {
     if (day.route_stage_key != null && day.route_stage_key !== item.route_stage_key) throw new Error(`La guía intentó cambiar la identidad física de ${item.driving_stage_id}`);
     if (day.from_point_id != null && day.from_point_id !== item.from_point_id) throw new Error(`La guía intentó cambiar el origen de ${item.driving_stage_id}`);
     if (day.to_point_id != null && day.to_point_id !== item.to_point_id) throw new Error(`La guía intentó cambiar el destino de ${item.driving_stage_id}`);
-    if (!sameNullableId(day.overnight_id, item.overnight_id)) throw new Error(`La guía intentó cambiar la pernocta de ${item.driving_stage_id}`);
-    if (!sameNullableId(day.base_id, item.base_id)) throw new Error(`La guía intentó cambiar la base de ${item.driving_stage_id}`);
+    assertOptionalAuthoritativeId(day, "overnight_id", item.overnight_id, item.driving_stage_id, "la pernocta");
+    assertOptionalAuthoritativeId(day, "base_id", item.base_id, item.driving_stage_id, "la base");
     if (day.distance_m != null && !sameNumber(day.distance_m, item.distance_m)) throw new Error(`La guía intentó cambiar la distancia de ${item.driving_stage_id}`);
     if (day.duration_s != null && !sameNumber(day.duration_s, item.duration_s)) throw new Error(`La guía intentó cambiar la duración de ${item.driving_stage_id}`);
     if (day.overnight_compatibility != null && !sameCompatibility(day.overnight_compatibility, item.overnight_compatibility)) {
