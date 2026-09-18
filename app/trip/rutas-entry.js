@@ -1,5 +1,6 @@
 import { getState, subscribe } from "../core/store.js";
 import { prepareTripFromCurrentForm, createProductionGuideAdapter } from "./controller.js";
+import { renderRouteMap } from "../ui/route-map.js";
 
 let currentStep = 1;
 let childAgeCount = 0;
@@ -85,7 +86,7 @@ function renderClosedTrip(state) {
     const minutes = Math.round(Number(state.route?.duration_s ?? 0) / 60);
     metrics.textContent = `${km} km · ${Math.floor(minutes / 60)} h ${minutes % 60} min · ${state.trip?.stages?.length ?? 0} etapas`;
   }
-  if (stages) {
+  renderRouteMap(state.route);\n  if (stages) {
     stages.replaceChildren();
     for (const stage of state.trip?.stages ?? []) {
       const article = document.createElement("article");
