@@ -49,6 +49,16 @@ export function createLogisticsService({ loadCatalogs, resolveCountries }) {
     const overnights = uniqueOvernights(
       stagesWithOvernights.map(stage => stage.overnight).filter(Boolean)
     );
+    const missingRequiredOvernights = stagesWithOvernights.filter((stage, index) =>
+      index < stagesWithOvernights.length - 1 &&
+      !stage.overnight &&
+      !stage.requires_stage_split &&
+      stage.overnight_unavailable
+    );
+    if (missingRequiredOvernights.length) {
+      const ids = missingRequiredOvernights.map(stage => stage.driving_stage_id).join(", ");
+      throw new Error(`No hay una pernocta compatible disponible para completar la ruta (${ids})`);
+    }
     const proposedOvernights = splitTargets
       .filter(target => target?.overnight)
       .map(target => ({
