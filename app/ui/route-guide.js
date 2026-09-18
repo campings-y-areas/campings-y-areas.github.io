@@ -56,6 +56,7 @@ function recommendation(item, { prefix = "" } = {}) {
   const figure = verifiedFigure(item);
   if (figure) box.append(figure);
   paragraph(box, item?.description);
+  paragraph(box, item?.recommended_visit_time, "⏱️ Tiempo recomendado: ");
   paragraph(box, item?.why);
   paragraph(box, item?.category, "Qué vas a visitar: ");
   paragraph(box, item?.address, "Dirección: ");
