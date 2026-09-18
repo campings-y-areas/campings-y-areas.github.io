@@ -18,7 +18,7 @@
   </script>
 
   <link rel="stylesheet" href="style.css?v=2">
-  <link rel="stylesheet" href="inicio.css?v=1">
+  <link rel="stylesheet" href="inicio.css?v=2">
   <script src="app/private-access.js?v=1" defer></script>
 </head>
 
@@ -61,6 +61,12 @@
           puntos de interés, servicios, talleres, normativas y planificación de rutas.
         </p>
 
+        <div class="inicio-acciones">
+          <a class="inicio-boton inicio-boton-principal" href="#explorar">Explorar la web gratis</a>
+          <a class="inicio-boton inicio-boton-demo" href="demo-ruta.html">▶ Ver demo de una ruta</a>
+          <a class="inicio-enlace-premium" href="#planes">Conocer Gratis y Premium ↓</a>
+        </div>
+
         <div class="inicio-datos" aria-label="Contenido disponible">
           <span>🏕️ Campings</span>
           <span>🚐 Áreas</span>
@@ -72,7 +78,7 @@
       </div>
     </section>
 
-    <section class="inicio-seccion" aria-labelledby="como-funciona">
+    <section class="inicio-seccion" id="explorar" aria-labelledby="como-funciona">
       <div class="inicio-cabecera-seccion">
         <p class="inicio-etiqueta">Cómo usar la web</p>
         <h2 id="como-funciona">Todo organizado por secciones</h2>
@@ -81,6 +87,17 @@
           Cada sección está pensada para que puedas filtrar la información y encontrar
           rápidamente opciones que encajen con tu viaje.
         </p>
+      </div>
+
+      <div class="inicio-accesos" aria-label="Secciones de Campings y Áreas">
+        <a href="campings.html"><span>🏕️</span><strong>Campings</strong><small>Busca alojamientos y consulta sus datos.</small></a>
+        <a href="areas.html?tipo=area"><span>🚐</span><strong>Áreas</strong><small>Encuentra áreas para autocaravanas.</small></a>
+        <a href="areas.html?tipo=parking"><span>🅿️</span><strong>Parkings</strong><small>Localiza aparcamientos útiles para el viaje.</small></a>
+        <a href="acampadas.html"><span>🥾</span><strong>Acampadas</strong><small>Descubre zonas de acampada controlada.</small></a>
+        <a href="lugares.html"><span>📍</span><strong>Lugares</strong><small>Ideas para visitar y disfrutar del entorno.</small></a>
+        <a href="talleres.html"><span>🛠️</span><strong>Talleres</strong><small>Ayuda para resolver imprevistos del vehículo.</small></a>
+        <a href="servicios.html"><span>🔧</span><strong>Servicios</strong><small>Servicios prácticos para viajar con comodidad.</small></a>
+        <a href="normativas.html"><span>📘</span><strong>Normativas</strong><small>Información útil antes de circular o pernoctar.</small></a>
       </div>
 
       <div class="inicio-pasos">
@@ -151,11 +168,16 @@
           <li>Guía completa preparada para consultar y guardar en PDF.</li>
         </ul>
 
-        <p class="inicio-nota">
-          La generación de rutas formará parte de Campings & Áreas Premium.
-          Habrá una demo pública completa para que cualquier visitante pueda ver
-          el resultado antes de decidir si quiere Premium.
-        </p>
+        <div class="inicio-demo-caja">
+          <span class="inicio-demo-insignia">DEMO PREPARADA · SIN REGISTRO</span>
+          <h3>Comprueba cómo sería una guía Premium completa</h3>
+          <p>
+            Recorre un ejemplo real de 15 días y 14 noches por España, con 12 bases,
+            mapa, etapas, visitas, gastronomía, lugares de pernocta, fotografías y enlaces útiles.
+          </p>
+          <a class="inicio-boton inicio-boton-principal" href="demo-ruta.html">▶ Abrir la demo completa</a>
+          <small>La demo es estática: verla no genera consumo de IA ni crea una ruta nueva.</small>
+        </div>
       </div>
 
       <div class="inicio-rutas-visual" aria-hidden="true">
@@ -181,10 +203,10 @@
         <article class="inicio-plan">
           <span class="inicio-plan-icono">🇪🇸</span>
           <h3>Gratis</h3>
-          <p class="inicio-plan-subtitulo">Para consultar España</p>
+        <p class="inicio-plan-subtitulo">España básica, siempre accesible</p>
           <ul>
-            <li>Acceso a los contenidos gratuitos disponibles en España.</li>
-            <li>Búsqueda por listas y mapas.</li>
+            <li>Campings, áreas y parkings de España.</li>
+            <li>Búsqueda básica por listas y mapas.</li>
             <li>Acceso a la demo pública de Rutas.</li>
             <li>Sin generación de rutas personalizadas.</li>
           </ul>
@@ -193,20 +215,23 @@
         <article class="inicio-plan inicio-plan-premium">
           <span class="inicio-plan-icono">⭐</span>
           <h3>Premium</h3>
-          <p class="inicio-plan-subtitulo">Para viajar por Europa</p>
+          <p class="inicio-plan-subtitulo">Europa, rutas y guía avanzada</p>
           <ul>
-            <li>Acceso a los países europeos incluidos en la web.</li>
-            <li>Búsqueda por listas y mapas.</li>
-            <li>Rutas Campings & Áreas IA con generación de rutas personalizadas.</li>
-            <li>Acceso Premium mientras la suscripción esté activa.</li>
-            <li>Cancelación cuando el usuario quiera.</li>
+            <li>Campings, áreas y parkings de los países europeos incluidos.</li>
+            <li>Funciones y filtros avanzados para preparar el viaje.</li>
+            <li>Rutas IA personalizadas según días, viajeros, vehículo e intereses.</li>
+            <li>Guía detallada con etapas, visitas, gastronomía y pernoctas.</li>
           </ul>
         </article>
       </div>
 
-      <p class="inicio-aviso">
-        El registro, las suscripciones y el acceso Premium todavía no están activos.
-      </p>
+      <div class="inicio-precio-pendiente">
+        <strong>El precio todavía no está decidido.</strong>
+        <p>
+          Primero realizaremos una ruta larga completa y mediremos su consumo real.
+          Con ese dato se calculará un precio justo y se decidirán las opciones mensual y anual.
+        </p>
+      </div>
     </section>
 
     <section class="inicio-seccion inicio-final">
@@ -220,6 +245,9 @@
     </section>
 
   </main>
+
+  <script src="rutas-config.js?v=7"></script>
+  <script type="module" src="app/report-modal.js?v=1"></script>
 
 </body>
 
