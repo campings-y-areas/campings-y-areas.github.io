@@ -94,3 +94,72 @@ test("la validación rechaza cambios de pernocta", () => {
   const guide = { days: [{ driving_stage_id: "stage-1", overnight_id: "inventada" }] };
   assert.throws(() => validateGeneratedGuide(guide, p), /overnight_id/);
 });
+
+
+test("plan-route usa Responses API sin alterar el contrato y acepta salida REST real", async () => {
+  const originalFetch = globalThis.fetch;
+  let captured = null;
+  globalThis.fetch = async (url, options) => {
+    captured = { url, options, body: JSON.parse(options.body) };
+    return new Response(JSON.stringify({
+      id: "resp_test",
+      status: "completed",
+      output: [{
+        type: "message",
+        role: "assistant",
+        content: [{ type: "output_text", text: JSON.stringify({ days: [{ vacation_day_id: "day-1" }] }), annotations: [] }]
+      }]
+    }), { status: 200, headers: { "content-type": "application/json" } });
+  };
+  try {
+    const response = await worker.fetch(new Request("https://worker.test/plan-route", {
+      method: "POST",
+      headers: { origin, "content-type": "application/json" },
+      body: JSON.stringify(profile())
+    }), { OPENAI_ROUTE_PIPELINE_ENABLED: "true", OPENAI_SPEND_ENABLED: "true", OPENAI_API_KEY: "test-key" });
+    assert.equal(response.status, 200);
+    assert.equal((await response.json()).status, "planned");
+    assert.equal(captured.url, "https://api.openai.com/v1/responses");
+    assert.equal(captured.options.method, "POST");
+    assert.equal(captured.body.model, "gpt-5.6");
+    assert.equal(captured.body.text.format.type, "json_object");
+    assert.equal(typeof captured.body.input, "string");
+    assert.match(captured.options.headers.authorization, /^Bearer test-key$/);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("error de red de OpenAI se clasifica como fallo de generación", async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () => { throw new TypeError("network down"); };
+  try {
+    const response = await worker.fetch(new Request("https://worker.test/plan-route", {
+      method: "POST",
+      headers: { origin, "content-type": "application/json" },
+      body: JSON.stringify(profile())
+    }), { OPENAI_ROUTE_PIPELINE_ENABLED: "true", OPENAI_SPEND_ENABLED: "true", OPENAI_API_KEY: "test-key" });
+    assert.equal(response.status, 502);
+    assert.equal((await response.json()).status, "generation_failed");
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("JSON inválido de OpenAI se clasifica como fallo de generación", async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () => new Response(JSON.stringify({
+    output: [{ type: "message", content: [{ type: "output_text", text: "{no-json" }] }]
+  }), { status: 200, headers: { "content-type": "application/json" } });
+  try {
+    const response = await worker.fetch(new Request("https://worker.test/plan-route", {
+      method: "POST",
+      headers: { origin, "content-type": "application/json" },
+      body: JSON.stringify(profile())
+    }), { OPENAI_ROUTE_PIPELINE_ENABLED: "true", OPENAI_SPEND_ENABLED: "true", OPENAI_API_KEY: "test-key" });
+    assert.equal(response.status, 502);
+    assert.equal((await response.json()).status, "generation_failed");
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
