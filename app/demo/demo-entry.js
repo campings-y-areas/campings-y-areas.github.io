@@ -126,7 +126,10 @@ if (acceso) {
       overnight: day.base ? [enrichItem(day.base)] : [],
       overnight_intro: day.sameBase && day.base ? `Se mantiene la misma base: ${day.base.name}, evitando mover innecesariamente la autocaravana.` : "",
       practical_advice: day.warning,
-      maps_url: day.stay || !DEMO_DAYS[index + 1] ? mapsSearch(day.place) : mapsDir(day.place, DEMO_DAYS[index + 1].place)
+      maps_url: day.stay || !DEMO_DAYS[index + 1] ? mapsSearch(day.place) : mapsDir(day.place, DEMO_DAYS[index + 1].place),
+      final_recommendation: day.stay
+        ? "Aprovecha que hoy no hay un gran traslado: deja margen para descansar y adapta las visitas al ritmo real del grupo."
+        : "No persigas el reloj. Las distancias son aproximadas y la prioridad es llegar con margen, instalar la autocaravana y disfrutar del destino."
     })),
     final_notes: [
       "La ruta termina en Sevilla después del día 15; no se añade una noche 15 ficticia.",
@@ -134,4 +137,15 @@ if (acceso) {
     ]
   };
   if (etapas) renderLongFormGuide(guide, etapas);
+
+  const header = document.querySelector(".resultado-cabecera");
+  if (header && !document.getElementById("imprimirDemoPdf")) {
+    const pdf = document.createElement("button");
+    pdf.type = "button";
+    pdf.id = "imprimirDemoPdf";
+    pdf.className = "boton-secundario boton-pdf-demo";
+    pdf.textContent = "🖨️ Imprimir / guardar en PDF";
+    pdf.addEventListener("click", () => window.print());
+    header.append(pdf);
+  }
 }
