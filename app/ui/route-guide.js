@@ -175,6 +175,11 @@ export function renderLongFormGuide(guide, container) {
       ? listSection("💡 Consejo del día", day.practical_advice)
       : day?.practical_advice ? (() => { const s = section("💡 Consejo del día"); paragraph(s, day.practical_advice); return s; })() : null;
     if (advice) daySection.append(advice);
+    if (day?.final_recommendation) {
+      const s = section("📌 Recomendación final");
+      paragraph(s, day.final_recommendation);
+      daySection.append(s);
+    }
     root.append(daySection);
   });
 
