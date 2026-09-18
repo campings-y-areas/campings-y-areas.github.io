@@ -10,6 +10,10 @@ const acceso = params.get("pruebas") === "manuel";
 const app = document.getElementById("demoApp");
 const bloqueo = document.getElementById("bloqueoDemo");
 
+function mapsDir(origin, destination) {
+  const query = new URLSearchParams({ api: "1", origin, destination, travelmode: "driving" });
+  return `https://www.google.com/maps/dir/?${query}`;
+}
 function mapsSearch(query) {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
 }
