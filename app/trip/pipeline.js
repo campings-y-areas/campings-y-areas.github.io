@@ -39,9 +39,9 @@ function insertSplitTargets(routeWaypoints, stages, splitTargets) {
     if (targetsByStage.has(key)) targetsByStage.get(key).push(target);
   }
 
-  const existingOvernights = new Set(routeWaypoints
+  const existingStops = new Set(routeWaypoints
     .filter(point => point?.logistics_overnight_id)
-    .map(point => String(point.logistics_overnight_id)));
+    .map(point => `${String(point.logistics_stage_key ?? "")}::${String(point.logistics_overnight_id)}`));
   const result = [];
   let inserted = 0;
 
@@ -50,9 +50,9 @@ function insertSplitTargets(routeWaypoints, stages, splitTargets) {
     const targets = targetsByStage.get(stageIdentity(stage)) ?? [];
     for (const target of targets) {
       const point = overnightWaypoint(target);
-      const overnightKey = String(point.logistics_overnight_id);
-      if (!existingOvernights.has(overnightKey)) {
-        existingOvernights.add(overnightKey);
+      const overnightKey = `${String(point.logistics_stage_key ?? "")}::${String(point.logistics_overnight_id)}`;
+      if (!existingStops.has(overnightKey)) {
+        existingStops.add(overnightKey);
         result.push(point);
         inserted += 1;
       }
