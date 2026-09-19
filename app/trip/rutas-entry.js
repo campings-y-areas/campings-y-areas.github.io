@@ -4,6 +4,7 @@ import { renderRouteMap } from "../ui/route-map.js";
 import { renderLongFormGuide } from "../ui/route-guide.js";
 import { renderRouteActions } from "../ui/route-actions.js";
 import { backendRequest } from "../services/backend-client.js";
+import { attachPlaceAutocomplete } from "./place-autocomplete.js";
 
 let currentStep = 1;
 let childAgeCount = 0;
@@ -67,6 +68,7 @@ function addViaField(value = "") {
   remove.addEventListener("click", () => row.remove());
   row.append(input, remove);
   container.append(row);
+  attachPlaceAutocomplete(input);
 }
 
 function syncRouteMode() {
@@ -196,6 +198,8 @@ function init() {
   showStep(1);
   syncChildAges();
   syncRouteMode();
+  attachPlaceAutocomplete(byId("origen"));
+  attachPlaceAutocomplete(byId("destinoPrincipal"));
 
   const syncVehicleDimensions = () => {
     const tipo = document.querySelector('input[name="vehiculo"]:checked')?.value ?? "autocaravana";
