@@ -139,7 +139,7 @@ function renderClosedTrip(state) {
 
 function productionGuide() {
   const config = globalThis.RUTAS_CONFIG ?? {};
-  if (config.OPENAI_ROUTE_PIPELINE_ENABLED !== true || config.OPENAI_SPEND_ENABLED !== true) return undefined;
+  if (!String(config.WORKER_BASE_URL ?? "").trim()) return undefined;
   return createProductionGuideAdapter({ request: backendRequest });
 }
 
