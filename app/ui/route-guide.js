@@ -1,5 +1,8 @@
+const INTERNAL_TECHNICAL_TEXT = /\b(?:overnight_id|base_id|driving_stage_id|route_stage_key|request_point_id|from_point_id|to_point_id|distance_m|duration_s|max_driving_seconds|excess_s)\b|\bnull\b/i;
+
 function text(value) {
-  return value == null ? "" : String(value).trim();
+  const content = value == null ? "" : String(value).trim();
+  return INTERNAL_TECHNICAL_TEXT.test(content) ? "" : content;
 }
 function node(tag, className, value) {
   const element = document.createElement(tag);
@@ -22,7 +25,8 @@ function listSection(title, items) {
   if (!Array.isArray(items) || !items.length) return null;
   const element = section(title);
   const ul = node("ul");
-  items.filter(Boolean).forEach(item => ul.append(node("li", "", text(item))));
+  items.filter(Boolean).forEach(item => { const value = text(item); if (value) ul.append(node("li", "", value)); });
+  if (!ul.children.length) return null;
   element.append(ul);
   return element;
 }
