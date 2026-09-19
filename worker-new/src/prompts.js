@@ -81,6 +81,7 @@ export function writerPrompt(profile) {
     "Solo añade verified_media cuando el resultado de imagen corresponda de forma inequívoca a ESA entidad exacta por nombre, descripción/caption y página fuente. Si existe cualquier duda, omite la foto.",
     "Para una foto obtenida por búsqueda usa verified_media={image_url: image_url del resultado, source_page: source_website_url del resultado, credit: caption o nombre de la fuente, verified_exact:true}. No inventes, reconstruyas ni modifiques URLs.",
     "El material recibido que ya contenga verified_media verificado también puede copiarse sin cambiar image_url, source_page, credit ni verified_exact.",
+    "Aunque la búsqueda web esté activa, tu respuesta final debe ser EXCLUSIVAMENTE el objeto JSON de la guía, sin Markdown, sin bloque ``` y sin texto antes o después.",
     "Los campos técnicos son exclusivamente para validar la ruta. NUNCA escribas en title, subtitle, introduction, trip_summary, before_you_go, heading, driving, narrativas, visitas, gastronomía, pernocta, avisos, consejos ni notas nombres internos como overnight_id, base_id, driving_stage_id, route_stage_key, request_point_id, distance_m, duration_s, max_driving_seconds, excess_s o valores null.",
     "Expresa siempre distancias y tiempos para viajeros: kilómetros y horas/minutos redondeados de forma natural. Nunca muestres metros crudos ni segundos crudos.",
     "La salida debe respetar esta estructura compatible con el renderizador existente:",
