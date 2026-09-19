@@ -30,7 +30,7 @@ export async function generateJson(env, prompt, { imageSearch = false } = {}) {
       body: JSON.stringify({
         model,
         input: prompt,
-        text: { format: { type: "json_object" } },
+        ...(!imageSearch ? { text: { format: { type: "json_object" } } } : {}),
         ...(imageSearch ? {
           tools: [{
             type: "web_search",
