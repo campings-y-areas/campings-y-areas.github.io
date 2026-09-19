@@ -566,3 +566,10 @@
 #pantallaEsperaRutaIA .espera-ruta-aviso{background:rgba(255,241,241,.96);border:1px solid rgba(201,45,45,.28);border-radius:clamp(12px,1.8vw,18px);padding:clamp(8px,1.4vh,12px) clamp(10px,2vw,16px);color:#a21919;font-size:clamp(11px,1.12vw,15px);line-height:1.25;font-weight:800;box-shadow:0 9px 26px rgba(0,0,0,.20)}
 @media(max-width:700px) and (orientation:portrait){#pantallaEsperaRutaIA .espera-ruta-estado{bottom:max(10px,env(safe-area-inset-bottom));width:calc(100vw - 20px);gap:7px}}
 @media(max-height:560px) and (orientation:landscape){#pantallaEsperaRutaIA .espera-ruta-estado{left:auto;right:10px;bottom:10px;transform:none;width:min(430px,46vw);gap:6px}}
+
+/* Acceso a creación de rutas: cerrado al público mientras Premium no tenga autenticación */
+.rutas-premium-lock{max-width:920px;margin:18px auto;padding:24px;border:1px solid #d8e1e5;border-radius:18px;background:#fff;box-shadow:0 8px 24px rgba(20,52,70,.08);text-align:center}
+.rutas-premium-lock h2{margin:0 0 8px;color:#173f55}
+.rutas-premium-lock p{margin:0;color:#526773}
+html:not(.acceso-pruebas) .rutas-panel{display:none!important}
+html.acceso-pruebas .rutas-premium-lock{display:none!important}
