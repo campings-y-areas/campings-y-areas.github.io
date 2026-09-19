@@ -551,3 +551,18 @@
 .modo-visual-minimo .poi-foto-principal {
   display: none !important;
 }
+
+/* Rutas: pantalla de espera durante la preparación */
+@keyframes esperaRutaIA{from{transform:translateX(-70%)}to{transform:translateX(190%)}}
+#pantallaEsperaRutaIA{position:fixed;inset:0;z-index:99999;width:100vw;height:100vh;height:100dvh;overflow:hidden;text-align:center;background:#173348}
+#pantallaEsperaRutaIA .espera-ruta-fondo{position:absolute;inset:-3%;background:linear-gradient(rgba(6,25,38,.30),rgba(6,25,38,.42)),url('ruta-espera-ia.png') center/cover no-repeat;filter:blur(16px);transform:scale(1.05)}
+#pantallaEsperaRutaIA .espera-ruta-imagen{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center;display:block}
+#pantallaEsperaRutaIA .espera-ruta-sombra{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.02) 0%,rgba(0,0,0,.02) 62%,rgba(0,0,0,.30) 100%);pointer-events:none}
+#pantallaEsperaRutaIA .espera-ruta-estado{position:absolute;z-index:2;left:50%;bottom:clamp(12px,2.2vh,28px);transform:translateX(-50%);width:min(720px,calc(100vw - 28px));display:grid;gap:clamp(7px,1.2vh,12px)}
+#pantallaEsperaRutaIA .espera-ruta-panel{background:rgba(255,255,255,.94);backdrop-filter:blur(9px);border:1px solid rgba(255,255,255,.8);border-radius:clamp(14px,2vw,22px);padding:clamp(10px,1.8vh,17px) clamp(12px,2.2vw,20px);box-shadow:0 14px 45px rgba(0,0,0,.28)}
+#pantallaEsperaRutaIA #mensajeEsperaRutaIA{font-size:clamp(13px,1.35vw,18px);font-weight:850;color:#103f57;line-height:1.3}
+#pantallaEsperaRutaIA .espera-ruta-barra{height:clamp(5px,.8vh,7px);background:#dfe9ee;border-radius:999px;overflow:hidden;margin:clamp(7px,1.2vh,12px) auto 0}
+#pantallaEsperaRutaIA .espera-ruta-barra>div{width:38%;height:100%;background:#0a8fa7;border-radius:999px;animation:esperaRutaIA 1.35s ease-in-out infinite alternate}
+#pantallaEsperaRutaIA .espera-ruta-aviso{background:rgba(255,241,241,.96);border:1px solid rgba(201,45,45,.28);border-radius:clamp(12px,1.8vw,18px);padding:clamp(8px,1.4vh,12px) clamp(10px,2vw,16px);color:#a21919;font-size:clamp(11px,1.12vw,15px);line-height:1.25;font-weight:800;box-shadow:0 9px 26px rgba(0,0,0,.20)}
+@media(max-width:700px) and (orientation:portrait){#pantallaEsperaRutaIA .espera-ruta-estado{bottom:max(10px,env(safe-area-inset-bottom));width:calc(100vw - 20px);gap:7px}}
+@media(max-height:560px) and (orientation:landscape){#pantallaEsperaRutaIA .espera-ruta-estado{left:auto;right:10px;bottom:10px;transform:none;width:min(430px,46vw);gap:6px}}
