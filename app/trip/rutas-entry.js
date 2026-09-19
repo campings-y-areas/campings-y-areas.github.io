@@ -143,12 +143,57 @@ function productionGuide() {
   return createProductionGuideAdapter({ request: backendRequest });
 }
 
+let routePreparing = false;
+let routeWaitObserver = null;
+
+function showRouteWaitScreen() {
+  routePreparing = true;
+  byId("pantallaEsperaRutaIA")?.remove();
+  const layer = document.createElement("div");
+  layer.id = "pantallaEsperaRutaIA";
+  layer.innerHTML = `
+    <div class="espera-ruta-fondo" aria-hidden="true"></div>
+    <img class="espera-ruta-imagen" src="ruta-espera-ia.png" alt="" aria-hidden="true">
+    <div class="espera-ruta-sombra" aria-hidden="true"></div>
+    <div class="espera-ruta-estado">
+      <div class="espera-ruta-panel">
+        <div id="mensajeEsperaRutaIA">Iniciando preparación…</div>
+        <div class="espera-ruta-barra"><div></div></div>
+      </div>
+      <div class="espera-ruta-aviso">⚠️ Puede tardar varios minutos. No actualices, cierres ni vuelvas atrás mientras se prepara la ruta.</div>
+    </div>`;
+  document.body.appendChild(layer);
+  const status = byId("estadoCalculo");
+  if (status) {
+    routeWaitObserver?.disconnect();
+    routeWaitObserver = new MutationObserver(() => {
+      const message = byId("mensajeEsperaRutaIA");
+      if (message && status.textContent.trim()) message.textContent = status.textContent.trim();
+    });
+    routeWaitObserver.observe(status, { childList: true, subtree: true, characterData: true });
+  }
+}
+
+function hideRouteWaitScreen() {
+  routePreparing = false;
+  routeWaitObserver?.disconnect();
+  routeWaitObserver = null;
+  byId("pantallaEsperaRutaIA")?.remove();
+}
+
+window.addEventListener("beforeunload", event => {
+  if (!routePreparing) return;
+  event.preventDefault();
+  event.returnValue = "";
+});
+
 async function submitTrip(event) {
   event.preventDefault();
   if (!validateCurrentStep()) return;
   const button = byId("crearRuta");
   const status = byId("estadoCalculo");
   button && (button.disabled = true);
+  showRouteWaitScreen();
   const result = byId("resultadoReal");
   result?.classList.remove("oculto");
   result?.classList.add("cargando-ruta");
@@ -170,7 +215,7 @@ async function submitTrip(event) {
       const strong = document.createElement("strong");
       const detail = document.createElement("p");
       strong.textContent = "⚠️ La ruta y las pernoctas están preparadas.";
-      detail.textContent = "La guía Premium no se ha podido completar. Puedes revisar la ruta o modificar el viaje e intentarlo de nuevo.";
+      detail.textContent = `La guía Premium no se ha podido completar. ${error?.message ? `Motivo: ${error.message}` : "Revisa la ruta o modifica el viaje antes de intentarlo de nuevo."}`;
       notice.append(strong, detail);
       byId("etapasRuta")?.prepend(notice);
     } else {
@@ -189,6 +234,7 @@ async function submitTrip(event) {
       }
     }
   } finally {
+    hideRouteWaitScreen();
     result?.classList.remove("cargando-ruta");
     button && (button.disabled = false);
   }
