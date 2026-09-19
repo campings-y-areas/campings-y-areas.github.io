@@ -19,7 +19,7 @@ function outputText(payload) {
   throw new Error("OpenAI no devolvió texto utilizable");
 }
 
-export async function generateJson(env, prompt) {
+export async function generateJson(env, prompt, { imageSearch = false } = {}) {
   if (!env.OPENAI_API_KEY) throw new Error("OPENAI_API_KEY no configurada");
   const model = env.OPENAI_MODEL || "gpt-5.6";
   let response;
@@ -30,7 +30,15 @@ export async function generateJson(env, prompt) {
       body: JSON.stringify({
         model,
         input: prompt,
-        text: { format: { type: "json_object" } }
+        text: { format: { type: "json_object" } },
+        ...(imageSearch ? {
+          tools: [{
+            type: "web_search",
+            search_content_types: ["image"],
+            image_settings: { max_results: 12, caption: true }
+          }],
+          include: ["web_search_call.results"]
+        } : {})
       })
     });
   } catch (error) {

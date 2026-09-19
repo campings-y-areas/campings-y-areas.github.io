@@ -28,7 +28,7 @@ async function writeRoute(request, env) {
   const profile = assertWriteRequest(await readJson(request));
   if (!generationEnabled(env)) return jsonReply(request, env, 503, { ok: false, status: "cost_guard_active", message: "Generación Premium desactivada" });
   const verifiedProfile = { ...profile, editorial_material: buildVerifiedEditorialMaterial(profile) };
-  const guide = validateGeneratedGuide(await generateJson(env, writerPrompt(verifiedProfile)), verifiedProfile);
+  const guide = validateGeneratedGuide(await generateJson(env, writerPrompt(verifiedProfile), { imageSearch: verifiedProfile.visual_content === "completo" }), verifiedProfile);
   return jsonReply(request, env, 200, { ok: true, status: "written", guide });
 }
 
