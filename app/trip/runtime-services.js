@@ -1,5 +1,5 @@
 import { calculateRoute } from "../services/routing.js";
-import { geoapifyRoute } from "../services/geoapify-client.js?v=3";
+import { geoapifyRoute } from "../services/geoapify-client.js?v=2";
 import { createLogisticsService } from "./logistics-service.js";
 import { loadTripCatalogs } from "./catalogs.js";
 import { resolveKnownTripCountries } from "./country-resolver.js";
