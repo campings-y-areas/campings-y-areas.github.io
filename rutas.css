@@ -579,6 +579,6 @@
 .premium-auth-help{margin-top:8px!important;font-size:.9rem}
 .premium-auth-status{min-height:1.4em;margin-top:12px!important;font-weight:700}
 .premium-plan-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:20px}
-html:not(.acceso-pruebas):not(.premium-activo) .rutas-panel{display:none!important}
-html.acceso-pruebas .rutas-premium-lock,html.premium-activo .rutas-premium-lock{display:none!important}
+html:not(.premium-activo) .rutas-panel{display:none!important}
+html.premium-activo .rutas-premium-lock{display:none!important}
 @media(max-width:600px){.premium-auth-row{flex-direction:column}.premium-plan-actions{flex-direction:column}}
