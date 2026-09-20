@@ -2,9 +2,7 @@ import { getRuntimeConfig } from "../core/runtime-config.js";
 
 function vehicleMode(vehicle) {
   const type = String(vehicle?.tipo ?? vehicle?.type ?? "").toLowerCase();
-  if (type.includes("moto")) return "motorcycle";
-  if (["autocaravana", "camper", "caravana"].includes(type)) return "light_truck";
-  return "drive";
+  return type.includes("moto") ? "motorcycle" : "drive";
 }
 
 export function routeCountryMetadata(properties = {}) {
@@ -75,10 +73,6 @@ export async function geoapifyRoute({ points, vehicle, preferences = {}, include
   const query = new URLSearchParams({
     waypoints,
     mode: vehicleMode(vehicle),
-    intermediate_waypoint_mode: "stopover",
-    traffic: "approximated",
-    units: "metric",
-    lang: "es",
     format: "geojson",
     apiKey: key
   });
@@ -90,15 +84,7 @@ export async function geoapifyRoute({ points, vehicle, preferences = {}, include
   // Conservamos la metadata de país que Geoapify incluya en la respuesta base.
 
   const response = await fetch(`https://api.geoapify.com/v1/routing?${query.toString()}`);
-  if (!response.ok) {
-    const errorBody = await response.text().catch(() => "");
-    let detail = errorBody.trim();
-    try {
-      const parsed = detail ? JSON.parse(detail) : null;
-      detail = parsed?.message ?? parsed?.error ?? parsed?.reason ?? detail;
-    } catch {}
-    throw new Error(`Geoapify: ${response.status}${detail ? ` · ${detail.slice(0, 500)}` : ""}`);
-  }
+  if (!response.ok) throw new Error(`Geoapify: ${response.status}`);
   const payload = await response.json();
   const feature = payload?.features?.[0];
   if (!feature?.geometry || !feature?.properties) throw new Error("Geoapify devolvió una ruta vacía");
