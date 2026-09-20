@@ -79,10 +79,9 @@ export async function geoapifyRoute({ points, vehicle, preferences = {}, include
   const options = routingOptions(preferences);
   if (options.avoid.length) query.set("avoid", options.avoid.join("|"));
   if (options.type) query.set("type", options.type);
-  // Geoapify expone los países atravesados en properties.country_code y los
-  // nombres administrativos mediante details=admin_areas. route_details son
-  // atributos viarios y tienen un coste adicional, por lo que no se solicitan.
-  if (includeCountryDetails) query.set("details", "admin_areas");
+  // No enviar details=admin_areas: no es un valor válido del Routing API.
+  // Los únicos details admitidos son instruction_details, route_details y elevation.
+  // Conservamos la metadata de país que Geoapify incluya en la respuesta base.
 
   const response = await fetch(`https://api.geoapify.com/v1/routing?${query.toString()}`);
   if (!response.ok) throw new Error(`Geoapify: ${response.status}`);
