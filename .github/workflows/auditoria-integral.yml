@@ -18,7 +18,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Aplicar reparación geográfica exacta en Rutas
+      - name: Validar regresiones geográficas en Rutas modular
         run: node scripts/probar-reparacion-rutas.mjs
       - name: Aplicar reparaciones de coordenadas confirmadas
         run: node scripts/reparar-anomalias-geograficas-confirmadas.mjs
@@ -49,12 +49,12 @@ jobs:
       - name: Guardar reparaciones validadas en la rama de auditoría
         if: github.event_name == 'push'
         run: |
-          if git diff --quiet -- rutas.js areas-paises-bajos-definitivo.json areas-parkings-espana-v4-corregido.json lavaderos-autocaravanas-v1.json; then
+          if git diff --quiet -- areas-paises-bajos-definitivo.json areas-parkings-espana-v4-corregido.json lavaderos-autocaravanas-v1.json; then
             echo "Sin cambios pendientes que guardar"
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add rutas.js areas-paises-bajos-definitivo.json areas-parkings-espana-v4-corregido.json lavaderos-autocaravanas-v1.json
+          git add areas-paises-bajos-definitivo.json areas-parkings-espana-v4-corregido.json lavaderos-autocaravanas-v1.json
           git commit -m "Datos: corregir anomalías geográficas verificadas"
           git push origin HEAD:audit-integral-rutas-2026-09-16
