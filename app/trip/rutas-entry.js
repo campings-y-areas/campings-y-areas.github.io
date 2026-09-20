@@ -236,7 +236,7 @@ async function submitTrip(event) {
         const strong = document.createElement("strong");
         const detail = document.createElement("p");
         strong.textContent = "⚠️ No se pudo preparar esta ruta.";
-        detail.textContent = "Revisa los datos del viaje e inténtalo de nuevo.";
+        detail.textContent = error?.message ? `Motivo: ${error.message}` : "Revisa los datos del viaje e inténtalo de nuevo.";
         box.append(strong, detail);
         stages.append(box);
       }
