@@ -8,6 +8,10 @@ function escapeHtml(value) {
     .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 }
 
+export function getSelectedPlace(input) {
+  return input ? selectedPlaces.get(input) ?? null : null;
+}
+
 export function attachPlaceAutocomplete(input) {
   if (!input || input.dataset.autocompleteListo === "1") return;
   input.dataset.autocompleteListo = "1";
