@@ -1,6 +1,7 @@
 import { getState, setState } from "../core/store.js";
 import { commitCurrentTripForm } from "./form-adapter.js";
 import { resolveTripPoints } from "./geocoding.js";
+import { getSelectedPlace } from "./place-autocomplete.js";
 import { buildTrip } from "./pipeline.js";
 import { routingService, logisticsService, enrichmentService } from "./runtime-services.js";
 import { createGuideService } from "../services/guide-service.js";
@@ -27,7 +28,12 @@ export async function prepareTripFromCurrentForm({ guide = null } = {}) {
   const points = await resolveTripPoints({
     originText: state.trip.originText,
     viaTexts: state.trip.viaTexts,
-    destinationText: state.trip.destinationText
+    destinationText: state.trip.destinationText,
+    selectedPlaces: {
+      origin: getSelectedPlace(document.getElementById("origen")),
+      vias: [...document.querySelectorAll("#destinosExtra input")].map(getSelectedPlace),
+      destination: getSelectedPlace(document.getElementById("destinoPrincipal"))
+    }
   });
 
   setState(current => ({
