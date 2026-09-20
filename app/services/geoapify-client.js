@@ -2,7 +2,9 @@ import { getRuntimeConfig } from "../core/runtime-config.js";
 
 function vehicleMode(vehicle) {
   const type = String(vehicle?.tipo ?? vehicle?.type ?? "").toLowerCase();
-  return type.includes("moto") ? "motorcycle" : "drive";
+  if (type.includes("moto")) return "motorcycle";
+  if (["autocaravana", "camper", "caravana"].includes(type)) return "light_truck";
+  return "drive";
 }
 
 export function routeCountryMetadata(properties = {}) {
@@ -73,6 +75,10 @@ export async function geoapifyRoute({ points, vehicle, preferences = {}, include
   const query = new URLSearchParams({
     waypoints,
     mode: vehicleMode(vehicle),
+    intermediate_waypoint_mode: "stopover",
+    traffic: "approximated",
+    units: "metric",
+    lang: "es",
     format: "geojson",
     apiKey: key
   });
