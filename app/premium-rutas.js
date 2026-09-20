@@ -2,7 +2,8 @@ import {
   getPremiumAccount,
   requestLoginCode,
   verifyLoginCode,
-  createPremiumCheckout
+  createPremiumCheckout,
+  createPremiumPortal
 } from "./premium-client.js";
 
 const lock = document.getElementById("rutasPremiumLock");
@@ -20,6 +21,17 @@ const checkoutStatus = document.getElementById("premiumCheckoutStatus");
 let loginEmail = "";
 const requestedPlan = new URLSearchParams(window.location.search).get("plan");
 const pendingPlan = requestedPlan === "monthly" || requestedPlan === "yearly" ? requestedPlan : "";
+const PREMIUM_PRICE_IDS = Object.freeze({
+  monthly: "price_1UHNzZJ2BhU8rexUL9tyoB8Q",
+  yearly: "price_1UHO3JJ2BhU8rexU1FawP72e"
+});
+
+function currentPlan(account) {
+  const priceId = account?.subscription?.price_id;
+  if (priceId === PREMIUM_PRICE_IDS.monthly) return "monthly";
+  if (priceId === PREMIUM_PRICE_IDS.yearly) return "yearly";
+  return "";
+}
 
 function show(element, visible) {
   element?.classList.toggle("oculto", !visible);
@@ -59,12 +71,26 @@ async function startCheckout(plan) {
   window.location.assign(checkout.url);
 }
 
+async function openPlanChange() {
+  if (checkoutStatus) checkoutStatus.textContent = "Abriendo Stripe para gestionar tu suscripción…";
+  const portal = await createPremiumPortal();
+  if (!portal?.url) throw new Error("Stripe no devolvió una dirección para gestionar la suscripción.");
+  window.location.assign(portal.url);
+}
+
 async function refreshAccount() {
   try {
     const account = await getPremiumAccount();
     renderAccount(account);
-    if (pendingPlan && account?.authenticated === true && account?.premium !== true) {
-      await startCheckout(pendingPlan);
+    if (pendingPlan && account?.authenticated === true) {
+      if (account?.premium !== true) {
+        await startCheckout(pendingPlan);
+      } else {
+        const activePlan = currentPlan(account);
+        if (activePlan && activePlan !== pendingPlan) {
+          await openPlanChange();
+        }
+      }
     }
   } catch (error) {
     show(checking, false);
