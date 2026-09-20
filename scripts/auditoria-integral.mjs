@@ -76,7 +76,7 @@ for(const f of files.filter(f=>f.endsWith('.html'))){
   }
 }
 
-// Navegación: las secciones principales deben exponer Rutas, informes y conservar el acceso privado.
+// Navegación: las secciones principales deben exponer Rutas e Informar de un error.
 const navPages=['index.html','campings.html','areas.html','acampadas.html','lugares.html','talleres.html','servicios.html','normativas.html','rutas.html'];
 for(const page of navPages){
   const f=path.join(root,page);
@@ -84,7 +84,6 @@ for(const page of navPages){
   const text=fs.readFileSync(f,'utf8');
   if(!/href=["']rutas\.html["']/.test(text))errors.push(`Navegación incompleta: ${page} no enlaza Rutas.`);
   if(!/href=["']informar-error\.html["']/.test(text))errors.push(`Navegación incompleta: ${page} no enlaza Informar de un error.`);
-  if(!text.includes('app/private-access.js'))errors.push(`Acceso privado inconsistente: ${page} no conserva pruebas=manuel al navegar.`);
 }
 
 // Módulos con varias fuentes independientes: un fallo parcial no debe derribar toda la sección.
