@@ -505,3 +505,14 @@
         min-width: 14px;
     }
 }
+
+/* Precios Premium definitivos */
+.inicio-precios-premium{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;max-width:900px;margin:26px auto 0}
+.inicio-precio-card{padding:24px;border:1px solid #dce5e9;border-radius:18px;background:#fff;text-align:center}
+.inicio-precio-destacado{border:2px solid #159bd7;box-shadow:0 8px 28px rgba(21,155,215,.12)}
+.inicio-precio-card>span{display:block;font-weight:800;color:#126fa0}
+.inicio-precio-card>strong{display:block;margin:8px 0;font-size:2rem;color:#173f55}
+.inicio-precio-card>strong small{font-size:.95rem;color:#61717a}
+.inicio-precio-card p{min-height:3em;color:#52616b}
+.inicio-boton-premium{margin-top:8px;background:#159bd7;color:#fff;box-shadow:none}
+@media(max-width:850px){.inicio-precios-premium{grid-template-columns:1fr}}
