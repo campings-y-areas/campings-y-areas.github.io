@@ -84,7 +84,15 @@ export async function geoapifyRoute({ points, vehicle, preferences = {}, include
   // Conservamos la metadata de país que Geoapify incluya en la respuesta base.
 
   const response = await fetch(`https://api.geoapify.com/v1/routing?${query.toString()}`);
-  if (!response.ok) throw new Error(`Geoapify: ${response.status}`);
+  if (!response.ok) {
+    const errorBody = await response.text().catch(() => "");
+    let detail = errorBody.trim();
+    try {
+      const parsed = detail ? JSON.parse(detail) : null;
+      detail = parsed?.message ?? parsed?.error ?? parsed?.reason ?? detail;
+    } catch {}
+    throw new Error(`Geoapify: ${response.status}${detail ? ` · ${detail.slice(0, 500)}` : ""}`);
+  }
   const payload = await response.json();
   const feature = payload?.features?.[0];
   if (!feature?.geometry || !feature?.properties) throw new Error("Geoapify devolvió una ruta vacía");
