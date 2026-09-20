@@ -1,7 +1,8 @@
 import {
   getPremiumAccount,
   requestLoginCode,
-  verifyLoginCode
+  verifyLoginCode,
+  createPremiumCheckout
 } from "./premium-client.js";
 
 const lock = document.getElementById("rutasPremiumLock");
@@ -100,9 +101,22 @@ codeForm?.addEventListener("submit", async (event) => {
 });
 
 document.querySelectorAll("[data-premium-plan]").forEach((button) => {
-  button.addEventListener("click", () => {
-    if (checkoutStatus) {
-      checkoutStatus.textContent = "La compra desde la web se activará después de validar esta pantalla en pruebas.";
+  button.addEventListener("click", async () => {
+    const plan = button.dataset.premiumPlan;
+    if (checkoutStatus) checkoutStatus.textContent = "Preparando el pago seguro…";
+    button.disabled = true;
+    try {
+      const checkout = await createPremiumCheckout(plan);
+      if (!checkout?.url) throw new Error("Stripe no devolvió una dirección de pago.");
+      window.location.assign(checkout.url);
+    } catch (error) {
+      if (checkoutStatus) {
+        checkoutStatus.textContent = error?.status === 409
+          ? "Esta cuenta ya tiene una suscripción Premium activa."
+          : "No se pudo abrir el pago seguro. Inténtalo de nuevo.";
+      }
+      console.error("Premium checkout failed:", error);
+      button.disabled = false;
     }
   });
 });
