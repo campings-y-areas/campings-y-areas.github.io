@@ -18,6 +18,8 @@ const authStatus = document.getElementById("premiumAuthStatus");
 const checkoutStatus = document.getElementById("premiumCheckoutStatus");
 
 let loginEmail = "";
+const requestedPlan = new URLSearchParams(window.location.search).get("plan");
+const pendingPlan = requestedPlan === "monthly" || requestedPlan === "yearly" ? requestedPlan : "";
 
 function show(element, visible) {
   element?.classList.toggle("oculto", !visible);
@@ -49,10 +51,21 @@ function renderAccount(account) {
   show(noSubscription, authenticated);
 }
 
+async function startCheckout(plan) {
+  if (!plan) return;
+  if (checkoutStatus) checkoutStatus.textContent = "Preparando el pago seguro…";
+  const checkout = await createPremiumCheckout(plan);
+  if (!checkout?.url) throw new Error("Stripe no devolvió una dirección de pago.");
+  window.location.assign(checkout.url);
+}
+
 async function refreshAccount() {
   try {
     const account = await getPremiumAccount();
     renderAccount(account);
+    if (pendingPlan && account?.authenticated === true && account?.premium !== true) {
+      await startCheckout(pendingPlan);
+    }
   } catch (error) {
     show(checking, false);
     show(loggedOut, true);
@@ -106,9 +119,7 @@ document.querySelectorAll("[data-premium-plan]").forEach((button) => {
     if (checkoutStatus) checkoutStatus.textContent = "Preparando el pago seguro…";
     button.disabled = true;
     try {
-      const checkout = await createPremiumCheckout(plan);
-      if (!checkout?.url) throw new Error("Stripe no devolvió una dirección de pago.");
-      window.location.assign(checkout.url);
+      await startCheckout(plan);
     } catch (error) {
       if (checkoutStatus) {
         checkoutStatus.textContent = error?.status === 409
