@@ -2,11 +2,8 @@
   "use strict";
 
   // DEMO AISLADA: no importa ni consulta rutas.js, rutas-config.js, Worker, D1 u OpenAI.
-  const params = new URLSearchParams(location.search);
-  const acceso = params.get("pruebas") === "manuel";
   const app = document.getElementById("demoApp");
   const bloqueo = document.getElementById("bloqueoDemo");
-  if (!acceso) return;
   bloqueo.hidden = true;
   app.hidden = false;
 
