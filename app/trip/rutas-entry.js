@@ -4,6 +4,7 @@ import { renderRouteMap } from "../ui/route-map.js";
 import { renderLongFormGuide } from "../ui/route-guide.js";
 import { renderRouteActions } from "../ui/route-actions.js";
 import { backendRequest } from "../services/backend-client.js";
+import { premiumAuthorizationHeaders } from "../premium-client.js";
 import { attachPlaceAutocomplete } from "./place-autocomplete.js";
 
 let currentStep = 1;
@@ -137,10 +138,17 @@ function renderClosedTrip(state) {
   }
 }
 
+async function premiumBackendRequest(path, options = {}) {
+  return backendRequest(path, {
+    ...options,
+    headers: { ...(options.headers ?? {}), ...premiumAuthorizationHeaders() }
+  });
+}
+
 function productionGuide() {
   const config = globalThis.RUTAS_CONFIG ?? {};
   if (!String(config.WORKER_BASE_URL ?? "").trim()) return undefined;
-  return createProductionGuideAdapter({ request: backendRequest });
+  return createProductionGuideAdapter({ request: premiumBackendRequest });
 }
 
 let routePreparing = false;

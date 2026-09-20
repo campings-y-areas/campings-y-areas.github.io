@@ -72,7 +72,47 @@
       <a class="rutas-demo-boton" href="demo-ruta.html">▶ Ver ruta de ejemplo</a>
     </section>
 
-    <section class="rutas-premium-lock" id="rutasPremiumLock">\n      <h2>🔒 Crear rutas es una función Premium</h2>\n      <p>La demo Premium es gratuita. Para preparar una ruta personalizada necesitas acceso Premium.</p>\n    </section>\n\n    <section class="rutas-panel">
+    <section class="rutas-premium-lock" id="rutasPremiumLock" aria-live="polite">
+      <div id="premiumLoggedOut" class="oculto">
+        <h2>🔒 Crear rutas es una función Premium</h2>
+        <p>La demo Premium es gratuita. Para preparar una ruta personalizada, inicia sesión con tu correo.</p>
+
+        <form id="premiumEmailForm" class="premium-auth-form">
+          <label for="premiumEmail">Correo electrónico</label>
+          <div class="premium-auth-row">
+            <input id="premiumEmail" type="email" autocomplete="email" required placeholder="tu@correo.com">
+            <button type="submit">Enviar código</button>
+          </div>
+        </form>
+
+        <form id="premiumCodeForm" class="premium-auth-form oculto">
+          <label for="premiumCode">Código recibido por correo</label>
+          <div class="premium-auth-row">
+            <input id="premiumCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" required placeholder="123456">
+            <button type="submit">Entrar</button>
+          </div>
+          <p class="premium-auth-help">Si no ves el correo, revisa Spam o Correo no deseado.</p>
+        </form>
+
+        <p id="premiumAuthStatus" class="premium-auth-status" role="status"></p>
+      </div>
+
+      <div id="premiumNoSubscription" class="oculto">
+        <h2>⭐ Tu cuenta está lista</h2>
+        <p>Has iniciado sesión, pero esta cuenta no tiene una suscripción Premium activa.</p>
+        <div class="premium-plan-actions">
+          <button type="button" data-premium-plan="monthly">Premium mensual · 9,99 €/mes</button>
+          <button type="button" data-premium-plan="yearly">Premium anual · 59,99 €/año</button>
+        </div>
+        <p id="premiumCheckoutStatus" class="premium-auth-status" role="status"></p>
+      </div>
+
+      <div id="premiumChecking">
+        <p>Comprobando acceso Premium…</p>
+      </div>
+    </section>
+
+    <section class="rutas-panel">
       <div class="pasos-ruta" aria-label="Progreso">
         <span class="paso activo" data-paso-indicador="1">1</span>
         <span class="linea-paso"></span>
@@ -310,6 +350,7 @@
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script src="rutas-config.js?v=7"></script>
+  <script type="module" src="app/premium-rutas.js?v=1"></script>
   <script type="module" src="app/trip/rutas-entry.js?v=1"></script>
   <script type="module" src="app/report-modal.js?v=1"></script>
 </body>

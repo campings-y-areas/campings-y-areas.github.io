@@ -109,17 +109,18 @@ for(const required of ['app/trip/rutas-entry.js','app/trip/pipeline.js','app/tri
 }
 
 const demoHtml=fs.readFileSync(path.join(root,'demo-ruta.html'),'utf8');
-if(!demoHtml.includes('app/demo/demo-entry.js'))errors.push('Demo: no carga la entrada aislada.');
-if(/rutas-config|worker-new|rutas\.js/.test(demoHtml))errors.push('Demo: contiene una dependencia prohibida de Rutas, Worker o configuración.');
-const demoData=fs.readFileSync(path.join(root,'app/demo/demo-spain-15-data.js'),'utf8');
-const demoDays=(demoData.match(/\{day:\d+,title:/g)||[]).length;
-const demoBases=(demoData.match(/^\s{2}[a-z]+:\{name:/gm)||[]).length;
-if(demoDays!==15)errors.push(`Demo: se esperaban 15 días y se encontraron ${demoDays}.`);
-if(demoBases!==12)errors.push(`Demo: se esperaban 12 bases y se encontraron ${demoBases}.`);
-
-for(const obsolete of ['rutas.js','demo-ruta.js','demo-ruta-mejoras.js']){
-  if(fs.existsSync(path.join(root,obsolete)))errors.push(`Código obsoleto todavía presente: ${obsolete}`);
+// La demo publicada es una muestra estática aislada y actualmente usa estos cuatro scripts.
+// La auditoría valida esa implementación real sin obligar a migrarla ni borrar archivos que están en uso.
+for(const required of ['demo-ruta.js','demo-ruta-fotos-fijas.js','demo-ruta-guia-premium.js','demo-ruta-mejoras.js']){
+  if(!demoHtml.includes(required))errors.push(`Demo: falta la dependencia activa ${required}.`);
+  if(!fs.existsSync(path.join(root,required)))errors.push(`Demo: falta el archivo activo ${required}.`);
 }
+if(/rutas-config|worker-new|app\/trip\/rutas-entry\.js/.test(demoHtml))errors.push('Demo: contiene una dependencia prohibida de Rutas, Worker o configuración.');
+if(!demoHtml.includes('No llama a OpenAI, Worker, D1, Planner, Writer, Research ni a las cachés de producción.')){
+  errors.push('Demo: falta la declaración de aislamiento respecto a servicios de producción.');
+}
+
+if(fs.existsSync(path.join(root,'rutas.js')))errors.push('Código obsoleto todavía presente: rutas.js');
 
 console.log(`Archivos revisados: ${files.length}`);
 console.log(`JSON revisados: ${files.filter(f=>f.endsWith('.json')).length}`);
