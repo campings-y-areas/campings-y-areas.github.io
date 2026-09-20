@@ -567,9 +567,18 @@
 @media(max-width:700px) and (orientation:portrait){#pantallaEsperaRutaIA .espera-ruta-estado{bottom:max(10px,env(safe-area-inset-bottom));width:calc(100vw - 20px);gap:7px}}
 @media(max-height:560px) and (orientation:landscape){#pantallaEsperaRutaIA .espera-ruta-estado{left:auto;right:10px;bottom:10px;transform:none;width:min(430px,46vw);gap:6px}}
 
-/* Acceso a creación de rutas: cerrado al público mientras Premium no tenga autenticación */
+/* Acceso a creación de rutas: Premium aislado de la lógica de generación */
 .rutas-premium-lock{max-width:920px;margin:18px auto;padding:24px;border:1px solid #d8e1e5;border-radius:18px;background:#fff;box-shadow:0 8px 24px rgba(20,52,70,.08);text-align:center}
 .rutas-premium-lock h2{margin:0 0 8px;color:#173f55}
 .rutas-premium-lock p{margin:0;color:#526773}
-html:not(.acceso-pruebas) .rutas-panel{display:none!important}
-html.acceso-pruebas .rutas-premium-lock{display:none!important}
+.premium-auth-form{max-width:620px;margin:20px auto 0;text-align:left}
+.premium-auth-form label{display:block;margin-bottom:7px;font-weight:800;color:#173f55}
+.premium-auth-row{display:flex;gap:10px}
+.premium-auth-row input{min-width:0;flex:1;padding:12px 13px;border:1px solid #c9d5da;border-radius:10px;font:inherit}
+.premium-auth-row button,.premium-plan-actions button{padding:12px 16px;border:0;border-radius:10px;background:#0b668f;color:#fff;font-weight:800;cursor:pointer}
+.premium-auth-help{margin-top:8px!important;font-size:.9rem}
+.premium-auth-status{min-height:1.4em;margin-top:12px!important;font-weight:700}
+.premium-plan-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:20px}
+html:not(.acceso-pruebas):not(.premium-activo) .rutas-panel{display:none!important}
+html.acceso-pruebas .rutas-premium-lock,html.premium-activo .rutas-premium-lock{display:none!important}
+@media(max-width:600px){.premium-auth-row{flex-direction:column}.premium-plan-actions{flex-direction:column}}
