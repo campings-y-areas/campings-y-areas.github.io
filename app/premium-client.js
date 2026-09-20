@@ -131,3 +131,20 @@ export function premiumAuthorizationHeaders() {
   const token = readStoredToken();
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
+
+export async function createPremiumCheckout(plan) {
+  const normalizedPlan = plan === "yearly" ? "yearly" : plan === "monthly" ? "monthly" : "";
+  if (!normalizedPlan) throw new Error("Plan Premium no válido.");
+  return premiumRequest("/create-checkout-session", {
+    method: "POST",
+    authenticated: true,
+    body: { plan: normalizedPlan }
+  });
+}
+
+export async function createPremiumPortal() {
+  return premiumRequest("/create-portal-session", {
+    method: "POST",
+    authenticated: true
+  });
+}
