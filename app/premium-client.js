@@ -126,3 +126,8 @@ export async function getPremiumAccount() {
 export function hasStoredPremiumSession() {
   return Boolean(readStoredToken());
 }
+
+export function premiumAuthorizationHeaders() {
+  const token = readStoredToken();
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
