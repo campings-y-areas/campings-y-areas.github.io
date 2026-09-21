@@ -282,11 +282,24 @@ async function prepararFotosGuia(guide,stops=[]){
   (guide?.days||[]).forEach(d=>{
     const ciudad=ciudadDeDiaGuia(d,stops);
     const country=paisDeDiaGuia(d,stops);
+
     (d.highlights||[]).forEach(x=>{
-      trabajos.push(buscarFotoAutomatica(x.name,ciudad,"visit"));
       const r=buscarEntidadInvestigacionRuta(x.name,"visit",ciudad,country,x.entity_id||"");
+      trabajos.push(buscarFotoAutomatica(x.name,ciudad,"visit",r?.photo_search_terms||[]));
       const web=webOficialCorregida(x.name,x.url||r?.website||"");
       if(web)trabajos.push(consultarMediaOficial(x.name,ciudad,"visit",web,x.entity_id||""));
+    });
+
+    (d.restaurants||[]).forEach(x=>{
+      const r=buscarEntidadInvestigacionRuta(x.name,"restaurant",ciudad,country,x.entity_id||"");
+      const web=webOficialCorregida(x.name,x.website||r?.website||"");
+      if(web)trabajos.push(consultarMediaOficial(x.name,ciudad,"restaurant",web,x.entity_id||""));
+    });
+
+    (d.overnight||[]).forEach(x=>{
+      const r=buscarEntidadInvestigacionRuta(x.name,"overnight",ciudad,country,x.entity_id||"");
+      const web=webOficialCorregida(x.name,x.website||r?.website||"");
+      if(web)trabajos.push(consultarMediaOficial(x.name,ciudad,"overnight",web,x.entity_id||""));
     });
   });
   await Promise.allSettled(trabajos);
@@ -480,14 +493,6 @@ function webOficialCorregida(nombre,url=""){
   return URLS_OFICIALES_CORREGIDAS[normalizarClaveMedia(nombre)]||String(url||"").trim();
 }
 
-function urlGoogleMapsEntidad(entityId,nombre,tipo="",ciudad="",country=""){
-  const r=buscarEntidadInvestigacionRuta(nombre,tipo,ciudad,country,entityId);
-  const lat=Number(r?.latitude),lon=Number(r?.longitude);
-  if(!String(entityId||"").trim()||!Number.isFinite(lat)||!Number.isFinite(lon))return "";
-  const q=new URLSearchParams({api:"1",destination:`${lat.toFixed(6)},${lon.toFixed(6)}`});
-  return `https://www.google.com/maps/dir/?${q.toString()}`;
-}
-
 function htmlDatosLugar(nombre,tipo="",webGuia="",ciudad="",country="",entityId=""){
   const l=buscarLugarVerificado(nombre,tipo);
   const r=buscarEntidadInvestigacionRuta(nombre,tipo,ciudad,country,entityId);
@@ -497,12 +502,10 @@ function htmlDatosLugar(nombre,tipo="",webGuia="",ciudad="",country="",entityId=
   const address=String(r?.address||l?.address||"").trim();
   if(address)h+=`<p><strong>📍 Dirección:</strong> ${escapar(address)}</p>`;
   const enlaces=[];
-  // Para enlaces de lugares concretos usamos nombre + dirección verificada.
-  // Las coordenadas generadas durante investigación sirven como dato auxiliar,
-  // pero no deben poder enviar todos los botones al mismo punto si vienen mal.
-  const mapsUrl=urlGoogleMapsTexto(nombre,address)
-    ||l?.maps_url
-    ||(String(entityId||"").trim()?urlGoogleMapsEntidad(entityId,nombre,tipo,ciudad,country):"");
+  // Los enlaces individuales de Google Maps nunca usan coordenadas generadas
+  // por la investigación. Se envía nombre + dirección + ciudad + país para que
+  // Google resuelva el establecimiento o monumento por su identidad real.
+  const mapsUrl=urlGoogleMapsTexto(nombre,address,ciudad,country)||l?.maps_url;
   if(mapsUrl)enlaces.push(htmlEnlaceGuia("📍 Abrir en Google Maps",mapsUrl));
   const web=webOficialCorregida(nombre,webGuia||r?.website||l?.website||"");
   if(web)enlaces.push(htmlEnlaceGuia(tipo==="visit"?"🌐 Información oficial":"🌐 Web oficial",web));
@@ -548,11 +551,11 @@ function htmlFotoVerificada(nombre,ciudad,tipo,entityId=""){
     ||null;
   const auto=tipo==="visit"?fotoAutoCache.get(claveFotoAuto(nombre,ciudad,tipo))||null:null;
 
-  // Restaurantes y pernoctas: solo se muestra multimedia exacta ya validada y guardada en D1.
-  // No usamos búsquedas automáticas, coincidencias aproximadas ni scraping en vivo: es preferible
-  // no mostrar fotografía antes que enseñar un dibujo, un cartel, un túnel u otro negocio distinto.
+  // Restaurantes y pernoctas: aceptamos únicamente una imagen exacta ya
+  // guardada en D1 o una imagen extraída en ese momento de la web oficial del
+  // propio establecimiento. No se usan búsquedas aproximadas ni sustitutos.
   if(tipo==="restaurant"||tipo==="overnight"){
-    if(!(oficial?.from_d1&&oficial?.image_url))return "";
+    if(!(oficial?.image_url&&(oficial?.from_d1||oficial?.official)))return "";
     const sourcePage=oficial.source_page||"";
     const fuente=sourcePage?`<a href="${escapar(sourcePage)}" target="_blank" rel="noopener">Fuente de la imagen</a>`:"";
     return `<figure class="guia-foto">
@@ -926,9 +929,17 @@ function minutosTexto(min){
   return `${m} min`;
 }
 
-function urlGoogleMapsTexto(nombre,direccion=""){
-  const q=[nombre,direccion].filter(Boolean).join(" ").trim();
-  return q?`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`:"";
+function urlGoogleMapsTexto(nombre,direccion="",ciudad="",country=""){
+  const partes=[];
+  for(const valor of [nombre,direccion,ciudad,country]){
+    const limpio=String(valor||"").replace(/\s+/g," ").trim();
+    if(!limpio)continue;
+    if(!partes.some(x=>normalizarClaveMedia(x)===normalizarClaveMedia(limpio)))partes.push(limpio);
+  }
+  const destino=partes.join(", ");
+  if(!destino)return "";
+  const q=new URLSearchParams({api:"1",destination:destino});
+  return `https://www.google.com/maps/dir/?${q.toString()}`;
 }
 
 function htmlEnlacesPremium(nombre,direccion,web){
@@ -1133,16 +1144,21 @@ async function prepararDatosYMediaGuia(stops=[]){
 
 async function prepararFotosInvestigacionPremium(research,destino,country=""){
   cargarFotoAutoLocal();
-
-  // La multimedia de restaurantes y pernoctas se reutiliza exclusivamente desde D1.
-  // Aquí no se rastrean webs oficiales ni se buscan sustitutos automáticos.
   await cargarMediaDestinoD1(destino,country);
 
-  // Para monumentos y visitas sí conservamos Wikimedia Commons con licencia permitida
-  // y el selector visual estricto que ya utiliza la guía.
   const tareas=[];
   for(const x of (research?.must_see||[])){
     tareas.push(buscarFotoAutomatica(x.name,destino,"visit",x.photo_search_terms||[]));
+    const web=webOficialCorregida(x.name,x.website||"");
+    if(web)tareas.push(consultarMediaOficial(x.name,destino,"visit",web,x.entity_id||""));
+  }
+  for(const x of (research?.gastronomy?.restaurants||[])){
+    const web=webOficialCorregida(x.name,x.website||"");
+    if(web)tareas.push(consultarMediaOficial(x.name,destino,"restaurant",web,x.entity_id||""));
+  }
+  for(const x of (research?.overnight||[])){
+    const web=webOficialCorregida(x.name,x.website||"");
+    if(web)tareas.push(consultarMediaOficial(x.name,destino,"overnight",web,x.entity_id||""));
   }
   await Promise.allSettled(tareas);
 }
