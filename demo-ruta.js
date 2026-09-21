@@ -4,8 +4,8 @@
   // DEMO AISLADA: no importa ni consulta rutas.js, rutas-config.js, Worker, D1 u OpenAI.
   const app = document.getElementById("demoApp");
   const bloqueo = document.getElementById("bloqueoDemo");
-  bloqueo.hidden = true;
-  app.hidden = false;
+  if (bloqueo) bloqueo.hidden = true;
+  if (app) app.hidden = false;
 
   const esc = (v) => String(v ?? "").replace(/[&<>\"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
   const mapsSearch = q => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
