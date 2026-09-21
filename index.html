@@ -1,18 +1,256 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mantenimiento | Campings & Áreas</title>
-<meta name="robots" content="noindex">
-<link rel="icon" type="image/png" href="logo.png">
-<style>
-body{margin:0;min-height:100vh;display:grid;place-items:center;background:#f5f7f8;color:#1f2933;font-family:Arial,Helvetica,sans-serif}
-main{max-width:720px;margin:24px;padding:42px;text-align:center;background:#fff;border-radius:18px;box-shadow:0 8px 28px rgba(0,0,0,.1)}
-img{width:110px;height:110px;object-fit:contain}
-h1{color:#126fa0;font-size:2.2rem;margin:18px 0 12px}
-p{font-size:1.15rem;line-height:1.6;margin:0}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Campings & Áreas</title>
+  <meta name="description" content="Campings & Áreas: encuentra campings, áreas, parkings, lugares, talleres, servicios y prepara tus viajes de forma sencilla.">
+
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="apple-touch-icon" href="logo.png">
+
+  <link rel="stylesheet" href="style.css?v=2">
+  <link rel="stylesheet" href="inicio.css?v=2">
 </head>
-<body><main><img src="logo.png" alt="Campings & Áreas"><h1>Estamos en mantenimiento</h1><p>Estamos realizando mejoras en Campings & Áreas. Volveremos pronto.</p></main></body>
+
+<body>
+
+  <header>
+    <h1>
+      <img src="logo.png" alt="Campings & Áreas" class="logo">
+      Campings & Áreas
+    </h1>
+  </header>
+
+  <nav class="menu">
+    <a href="index.html" aria-current="page">🏠 Inicio</a>
+    <a href="campings.html">🏕️ Campings</a>
+    <a href="areas.html?tipo=area">🚐 Áreas</a>
+    <a href="areas.html?tipo=parking">🅿️ Parkings</a>
+    <a href="acampadas.html">🥾 Acampadas</a>
+    <a href="lugares.html">📍 Lugares</a>
+    <a href="talleres.html">🛠️ Talleres</a>
+    <a href="servicios.html">🔧 Servicios</a>
+    <a href="normativas.html">📘 Normativas</a>
+    <a href="rutas.html">🗺️ Rutas</a>
+    <a href="informar-error.html">⚠️ Informar de un error</a>
+  </nav>
+
+  <main class="inicio">
+
+    <section class="inicio-hero" aria-labelledby="titulo-inicio">
+      <div class="inicio-hero-contenido">
+        <p class="inicio-etiqueta">Tu compañero para viajar por carretera</p>
+
+        <h2 id="titulo-inicio">
+          Prepara el viaje, encuentra dónde parar y descubre qué ver
+        </h2>
+
+        <p class="inicio-entradilla">
+          Campings & Áreas reúne en una sola web información útil para viajar en
+          autocaravana, camper, caravana, coche o moto: lugares para dormir,
+          puntos de interés, servicios, talleres, normativas y planificación de rutas.
+        </p>
+
+        <div class="inicio-acciones">
+          <a class="inicio-boton inicio-boton-principal" href="#explorar">Explorar la web gratis</a>
+          <a class="inicio-boton inicio-boton-demo" href="demo-ruta.html">▶ Ver demo de una ruta</a>
+          <a class="inicio-enlace-premium" href="#planes">Conocer Gratis y Premium ↓</a>
+        </div>
+
+        <div class="inicio-datos" aria-label="Contenido disponible">
+          <span>🏕️ Campings</span>
+          <span>🚐 Áreas</span>
+          <span>🅿️ Parkings</span>
+          <span>📍 Lugares</span>
+          <span>🛠️ Talleres</span>
+          <span>🗺️ Rutas</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="inicio-seccion" id="explorar" aria-labelledby="como-funciona">
+      <div class="inicio-cabecera-seccion">
+        <p class="inicio-etiqueta">Cómo usar la web</p>
+        <h2 id="como-funciona">Todo organizado por secciones</h2>
+        <p>
+          Utiliza el menú superior para entrar directamente en lo que necesites.
+          Cada sección está pensada para que puedas filtrar la información y encontrar
+          rápidamente opciones que encajen con tu viaje.
+        </p>
+      </div>
+
+      <div class="inicio-accesos" aria-label="Secciones de Campings y Áreas">
+        <a href="campings.html"><span>🏕️</span><strong>Campings</strong><small>Busca alojamientos y consulta sus datos.</small></a>
+        <a href="areas.html?tipo=area"><span>🚐</span><strong>Áreas</strong><small>Encuentra áreas para autocaravanas.</small></a>
+        <a href="areas.html?tipo=parking"><span>🅿️</span><strong>Parkings</strong><small>Localiza aparcamientos útiles para el viaje.</small></a>
+        <a href="acampadas.html"><span>🥾</span><strong>Acampadas</strong><small>Descubre zonas de acampada controlada.</small></a>
+        <a href="lugares.html"><span>📍</span><strong>Lugares</strong><small>Ideas para visitar y disfrutar del entorno.</small></a>
+        <a href="talleres.html"><span>🛠️</span><strong>Talleres</strong><small>Ayuda para resolver imprevistos del vehículo.</small></a>
+        <a href="servicios.html"><span>🔧</span><strong>Servicios</strong><small>Servicios prácticos para viajar con comodidad.</small></a>
+        <a href="normativas.html"><span>📘</span><strong>Normativas</strong><small>Información útil antes de circular o pernoctar.</small></a>
+      </div>
+
+      <div class="inicio-pasos">
+        <article>
+          <span class="inicio-paso-numero">1</span>
+          <h3>Elige qué estás buscando</h3>
+          <p>
+            Campings, áreas, parkings, zonas de acampada, lugares para visitar,
+            talleres, servicios o normativas.
+          </p>
+        </article>
+
+        <article>
+          <span class="inicio-paso-numero">2</span>
+          <h3>Filtra los resultados</h3>
+          <p>
+            Busca por país, zona, localidad y las características disponibles
+            para encontrar opciones útiles para tu vehículo y tu forma de viajar.
+          </p>
+        </article>
+
+        <article>
+          <span class="inicio-paso-numero">3</span>
+          <h3>Consulta la ficha</h3>
+          <p>
+            Revisa ubicación, características, enlaces y la información disponible
+            antes de decidir dónde parar o qué visitar.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="inicio-seccion inicio-mapa" aria-labelledby="lista-mapa">
+      <div class="inicio-mapa-icono" aria-hidden="true">🗺️</div>
+
+      <div>
+        <p class="inicio-etiqueta">Lista y mapa</p>
+        <h2 id="lista-mapa">Dos formas de encontrar lo que buscas</h2>
+        <p>
+          Las secciones principales combinan búsquedas y filtros con vistas de mapa.
+          Puedes localizar opciones concretas en las listas o explorar visualmente
+          qué tienes alrededor de una zona o de tu destino.
+        </p>
+        <p class="inicio-nota">
+          Los mapas forman parte de la web y utilizan los mismos datos revisados que las listas.
+        </p>
+      </div>
+    </section>
+
+    <section class="inicio-seccion inicio-rutas" aria-labelledby="rutas-vacaciones">
+      <div class="inicio-rutas-contenido">
+        <p class="inicio-etiqueta">Planificador de vacaciones</p>
+        <h2 id="rutas-vacaciones">Rutas Campings & Áreas IA</h2>
+
+        <p>
+          Rutas Campings & Áreas IA no se limita a calcular una carretera entre dos puntos.
+          El planificador tiene en cuenta quién viaja, los días disponibles,
+          el tiempo máximo de conducción, los intereses, el ritmo del viaje,
+          dónde prefieres dormir y otros detalles personales.
+        </p>
+
+        <ul class="inicio-lista">
+          <li>Etapas y tiempos de conducción.</li>
+          <li>Visitas y actividades adaptadas al viaje.</li>
+          <li>Restaurantes y gastronomía.</li>
+          <li>Campings, áreas y opciones de pernocta.</li>
+          <li>Fotografías verificadas cuando están disponibles.</li>
+          <li>Guía completa preparada para consultar y guardar en PDF.</li>
+        </ul>
+
+        <div class="inicio-demo-caja">
+          <span class="inicio-demo-insignia">DEMO PREPARADA · SIN REGISTRO</span>
+          <h3>Comprueba cómo sería una guía Premium completa</h3>
+          <p>
+            Recorre un ejemplo real de 15 días y 14 noches por España, con 12 bases,
+            mapa, etapas, visitas, gastronomía, lugares de pernocta, fotografías y enlaces útiles.
+          </p>
+          <a class="inicio-boton inicio-boton-principal" href="demo-ruta.html">▶ Abrir la demo completa</a>
+          <small>La demo es estática: verla no genera consumo de IA ni crea una ruta nueva.</small>
+        </div>
+      </div>
+
+      <div class="inicio-rutas-visual" aria-hidden="true">
+        <span>🚐</span>
+        <div class="inicio-linea-ruta"></div>
+        <span>📍</span>
+        <div class="inicio-linea-ruta"></div>
+        <span>🏕️</span>
+      </div>
+    </section>
+
+    <section class="inicio-seccion inicio-planes" aria-labelledby="planes">
+      <div class="inicio-cabecera-seccion">
+        <p class="inicio-etiqueta">Gratis y Premium</p>
+        <h2 id="planes">Una versión gratuita y una versión Premium</h2>
+        <p>
+          Puedes utilizar gratuitamente el contenido básico de España o activar Premium para
+          acceder al contenido europeo y crear rutas personalizadas con Rutas Campings & Áreas IA.
+        </p>
+      </div>
+
+      <div class="inicio-comparativa">
+        <article class="inicio-plan">
+          <span class="inicio-plan-icono">🇪🇸</span>
+          <h3>Gratis</h3>
+        <p class="inicio-plan-subtitulo">España básica, siempre accesible</p>
+          <ul>
+            <li>Campings, áreas y parkings de España.</li>
+            <li>Búsqueda básica por listas y mapas.</li>
+            <li>Acceso a la demo pública de Rutas.</li>
+            <li>Sin generación de rutas personalizadas.</li>
+          </ul>
+        </article>
+
+        <article class="inicio-plan inicio-plan-premium">
+          <span class="inicio-plan-icono">⭐</span>
+          <h3>Premium</h3>
+          <p class="inicio-plan-subtitulo">Europa, rutas y guía avanzada</p>
+          <ul>
+            <li>Campings, áreas y parkings de los países europeos incluidos.</li>
+            <li>Funciones y filtros avanzados para preparar el viaje.</li>
+            <li>Rutas IA personalizadas según días, viajeros, vehículo e intereses.</li>
+            <li>Guía detallada con etapas, visitas, gastronomía y pernoctas.</li>
+            <li>Hasta 8 rutas personalizadas con IA cada mes.</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="inicio-precios-premium" aria-label="Precios Premium">
+        <div class="inicio-precio-card">
+          <span>Premium mensual</span>
+          <strong>9,99 € <small>/ mes</small></strong>
+          <p>Acceso Premium y hasta 8 rutas con IA al mes.</p>
+          <a class="inicio-boton inicio-boton-premium" href="rutas.html?plan=monthly">Elegir mensual</a>
+        </div>
+        <div class="inicio-precio-card inicio-precio-destacado">
+          <span>Premium anual</span>
+          <strong>59,99 € <small>/ año</small></strong>
+          <p>El mismo acceso Premium, con hasta 8 rutas con IA cada mes. Equivale a unos 5 € al mes.</p>
+          <a class="inicio-boton inicio-boton-premium" href="rutas.html?plan=yearly">Elegir anual</a>
+        </div>
+      </div>
+      <p class="inicio-aviso">Puedes ver la demo completa sin registrarte ni consumir ninguna ruta. La suscripción se gestiona de forma segura mediante Stripe.</p>
+    </section>
+
+    <section class="inicio-seccion inicio-final">
+      <p class="inicio-etiqueta">Campings & Áreas</p>
+      <h2>Una web para preparar el viaje y seguir utilizándola durante la ruta</h2>
+      <p>
+        Consulta dónde dormir, qué visitar, qué servicios tienes cerca y las
+        normativas que debes conocer. Todo desde el menú superior, sin accesos
+        duplicados en la página principal.
+      </p>
+    </section>
+
+  </main>
+
+  <script src="rutas-config.js?v=7"></script>
+  <script type="module" src="app/report-modal.js?v=1"></script>
+
+</body>
+
 </html>
