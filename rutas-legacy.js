@@ -119,6 +119,18 @@ function puntuacionFotoBase(p,nombre,ciudad){
   if(/crowd|crowded|people|tourists|menschenmenge|touristen/.test(titulo))score-=8;
   return score;
 }
+function creditoAutorFoto(valor){
+  let autor=textoPlanoHtml(valor);
+  autor=autor.replace(/^this photo was taken by\s+/i,"");
+  autor=autor.split(/\.\s*(?:please|if|do not|you may|contact)\b/i)[0].trim();
+  if(autor.length>100)autor=autor.slice(0,97).trim()+"…";
+  return autor;
+}
+
+function creditoFotoVisible(valor){
+  const limpio=textoPlanoHtml(valor);
+  return limpio.length>140?limpio.slice(0,137).trim()+"…":limpio;
+}
 function licenciaFotoPermitida(meta){
   const l=textoPlanoHtml(meta?.LicenseShortName?.value||meta?.UsageTerms?.value||"").toLowerCase();
   if(!l)return false;
@@ -190,7 +202,10 @@ async function buscarFotoAutomatica(nombre,ciudad,tipo="visit",terminosExtra=[])
     const foto={
       image_url:ii.thumburl||ii.url||"",
       source_page:ii.descriptionurl||"",
-      credit:[textoPlanoHtml(m.Artist?.value),textoPlanoHtml(m.LicenseShortName?.value)].filter(Boolean).join(" · ")||"Wikimedia Commons",
+      credit:[
+        creditoAutorFoto(m.Artist?.value),
+        textoPlanoHtml(m.LicenseShortName?.value)
+      ].filter(Boolean).join(" · ")||"Wikimedia Commons",
       score, selected_automatically:true
     };
     if(foto.image_url){fotoAutoCache.set(key,foto);guardarFotoAutoLocal();return foto;}
@@ -391,6 +406,7 @@ function buscarLugarVerificado(nombre,tipo=""){
 
 function limpiarTextoGuia(texto){
   return String(texto??"")
+    .replace(/\[([^\]]+)\]\(https?:\/\/[^)\s]+\)/gi,"$1")
     .replace(/\s+([,.;:!?])/g,"$1")
     .replace(/([.!?])\s*,\s*/g,"$1 ")
     .replace(/,\s*([.!?])/g,"$1")
@@ -541,7 +557,7 @@ function htmlFotoVerificada(nombre,ciudad,tipo,entityId=""){
     const fuente=sourcePage?`<a href="${escapar(sourcePage)}" target="_blank" rel="noopener">Fuente de la imagen</a>`:"";
     return `<figure class="guia-foto">
       <img src="${escapar(oficial.image_url)}" alt="${escapar(nombre)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('figure').remove()">
-      <figcaption>${escapar(nombre)}${oficial.credit?` · ${escapar(oficial.credit)}`:""}${fuente?` · ${fuente}`:""}</figcaption>
+      <figcaption>${escapar(nombre)}${oficial.credit?` · ${escapar(creditoFotoVisible(oficial.credit))}`:""}${fuente?` · ${fuente}`:""}</figcaption>
     </figure>`;
   }
 
@@ -556,7 +572,7 @@ function htmlFotoVerificada(nombre,ciudad,tipo,entityId=""){
     : "";
   return `<figure class="guia-foto">
     <img src="${escapar(imageUrl)}" alt="${escapar(pie)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('figure').remove()">
-    <figcaption>${escapar(pie)}${credit?` · ${escapar(credit)}`:""}${fuente?` · ${fuente}`:""}</figcaption>
+    <figcaption>${escapar(pie)}${credit?` · ${escapar(creditoFotoVisible(credit))}`:""}${fuente?` · ${fuente}`:""}</figcaption>
   </figure>`;
 }
 
