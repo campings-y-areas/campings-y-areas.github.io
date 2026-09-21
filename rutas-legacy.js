@@ -412,7 +412,7 @@ async function cargarInvestigacionRutaD1(place,country=""){
     const u=new URL(`${base}/research-cache`);
     u.searchParams.set("place",nombre);
     if(country)u.searchParams.set("country",country);
-    const r=await fetch(u.toString(),{method:"GET",cache:"no-store"});
+    const r=await fetch(u.toString(),{method:"GET",headers:headersWorker(),cache:"no-store"});
     if(!r.ok)return null;
     const d=await r.json();
     const research=(d?.ok&&d?.found&&d?.cache_valid&&d?.research)?d.research:null;
@@ -623,7 +623,7 @@ async function llamarWorker(ruta, cuerpo){
   if(!base)throw new Error("Falta configurar la dirección del Worker de Rutas.");
   const r=await fetch(`${base}${ruta}`,{
     method:"POST",
-    headers:{"Content-Type":"application/json"},
+    headers:headersWorker(),
     body:JSON.stringify(cuerpo)
   });
   let data=null;
@@ -817,7 +817,7 @@ async function consultarInvestigacionDestinoD1(lugar,datos){
   const u=new URL(`${base}/research-cache`);
   u.searchParams.set("place",place);
   if(country)u.searchParams.set("country",country);
-  const r=await fetch(u.toString(),{method:"GET",cache:"no-store"});
+  const r=await fetch(u.toString(),{method:"GET",headers:headersWorker(),cache:"no-store"});
   if(!r.ok)return null;
   const d=await r.json();
   if(!(d?.ok&&d?.found&&d?.cache_valid&&d?.research))return null;
@@ -838,7 +838,7 @@ async function investigarDestinoPendienteIA(place,country=""){
   u.searchParams.set("place",nombre);
   if(pais)u.searchParams.set("country",pais);
 
-  const r=await fetch(u.toString(),{method:"GET",cache:"no-store"});
+  const r=await fetch(u.toString(),{method:"GET",headers:headersWorker(),cache:"no-store"});
   let d=null;
   try{d=await r.json();}catch{}
   if(!r.ok){
@@ -994,7 +994,7 @@ async function consultarMediaOficial(nombre,ciudad,tipo,website,entityId=""){
     u.searchParams.set("name",nombre);
     u.searchParams.set("type",tipo);
     if(entityId)u.searchParams.set("entity_id",entityId);
-    const r=await fetch(u.toString(),{method:"GET",cache:"no-store"});
+    const r=await fetch(u.toString(),{method:"GET",headers:headersWorker(),cache:"no-store"});
     if(!r.ok)return null;
     const d=await r.json();
     if(d?.ok&&d?.image_url){
@@ -1020,7 +1020,7 @@ async function cargarMediaDestinoD1(destino,country=""){
     u.searchParams.set("place",destino);
     if(country)u.searchParams.set("country",country);
 
-    const r=await fetch(u.toString(),{method:"GET",cache:"no-store"});
+    const r=await fetch(u.toString(),{method:"GET",headers:headersWorker(),cache:"no-store"});
     if(!r.ok)return 0;
 
     const d=await r.json();
@@ -1060,7 +1060,7 @@ async function investigarMediaDestinoIA(place,country=""){
   try{
     const base=String(config.WORKER_BASE_URL||"").replace(/\/+$/,"" );
     if(!base||!place||!country)return null;
-    const r=await fetch(`${base}/research-media`,{
+    const r=await fetch(`${base}/research-media`,{\n    headers:headersWorker(),
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({place,country})
