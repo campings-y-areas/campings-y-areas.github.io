@@ -1225,15 +1225,14 @@ function rutaResumenVisible(datos={},fallback=""){
 }
 
 function conduccionDiaVisible(dia,stops=[]){
-  const stop=stopDeDiaGuia(dia,stops);
-  if(stop&&Number(stop.driving_minutes)>0){
-    const km=Number.isFinite(Number(stop.driving_km))
-      ? `${new Intl.NumberFormat("es-ES").format(Number(stop.driving_km))} km`
-      : "";
-    const tiempo=minutosTexto(Math.round(Number(stop.driving_minutes)||0));
-    return [km,tiempo].filter(Boolean).join(" · ");
-  }
-  return String(dia?.driving||"").trim();
+  const esConduccion=dia?.day_type==="conduccion_y_visita"||Number(dia?.driving_minutes)>0;
+  if(!esConduccion)return "";
+  const km=Number.isFinite(Number(dia?.driving_km))
+    ? `${new Intl.NumberFormat("es-ES").format(Number(dia.driving_km))} km`
+    : "";
+  const tiempo=minutosTexto(Math.round(Number(dia?.driving_minutes)||0));
+  const real=[km,tiempo].filter(Boolean).join(" · ");
+  return real||String(dia?.driving||"").trim();
 }
 
 function escaparRegExpTexto(v){
@@ -1256,8 +1255,7 @@ function corregirTextoRutaVisible(texto,guide,datos={},stops=[]){
   }
   const dias=Array.isArray(guide?.days)?guide.days:[];
   dias.forEach(d=>{
-    const stop=stopDeDiaGuia(d,stops);
-    const realKm=Math.round(Number(stop?.driving_km)||0);
+    const realKm=Math.round(Number(d?.driving_km)||0);
     const generado=String(d?.driving||"");
     const m=generado.match(/(\d+(?:[.,]\d+)?)\s*(?:km|kil[oó]metros?)/i);
     if(realKm>0&&m){
@@ -1273,8 +1271,10 @@ function corregirTextoRutaVisible(texto,guide,datos={},stops=[]){
 
 function tituloDiaVisible(dia,guide,datos={},stops=[]){
   const original=corregirTextoRutaVisible(dia?.heading||"Etapa",guide,datos,stops);
+  const esConduccion=dia?.day_type==="conduccion_y_visita"||Number(dia?.driving_minutes)>0;
+  if(!esConduccion)return original;
   const stop=stopDeDiaGuia(dia,stops);
-  if(!stop||Number(stop.driving_minutes)<=0)return original;
+  if(!stop)return original;
   const lista=Array.isArray(stops)?stops:[];
   const idx=lista.indexOf(stop);
   const origen=idx>0 ? nombrePortadaRuta(lista[idx-1]?.place,"") : nombrePortadaRuta(datos.origen,"");
