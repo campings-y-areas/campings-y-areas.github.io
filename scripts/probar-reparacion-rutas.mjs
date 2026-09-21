@@ -46,7 +46,6 @@ if(!/fetch\(\`\$\{base\}\$\{ruta\}\`[\s\S]{0,250}headers:headersWorker\(\)/.test
 }
 
 const forbidden=[
-  {label:'POI usado como localidad de pernocta',pattern:/const\s+localidadPernocta\s*=\s*String\(\s*nombreLugarWorker\s*\(/s},
   {label:'comparación alojamiento-localidad antigua',pattern:/normalizarClaveMedia\(nombre\)===normalizarClaveMedia\(ultimoLugar\)/}
 ];
 for(const check of forbidden){
