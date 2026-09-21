@@ -661,7 +661,7 @@ function nombreLugarWorker(lugar,fallback=""){
   // Esto solo afecta a los nombres enviados al Worker; la interfaz sigue en español.
   const otros=lugar?.other_names||{};
   const raw=lugar?.datasource?.raw||{};
-  return otros.name||raw.name||otros["name:en"]||raw["name:en"]||lugar?.city||lugar?.town||lugar?.village||lugar?.municipality||lugar?.name||fallback||lugar?.formatted||"";
+  return otros.name||raw.name||otros["name:en"]||raw["name:en"]||lugar?.name||lugar?.village||lugar?.town||lugar?.city||lugar?.municipality||fallback||lugar?.formatted||"";
 }
 
 function ritmoWorker(valor){
@@ -1221,19 +1221,78 @@ function nombrePortadaRuta(valor,fallback){
 function rutaResumenVisible(datos={},fallback=""){
   const origen=nombrePortadaRuta(datos.origen,"");
   const destino=nombrePortadaRuta(datos.destinoPrincipal||datos.destinoFinal,"");
-  return origen&&destino?\`${origen} → ${destino}\`:String(fallback||"");
+  return origen&&destino?`${origen} → ${destino}`:String(fallback||"");
 }
 
 function conduccionDiaVisible(dia,stops=[]){
   const stop=stopDeDiaGuia(dia,stops);
   if(stop&&Number(stop.driving_minutes)>0){
     const km=Number.isFinite(Number(stop.driving_km))
-      ? \`${new Intl.NumberFormat("es-ES").format(Number(stop.driving_km))} km\`
+      ? `${new Intl.NumberFormat("es-ES").format(Number(stop.driving_km))} km`
       : "";
     const tiempo=minutosTexto(Math.round(Number(stop.driving_minutes)||0));
     return [km,tiempo].filter(Boolean).join(" · ");
   }
   return String(dia?.driving||"").trim();
+}
+
+function escaparRegExpTexto(v){
+  return String(v||"").replace(/[.*+?^${}()|[\]\\]/g,"\\function conduccionDiaVisible(dia,stops=[]){
+  const stop=stopDeDiaGuia(dia,stops);
+  if(stop&&Number(stop.driving_minutes)>0){
+    const km=Number.isFinite(Number(stop.driving_km))
+      ? `${new Intl.NumberFormat("es-ES").format(Number(stop.driving_km))} km`
+      : "";
+    const tiempo=minutosTexto(Math.round(Number(stop.driving_minutes)||0));
+    return [km,tiempo].filter(Boolean).join(" · ");
+  }
+  return String(dia?.driving||"").trim();
+}");
+}
+
+function origenDeclaradoGuia(guide){
+  const ruta=String(guide?.trip_summary?.route||"").trim();
+  const partes=ruta.split(/→|->|—>/).map(x=>x.trim()).filter(Boolean);
+  return partes.length>=2?partes[0]:"";
+}
+
+function corregirTextoRutaVisible(texto,guide,datos={},stops=[]){
+  let out=String(texto||"");
+  if(!out)return out;
+  const real=nombrePortadaRuta(datos.origen,"");
+  const declarado=origenDeclaradoGuia(guide);
+  if(real&&declarado&&normalizarClaveMedia(real)!==normalizarClaveMedia(declarado)){
+    out=out.replace(new RegExp(escaparRegExpTexto(declarado),"gi"),real);
+  }
+  const dias=Array.isArray(guide?.days)?guide.days:[];
+  dias.forEach(d=>{
+    const stop=stopDeDiaGuia(d,stops);
+    const realKm=Math.round(Number(stop?.driving_km)||0);
+    const generado=String(d?.driving||"");
+    const m=generado.match(/(\d+(?:[.,]\d+)?)\s*(?:km|kil[oó]metros?)/i);
+    if(realKm>0&&m){
+      const oldKm=Math.round(Number(String(m[1]).replace(",","."))||0);
+      if(oldKm>0&&oldKm!==realKm){
+        out=out.replace(new RegExp("\\b"+oldKm+"\\s*km\\b","gi"),realKm+" km");
+        out=out.replace(new RegExp("\\b"+oldKm+"\\s*kil[oó]metros?\\b","gi"),realKm+" kilómetros");
+      }
+    }
+  });
+  return out;
+}
+
+function tituloDiaVisible(dia,guide,datos={},stops=[]){
+  const original=corregirTextoRutaVisible(dia?.heading||"Etapa",guide,datos,stops);
+  const stop=stopDeDiaGuia(dia,stops);
+  if(!stop||Number(stop.driving_minutes)<=0)return original;
+  const lista=Array.isArray(stops)?stops:[];
+  const idx=lista.indexOf(stop);
+  const origen=idx>0 ? nombrePortadaRuta(lista[idx-1]?.place,"") : nombrePortadaRuta(datos.origen,"");
+  const destino=stop.is_final ? nombrePortadaRuta(datos.destinoPrincipal||datos.destinoFinal,stop.place||"") : nombrePortadaRuta(stop.place,"");
+  if(!origen||!destino)return original;
+  const colon=original.indexOf(":");
+  const sufijo=colon>=0?original.slice(colon+1).trim():"";
+  return `Día ${dia?.day||idx+1} · ${origen} → ${destino}${sufijo?`: ${sufijo}`:""}`;
 }
 
 function htmlPortadaRuta(datos={}){
@@ -1309,10 +1368,10 @@ function htmlGuiaIA(guide,datos={},stops=[]){
     <header class="guia-portada">
       <span>GUÍA PERSONALIZADA DE VIAJE</span>
       <h2>${escapar(guide.title||"Tu ruta")}</h2>
-      ${guide.subtitle?`<p>${escapar(guide.subtitle)}</p>`:""}
+      ${guide.subtitle?`<p>${escapar(corregirTextoRutaVisible(guide.subtitle,guide,datos,stops))}</p>`:""}
     </header>`;
 
-  if(guide.introduction)h+=`<section class="guia-seccion-editorial"><p>${escapar(limpiarTextoGuia(guide.introduction))}</p></section>`;
+  if(guide.introduction)h+=`<section class="guia-seccion-editorial"><p>${escapar(limpiarTextoGuia(corregirTextoRutaVisible(guide.introduction,guide,datos,stops)))}</p></section>`;
 
   const resumen=guide.trip_summary||{};
   if(Object.keys(resumen).length){
@@ -1338,12 +1397,12 @@ function htmlGuiaIA(guide,datos={},stops=[]){
       <div class="guia-dia-titulo">
         <span>DÍA ${escapar(d.day||"")}${fechaTexto}</span>
         ${badgeTipo}
-        <h2>${escapar(d.heading||"Etapa")}</h2>
+        <h2>${escapar(tituloDiaVisible(d,guide,datos,stops))}</h2>
         ${conduccionDiaVisible(d,stops)?`<p>🚐 ${escapar(conduccionDiaVisible(d,stops))}</p>`:""}
       </div>
       ${htmlGoogleMapsDia(d,stops)}`;
 
-    if(d.opening_narrative)h+=`<div class="guia-narrativa"><p>${escapar(limpiarTextoGuia(d.opening_narrative))}</p></div>`;
+    if(d.opening_narrative)h+=`<div class="guia-narrativa"><p>${escapar(limpiarTextoGuia(corregirTextoRutaVisible(d.opening_narrative,guide,datos,stops)))}</p></div>`;
     if(d.arrival_strategy)h+=`<div class="guia-narrativa"><p><strong>Al llegar:</strong> ${escapar(limpiarTextoGuia(d.arrival_strategy))}</p></div>`;
     if(d.recommended_visit_time)h+=`<div class="guia-narrativa"><p><strong>Tiempo recomendado:</strong> ${escapar(limpiarTextoGuia(d.recommended_visit_time))}</p></div>`;
     if(d.pace_advice)h+=`<div class="guia-narrativa"><p><strong>Ritmo:</strong> ${escapar(limpiarTextoGuia(d.pace_advice))}</p></div>`;
