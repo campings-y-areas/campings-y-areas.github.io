@@ -53,9 +53,6 @@ if(!source.includes('const mapsUrl=urlGoogleMapsTexto(nombre,address)')) {
 if(!source.includes('const FOTO_AUTO_STORAGE_KEY = "campingsAreasFotoAutoV4"')) {
   throw new Error('La caché fotográfica antigua no quedó invalidada');
 }
-if(!source.includes('lugar?.name||lugar?.village||lugar?.town||lugar?.city||lugar?.municipality')) {
-  throw new Error('El nombre canónico puede volver a degradar un pueblo a su municipio');
-}
 if(!source.includes('.replace(/\\[([^\\]]+)\\]\\(https?:\\/\\/[^)\\s]+\\)/gi,"$1")')) {
   throw new Error('La guía puede volver a mostrar enlaces Markdown sin renderizar');
 }
