@@ -34,7 +34,7 @@ const mediaOficialCache = new Map();
 const mediaPorEntityIdCache = new Map();
 
 // ---------- Selector fotográfico automático (sin OpenAI) ----------
-const FOTO_AUTO_STORAGE_KEY = "campingsAreasFotoAutoV3";
+const FOTO_AUTO_STORAGE_KEY = "campingsAreasFotoAutoV4";
 const fotoAutoCache = new Map();
 
 function cargarFotoAutoLocal(){
@@ -90,7 +90,7 @@ function consultasFotoVisita(nombre,ciudad,tipo="visit",terminosExtra=[]){
   (Array.isArray(terminosExtra)?terminosExtra:[]).forEach(add);
   partes.forEach(x=>add(`${x} ${ciudadTxt}`));
   add(`${original} ${ciudadTxt}`);
-  add(original);
+  if(!ciudadTxt)add(original);
   return q.slice(0,8);
 }
 function bonusIconicoFoto(texto){
@@ -129,6 +129,10 @@ function puntuacionFotoFinal(p,nombre,ciudad,tipo="visit"){
   let score=puntuacionFotoBase(p,nombre,ciudad);
   const texto=normalizarClaveMedia([p.title,textoPlanoHtml(m.ImageDescription?.value),textoPlanoHtml(m.Categories?.value),textoPlanoHtml(m.Assessments?.value)].join(" "));
   const nt=tokensFoto(nombre), ct=tokensFoto(ciudad);
+  // Para visitas con ciudad conocida exigimos que la propia ciudad aparezca en
+  // título/metadatos de Commons. Es preferible no mostrar foto a confundir un
+  // monumento homónimo de otra ciudad.
+  if(tipo==="visit"&&ct.length&&!ct.some(t=>texto.includes(t)))return -999;
   const coincidenciasNombre=nt.filter(t=>texto.includes(t)).length;
   nt.forEach(t=>{if(texto.includes(t))score+=5;});
   ct.forEach(t=>{if(texto.includes(t))score+=3;});
@@ -477,9 +481,12 @@ function htmlDatosLugar(nombre,tipo="",webGuia="",ciudad="",country="",entityId=
   const address=String(r?.address||l?.address||"").trim();
   if(address)h+=`<p><strong>📍 Dirección:</strong> ${escapar(address)}</p>`;
   const enlaces=[];
-  const mapsUrl=String(entityId||"").trim()
-    ? urlGoogleMapsEntidad(entityId,nombre,tipo,ciudad,country)
-    : (l?.maps_url||urlGoogleMapsTexto(nombre,address));
+  // Para enlaces de lugares concretos usamos nombre + dirección verificada.
+  // Las coordenadas generadas durante investigación sirven como dato auxiliar,
+  // pero no deben poder enviar todos los botones al mismo punto si vienen mal.
+  const mapsUrl=urlGoogleMapsTexto(nombre,address)
+    ||l?.maps_url
+    ||(String(entityId||"").trim()?urlGoogleMapsEntidad(entityId,nombre,tipo,ciudad,country):"");
   if(mapsUrl)enlaces.push(htmlEnlaceGuia("📍 Abrir en Google Maps",mapsUrl));
   const web=webOficialCorregida(nombre,webGuia||r?.website||l?.website||"");
   if(web)enlaces.push(htmlEnlaceGuia(tipo==="visit"?"🌐 Información oficial":"🌐 Web oficial",web));
@@ -1211,6 +1218,24 @@ function nombrePortadaRuta(valor,fallback){
   return limpio.split(",")[0].trim()||fallback;
 }
 
+function rutaResumenVisible(datos={},fallback=""){
+  const origen=nombrePortadaRuta(datos.origen,"");
+  const destino=nombrePortadaRuta(datos.destinoPrincipal||datos.destinoFinal,"");
+  return origen&&destino?\`${origen} → ${destino}\`:String(fallback||"");
+}
+
+function conduccionDiaVisible(dia,stops=[]){
+  const stop=stopDeDiaGuia(dia,stops);
+  if(stop&&Number(stop.driving_minutes)>0){
+    const km=Number.isFinite(Number(stop.driving_km))
+      ? \`${new Intl.NumberFormat("es-ES").format(Number(stop.driving_km))} km\`
+      : "";
+    const tiempo=minutosTexto(Math.round(Number(stop.driving_minutes)||0));
+    return [km,tiempo].filter(Boolean).join(" · ");
+  }
+  return String(dia?.driving||"").trim();
+}
+
 function htmlPortadaRuta(datos={}){
   const origen=escapar(nombrePortadaRuta(datos.origen,"Origen"));
   const destino=escapar(nombrePortadaRuta(datos.destinoPrincipal,"Destino"));
@@ -1292,7 +1317,7 @@ function htmlGuiaIA(guide,datos={},stops=[]){
   const resumen=guide.trip_summary||{};
   if(Object.keys(resumen).length){
     h+=`<section class="guia-seccion-editorial"><h3>🧭 Resumen del viaje</h3>
-      ${resumen.route?`<p><strong>Ruta:</strong> ${escapar(resumen.route)}</p>`:""}
+      ${resumen.route?`<p><strong>Ruta:</strong> ${escapar(rutaResumenVisible(datos,resumen.route))}</p>`:""}
       ${resumen.travel_style?`<p><strong>Estilo:</strong> ${escapar(resumen.travel_style)}</p>`:""}
       ${resumen.key_advice?`<p><strong>Consejo principal:</strong> ${escapar(resumen.key_advice)}</p>`:""}
     </section>`;
@@ -1314,7 +1339,7 @@ function htmlGuiaIA(guide,datos={},stops=[]){
         <span>DÍA ${escapar(d.day||"")}${fechaTexto}</span>
         ${badgeTipo}
         <h2>${escapar(d.heading||"Etapa")}</h2>
-        ${d.driving?`<p>🚐 ${escapar(d.driving)}</p>`:""}
+        ${conduccionDiaVisible(d,stops)?`<p>🚐 ${escapar(conduccionDiaVisible(d,stops))}</p>`:""}
       </div>
       ${htmlGoogleMapsDia(d,stops)}`;
 
