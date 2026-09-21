@@ -87,3 +87,15 @@ Sólo terminado cuando: comprobaciones gratuitas limpias + Worker/Frontend/Premi
 - No se realizó ninguna llamada OpenAI ni prueba real de ruta durante esta auditoría.
 - Pendiente antes de la prueba real: verificar en Cloudflare los valores reales de flags de gasto/pipeline/media/test, el binding D1 y el Service Binding PREMIUM_AUTH; verificar contrato del Premium Worker y después realizar una única prueba real controlada.
 - La comprobación D1 debe ser general para coherencia de destinos y países; Trier se mantiene únicamente como el caso observado que descubrió el problema anterior, no como objetivo especial de la reparación.
+
+
+## Actualización 2026-09-21 — Cloudflare y cuota Premium verificados
+- Configuración real del Worker histórico rutas-campings-areas comprobada en Cloudflare: OPENAI_SPEND_ENABLED=false, OPENAI_ROUTE_PIPELINE_ENABLED=false y OPENAI_MEDIA_ENABLED=false durante el diagnóstico; OPENAI_API_KEY permanece como secreto cifrado.
+- Bindings reales comprobados: DB -> rutas-campings-areas-dev y PREMIUM_AUTH -> campings-areas-premium.
+- Se inspeccionó directamente el Worker campings-areas-premium actualmente activo. Implementa GET /route-usage y POST /route-usage/consume.
+- consumeRouteUsage valida route_id, incorpora billing_period al identificador almacenado y consulta previamente user_id + route_id, por lo que repetir la misma ruta completada dentro del mismo periodo devuelve duplicate=true sin un segundo consumo.
+- El límite mensual se aplica con un INSERT OR IGNORE condicionado por COUNT(*) < ROUTE_MONTHLY_LIMIT, evitando superar el límite incluso con consumos concurrentes.
+- Tras el INSERT vuelve a comprobar el route_id; si no se insertó por límite devuelve HTTP 429, route_limit_reached, remaining=0. En éxito devuelve used, limit, remaining y billing_period.
+- La interfaz/mensaje confirma un límite de 8 rutas IA al mes.
+- No se modificó ni desplegó el Worker Premium durante esta inspección.
+- Siguiente paso: determinar y activar únicamente los flags necesarios para una sola prueba real controlada; mantener multimedia desactivado si no es necesario para validar la guía textual, y comprobar consumo exactamente una vez.
