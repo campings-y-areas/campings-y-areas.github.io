@@ -1844,8 +1844,9 @@ async function elegirFinJornadaRealV3({tramoRestante,puntoInicioEtapa,requestCoo
         const progreso=remainingMinutes-restoMin;
         if(progreso<Math.max(20,idaMin*0.30))continue;
         const nombre=nombreAlojamiento(cand);
+        const localidadCand=localidadAlojamiento(cand);
         let score=(Number(cand._score)||0)+Math.max(0,32-Math.abs(idaMin-corte.target)*0.20)+Math.min(25,progreso*0.05);
-        if(ultimoLugar&&normalizarClaveMedia(nombre)===normalizarClaveMedia(ultimoLugar))score-=100;
+        if(ultimoLugar&&localidadCand&&normalizarClaveMedia(localidadCand)===normalizarClaveMedia(ultimoLugar))score-=100;
         opciones.push({cand,ida,idaMin,restoMin,score});
       }catch(e){}
     }
