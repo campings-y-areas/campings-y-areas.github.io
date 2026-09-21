@@ -615,6 +615,10 @@ function formatoKm(m){ return new Intl.NumberFormat("es-ES",{maximumFractionDigi
 // v49: blindaje de la demo editorial. Mientras la demo está en curso,
 // ninguna ruta capaz de planificar, redactar o investigar con OpenAI puede ejecutarse.
 let demoEnCurso=false;
+function headersWorker(){
+  const auth=typeof window.CAMPINGS_PREMIUM_AUTH_HEADERS==="function" ? window.CAMPINGS_PREMIUM_AUTH_HEADERS() : {};
+  return {"Content-Type":"application/json",...auth};
+}
 async function llamarWorker(ruta, cuerpo){
   if(demoEnCurso && ["/plan-route","/write-route","/research-destination","/research-media"].includes(String(ruta||""))){
     throw new Error("La demo editorial no puede llamar a servicios IA de pago.");
