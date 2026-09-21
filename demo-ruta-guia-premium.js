@@ -1,4 +1,4 @@
-(()=>{"use strict";if(new URLSearchParams(location.search).get("pruebas")!=="manuel")return;
+(()=>{"use strict";
 const T=t=>String(t||"").replace(/^⭐\s*/,"").replace(/^(Recomendado|Base recomendada)\s*·\s*/i,"").trim();
 const X={
 "Basílica de la Sagrada Família":"Hay un momento especialmente revelador al rodear el templo: cada fachada cambia el tono del relato. La del Nacimiento es exuberante, casi vegetal; la de la Pasión se vuelve dura y angulosa. Esa oposición ayuda a entender que Gaudí no diseñaba una simple envolvente, sino una narración de piedra. Al entrar, busca el efecto de bosque de las columnas y deja que la luz de las vidrieras haga el resto. No tengas prisa por sacar el teléfono: primero mira. Es una de esas obras que ganan cuando uno acepta sentirse pequeño dentro de ellas.",
