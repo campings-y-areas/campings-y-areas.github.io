@@ -397,6 +397,21 @@ function limpiarTextoGuia(texto){
 
 const investigacionRutaD1Cache=new Map();
 
+function headersWorker(incluirJson=false){
+  let auth={};
+  try{
+    const helper=window.CAMPINGS_PREMIUM_AUTH_HEADERS;
+    if(typeof helper==="function")auth=helper()||{};
+    else{
+      // El módulo Premium es deferido y puede terminar de cargar después de este
+      // script clásico. Este fallback conserva la autenticación durante esa ventana.
+      const token=String(localStorage.getItem("campings_areas_premium_session")||"").trim();
+      if(token)auth.Authorization=`Bearer ${token}`;
+    }
+  }catch{}
+  return incluirJson?{"Content-Type":"application/json",...auth}:auth;
+}
+
 function claveInvestigacionRuta(place,country=""){
   return `${normalizarClaveMedia(place)}|${normalizarClaveMedia(country)}`;
 }
@@ -412,7 +427,7 @@ async function cargarInvestigacionRutaD1(place,country=""){
     const u=new URL(`${base}/research-cache`);
     u.searchParams.set("place",nombre);
     if(country)u.searchParams.set("country",country);
-    const r=await fetch(u.toString(),{method:"GET",cache:"no-store"});
+    const r=await fetch(u.toString(),{method:"GET",headers:headersWorker(),cache:"no-store"});
     if(!r.ok)return null;
     const d=await r.json();
     const research=(d?.ok&&d?.found&&d?.cache_valid&&d?.research)?d.research:null;
@@ -621,14 +636,9 @@ async function llamarWorker(ruta, cuerpo){
   }
   const base=String(config.WORKER_BASE_URL||"").replace(/\/+$/,"");
   if(!base)throw new Error("Falta configurar la dirección del Worker de Rutas.");
-  let premiumHeaders={};
-  try{
-    const token=String(localStorage.getItem("campings_areas_premium_session")||"").trim();
-    if(token)premiumHeaders.Authorization=`Bearer ${token}`;
-  }catch{}
   const r=await fetch(`${base}${ruta}`,{
     method:"POST",
-    headers:{"Content-Type":"application/json",...premiumHeaders},
+    headers:headersWorker(true),
     body:JSON.stringify(cuerpo)
   });
   let data=null;
@@ -822,7 +832,7 @@ async function consultarInvestigacionDestinoD1(lugar,datos){
   const u=new URL(`${base}/research-cache`);
   u.searchParams.set("place",place);
   if(country)u.searchParams.set("country",country);
-  const r=await fetch(u.toString(),{method:"GET",cache:"no-store"});
+  const r=await fetch(u.toString(),{method:"GET",headers:headersWorker(),cache:"no-store"});
   if(!r.ok)return null;
   const d=await r.json();
   if(!(d?.ok&&d?.found&&d?.cache_valid&&d?.research))return null;
@@ -843,7 +853,7 @@ async function investigarDestinoPendienteIA(place,country=""){
   u.searchParams.set("place",nombre);
   if(pais)u.searchParams.set("country",pais);
 
-  const r=await fetch(u.toString(),{method:"GET",cache:"no-store"});
+  const r=await fetch(u.toString(),{method:"GET",headers:headersWorker(),cache:"no-store"});
   let d=null;
   try{d=await r.json();}catch{}
   if(!r.ok){
@@ -999,7 +1009,7 @@ async function consultarMediaOficial(nombre,ciudad,tipo,website,entityId=""){
     u.searchParams.set("name",nombre);
     u.searchParams.set("type",tipo);
     if(entityId)u.searchParams.set("entity_id",entityId);
-    const r=await fetch(u.toString(),{method:"GET",cache:"no-store"});
+    const r=await fetch(u.toString(),{method:"GET",headers:headersWorker(),cache:"no-store"});
     if(!r.ok)return null;
     const d=await r.json();
     if(d?.ok&&d?.image_url){
@@ -1025,7 +1035,7 @@ async function cargarMediaDestinoD1(destino,country=""){
     u.searchParams.set("place",destino);
     if(country)u.searchParams.set("country",country);
 
-    const r=await fetch(u.toString(),{method:"GET",cache:"no-store"});
+    const r=await fetch(u.toString(),{method:"GET",headers:headersWorker(),cache:"no-store"});
     if(!r.ok)return 0;
 
     const d=await r.json();
@@ -1067,7 +1077,7 @@ async function investigarMediaDestinoIA(place,country=""){
     if(!base||!place||!country)return null;
     const r=await fetch(`${base}/research-media`,{
       method:"POST",
-      headers:{"Content-Type":"application/json"},
+      headers:headersWorker(true),
       body:JSON.stringify({place,country})
     });
     const d=await r.json().catch(()=>null);
@@ -1866,7 +1876,7 @@ let revPernocta=null;
 try{revPernocta=await reverseLugar(coordPernocta);}catch(e){}
 
 const localidadPernocta=String(
-  nombreLugarWorker(revPernocta,localidadAlojamiento(cand))||""
+  (revPernocta?nombreLocalidad(revPernocta):localidadAlojamiento(cand))||""
 ).trim();
 
 if(!localidadPernocta){
