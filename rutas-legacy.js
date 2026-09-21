@@ -34,7 +34,7 @@ const mediaOficialCache = new Map();
 const mediaPorEntityIdCache = new Map();
 
 // ---------- Selector fotográfico automático (sin OpenAI) ----------
-const FOTO_AUTO_STORAGE_KEY = "campingsAreasFotoAutoV3";
+const FOTO_AUTO_STORAGE_KEY = "campingsAreasFotoAutoV4";
 const fotoAutoCache = new Map();
 
 function cargarFotoAutoLocal(){
@@ -90,7 +90,7 @@ function consultasFotoVisita(nombre,ciudad,tipo="visit",terminosExtra=[]){
   (Array.isArray(terminosExtra)?terminosExtra:[]).forEach(add);
   partes.forEach(x=>add(`${x} ${ciudadTxt}`));
   add(`${original} ${ciudadTxt}`);
-  add(original);
+  if(!ciudadTxt)add(original);
   return q.slice(0,8);
 }
 function bonusIconicoFoto(texto){
@@ -119,6 +119,18 @@ function puntuacionFotoBase(p,nombre,ciudad){
   if(/crowd|crowded|people|tourists|menschenmenge|touristen/.test(titulo))score-=8;
   return score;
 }
+function creditoAutorFoto(valor){
+  let autor=textoPlanoHtml(valor);
+  autor=autor.replace(/^this photo was taken by\s+/i,"");
+  autor=autor.split(/\.\s*(?:please|if|do not|you may|contact)\b/i)[0].trim();
+  if(autor.length>100)autor=autor.slice(0,97).trim()+"…";
+  return autor;
+}
+
+function creditoFotoVisible(valor){
+  const limpio=textoPlanoHtml(valor);
+  return limpio.length>140?limpio.slice(0,137).trim()+"…":limpio;
+}
 function licenciaFotoPermitida(meta){
   const l=textoPlanoHtml(meta?.LicenseShortName?.value||meta?.UsageTerms?.value||"").toLowerCase();
   if(!l)return false;
@@ -129,6 +141,10 @@ function puntuacionFotoFinal(p,nombre,ciudad,tipo="visit"){
   let score=puntuacionFotoBase(p,nombre,ciudad);
   const texto=normalizarClaveMedia([p.title,textoPlanoHtml(m.ImageDescription?.value),textoPlanoHtml(m.Categories?.value),textoPlanoHtml(m.Assessments?.value)].join(" "));
   const nt=tokensFoto(nombre), ct=tokensFoto(ciudad);
+  // Para visitas con ciudad conocida exigimos que la propia ciudad aparezca en
+  // título/metadatos de Commons. Es preferible no mostrar foto a confundir un
+  // monumento homónimo de otra ciudad.
+  if(tipo==="visit"&&ct.length&&!ct.some(t=>texto.includes(t)))return -999;
   const coincidenciasNombre=nt.filter(t=>texto.includes(t)).length;
   nt.forEach(t=>{if(texto.includes(t))score+=5;});
   ct.forEach(t=>{if(texto.includes(t))score+=3;});
@@ -186,7 +202,10 @@ async function buscarFotoAutomatica(nombre,ciudad,tipo="visit",terminosExtra=[])
     const foto={
       image_url:ii.thumburl||ii.url||"",
       source_page:ii.descriptionurl||"",
-      credit:[textoPlanoHtml(m.Artist?.value),textoPlanoHtml(m.LicenseShortName?.value)].filter(Boolean).join(" · ")||"Wikimedia Commons",
+      credit:[
+        creditoAutorFoto(m.Artist?.value),
+        textoPlanoHtml(m.LicenseShortName?.value)
+      ].filter(Boolean).join(" · ")||"Wikimedia Commons",
       score, selected_automatically:true
     };
     if(foto.image_url){fotoAutoCache.set(key,foto);guardarFotoAutoLocal();return foto;}
@@ -387,6 +406,7 @@ function buscarLugarVerificado(nombre,tipo=""){
 
 function limpiarTextoGuia(texto){
   return String(texto??"")
+    .replace(/\[([^\]]+)\]\(https?:\/\/[^)\s]+\)/gi,"$1")
     .replace(/\s+([,.;:!?])/g,"$1")
     .replace(/([.!?])\s*,\s*/g,"$1 ")
     .replace(/,\s*([.!?])/g,"$1")
@@ -477,9 +497,12 @@ function htmlDatosLugar(nombre,tipo="",webGuia="",ciudad="",country="",entityId=
   const address=String(r?.address||l?.address||"").trim();
   if(address)h+=`<p><strong>📍 Dirección:</strong> ${escapar(address)}</p>`;
   const enlaces=[];
-  const mapsUrl=String(entityId||"").trim()
-    ? urlGoogleMapsEntidad(entityId,nombre,tipo,ciudad,country)
-    : (l?.maps_url||urlGoogleMapsTexto(nombre,address));
+  // Para enlaces de lugares concretos usamos nombre + dirección verificada.
+  // Las coordenadas generadas durante investigación sirven como dato auxiliar,
+  // pero no deben poder enviar todos los botones al mismo punto si vienen mal.
+  const mapsUrl=urlGoogleMapsTexto(nombre,address)
+    ||l?.maps_url
+    ||(String(entityId||"").trim()?urlGoogleMapsEntidad(entityId,nombre,tipo,ciudad,country):"");
   if(mapsUrl)enlaces.push(htmlEnlaceGuia("📍 Abrir en Google Maps",mapsUrl));
   const web=webOficialCorregida(nombre,webGuia||r?.website||l?.website||"");
   if(web)enlaces.push(htmlEnlaceGuia(tipo==="visit"?"🌐 Información oficial":"🌐 Web oficial",web));
@@ -534,7 +557,7 @@ function htmlFotoVerificada(nombre,ciudad,tipo,entityId=""){
     const fuente=sourcePage?`<a href="${escapar(sourcePage)}" target="_blank" rel="noopener">Fuente de la imagen</a>`:"";
     return `<figure class="guia-foto">
       <img src="${escapar(oficial.image_url)}" alt="${escapar(nombre)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('figure').remove()">
-      <figcaption>${escapar(nombre)}${oficial.credit?` · ${escapar(oficial.credit)}`:""}${fuente?` · ${fuente}`:""}</figcaption>
+      <figcaption>${escapar(nombre)}${oficial.credit?` · ${escapar(creditoFotoVisible(oficial.credit))}`:""}${fuente?` · ${fuente}`:""}</figcaption>
     </figure>`;
   }
 
@@ -549,7 +572,7 @@ function htmlFotoVerificada(nombre,ciudad,tipo,entityId=""){
     : "";
   return `<figure class="guia-foto">
     <img src="${escapar(imageUrl)}" alt="${escapar(pie)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('figure').remove()">
-    <figcaption>${escapar(pie)}${credit?` · ${escapar(credit)}`:""}${fuente?` · ${fuente}`:""}</figcaption>
+    <figcaption>${escapar(pie)}${credit?` · ${escapar(creditoFotoVisible(credit))}`:""}${fuente?` · ${fuente}`:""}</figcaption>
   </figure>`;
 }
 
@@ -1211,6 +1234,73 @@ function nombrePortadaRuta(valor,fallback){
   return limpio.split(",")[0].trim()||fallback;
 }
 
+function rutaResumenVisible(datos={},fallback=""){
+  const origen=nombrePortadaRuta(datos.origen,"");
+  const destino=nombrePortadaRuta(datos.destinoPrincipal||datos.destinoFinal,"");
+  return origen&&destino?`${origen} → ${destino}`:String(fallback||"");
+}
+
+function conduccionDiaVisible(dia,stops=[]){
+  const esConduccion=dia?.day_type==="conduccion_y_visita"||Number(dia?.driving_minutes)>0;
+  if(!esConduccion)return "";
+  const km=Number.isFinite(Number(dia?.driving_km))
+    ? `${new Intl.NumberFormat("es-ES").format(Number(dia.driving_km))} km`
+    : "";
+  const tiempo=minutosTexto(Math.round(Number(dia?.driving_minutes)||0));
+  const real=[km,tiempo].filter(Boolean).join(" · ");
+  return real||String(dia?.driving||"").trim();
+}
+
+function escaparRegExpTexto(v){
+  return String(v||"").replace(/[.*+?^${}()|[\]\\]/g,m=>`\\${m}`);
+}
+
+function origenDeclaradoGuia(guide){
+  const ruta=String(guide?.trip_summary?.route||"").trim();
+  const partes=ruta.split(/→|->|—>/).map(x=>x.trim()).filter(Boolean);
+  return partes.length>=2?partes[0]:"";
+}
+
+function corregirTextoRutaVisible(texto,guide,datos={},stops=[]){
+  let out=String(texto||"");
+  if(!out)return out;
+  const real=nombrePortadaRuta(datos.origen,"");
+  const declarado=origenDeclaradoGuia(guide);
+  if(real&&declarado&&normalizarClaveMedia(real)!==normalizarClaveMedia(declarado)){
+    out=out.replace(new RegExp(escaparRegExpTexto(declarado),"gi"),real);
+  }
+  const dias=Array.isArray(guide?.days)?guide.days:[];
+  dias.forEach(d=>{
+    const realKm=Math.round(Number(d?.driving_km)||0);
+    const generado=String(d?.driving||"");
+    const m=generado.match(/(\d+(?:[.,]\d+)?)\s*(?:km|kil[oó]metros?)/i);
+    if(realKm>0&&m){
+      const oldKm=Math.round(Number(String(m[1]).replace(",","."))||0);
+      if(oldKm>0&&oldKm!==realKm){
+        out=out.replace(new RegExp("\\b"+oldKm+"\\s*km\\b","gi"),realKm+" km");
+        out=out.replace(new RegExp("\\b"+oldKm+"\\s*kil[oó]metros?\\b","gi"),realKm+" kilómetros");
+      }
+    }
+  });
+  return out;
+}
+
+function tituloDiaVisible(dia,guide,datos={},stops=[]){
+  const original=corregirTextoRutaVisible(dia?.heading||"Etapa",guide,datos,stops);
+  const esConduccion=dia?.day_type==="conduccion_y_visita"||Number(dia?.driving_minutes)>0;
+  if(!esConduccion)return original;
+  const stop=stopDeDiaGuia(dia,stops);
+  if(!stop)return original;
+  const lista=Array.isArray(stops)?stops:[];
+  const idx=lista.indexOf(stop);
+  const origen=idx>0 ? nombrePortadaRuta(lista[idx-1]?.place,"") : nombrePortadaRuta(datos.origen,"");
+  const destino=stop.is_final ? nombrePortadaRuta(datos.destinoPrincipal||datos.destinoFinal,stop.place||"") : nombrePortadaRuta(stop.place,"");
+  if(!origen||!destino)return original;
+  const colon=original.indexOf(":");
+  const sufijo=colon>=0?original.slice(colon+1).trim():"";
+  return `Día ${dia?.day||idx+1} · ${origen} → ${destino}${sufijo?`: ${sufijo}`:""}`;
+}
+
 function htmlPortadaRuta(datos={}){
   const origen=escapar(nombrePortadaRuta(datos.origen,"Origen"));
   const destino=escapar(nombrePortadaRuta(datos.destinoPrincipal,"Destino"));
@@ -1284,15 +1374,15 @@ function htmlGuiaIA(guide,datos={},stops=[]){
     <header class="guia-portada">
       <span>GUÍA PERSONALIZADA DE VIAJE</span>
       <h2>${escapar(guide.title||"Tu ruta")}</h2>
-      ${guide.subtitle?`<p>${escapar(guide.subtitle)}</p>`:""}
+      ${guide.subtitle?`<p>${escapar(corregirTextoRutaVisible(guide.subtitle,guide,datos,stops))}</p>`:""}
     </header>`;
 
-  if(guide.introduction)h+=`<section class="guia-seccion-editorial"><p>${escapar(limpiarTextoGuia(guide.introduction))}</p></section>`;
+  if(guide.introduction)h+=`<section class="guia-seccion-editorial"><p>${escapar(limpiarTextoGuia(corregirTextoRutaVisible(guide.introduction,guide,datos,stops)))}</p></section>`;
 
   const resumen=guide.trip_summary||{};
   if(Object.keys(resumen).length){
     h+=`<section class="guia-seccion-editorial"><h3>🧭 Resumen del viaje</h3>
-      ${resumen.route?`<p><strong>Ruta:</strong> ${escapar(resumen.route)}</p>`:""}
+      ${resumen.route?`<p><strong>Ruta:</strong> ${escapar(rutaResumenVisible(datos,resumen.route))}</p>`:""}
       ${resumen.travel_style?`<p><strong>Estilo:</strong> ${escapar(resumen.travel_style)}</p>`:""}
       ${resumen.key_advice?`<p><strong>Consejo principal:</strong> ${escapar(resumen.key_advice)}</p>`:""}
     </section>`;
@@ -1313,12 +1403,12 @@ function htmlGuiaIA(guide,datos={},stops=[]){
       <div class="guia-dia-titulo">
         <span>DÍA ${escapar(d.day||"")}${fechaTexto}</span>
         ${badgeTipo}
-        <h2>${escapar(d.heading||"Etapa")}</h2>
-        ${d.driving?`<p>🚐 ${escapar(d.driving)}</p>`:""}
+        <h2>${escapar(tituloDiaVisible(d,guide,datos,stops))}</h2>
+        ${conduccionDiaVisible(d,stops)?`<p>🚐 ${escapar(conduccionDiaVisible(d,stops))}</p>`:""}
       </div>
       ${htmlGoogleMapsDia(d,stops)}`;
 
-    if(d.opening_narrative)h+=`<div class="guia-narrativa"><p>${escapar(limpiarTextoGuia(d.opening_narrative))}</p></div>`;
+    if(d.opening_narrative)h+=`<div class="guia-narrativa"><p>${escapar(limpiarTextoGuia(corregirTextoRutaVisible(d.opening_narrative,guide,datos,stops)))}</p></div>`;
     if(d.arrival_strategy)h+=`<div class="guia-narrativa"><p><strong>Al llegar:</strong> ${escapar(limpiarTextoGuia(d.arrival_strategy))}</p></div>`;
     if(d.recommended_visit_time)h+=`<div class="guia-narrativa"><p><strong>Tiempo recomendado:</strong> ${escapar(limpiarTextoGuia(d.recommended_visit_time))}</p></div>`;
     if(d.pace_advice)h+=`<div class="guia-narrativa"><p><strong>Ritmo:</strong> ${escapar(limpiarTextoGuia(d.pace_advice))}</p></div>`;
