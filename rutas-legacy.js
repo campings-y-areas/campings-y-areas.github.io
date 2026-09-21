@@ -412,7 +412,7 @@ async function cargarInvestigacionRutaD1(place,country=""){
     const u=new URL(`${base}/research-cache`);
     u.searchParams.set("place",nombre);
     if(country)u.searchParams.set("country",country);
-    const r=await fetch(u.toString(),{method:"GET",cache:"no-store"});
+    const r=await fetch(u.toString(),{method:"GET",headers:headersWorker(),cache:"no-store"});
     if(!r.ok)return null;
     const d=await r.json();
     const research=(d?.ok&&d?.found&&d?.cache_valid&&d?.research)?d.research:null;
@@ -615,20 +615,19 @@ function formatoKm(m){ return new Intl.NumberFormat("es-ES",{maximumFractionDigi
 // v49: blindaje de la demo editorial. Mientras la demo está en curso,
 // ninguna ruta capaz de planificar, redactar o investigar con OpenAI puede ejecutarse.
 let demoEnCurso=false;
+function headersWorker(){
+  const auth=typeof window.CAMPINGS_PREMIUM_AUTH_HEADERS==="function" ? window.CAMPINGS_PREMIUM_AUTH_HEADERS() : {};
+  return {"Content-Type":"application/json",...auth};
+}
 async function llamarWorker(ruta, cuerpo){
   if(demoEnCurso && ["/plan-route","/write-route","/research-destination","/research-media"].includes(String(ruta||""))){
     throw new Error("La demo editorial no puede llamar a servicios IA de pago.");
   }
   const base=String(config.WORKER_BASE_URL||"").replace(/\/+$/,"");
   if(!base)throw new Error("Falta configurar la dirección del Worker de Rutas.");
-  let premiumHeaders={};
-  try{
-    const token=String(localStorage.getItem("campings_areas_premium_session")||"").trim();
-    if(token)premiumHeaders.Authorization=`Bearer ${token}`;
-  }catch{}
   const r=await fetch(`${base}${ruta}`,{
     method:"POST",
-    headers:{"Content-Type":"application/json",...premiumHeaders},
+    headers:headersWorker(),
     body:JSON.stringify(cuerpo)
   });
   let data=null;
@@ -822,7 +821,7 @@ async function consultarInvestigacionDestinoD1(lugar,datos){
   const u=new URL(`${base}/research-cache`);
   u.searchParams.set("place",place);
   if(country)u.searchParams.set("country",country);
-  const r=await fetch(u.toString(),{method:"GET",cache:"no-store"});
+  const r=await fetch(u.toString(),{method:"GET",headers:headersWorker(),cache:"no-store"});
   if(!r.ok)return null;
   const d=await r.json();
   if(!(d?.ok&&d?.found&&d?.cache_valid&&d?.research))return null;
@@ -843,7 +842,7 @@ async function investigarDestinoPendienteIA(place,country=""){
   u.searchParams.set("place",nombre);
   if(pais)u.searchParams.set("country",pais);
 
-  const r=await fetch(u.toString(),{method:"GET",cache:"no-store"});
+  const r=await fetch(u.toString(),{method:"GET",headers:headersWorker(),cache:"no-store"});
   let d=null;
   try{d=await r.json();}catch{}
   if(!r.ok){
@@ -999,7 +998,7 @@ async function consultarMediaOficial(nombre,ciudad,tipo,website,entityId=""){
     u.searchParams.set("name",nombre);
     u.searchParams.set("type",tipo);
     if(entityId)u.searchParams.set("entity_id",entityId);
-    const r=await fetch(u.toString(),{method:"GET",cache:"no-store"});
+    const r=await fetch(u.toString(),{method:"GET",headers:headersWorker(),cache:"no-store"});
     if(!r.ok)return null;
     const d=await r.json();
     if(d?.ok&&d?.image_url){
@@ -1025,7 +1024,7 @@ async function cargarMediaDestinoD1(destino,country=""){
     u.searchParams.set("place",destino);
     if(country)u.searchParams.set("country",country);
 
-    const r=await fetch(u.toString(),{method:"GET",cache:"no-store"});
+    const r=await fetch(u.toString(),{method:"GET",headers:headersWorker(),cache:"no-store"});
     if(!r.ok)return 0;
 
     const d=await r.json();
@@ -1067,7 +1066,7 @@ async function investigarMediaDestinoIA(place,country=""){
     if(!base||!place||!country)return null;
     const r=await fetch(`${base}/research-media`,{
       method:"POST",
-      headers:{"Content-Type":"application/json"},
+      headers:headersWorker(),
       body:JSON.stringify({place,country})
     });
     const d=await r.json().catch(()=>null);
