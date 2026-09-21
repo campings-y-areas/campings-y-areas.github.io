@@ -1,4 +1,4 @@
-(()=>{"use strict";if(new URLSearchParams(location.search).get("pruebas")!=="manuel")return;
+(()=>{"use strict";
 const realFetch=window.fetch.bind(window);window.fetch=(input,init)=>{const u=String(typeof input==="string"?input:input?.url||"");if(u.startsWith("https://commons.wikimedia.org/w/api.php"))return Promise.reject(new Error("Commons API desactivada en la demo"));return realFetch(input,init)};
 const commons=n=>`https://commons.wikimedia.org/wiki/Special:Redirect/file/${encodeURIComponent(n)}?width=1600`,page=n=>`https://commons.wikimedia.org/wiki/File:${encodeURIComponent(n).replace(/%2F/g,"/")}`,C=(n,a,l)=>({url:commons(n),page:page(n),author:a,license:l}),O=(u,a,p)=>({url:u,page:p||u,author:a,license:"Fuente oficial"});
 const F={
