@@ -75,3 +75,15 @@ Sólo terminado cuando: comprobaciones gratuitas limpias + Worker/Frontend/Premi
 - rutas-config.js sigue apuntando al Worker histórico rutas-campings-areas.
 - No se ha realizado ninguna llamada OpenAI ni prueba real de ruta en este bloque.
 - Pendiente: comprobar flags reales de Cloudflare, D1/Trier, Service Binding Premium, realizar comprobaciones gratuitas y después una única prueba real controlada.
+
+
+## Actualización 2026-09-21 — auditoría gratuita vigente
+- Se actualizó scripts/probar-reparacion-rutas.mjs para auditar la arquitectura realmente publicada: rutas-legacy.js + Premium, no la arquitectura modular retirada.
+- La nueva auditoría detectó una regresión real: al penalizar pernoctas repetidas se comparaba el nombre del alojamiento con la localidad anterior. Se corrigió para comparar localidadAlojamiento(cand) con ultimoLugar.
+- Ejecución GitHub Actions #149: SUCCESS.
+- Resultado específico de Rutas: arquitectura vigente OK; autorización Premium en endpoints protegidos OK; regresiones geográficas antiguas no presentes.
+- Auditoría integral: 293 archivos, 174 JSON, 85 JS, 100374 objetos JSON y 49758 objetos con coordenadas; AUDITORÍA ESTÁTICA AMPLIADA OK.
+- Clasificación geográfica de datos activos: 0 fuera de Europa mal archivados, 0 país distinto >5 km de alta confianza, 0 lat/lon intercambiadas, 0 coordenadas 0,0. Quedan 96 puntos sin polígono terrestre >5 km para revisión no inequívoca; el clasificador no los considera anomalías inequívocas.
+- No se realizó ninguna llamada OpenAI ni prueba real de ruta durante esta auditoría.
+- Pendiente antes de la prueba real: verificar en Cloudflare los valores reales de flags de gasto/pipeline/media/test, el binding D1 y el Service Binding PREMIUM_AUTH; verificar contrato del Premium Worker y después realizar una única prueba real controlada.
+- La comprobación D1 debe ser general para coherencia de destinos y países; Trier se mantiene únicamente como el caso observado que descubrió el problema anterior, no como objetivo especial de la reparación.
