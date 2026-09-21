@@ -96,5 +96,12 @@ Premium login/session → autorización Worker → Geoapify → logística → p
 - Pruebas gratuitas superadas: 9/9 tests del sitio, 18/18 tests de `worker-new`, sintaxis de las tres fuentes completas y `npm run audit` sobre 300 archivos. No hubo llamadas a OpenAI, investigación real ni ruta real.
 - No se desplegó ningún Worker: el siguiente bloque debe publicar el commit/PR, comprobar en Cloudflare bindings y esquema D1, ejecutar la migración sólo si el preflight no tiene duplicados, desplegar primero Premium y después Route Worker, y repetir health/CORS/cost guard gratuitos antes de habilitar una única prueba controlada.
 
+### Bloque 4 — PR verificado y límite de acceso a Cloudflare (2026-09-21)
+- PR borrador #59 publicado. Los SHA de blob de los 15 archivos del bloque anterior se compararon entre el workspace y GitHub: 15/15 idénticos. GitHub Actions `Auditoría integral gratuita` (run `35596577141`) terminó con `success` sobre la cabeza remota.
+- Se añadió una prueba aislada del Premium Worker con D1 simulado: la primera guía pasa de 8 a 7 restantes, repetir exactamente el mismo `route_id` no vuelve a consumir y una novena ruta recibe 429 sin insertar. Resultado gratuito actualizado: 11/11 tests del sitio + 18/18 de `worker-new`; auditoría ampliada OK sobre 301 archivos.
+- Acceso Cloudflare comprobado sin modificar nada: no hay variables de credenciales configuradas y `wrangler whoami` responde `You are not authenticated`. El navegador de trabajo sigue bloqueado por la verificación humana de Cloudflare. También se buscó una integración instalable de Cloudflare Workers/D1 y no existe ninguna disponible.
+- Por tanto NO se ha inspeccionado aún el esquema real de D1, NO se ha ejecutado la migración, NO se han desplegado Workers y NO se han abierto los flags de coste. Para continuar hace falta autenticar Wrangler o aportar un API Token limitado al proyecto con permisos de lectura/escritura de Workers y D1; después se ejecutarán primero consultas de sólo lectura.
+- No se ejecutó OpenAI, investigación real ni ruta real. Stripe continúa en TEST por diseño hasta cerrar Rutas.
+
 ## Criterio de cierre
 Sólo terminado cuando: comprobaciones gratuitas limpias + Worker/Frontend/Premium/D1 coherentes + una única prueba real produce guía completa correcta + cuota pasa exactamente de 8 a 7 (o equivalente de una unidad) + Stripe LIVE configurado y probado sin alterar Rutas + auditoría funcional final.
