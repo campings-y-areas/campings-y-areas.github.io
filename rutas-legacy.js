@@ -621,9 +621,14 @@ async function llamarWorker(ruta, cuerpo){
   }
   const base=String(config.WORKER_BASE_URL||"").replace(/\/+$/,"");
   if(!base)throw new Error("Falta configurar la dirección del Worker de Rutas.");
+  let premiumHeaders={};
+  try{
+    const token=String(localStorage.getItem("campings_areas_premium_session")||"").trim();
+    if(token)premiumHeaders.Authorization=`Bearer ${token}`;
+  }catch{}
   const r=await fetch(`${base}${ruta}`,{
     method:"POST",
-    headers:{"Content-Type":"application/json"},
+    headers:{"Content-Type":"application/json",...premiumHeaders},
     body:JSON.stringify(cuerpo)
   });
   let data=null;
