@@ -677,7 +677,7 @@ function nombreLugarWorker(lugar,fallback=""){
   // Esto solo afecta a los nombres enviados al Worker; la interfaz sigue en español.
   const otros=lugar?.other_names||{};
   const raw=lugar?.datasource?.raw||{};
-  return otros.name||raw.name||otros["name:en"]||raw["name:en"]||lugar?.name||lugar?.village||lugar?.town||lugar?.city||lugar?.municipality||fallback||lugar?.formatted||"";
+  return otros.name||raw.name||otros["name:en"]||raw["name:en"]||lugar?.city||lugar?.town||lugar?.village||lugar?.municipality||lugar?.name||fallback||lugar?.formatted||"";
 }
 
 function ritmoWorker(valor){
