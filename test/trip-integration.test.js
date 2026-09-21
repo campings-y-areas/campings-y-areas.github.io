@@ -68,7 +68,7 @@ test("pipeline completo conserva estado, inserta pernocta, enriquece y construye
   assert.equal(result.guide.days.find(day => day.day_type === "estancia").driving_minutes, 0);
 });
 
-test("Geoapify usa admin_areas, coordenadas lat-lon en la petición y GeoJSON lon-lat", async () => {
+test("Geoapify evita details inválido, usa lat-lon en la petición y GeoJSON lon-lat", async () => {
   globalThis.RUTAS_CONFIG = { GEOAPIFY_API_KEY: "test", WORKER_BASE_URL: "" };
   const originalFetch = globalThis.fetch;
   let requested;
@@ -83,7 +83,7 @@ test("Geoapify usa admin_areas, coordenadas lat-lon en la petición y GeoJSON lo
   try {
     const result = await geoapifyRoute({ points: [origin, { ...destination, lat: 41.39, lon: 2.18 }], vehicle: { tipo: "autocaravana" }, preferences: { avoid: ["peajes", "ferris"] }, includeCountryDetails: true });
     assert.equal(requested.searchParams.get("waypoints"), "41.38,2.17|41.39,2.18");
-    assert.equal(requested.searchParams.get("details"), "admin_areas");
+    assert.equal(requested.searchParams.get("details"), null);
     assert.equal(requested.searchParams.get("avoid"), "tolls|ferries");
     assert.deepEqual(result.legs[0].geometry.coordinates[0], [2.17, 41.38]);
     assert.deepEqual(result.country_metadata.map(item => item.country_code), ["es", "fr"]);

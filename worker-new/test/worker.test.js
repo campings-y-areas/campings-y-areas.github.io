@@ -60,6 +60,15 @@ test("preflight rechaza orígenes no autorizados", async () => {
   assert.equal(response.status, 403);
 });
 
+test("preflight permite la cabecera de sesión Premium", async () => {
+  const response = await worker.fetch(new Request("https://worker.test/plan-route", {
+    method: "OPTIONS",
+    headers: { origin, "access-control-request-headers": "content-type, authorization" }
+  }), {});
+  assert.equal(response.status, 204);
+  assert.match(response.headers.get("access-control-allow-headers") || "", /Authorization/i);
+});
+
 test("cost guard bloquea OpenAI sin gastar", async () => {
   const response = await worker.fetch(new Request("https://worker.test/plan-route", {
     method: "POST",

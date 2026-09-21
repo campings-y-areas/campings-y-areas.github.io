@@ -3,8 +3,14 @@ import {
   requestLoginCode,
   verifyLoginCode,
   createPremiumCheckout,
-  createPremiumPortal
+  createPremiumPortal,
+  premiumAuthorizationHeaders
 } from "./premium-client.js";
+
+// rutas-legacy.js sigue siendo el motor activo de producción. Exponemos únicamente
+// el lector de cabeceras para que todas sus llamadas al Route Worker compartan la
+// misma sesión Premium que este módulo, sin duplicar la clave de almacenamiento.
+window.CAMPINGS_PREMIUM_AUTH_HEADERS = premiumAuthorizationHeaders;
 
 const lock = document.getElementById("rutasPremiumLock");
 const panel = document.querySelector(".rutas-panel");

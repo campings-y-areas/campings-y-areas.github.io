@@ -102,9 +102,35 @@ if(fs.existsSync(normativas)){
 }
 
 const rutasHtml=fs.readFileSync(path.join(root,'rutas.html'),'utf8');
-if(/(?:src|href)=["']rutas\.js/.test(rutasHtml))errors.push('Rutas carga el script monolítico antiguo.');
+if(/(?:src|href)=["']rutas\.js/.test(rutasHtml))errors.push('Rutas carga el script obsoleto rutas.js.');
+if(!/src=["']rutas-legacy\.js\?v=3["']/.test(rutasHtml))errors.push('Rutas no carga la revisión reparada del motor activo rutas-legacy.js.');
 for(const required of ['app/trip/rutas-entry.js','app/trip/pipeline.js','app/trip/vacation-days.js','app/services/data-registry.js']){
   if(!fs.existsSync(path.join(root,required)))errors.push(`Arquitectura de Rutas incompleta: falta ${required}`);
+}
+
+// La migración modular aún no sustituye al motor histórico en producción. Auditar
+// explícitamente el script que carga rutas.html evita otro falso positivo estático.
+const rutasLegacyPath=path.join(root,'rutas-legacy.js');
+if(!fs.existsSync(rutasLegacyPath)){
+  errors.push('Motor activo de Rutas ausente: rutas-legacy.js');
+}else{
+  const s=fs.readFileSync(rutasLegacyPath,'utf8');
+  if(!s.includes('CAMPINGS_PREMIUM_AUTH_HEADERS'))errors.push('Rutas: la sesión Premium no está centralizada.');
+  for(const endpoint of ['/research-cache','/research-destination','/official-media','/media-cache']){
+    const endpointIndex=s.indexOf(`\${base}${endpoint}`);
+    const fetchIndex=s.indexOf('fetch(u.toString()',endpointIndex);
+    if(endpointIndex<0||fetchIndex<0||!s.slice(fetchIndex,fetchIndex+180).includes('headers:headersWorker()')){
+      errors.push(`Rutas: ${endpoint} no envía Authorization.`);
+    }
+  }
+  const researchMediaIndex=s.indexOf('`${base}/research-media`');
+  if(researchMediaIndex<0||!s.slice(researchMediaIndex,researchMediaIndex+220).includes('headers:headersWorker(true)')){
+    errors.push('Rutas: /research-media no envía Authorization.');
+  }
+  const localityBlock=s.match(/const localidadPernocta=String\([\s\S]*?\)\.trim\(\);/)?.[0]||'';
+  if(!localityBlock.includes('nombreLocalidad(revPernocta)')||localityBlock.includes('nombreLugarWorker')){
+    errors.push('Rutas: la identidad de pernocta no usa la localidad administrativa.');
+  }
 }
 
 const demoHtml=fs.readFileSync(path.join(root,'demo-ruta.html'),'utf8');
