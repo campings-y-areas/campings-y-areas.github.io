@@ -47,8 +47,14 @@ if(!/fetch\(\`\$\{base\}\$\{ruta\}\`[\s\S]{0,250}headers:headersWorker\(\)/.test
 
 
 // Regresiones detectadas en la primera prueba Premium real (2026-09-21).
-if(!source.includes('const mapsUrl=urlGoogleMapsTexto(nombre,address)')) {
-  throw new Error('Google Maps de lugares no prioriza nombre + dirección verificada');
+if(!source.includes('const mapsUrl=urlGoogleMapsTexto(nombre,address,ciudad,country)')) {
+  throw new Error('Google Maps de lugares no prioriza nombre + dirección + ciudad + país');
+}
+if(source.includes('function urlGoogleMapsEntidad(')) {
+  throw new Error('Google Maps individual vuelve a depender de coordenadas de investigación');
+}
+if(!source.includes('new URLSearchParams({api:"1",destination:destino})')) {
+  throw new Error('Google Maps individual no abre navegación hacia un destino textual');
 }
 if(!source.includes('const FOTO_AUTO_STORAGE_KEY = "campingsAreasFotoAutoV4"')) {
   throw new Error('La caché fotográfica antigua no quedó invalidada');
@@ -58,6 +64,12 @@ if(!source.includes('.replace(/\\[([^\\]]+)\\]\\(https?:\\/\\/[^)\\s]+\\)/gi,"$1
 }
 if(!source.includes('function corregirTextoRutaVisible(') || !source.includes('function tituloDiaVisible(')) {
   throw new Error('Falta la corrección determinista de origen y métricas visibles');
+}
+if(!source.includes('(d.restaurants||[]).forEach') || !source.includes('(d.overnight||[]).forEach')) {
+  throw new Error('La guía no intenta completar fotos de restaurantes y pernoctas desde sus webs oficiales');
+}
+if(!source.includes('oficial?.from_d1||oficial?.official')) {
+  throw new Error('Las fotos de web oficial no pueden mostrarse como fallback exacto de restaurantes/pernoctas');
 }
 const forbidden=[
   {label:'comparación alojamiento-localidad antigua',pattern:/normalizarClaveMedia\(nombre\)===normalizarClaveMedia\(ultimoLugar\)/}
