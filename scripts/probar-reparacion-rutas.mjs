@@ -24,8 +24,19 @@ if(!premium.includes('window.CAMPINGS_PREMIUM_AUTH_HEADERS = premiumAuthorizatio
 
 const protectedGets=['research-cache','research-destination','media-cache','official-media'];
 for(const endpoint of protectedGets){
-  const re=new RegExp(`\\/${endpoint}[^;]{0,900}fetch\\([^;]{0,900}headers:headersWorker\\(\\)`,'s');
-  if(!re.test(source)) throw new Error(`El endpoint protegido /${endpoint} no usa headersWorker()`);
+  const positions=[];
+  let from=0;
+  while((from=source.indexOf(`/${endpoint}`,from))!==-1){
+    positions.push(from);
+    from+=endpoint.length+1;
+  }
+  if(!positions.length) throw new Error(`No se encontró el endpoint protegido /${endpoint}`);
+  for(const pos of positions){
+    const nearby=source.slice(pos,Math.min(source.length,pos+1200));
+    if(!/fetch\([\s\S]{0,900}headers:headersWorker\(\)/.test(nearby)){
+      throw new Error(`El endpoint protegido /${endpoint} no usa headersWorker()`);
+    }
+  }
 }
 if(!/\/research-media[\s\S]{0,500}headers:headersWorker\(\)/.test(source)) {
   throw new Error('El endpoint protegido /research-media no usa headersWorker()');
