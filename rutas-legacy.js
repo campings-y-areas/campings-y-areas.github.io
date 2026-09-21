@@ -1064,9 +1064,9 @@ async function investigarMediaDestinoIA(place,country=""){
   try{
     const base=String(config.WORKER_BASE_URL||"").replace(/\/+$/,"" );
     if(!base||!place||!country)return null;
-    const r=await fetch(`${base}/research-media`,{\n    headers:headersWorker(),
+    const r=await fetch(`${base}/research-media`,{
       method:"POST",
-      headers:{"Content-Type":"application/json"},
+      headers:headersWorker(),
       body:JSON.stringify({place,country})
     });
     const d=await r.json().catch(()=>null);
