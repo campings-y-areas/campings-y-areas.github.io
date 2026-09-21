@@ -103,5 +103,12 @@ Premium login/session → autorización Worker → Geoapify → logística → p
 - Por tanto NO se ha inspeccionado aún el esquema real de D1, NO se ha ejecutado la migración, NO se han desplegado Workers y NO se han abierto los flags de coste. Para continuar hace falta autenticar Wrangler o aportar un API Token limitado al proyecto con permisos de lectura/escritura de Workers y D1; después se ejecutarán primero consultas de sólo lectura.
 - No se ejecutó OpenAI, investigación real ni ruta real. Stripe continúa en TEST por diseño hasta cerrar Rutas.
 
+### Bloque 5 — Binding y esquema real de D1 verificados (2026-09-21)
+- Inspección manual en el panel real de Cloudflare: el Worker `campings-areas-premium` tiene el binding D1 con nombre exacto `DB`, vinculado a la base `campings-areas-premium` (ID visible en el panel: `26119a19-2022-4744-8d96-21202639e884`).
+- Consulta de sólo lectura ejecutada en la consola D1 sobre `sqlite_master`; no se modificaron datos ni se llamó a OpenAI.
+- La tabla real `route_usage` ya declara `UNIQUE(user_id, route_id)`. D1 creó `sqlite_autoindex_route_usage_2` para esa restricción; también existen la clave primaria sobre `id` y el índice `idx_route_usage_user_period` sobre `(user_id, billing_period)`.
+- Conclusión: `INSERT OR IGNORE` del Premium Worker puede garantizar idempotencia por usuario/ruta y la migración de índice único incluida en el PR #59 NO debe ejecutarse en producción porque la restricción necesaria ya existe. No se ha desplegado ningún Worker ni se han habilitado flags de coste.
+- Pendiente inmediato: comprobar bindings y variables no secretas de los dos Route Workers, desplegar de forma ordenada Premium y Route Worker desde las fuentes versionadas, y repetir health/CORS/cost guard gratuitos antes de autorizar una única prueba real.
+
 ## Criterio de cierre
 Sólo terminado cuando: comprobaciones gratuitas limpias + Worker/Frontend/Premium/D1 coherentes + una única prueba real produce guía completa correcta + cuota pasa exactamente de 8 a 7 (o equivalente de una unidad) + Stripe LIVE configurado y probado sin alterar Rutas + auditoría funcional final.
