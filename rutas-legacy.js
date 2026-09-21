@@ -1237,17 +1237,7 @@ function conduccionDiaVisible(dia,stops=[]){
 }
 
 function escaparRegExpTexto(v){
-  return String(v||"").replace(/[.*+?^${}()|[\]\\]/g,"\\function conduccionDiaVisible(dia,stops=[]){
-  const stop=stopDeDiaGuia(dia,stops);
-  if(stop&&Number(stop.driving_minutes)>0){
-    const km=Number.isFinite(Number(stop.driving_km))
-      ? `${new Intl.NumberFormat("es-ES").format(Number(stop.driving_km))} km`
-      : "";
-    const tiempo=minutosTexto(Math.round(Number(stop.driving_minutes)||0));
-    return [km,tiempo].filter(Boolean).join(" · ");
-  }
-  return String(dia?.driving||"").trim();
-}");
+  return String(v||"").replace(/[.*+?^${}()|[\]\\]/g,m=>`\\${m}`);
 }
 
 function origenDeclaradoGuia(guide){
