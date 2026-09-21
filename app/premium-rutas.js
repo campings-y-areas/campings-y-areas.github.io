@@ -3,7 +3,8 @@ import {
   requestLoginCode,
   verifyLoginCode,
   createPremiumCheckout,
-  createPremiumPortal
+  createPremiumPortal,
+  premiumAuthorizationHeaders
 } from "./premium-client.js";
 
 const lock = document.getElementById("rutasPremiumLock");
@@ -21,6 +22,8 @@ const checkoutStatus = document.getElementById("premiumCheckoutStatus");
 let loginEmail = "";
 const requestedPlan = new URLSearchParams(window.location.search).get("plan");
 const pendingPlan = requestedPlan === "monthly" || requestedPlan === "yearly" ? requestedPlan : "";
+window.CAMPINGS_PREMIUM_AUTH_HEADERS = premiumAuthorizationHeaders;
+
 const PREMIUM_PRICE_IDS = Object.freeze({
   monthly: "price_1UHNzZJ2BhU8rexUL9tyoB8Q",
   yearly: "price_1UHO3JJ2BhU8rexU1FawP72e"
