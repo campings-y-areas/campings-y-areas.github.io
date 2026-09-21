@@ -70,5 +70,20 @@ Premium login/session → autorización Worker → Geoapify → logística → p
 - No se ha ejecutado ninguna llamada de OpenAI, investigación con gasto ni ruta real durante este bloque.
 - Pendiente inmediato: auditar código y contratos completos; obtener y comparar la fuente exacta de los Workers desplegados y sus bindings antes de decidir la arquitectura definitiva.
 
+### Bloque 2 — Fuentes desplegadas, endpoints y costes auditados (2026-09-21)
+- Fuente recuperada del Route Worker antiguo desplegado: `rutas-campings-areas-DEFINITIVO.js`, 8.111 líneas, SHA-256 `d2cac088c0493c20377a474225400bbd7681c112e7bdee20286fd0922dda3bb7`.
+- Fuente recuperada del Premium Worker desplegado: `campings-areas-premium-FINAL-8-rutas.txt`, 983 líneas, SHA-256 `0ada9db3f51243389b4c1489879134599c9f02dd734ee42789cee1dfd756c50d`.
+- Las respuestas públicas corroboran esos despliegues: Route Worker antiguo devuelve el backend histórico y D1 conectado; Route Worker nuevo devuelve `route-contract-v3`; Premium devuelve fase 2, `stripe_mode: test` y autenticación por código.
+- Preflight gratuito verificado en Worker antiguo para plan, caché, investigación y multimedia: permite el origen público y `Content-Type, Authorization`. Premium también. El Worker nuevo desplegado también permite `Authorization`, pero su fuente en el repositorio todavía no: hay desincronización real entre repo y despliegue.
+- `/cost-status` del Worker antiguo verificado sin gasto: `OPENAI_SPEND_ENABLED=false`, `OPENAI_ROUTE_PIPELINE_ENABLED=false`, `OPENAI_MEDIA_ENABLED=false`, `OPENAI_TEST_ENDPOINT_ENABLED=false`, protección `COST_GUARD_ACTIVE`, 32 investigaciones D1 y cachés de plan/guía existentes.
+- Hallazgo crítico de identidad: `elegirFinJornadaRealV3()` obtiene la supuesta localidad con `nombreLugarWorker(revPernocta, ...)`, función que prioriza `raw.name`/`other_names.name`. En un reverse geocode sobre una pernocta puede devolver el nombre del camping o área en vez de la ciudad. `/cost-status` confirma contaminación funcional reciente con claves como `kamp zagreb|croatia`, `camper stop maribor - partizanska|slovenia` y varios `wohnmobilstellplatz...|germany`.
+- Hallazgo crítico de autenticación: `main` no envía Bearer en lecturas/investigaciones directas. La rama `unificar` corrige cuatro familias, pero omite `/official-media`; además conserva la regresión de caché `v=2` → `v=1`.
+- Hallazgo de cuota: el consumo es idempotente por `route_id`, pero usa FNV-1a de 32 bits sobre el cuerpo de `/write-route` y el Premium Worker hace `COUNT` e `INSERT` por separado. Dos escrituras simultáneas podrían superar el límite de 8; una colisión de 32 bits podría tratar rutas distintas como duplicadas.
+- Hallazgo de Stripe: el despliegue sigue expresamente en TEST y el frontend contiene IDs de precio TEST. LIVE continúa pendiente y no se tocará hasta cerrar Rutas.
+- Pruebas gratuitas: `npm run audit` informa OK, pero es un falso positivo parcial porque no valida que `rutas-legacy.js` sea el motor activo ni los Workers desplegados. `npm test` falla 1/3 en el test modular de Geoapify porque aún espera el parámetro inválido `details=admin_areas`; los 17 tests de `worker-new` pasan. Ambas fuentes desplegadas superan comprobación de sintaxis.
+- El panel de Cloudflare no fue accesible desde el navegador de trabajo por una verificación humana persistente. No se intentó eludirla; las fuentes exactas guardadas y las respuestas de producción permitieron continuar la auditoría.
+- No se ejecutó ninguna ruta real ni endpoint que pueda llamar a OpenAI. Todos los flags observados siguen cerrados.
+- Pendiente inmediato: corregir identidad de localidad, unificar headers incluyendo `/official-media`, versionado de caché, pruebas/auditoría, sincronizar fuentes de Workers en GitHub y blindar cuota antes de cualquier despliegue o prueba real.
+
 ## Criterio de cierre
 Sólo terminado cuando: comprobaciones gratuitas limpias + Worker/Frontend/Premium/D1 coherentes + una única prueba real produce guía completa correcta + cuota pasa exactamente de 8 a 7 (o equivalente de una unidad) + Stripe LIVE configurado y probado sin alterar Rutas + auditoría funcional final.
