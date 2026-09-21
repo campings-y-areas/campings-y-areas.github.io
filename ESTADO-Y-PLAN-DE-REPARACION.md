@@ -58,5 +58,17 @@ Premium login/session → autorización Worker → Geoapify → logística → p
 - Actualizar ESTE checkpoint tras cada bloque importante: hallazgo, cambio, commit/PR, prueba y pendiente.
 - Si el trabajo se interrumpe, el siguiente agente debe leer este archivo y comprobar GitHub/Cloudflare antes de continuar; no reconstruir de memoria.
 
+## Registro de reparación integral
+
+### Bloque 1 — Punto de partida verificado en GitHub (2026-09-21)
+- Rama de trabajo creada: `reparacion-integral-2026-09-21`, basada en el checkpoint `4272c944440f6f50fd23bc802ab0e72800d9c4c5`.
+- `main` verificada en `3274a8eb213945fd0e784c4cde3b931dcac69369`.
+- La rama `checkpoint-reparacion-total-2026-09-21` está exactamente un commit por delante de `main` y su única diferencia es este archivo.
+- PR #58 verificado en GitHub como cerrado y fusionado; merge commit `3274a8eb213945fd0e784c4cde3b931dcac69369`.
+- La rama `unificar-rutas-premium-2026-09-21` existe en `f84413684198ffc9a128f5f522e457acdc69a7e3` y cambia sólo `app/premium-rutas.js`, `rutas-legacy.js` y `rutas.html`.
+- Hallazgo nuevo: esa rama centraliza `headersWorker()` y añade `Authorization` a investigación/media, pero cambia la referencia de `rutas-legacy.js?v=2` a `v=1`. Es una regresión potencial de caché; no se fusionará tal cual.
+- No se ha ejecutado ninguna llamada de OpenAI, investigación con gasto ni ruta real durante este bloque.
+- Pendiente inmediato: auditar código y contratos completos; obtener y comparar la fuente exacta de los Workers desplegados y sus bindings antes de decidir la arquitectura definitiva.
+
 ## Criterio de cierre
 Sólo terminado cuando: comprobaciones gratuitas limpias + Worker/Frontend/Premium/D1 coherentes + una única prueba real produce guía completa correcta + cuota pasa exactamente de 8 a 7 (o equivalente de una unidad) + Stripe LIVE configurado y probado sin alterar Rutas + auditoría funcional final.
