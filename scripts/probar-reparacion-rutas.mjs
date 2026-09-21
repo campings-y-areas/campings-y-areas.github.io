@@ -45,6 +45,23 @@ if(!/fetch\(\`\$\{base\}\$\{ruta\}\`[\s\S]{0,250}headers:headersWorker\(\)/.test
   throw new Error('plan-route/write-route no pasan por headersWorker()');
 }
 
+
+// Regresiones detectadas en la primera prueba Premium real (2026-09-21).
+if(!source.includes('const mapsUrl=urlGoogleMapsTexto(nombre,address)')) {
+  throw new Error('Google Maps de lugares no prioriza nombre + dirección verificada');
+}
+if(!source.includes('const FOTO_AUTO_STORAGE_KEY = "campingsAreasFotoAutoV4"')) {
+  throw new Error('La caché fotográfica antigua no quedó invalidada');
+}
+if(!source.includes('lugar?.name||lugar?.village||lugar?.town||lugar?.city||lugar?.municipality')) {
+  throw new Error('El nombre canónico puede volver a degradar un pueblo a su municipio');
+}
+if(!source.includes('.replace(/\\[([^\\]]+)\\]\\(https?:\\/\\/[^)\\s]+\\)/gi,"$1")')) {
+  throw new Error('La guía puede volver a mostrar enlaces Markdown sin renderizar');
+}
+if(!source.includes('function corregirTextoRutaVisible(') || !source.includes('function tituloDiaVisible(')) {
+  throw new Error('Falta la corrección determinista de origen y métricas visibles');
+}
 const forbidden=[
   {label:'comparación alojamiento-localidad antigua',pattern:/normalizarClaveMedia\(nombre\)===normalizarClaveMedia\(ultimoLugar\)/}
 ];
