@@ -1,6 +1,5 @@
 (() => {
 "use strict";
-if(new URLSearchParams(location.search).get("pruebas")!=="manuel")return;
 const commonsApi="https://commons.wikimedia.org/w/api.php",cache=new Map();
 const E={
 "Basílica de la Sagrada Família":["La basílica comenzó a construirse en 1882 y quedó ligada para siempre a Antoni Gaudí. Fachadas, torres, geometría y un interior concebido como un bosque de columnas permiten entender cómo Gaudí mezcló arquitectura, naturaleza, luz y simbolismo.","1 h 30 min–2 h"],
