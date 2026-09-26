@@ -27867,5 +27867,27 @@
     "estado": "pendiente_verificacion",
     "verificado_el": null,
     "fuente_verificacion": null
+  },
+  {
+    "id": "camping-1191",
+    "nombre": "Base Camp Granada",
+    "tipo": "camping",
+    "lat": 36.9936,
+    "lon": -3.5647,
+    "capa_origen": "Reporte web",
+    "abierto_todo_ano": false,
+    "piscina_climatizada": false,
+    "parque_acuatico": false,
+    "mascotas": true,
+    "direccion": "Camino Instituto F.P., 31, 18650 Dúrcal, Granada, España",
+    "provincia_texto": "Granada",
+    "telefono": "+34 601 67 50 68",
+    "web": "https://granadabasecamp.com",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=36.9936,-3.5647",
+    "fotos": [],
+    "descripcion_original": "Camping de 4 estrellas de reciente apertura en Dúrcal. Parcelas Standard de 70 m² y XXL de 100 m² para caravanas, autocaravanas y campers. Zona de acampada libre para tiendas. Restaurante, piscina, supermercado, lavandería, aseos y duchas, descarga de caravanas y alquiler de bicicletas. Registro de Turismo de Andalucía: CM/GR/00063.",
+    "estado": "verificado",
+    "verificado_el": "2026-09-26",
+    "fuente_verificacion": "https://granadabasecamp.com; Ayuntamiento de Granada"
   }
 ]
