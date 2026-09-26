@@ -2452,7 +2452,7 @@ try {
 
 
     cargarJSON(
-      "campings-espana-definitivo.json?v=1"
+      "campings-espana-definitivo.json?v=2"
     ),
 
 
