@@ -1694,7 +1694,7 @@ function crearFichaCamping(camping) {
 
 
   // Iconos informativos adicionales; se conserva el texto original.
-  if (caracteristicas.length > 0) {
+  if (caracteristicas.length > 0 || camping.electricidad === true) {
     const filaIconos = document.createElement("div");
     filaIconos.className = "iconos-caracteristicas";
     filaIconos.setAttribute("aria-hidden", "true");
@@ -1706,6 +1706,15 @@ function crearFichaCamping(camping) {
       icono.title = texto.slice(texto.indexOf(" ") + 1);
       filaIconos.appendChild(icono);
     });
+
+    // Electricidad estaba registrada, pero no tenia icono en Campings.
+    if (camping.electricidad === true) {
+      const icono = document.createElement("span");
+      icono.className = "icono-caracteristica";
+      icono.textContent = "⚡";
+      icono.title = "Electricidad";
+      filaIconos.appendChild(icono);
+    }
 
     ficha.appendChild(filaIconos);
   }
