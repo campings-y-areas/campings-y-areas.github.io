@@ -1693,6 +1693,24 @@ function crearFichaCamping(camping) {
   }
 
 
+  // Iconos informativos adicionales; se conserva el texto original.
+  if (caracteristicas.length > 0) {
+    const filaIconos = document.createElement("div");
+    filaIconos.className = "iconos-caracteristicas";
+    filaIconos.setAttribute("aria-hidden", "true");
+
+    caracteristicas.forEach(texto => {
+      const icono = document.createElement("span");
+      icono.className = "icono-caracteristica";
+      icono.textContent = texto.split(" ")[0];
+      icono.title = texto.slice(texto.indexOf(" ") + 1);
+      filaIconos.appendChild(icono);
+    });
+
+    ficha.appendChild(filaIconos);
+  }
+
+
   caracteristicas.forEach(texto => {
 
     const caracteristica =
