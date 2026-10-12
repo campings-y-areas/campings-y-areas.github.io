@@ -987,6 +987,35 @@ function crearFichaPunto(punto) {
   }
 
 
+  // Iconos informativos adicionales; se conserva el texto original.
+  if (caracteristicas.length > 0) {
+    const filaIconos = document.createElement("div");
+    filaIconos.className = "iconos-caracteristicas";
+    filaIconos.setAttribute("aria-hidden", "true");
+
+    caracteristicas.forEach(texto => {
+      const icono = document.createElement("span");
+      icono.className = "icono-caracteristica";
+      icono.title = texto.slice(texto.indexOf(" ") + 1);
+
+      if (texto === "🚐 Admite caravanas") {
+        // Pictograma de caravana remolcada, no de autocaravana.
+        const dibujo = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        dibujo.setAttribute("viewBox", "0 0 64 40");
+        dibujo.setAttribute("focusable", "false");
+        dibujo.innerHTML = '<path d="M13 7h30a7 7 0 0 1 7 7v14H8V12a5 5 0 0 1 5-5Z"/><path d="M50 27h6l5 4"/><rect x="15" y="12" width="11" height="9" rx="1"/><rect x="34" y="12" width="9" height="16" rx="1"/><circle cx="19" cy="31" r="4"/><circle cx="42" cy="31" r="4"/>';
+        icono.appendChild(dibujo);
+      } else {
+        icono.textContent = texto.split(" ")[0];
+      }
+
+      filaIconos.appendChild(icono);
+    });
+
+    ficha.appendChild(filaIconos);
+  }
+
+
   caracteristicas.forEach(texto => {
 
     const dato =
