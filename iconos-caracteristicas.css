@@ -1,0 +1,34 @@
+/* SOLO ICONOS INFORMATIVOS ADICIONALES EN LAS TARJETAS.
+   Los textos existentes y los filtros permanecen intactos. */
+.resultado-camping .iconos-caracteristicas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 12px 0 9px;
+}
+
+.resultado-camping .icono-caracteristica {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 35px;
+  width: 35px;
+  height: 35px;
+  border: 2px solid #4c8295;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #326b81;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.resultado-camping .icono-caracteristica svg {
+  display: block;
+  width: 28px;
+  height: 28px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
