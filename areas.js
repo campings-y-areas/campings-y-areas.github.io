@@ -988,7 +988,11 @@ function crearFichaPunto(punto) {
 
 
   // Iconos informativos adicionales; se conserva el texto original.
-  if (caracteristicas.length > 0) {
+  if (
+    caracteristicas.length > 0 ||
+    punto.vaciado_aguas === true ||
+    punto.permite_pernocta === true
+  ) {
     const filaIconos = document.createElement("div");
     filaIconos.className = "iconos-caracteristicas";
     filaIconos.setAttribute("aria-hidden", "true");
@@ -1011,6 +1015,28 @@ function crearFichaPunto(punto) {
 
       filaIconos.appendChild(icono);
     });
+
+    // Vaciado general: no duplicar si ya se muestran los tipos concretos.
+    if (
+      punto.vaciado_aguas === true &&
+      punto.aguas_grises !== true &&
+      punto.aguas_negras !== true
+    ) {
+      const icono = document.createElement("span");
+      icono.className = "icono-caracteristica";
+      icono.textContent = "♻️";
+      icono.title = "Vaciado de aguas";
+      filaIconos.appendChild(icono);
+    }
+
+    // Pernocta solo cuando esta expresamente permitida en los datos.
+    if (punto.permite_pernocta === true) {
+      const icono = document.createElement("span");
+      icono.className = "icono-caracteristica";
+      icono.textContent = "🌙";
+      icono.title = "Pernocta permitida";
+      filaIconos.appendChild(icono);
+    }
 
     ficha.appendChild(filaIconos);
   }
